@@ -181,7 +181,7 @@ export const COURSE_DETAILS: CourseDetail[] = [
             slug: "apa-itu-playwright",
             title: "Apa itu Playwright?",
             duration: "5 menit",
-            isCompleted: true,
+            isCompleted: false,
             isLocked: false,
           },
           {

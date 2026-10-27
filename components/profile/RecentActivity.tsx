@@ -1,29 +1,4 @@
-import {
-  BookOpen,
-  CheckCircle2,
-  FlaskConical,
-} from "lucide-react";
-
-const activities = [
-  {
-    id: 1,
-    title: "Menyelesaikan materi Playwright Locator",
-    time: "2 jam lalu",
-    icon: BookOpen,
-  },
-  {
-    id: 2,
-    title: "Menyelesaikan challenge Locator Strategy",
-    time: "Kemarin",
-    icon: FlaskConical,
-  },
-  {
-    id: 3,
-    title: "Menyelesaikan QA Fundamentals",
-    time: "3 hari lalu",
-    icon: CheckCircle2,
-  },
-];
+import { History } from "lucide-react";
 
 export default function RecentActivity() {
   return (
@@ -33,34 +8,12 @@ export default function RecentActivity() {
       </h2>
 
       <p className="mt-1 text-sm text-muted-foreground">
-        Aktivitas belajar terbaru kamu.
+        Riwayat aktivitas belum tersedia karena aktivitas belajar belum disimpan.
       </p>
 
-      <div className="mt-6 space-y-4">
-        {activities.map((activity) => {
-          const Icon = activity.icon;
-
-          return (
-            <div
-              key={activity.id}
-              className="flex items-center gap-4"
-            >
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-muted">
-                <Icon className="h-5 w-5" />
-              </div>
-
-              <div>
-                <p className="text-sm font-medium">
-                  {activity.title}
-                </p>
-
-                <p className="mt-1 text-xs text-muted-foreground">
-                  {activity.time}
-                </p>
-              </div>
-            </div>
-          );
-        })}
+      <div className="mt-6 flex items-center gap-3 rounded-xl bg-muted/50 p-4 text-sm text-muted-foreground">
+        <History className="h-4 w-4 shrink-0" aria-hidden="true" />
+        Belum ada aktivitas tersimpan.
       </div>
     </section>
   );

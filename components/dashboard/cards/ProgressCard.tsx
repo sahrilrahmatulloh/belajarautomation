@@ -1,40 +1,18 @@
-import { Flame } from "lucide-react";
-import { Progress } from "@/components/ui/progress";
+import Link from "next/link";
+import { ArrowRight, BookOpenCheck } from "lucide-react";
 
 export default function ProgressCard() {
-  const progress = 67;
-
   return (
-    <div className="rounded-3xl border border-border bg-card p-6 text-card-foreground shadow-sm">
-      <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold">
-          Progress Belajar
-        </h2>
-
-        <span className="text-4xl font-bold text-blue-600 dark:text-blue-400">
-          {progress}%
-        </span>
-      </div>
-
-      <Progress value={progress} className="mt-6" />
-
-      <div className="mt-6 space-y-3">
-        <div className="flex items-center gap-2">
-          <Flame className="text-orange-500" size={18} />
-
-          <p className="text-sm">
-            7 Hari Belajar Berturut-turut
-          </p>
-        </div>
-
-        <p className="text-sm text-muted-foreground">
-          Level 8 QA Explorer
-        </p>
-
-        <p className="text-xs text-muted-foreground">
-          +12 XP menuju Level 9
-        </p>
-      </div>
+    <div className="h-full rounded-3xl border border-border bg-card p-6 text-card-foreground shadow-sm">
+      <BookOpenCheck className="h-5 w-5 text-primary" aria-hidden="true" />
+      <h2 className="mt-4 text-lg font-semibold">Progres belajar</h2>
+      <p className="mt-2 text-sm leading-6 text-muted-foreground">
+        Pelacakan progres akun belum tersedia. Kamu tetap bisa membuka materi
+        dan melanjutkan belajar dari daftar kursus.
+      </p>
+      <Link href="/learn" className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline">
+        Jelajahi materi <ArrowRight className="h-4 w-4" />
+      </Link>
     </div>
   );
 }

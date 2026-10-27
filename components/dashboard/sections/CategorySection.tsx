@@ -1,4 +1,5 @@
 import CategoryCard from "../cards/CategoryCard";
+import Link from "next/link";
 import { CATEGORIES } from "@/data/categories";
 
 export default function CategorySection() {
@@ -15,9 +16,9 @@ export default function CategorySection() {
           </p>
         </div>
 
-        <button className="self-start text-sm font-medium text-blue-600 hover:underline dark:text-blue-400">
-          View All
-        </button>
+        <Link href="/learn" className="self-start text-sm font-medium text-primary hover:underline">
+          Lihat semua materi
+        </Link>
       </div>
 
       <div className="grid w-full grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">

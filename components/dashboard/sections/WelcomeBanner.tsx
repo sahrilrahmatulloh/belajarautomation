@@ -1,5 +1,5 @@
 import { ArrowRight, BookOpen } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default function WelcomeBanner() {
   return (
@@ -18,20 +18,20 @@ export default function WelcomeBanner() {
           </h1>
 
           <p className="mt-4 max-w-xl text-muted-foreground">
-            Kuasai Selenium, Playwright, Appium, API Testing, Git, CI/CD, hingga
-            membangun Automation Framework dengan roadmap yang terstruktur.
+            Pelajari fondasi software testing, praktikkan automation, dan susun
+            langkah belajar berikutnya melalui materi serta roadmap yang tersedia.
           </p>
 
-          <div className="mt-8 flex gap-4">
-            <Button className="rounded-xl">
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Link href="/learn" className="inline-flex items-center justify-center rounded-xl bg-primary px-4 py-3 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/80">
               <BookOpen className="mr-2 h-4 w-4" />
               Mulai Belajar
-            </Button>
+            </Link>
 
-            <Button variant="outline" className="rounded-xl">
+            <Link href="/roadmap" className="inline-flex items-center justify-center rounded-xl border border-border px-4 py-3 text-sm font-medium transition-colors hover:bg-accent">
               Roadmap
               <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
+            </Link>
           </div>
         </div>
 

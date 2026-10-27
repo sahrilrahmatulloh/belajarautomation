@@ -25,7 +25,6 @@ export const COURSES: Course[] = [
     level: "Beginner",
     lessons: 16,
     isPremium: false,
-    progress: 80,
     icon: BookOpenCheck,
   },
   {
@@ -50,7 +49,6 @@ export const COURSES: Course[] = [
     level: "Beginner",
     lessons: 20,
     isPremium: false,
-    progress: 30,
     icon: Braces,
   },
   {
@@ -75,7 +73,6 @@ export const COURSES: Course[] = [
     level: "Beginner",
     lessons: 12,
     isPremium: false,
-    progress: 100,
     icon: GitBranch,
   },
   {
@@ -88,7 +85,6 @@ export const COURSES: Course[] = [
     level: "Advanced",
     lessons: 28,
     isPremium: true,
-    progress: 10,
     icon: Play,
   },
   {

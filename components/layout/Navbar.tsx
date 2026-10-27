@@ -1,12 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Bell, Menu, Moon, Search, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 
 import ProfileDropdown from "@/components/profile/ProfileDropdown";
-import { Input } from "@/components/ui/input";
 
 interface NavbarProps {
   onToggleSidebar: () => void;
@@ -16,14 +14,9 @@ export default function Navbar({
   onToggleSidebar,
 }: NavbarProps) {
   const { resolvedTheme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const toggleTheme = () => {
-    if (!mounted) return;
+    if (!resolvedTheme) return;
 
     setTheme(
       resolvedTheme === "dark" ? "light" : "dark"
@@ -44,27 +37,14 @@ export default function Navbar({
           <Menu size={20} />
         </button>
 
-        {/* Search - Tablet & Desktop */}
-        <div className="relative hidden min-w-0 flex-1 sm:block sm:max-w-[420px]">
-          <Search
-            size={18}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
-          />
-
-          <Input
-            placeholder="Cari materi, roadmap, artikel..."
-            className="w-full pl-10"
-          />
-        </div>
-
-        {/* Search Icon - Mobile */}
-        <button
-          type="button"
-          className="shrink-0 rounded-lg p-2 transition-colors hover:bg-accent sm:hidden"
-          aria-label="Cari"
+        <Link
+          href="/learn"
+          className="inline-flex min-w-0 items-center gap-2 rounded-lg border border-border px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+          aria-label="Cari materi"
         >
-          <Search size={20} />
-        </button>
+          <Search size={18} aria-hidden="true" />
+          <span className="hidden sm:inline">Cari materi</span>
+        </Link>
       </div>
 
       {/* Right */}
@@ -73,11 +53,11 @@ export default function Navbar({
         <button
           type="button"
           onClick={toggleTheme}
-          disabled={!mounted}
+          disabled={!resolvedTheme}
           className="rounded-lg p-2 transition-colors hover:bg-accent disabled:cursor-default"
           aria-label="Ganti tema"
         >
-          {!mounted ? (
+          {!resolvedTheme ? (
             <span className="block h-5 w-5" />
           ) : resolvedTheme === "dark" ? (
             <Sun size={20} />
