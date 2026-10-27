@@ -4,12 +4,9 @@ import Link from "next/link";
 
 import {
   Crown,
-  LogOut,
   Settings,
   User,
 } from "lucide-react";
-
-import { logoutAction } from "@/actions/auth/logout";
 
 import {
   DropdownMenu,
@@ -19,11 +16,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 export default function ProfileDropdown() {
   return (
@@ -33,23 +26,18 @@ export default function ProfileDropdown() {
         aria-label="Buka menu profil"
       >
         <Avatar className="h-8 w-8 sm:h-10 sm:w-10">
-          <AvatarImage
-            src="https://github.com/shadcn.png"
-            alt="Aril"
-          />
-
           <AvatarFallback>
-            A
+            BA
           </AvatarFallback>
         </Avatar>
 
         <div className="hidden text-left lg:block">
           <p className="text-sm font-semibold text-foreground">
-            Aril
+            BelajarAutomation
           </p>
 
           <p className="text-xs text-muted-foreground">
-            Free Plan
+            Mode lokal
           </p>
         </div>
       </DropdownMenuTrigger>
@@ -62,11 +50,11 @@ export default function ProfileDropdown() {
         {/* User Info */}
         <div className="px-2 py-3">
           <p className="text-sm font-semibold">
-            Aril
+            BelajarAutomation
           </p>
 
           <p className="mt-1 text-xs text-muted-foreground">
-            Free Plan
+            Mode lokal
           </p>
         </div>
 
@@ -79,7 +67,7 @@ export default function ProfileDropdown() {
             className="flex w-full items-center gap-2 px-2 py-1.5"
           >
             <User className="h-4 w-4" />
-            Profile
+            Profil
           </Link>
         </DropdownMenuItem>
 
@@ -90,7 +78,7 @@ export default function ProfileDropdown() {
             className="flex w-full items-center gap-2 px-2 py-1.5"
           >
             <Settings className="h-4 w-4" />
-            Settings
+            Pengaturan
           </Link>
         </DropdownMenuItem>
 
@@ -101,27 +89,10 @@ export default function ProfileDropdown() {
             className="flex w-full items-center gap-2 px-2 py-1.5"
           >
             <Crown className="h-4 w-4" />
-            Upgrade Premium
+            Lihat Premium
           </Link>
         </DropdownMenuItem>
 
-        <DropdownMenuSeparator />
-
-        {/* Logout */}
-        <DropdownMenuItem className="p-0 text-destructive focus:text-destructive">
-          <form
-            action={logoutAction}
-            className="w-full"
-          >
-            <button
-              type="submit"
-              className="flex w-full items-center gap-2 px-2 py-1.5 text-left text-destructive"
-            >
-              <LogOut className="h-4 w-4" />
-              Logout
-            </button>
-          </form>
-        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

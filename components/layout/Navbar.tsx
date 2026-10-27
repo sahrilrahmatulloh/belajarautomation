@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Bell, Menu, Moon, Search, Sun } from "lucide-react";
+import { Bell, Menu, Search, SunMoon } from "lucide-react";
 import { useTheme } from "next-themes";
 
 import ProfileDropdown from "@/components/profile/ProfileDropdown";
@@ -16,8 +16,6 @@ export default function Navbar({
   const { resolvedTheme, setTheme } = useTheme();
 
   const toggleTheme = () => {
-    if (!resolvedTheme) return;
-
     setTheme(
       resolvedTheme === "dark" ? "light" : "dark"
     );
@@ -53,17 +51,10 @@ export default function Navbar({
         <button
           type="button"
           onClick={toggleTheme}
-          disabled={!resolvedTheme}
-          className="rounded-lg p-2 transition-colors hover:bg-accent disabled:cursor-default"
+          className="rounded-lg p-2 transition-colors hover:bg-accent"
           aria-label="Ganti tema"
         >
-          {!resolvedTheme ? (
-            <span className="block h-5 w-5" />
-          ) : resolvedTheme === "dark" ? (
-            <Sun size={20} />
-          ) : (
-            <Moon size={20} />
-          )}
+          <SunMoon size={20} aria-hidden="true" />
         </button>
 
         {/* Notifications */}
