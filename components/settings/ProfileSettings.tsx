@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/avatar";
 
 import { Input } from "@/components/ui/input";
+import { DEFAULT_AVATAR } from "@/data/profile";
 
 export default function ProfileSettings() {
   const [name, setName] = useState("Aril");
@@ -32,8 +33,8 @@ export default function ProfileSettings() {
       <div className="mt-6 flex items-center gap-4">
         <Avatar className="h-20 w-20">
           <AvatarImage
-            src="https://github.com/shadcn.png"
-            alt="Aril"
+            src={DEFAULT_AVATAR}
+            alt="Foto profil"
           />
           <AvatarFallback>A</AvatarFallback>
         </Avatar>

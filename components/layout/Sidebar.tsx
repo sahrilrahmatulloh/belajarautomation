@@ -82,7 +82,7 @@ export default function Sidebar() {
           className="flex items-center gap-3"
         >
           <Image
-            src="/logo-v2.png"
+            src="/logo.png"
             alt="belajarautomation.id logo"
             width={36}
             height={36}

@@ -1,14 +1,21 @@
+import Image from "next/image";
 import Link from "next/link";
-import { Settings2, UserRound } from "lucide-react";
+import { Settings2 } from "lucide-react";
+
+import { DEFAULT_AVATAR } from "@/data/profile";
 
 export default function ProfileHeader() {
   return (
     <section className="rounded-3xl border border-border bg-card p-6 sm:p-8">
       <div className="flex flex-col gap-6 sm:flex-row sm:items-center">
         {/* Avatar */}
-        <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-full bg-primary text-3xl font-bold text-primary-foreground">
-          <UserRound className="h-10 w-10" aria-hidden="true" />
-        </div>
+        <Image
+          src={DEFAULT_AVATAR}
+          alt="Foto profil"
+          width={96}
+          height={96}
+          className="h-24 w-24 shrink-0 rounded-full"
+        />
 
         {/* Information */}
         <div className="flex-1">

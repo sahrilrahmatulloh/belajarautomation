@@ -16,7 +16,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { DEFAULT_AVATAR } from "@/data/profile";
 
 export default function ProfileDropdown() {
   return (
@@ -26,6 +27,7 @@ export default function ProfileDropdown() {
         aria-label="Buka menu profil"
       >
         <Avatar className="h-8 w-8 sm:h-10 sm:w-10">
+          <AvatarImage src={DEFAULT_AVATAR} alt="Foto profil" />
           <AvatarFallback>
             BA
           </AvatarFallback>
