@@ -15,5 +15,7 @@ export interface CourseModule {
 export interface CourseDetail {
   courseSlug: string;
   overview: string;
+  objectives: string[];
+  prerequisites: string[];
   modules: CourseModule[];
 }

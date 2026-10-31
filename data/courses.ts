@@ -23,6 +23,7 @@ export const COURSES: Course[] = [
     category: "Fundamental",
     level: "Beginner",
     lessons: 16,
+    estimatedDuration: "2 jam 40 menit",
     icon: BookOpenCheck,
   },
   {
@@ -33,7 +34,8 @@ export const COURSES: Course[] = [
       "Belajar Java dari dasar hingga OOP untuk automation testing.",
     category: "Programming",
     level: "Beginner",
-    lessons: 24,
+    lessons: 12,
+    estimatedDuration: "2 jam 30 menit",
     icon: Code2,
   },
   {
@@ -44,7 +46,8 @@ export const COURSES: Course[] = [
       "Dasar JavaScript hingga ES6+ untuk automation modern.",
     category: "Programming",
     level: "Beginner",
-    lessons: 20,
+    lessons: 10,
+    estimatedDuration: "2 jam",
     icon: Braces,
   },
   {
@@ -55,7 +58,8 @@ export const COURSES: Course[] = [
       "Belajar Python untuk automation, scripting, dan test framework.",
     category: "Programming",
     level: "Beginner",
-    lessons: 22,
+    lessons: 10,
+    estimatedDuration: "2 jam",
     icon: Code2,
   },
   {
@@ -64,9 +68,10 @@ export const COURSES: Course[] = [
     title: "Git & GitHub",
     description:
       "Version control dengan Git dan kolaborasi project di GitHub.",
-    category: "Version Control",
+    category: "Programming",
     level: "Beginner",
-    lessons: 12,
+    lessons: 9,
+    estimatedDuration: "1 jam 35 menit",
     icon: GitBranch,
   },
   {
@@ -77,7 +82,8 @@ export const COURSES: Course[] = [
       "Modern end-to-end testing dengan Playwright untuk web automation.",
     category: "Web Automation",
     level: "Advanced",
-    lessons: 28,
+    lessons: 8,
+    estimatedDuration: "1 jam 50 menit",
     icon: Play,
   },
   {
@@ -88,7 +94,8 @@ export const COURSES: Course[] = [
       "Web automation menggunakan Selenium WebDriver dari dasar hingga advanced.",
     category: "Web Automation",
     level: "Advanced",
-    lessons: 30,
+    lessons: 11,
+    estimatedDuration: "2 jam 20 menit",
     icon: Globe,
   },
   {
@@ -99,7 +106,8 @@ export const COURSES: Course[] = [
       "End-to-end testing modern untuk aplikasi web dengan Cypress.",
     category: "Web Automation",
     level: "Advanced",
-    lessons: 18,
+    lessons: 9,
+    estimatedDuration: "1 jam 40 menit",
     icon: TestTube2,
   },
   {
@@ -108,9 +116,10 @@ export const COURSES: Course[] = [
     title: "Cucumber",
     description:
       "BDD automation menggunakan Cucumber dan Gherkin syntax.",
-    category: "BDD",
+    category: "Web Automation",
     level: "Intermediate",
-    lessons: 16,
+    lessons: 9,
+    estimatedDuration: "1 jam 45 menit",
     icon: Workflow,
   },
   {
@@ -119,9 +128,10 @@ export const COURSES: Course[] = [
     title: "Katalon Studio",
     description:
       "Low-code automation untuk web, API, dan mobile testing.",
-    category: "Low-Code",
+    category: "Web Automation",
     level: "Beginner",
-    lessons: 14,
+    lessons: 9,
+    estimatedDuration: "1 jam 45 menit",
     icon: Blocks,
   },
   {
@@ -132,7 +142,8 @@ export const COURSES: Course[] = [
       "Keyword-driven test automation menggunakan Robot Framework.",
     category: "Web Automation",
     level: "Advanced",
-    lessons: 12,
+    lessons: 9,
+    estimatedDuration: "1 jam 35 menit",
     icon: Bot,
   },
 ];

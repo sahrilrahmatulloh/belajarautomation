@@ -4,13 +4,3 @@ export const RECOMMENDED_COURSE_SLUGS = [
   "playwright",
   "selenium",
 ];
-
-export const RECOMMENDATION_CATEGORIES = [
-  "Semua",
-  "Fundamental",
-  "Automation",
-  "API Testing",
-  "Mobile Testing",
-  "Performance",
-  "Security",
-] as const;

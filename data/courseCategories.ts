@@ -1,9 +1,13 @@
-// Kategori yang ditampilkan sebagai filter di halaman Belajar.
-export const COURSE_CATEGORIES = [
+import { CourseCategory } from "@/types/Course";
+
+// Kategori Learning Center sesuai PRD (FR-02), dipakai sebagai filter.
+export const COURSE_CATEGORIES: CourseCategory[] = [
   "Fundamental",
-  "Programming",
-  "Version Control",
+  "Manual Testing",
   "Web Automation",
-  "BDD",
-  "Low-Code",
+  "Mobile Testing",
+  "API Testing",
+  "Performance Testing",
+  "Security Testing",
+  "Programming",
 ];

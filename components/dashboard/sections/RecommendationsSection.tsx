@@ -6,13 +6,13 @@ import { ArrowRight, BookOpen, Clock3, Layers3 } from "lucide-react";
 
 import { COURSE_DETAILS } from "@/data/courseDetails";
 import { COURSES } from "@/data/courses";
-import {
-  RECOMMENDATION_CATEGORIES as categories,
-  RECOMMENDED_COURSE_SLUGS,
-} from "@/data/recommendations";
-import type { Course } from "@/types/Course";
+import { COURSE_CATEGORIES } from "@/data/courseCategories";
+import { RECOMMENDED_COURSE_SLUGS } from "@/data/recommendations";
+import type { Course, CourseCategory } from "@/types/Course";
 
-type RecommendationCategory = (typeof categories)[number];
+type RecommendationCategory = "Semua" | CourseCategory;
+
+const categories: RecommendationCategory[] = ["Semua", ...COURSE_CATEGORIES];
 
 const recommendedSlugs = new Set(RECOMMENDED_COURSE_SLUGS);
 
@@ -29,67 +29,34 @@ const accents: Record<string, { surface: string; icon: string; label: string; sh
     label: "bg-indigo-200/15 text-indigo-100",
     shape: "border-indigo-100/20 bg-indigo-100/10",
   },
-  "Version Control": {
-    surface: "from-sky-700 to-cyan-500",
-    icon: "bg-white/15 text-white",
-    label: "bg-white/15 text-white",
-    shape: "border-cyan-100/20 bg-cyan-100/10",
-  },
   "Web Automation": {
     surface: "from-blue-800 to-blue-500",
     icon: "bg-white/15 text-white",
     label: "bg-sky-200/15 text-sky-100",
     shape: "border-sky-100/20 bg-sky-100/10",
   },
-  BDD: {
-    surface: "from-cyan-800 to-sky-600",
+  "Manual Testing": {
+    surface: "from-sky-700 to-cyan-500",
     icon: "bg-white/15 text-white",
-    label: "bg-cyan-100/15 text-cyan-50",
+    label: "bg-white/15 text-white",
     shape: "border-cyan-100/20 bg-cyan-100/10",
   },
-  "Low-Code": {
+  "Mobile Testing": {
     surface: "from-indigo-800 to-sky-600",
     icon: "bg-white/15 text-white",
     label: "bg-indigo-100/15 text-indigo-50",
     shape: "border-indigo-100/20 bg-indigo-100/10",
   },
+  "API Testing": {
+    surface: "from-cyan-800 to-sky-600",
+    icon: "bg-white/15 text-white",
+    label: "bg-cyan-100/15 text-cyan-50",
+    shape: "border-cyan-100/20 bg-cyan-100/10",
+  },
 };
 
-function getCourseSearchText(course: Course) {
-  const detail = COURSE_DETAILS.find((item) => item.courseSlug === course.slug);
-  const lessonTitles = detail?.modules
-    .flatMap((module) => [module.title, ...module.lessons.map((lesson) => lesson.title)])
-    .join(" ");
-
-  return `${course.title} ${course.description} ${course.category} ${lessonTitles ?? ""}`.toLowerCase();
-}
-
 function matchesCategory(course: Course, category: RecommendationCategory) {
-  if (category === "Semua") return true;
-  if (category === "Fundamental") return course.category === "Fundamental";
-  if (category === "Automation") {
-    return ["Web Automation", "BDD", "Low-Code"].includes(course.category);
-  }
-
-  const text = getCourseSearchText(course);
-  if (category === "API Testing") return text.includes("api testing");
-  if (category === "Mobile Testing") return /mobile|appium/.test(text);
-  if (category === "Performance") return text.includes("performance");
-  return text.includes("security");
-}
-
-function formatDuration(courseSlug: string) {
-  const detail = COURSE_DETAILS.find((item) => item.courseSlug === courseSlug);
-  const minutes = detail?.modules
-    .flatMap((module) => module.lessons)
-    .reduce((sum, lesson) => sum + (Number.parseInt(lesson.duration, 10) || 0), 0) ?? 0;
-
-  if (!minutes) return "Durasi belum tersedia";
-  const hours = Math.floor(minutes / 60);
-  const remainder = minutes % 60;
-  if (hours && remainder) return `${hours}j ${remainder}m`;
-  if (hours) return `${hours}j`;
-  return `${minutes} menit`;
+  return category === "Semua" || course.category === category;
 }
 
 function RecommendationCard({ course }: { course: Course }) {
@@ -144,7 +111,7 @@ function RecommendationCard({ course }: { course: Course }) {
           </span>
           <span className="inline-flex items-center gap-1.5">
             <Clock3 className="h-3.5 w-3.5 text-brand-cyan" aria-hidden="true" />
-            {formatDuration(course.slug)}
+            {course.estimatedDuration}
           </span>
         </div>
 
