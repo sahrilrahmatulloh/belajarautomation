@@ -1,31 +1,36 @@
 import { BookOpenCheck, Flame, Target, Trophy } from "lucide-react";
 
+import { DUMMY_ACCOUNT, DUMMY_LEADERBOARD } from "@/data/dummyAccount";
+
+const leaderboardPosition =
+  DUMMY_LEADERBOARD.findIndex((entry) => entry.isCurrentUser) + 1;
+
 const stats = [
   {
     label: "Total XP",
-    value: "—",
-    detail: "Data XP belum tersedia",
+    value: DUMMY_ACCOUNT.xp.toLocaleString("id-ID"),
+    detail: `Peringkat #${leaderboardPosition} di leaderboard`,
     Icon: Trophy,
     iconStyle: "bg-amber-500/10 text-amber-600 dark:text-amber-300",
   },
   {
     label: "Materi Selesai",
-    value: "—",
-    detail: "Progres belum tersimpan",
+    value: String(DUMMY_ACCOUNT.completedLessons),
+    detail: "Lesson yang sudah dipelajari",
     Icon: BookOpenCheck,
     iconStyle: "bg-brand-blue/10 text-brand-blue",
   },
   {
     label: "Challenge Selesai",
-    value: "—",
-    detail: "Aktivitas belum tersimpan",
+    value: String(DUMMY_ACCOUNT.completedChallenges),
+    detail: "Latihan di Playground",
     Icon: Target,
     iconStyle: "bg-rose-500/10 text-rose-600 dark:text-rose-300",
   },
   {
     label: "Streak Belajar",
-    value: "—",
-    detail: "Riwayat belajar belum tersedia",
+    value: `${DUMMY_ACCOUNT.streakDays} hari`,
+    detail: "Belajar berturut-turut",
     Icon: Flame,
     iconStyle: "bg-orange-500/10 text-orange-600 dark:text-orange-300",
   },
