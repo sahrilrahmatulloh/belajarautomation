@@ -18,7 +18,7 @@ export const VIBE_CODING_STEPS: RoadmapStep[] = [
     description:
       "Pahami konsep automation testing sebelum menggunakan AI untuk menghasilkan kode.",
     icon: BookOpenCheck,
-    status: "completed",
+    status: "not-started",
   },
   {
     id: 2,
@@ -26,7 +26,7 @@ export const VIBE_CODING_STEPS: RoadmapStep[] = [
     description:
       "Pelajari workflow membangun automation dengan bantuan AI coding tools dan agents.",
     icon: Bot,
-    status: "current",
+    status: "not-started",
   },
   {
     id: 3,
@@ -34,7 +34,7 @@ export const VIBE_CODING_STEPS: RoadmapStep[] = [
     description:
       "Berikan requirement, context, constraint, dan instruction yang efektif kepada AI.",
     icon: MessageSquareCode,
-    status: "locked",
+    status: "not-started",
   },
   {
     id: 4,
@@ -42,7 +42,7 @@ export const VIBE_CODING_STEPS: RoadmapStep[] = [
     description:
       "Gunakan AI untuk membantu menghasilkan test scenario dan automation code.",
     icon: TestTube2,
-    status: "locked",
+    status: "not-started",
   },
   {
     id: 5,
@@ -50,7 +50,7 @@ export const VIBE_CODING_STEPS: RoadmapStep[] = [
     description:
       "Bangun automation project menggunakan AI-assisted development workflow.",
     icon: Code2,
-    status: "locked",
+    status: "not-started",
   },
   {
     id: 6,
@@ -58,7 +58,7 @@ export const VIBE_CODING_STEPS: RoadmapStep[] = [
     description:
       "Validasi, review, debug, dan perbaiki kode automation yang dihasilkan AI.",
     icon: SearchCode,
-    status: "locked",
+    status: "not-started",
   },
   {
     id: 7,
@@ -66,7 +66,7 @@ export const VIBE_CODING_STEPS: RoadmapStep[] = [
     description:
       "Bangun workflow automation yang tetap maintainable dan memiliki engineering standards.",
     icon: Workflow,
-    status: "locked",
+    status: "not-started",
   },
   {
     id: 8,
@@ -74,6 +74,6 @@ export const VIBE_CODING_STEPS: RoadmapStep[] = [
     description:
       "Bangun automation project end-to-end menggunakan AI sebagai development partner.",
     icon: FolderKanban,
-    status: "locked",
+    status: "not-started",
   },
 ];

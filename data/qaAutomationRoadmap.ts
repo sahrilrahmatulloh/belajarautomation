@@ -23,7 +23,7 @@ export const QA_AUTOMATION_STEPS: RoadmapStep[] = [
     description:
       "Pelajari dasar QA, SDLC, STLC, test case, bug report, dan testing methodology.",
     icon: BookOpenCheck,
-    status: "completed",
+    status: "not-started",
   },
   {
     id: 2,
@@ -31,7 +31,7 @@ export const QA_AUTOMATION_STEPS: RoadmapStep[] = [
     description:
       "Pilih bahasa pemrograman utama: Java, JavaScript, atau Python.",
     icon: Code2,
-    status: "current",
+    status: "not-started",
   },
   {
     id: 3,
@@ -39,7 +39,7 @@ export const QA_AUTOMATION_STEPS: RoadmapStep[] = [
     description:
       "Pelajari version control, branching, pull request, dan collaboration workflow.",
     icon: GitBranch,
-    status: "locked",
+    status: "not-started",
   },
   {
     id: 4,
@@ -47,7 +47,7 @@ export const QA_AUTOMATION_STEPS: RoadmapStep[] = [
     description:
       "Pelajari REST API, request, response, authentication, dan API automation.",
     icon: Network,
-    status: "locked",
+    status: "not-started",
   },
 ];
 
@@ -87,7 +87,7 @@ export const QA_AUTOMATION_FINAL_STEPS: RoadmapStep[] = [
     description:
       "Bangun struktur automation framework yang scalable dan maintainable.",
     icon: Workflow,
-    status: "locked",
+    status: "not-started",
   },
   {
     id: 6,
@@ -95,7 +95,7 @@ export const QA_AUTOMATION_FINAL_STEPS: RoadmapStep[] = [
     description:
       "Integrasikan automation testing ke dalam pipeline dan container.",
     icon: Container,
-    status: "locked",
+    status: "not-started",
   },
   {
     id: 7,
@@ -103,7 +103,7 @@ export const QA_AUTOMATION_FINAL_STEPS: RoadmapStep[] = [
     description:
       "Kerjakan simulasi automation project berdasarkan workflow perusahaan.",
     icon: FolderKanban,
-    status: "locked",
+    status: "not-started",
   },
   {
     id: 8,
@@ -111,6 +111,6 @@ export const QA_AUTOMATION_FINAL_STEPS: RoadmapStep[] = [
     description:
       "Persiapkan portfolio, CV, technical interview, dan automation assessment.",
     icon: BriefcaseBusiness,
-    status: "locked",
+    status: "not-started",
   },
 ];

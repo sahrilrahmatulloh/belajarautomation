@@ -3,7 +3,6 @@ import {
   ArrowRight,
   CheckCircle2,
   Clock3,
-  Trophy,
 } from "lucide-react";
 
 import { Challenge } from "@/types/Challenge";
@@ -85,11 +84,6 @@ export default function ChallengeCard({
         <span className="flex items-center gap-1">
           <Clock3 className="h-3.5 w-3.5" />
           {challenge.duration}
-        </span>
-
-        <span className="flex items-center gap-1 font-medium text-primary">
-          <Trophy className="h-3.5 w-3.5" />
-          +{challenge.rp} RP
         </span>
       </div>
 

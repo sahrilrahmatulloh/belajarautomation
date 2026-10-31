@@ -4,7 +4,6 @@ import {
   ArrowLeft,
   CheckCircle2,
   Clock3,
-  Lock,
   PlayCircle,
 } from "lucide-react";
 
@@ -138,8 +137,6 @@ export default function CourseDetailPage({
                     <div className="shrink-0">
                       {lesson.isCompleted ? (
                         <CheckCircle2 className="h-5 w-5 text-primary" />
-                      ) : lesson.isLocked ? (
-                        <Lock className="h-5 w-5 text-muted-foreground" />
                       ) : (
                         <PlayCircle className="h-5 w-5 text-muted-foreground" />
                       )}
@@ -157,14 +154,6 @@ export default function CourseDetailPage({
                     </div>
                   </div>
                 );
-
-                if (lesson.isLocked) {
-                  return (
-                    <div key={lesson.id}>
-                      {content}
-                    </div>
-                  );
-                }
 
                 return (
                   <Link

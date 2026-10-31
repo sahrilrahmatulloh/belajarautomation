@@ -5,6 +5,7 @@ import ChallengeWorkspace from "@/components/playground/ChallengeWorkspace";
 
 import { CHALLENGES } from "@/data/challenges";
 import { CHALLENGE_DETAILS } from "@/data/challengeDetails";
+import { PublicChallengeDetail } from "@/types/ChallengeDetail";
 
 interface ChallengePageProps {
   params: Promise<{
@@ -34,11 +35,20 @@ export default async function ChallengePage({
     Object.entries(challengeData).filter(([key]) => key !== "icon")
   ) as Omit<typeof challengeData, "icon">;
 
+  // Kunci jawaban tidak boleh dikirim ke browser; pengecekan ada di actions.ts.
+  const publicDetail: PublicChallengeDetail = {
+    slug: detail.slug,
+    instruction: detail.instruction,
+    requirements: detail.requirements,
+    code: detail.code,
+    placeholder: detail.placeholder,
+  };
+
   return (
     <DashboardLayout>
       <ChallengeWorkspace
         challenge={challenge}
-        detail={detail}
+        detail={publicDetail}
       />
     </DashboardLayout>
   );

@@ -19,7 +19,7 @@ export const MOBILE_AUTOMATION_STEPS: RoadmapStep[] = [
     description:
       "Pelajari karakteristik mobile testing, Android, iOS, emulator, simulator, dan real device.",
     icon: BookOpenCheck,
-    status: "completed",
+    status: "not-started",
   },
   {
     id: 2,
@@ -27,7 +27,7 @@ export const MOBILE_AUTOMATION_STEPS: RoadmapStep[] = [
     description:
       "Bangun fondasi programming untuk membuat mobile automation.",
     icon: Code2,
-    status: "current",
+    status: "not-started",
   },
   {
     id: 3,
@@ -35,7 +35,7 @@ export const MOBILE_AUTOMATION_STEPS: RoadmapStep[] = [
     description:
       "Kelola automation project menggunakan version control.",
     icon: GitBranch,
-    status: "locked",
+    status: "not-started",
   },
   {
     id: 4,
@@ -43,7 +43,7 @@ export const MOBILE_AUTOMATION_STEPS: RoadmapStep[] = [
     description:
       "Pelajari Appium, locator, capabilities, gestures, dan mobile test execution.",
     icon: Smartphone,
-    status: "locked",
+    status: "not-started",
   },
   {
     id: 5,
@@ -51,7 +51,7 @@ export const MOBILE_AUTOMATION_STEPS: RoadmapStep[] = [
     description:
       "Gunakan API testing untuk mendukung mobile end-to-end testing.",
     icon: Network,
-    status: "locked",
+    status: "not-started",
   },
   {
     id: 6,
@@ -59,7 +59,7 @@ export const MOBILE_AUTOMATION_STEPS: RoadmapStep[] = [
     description:
       "Jalankan automation pada berbagai device dan environment.",
     icon: Cloud,
-    status: "locked",
+    status: "not-started",
   },
   {
     id: 7,
@@ -67,7 +67,7 @@ export const MOBILE_AUTOMATION_STEPS: RoadmapStep[] = [
     description:
       "Bangun framework yang scalable, reusable, dan maintainable.",
     icon: Workflow,
-    status: "locked",
+    status: "not-started",
   },
   {
     id: 8,
@@ -75,7 +75,7 @@ export const MOBILE_AUTOMATION_STEPS: RoadmapStep[] = [
     description:
       "Integrasikan mobile automation ke automation pipeline.",
     icon: Container,
-    status: "locked",
+    status: "not-started",
   },
   {
     id: 9,
@@ -83,6 +83,6 @@ export const MOBILE_AUTOMATION_STEPS: RoadmapStep[] = [
     description:
       "Bangun project mobile automation berdasarkan simulasi workflow perusahaan.",
     icon: FolderKanban,
-    status: "locked",
+    status: "not-started",
   },
 ];

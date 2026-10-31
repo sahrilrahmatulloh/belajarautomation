@@ -19,7 +19,7 @@ export const WEB_AUTOMATION_STEPS: RoadmapStep[] = [
     description:
       "Pelajari dasar QA, web testing, browser, DOM, HTTP, dan strategi pengujian aplikasi web.",
     icon: BookOpenCheck,
-    status: "completed",
+    status: "not-started",
   },
   {
     id: 2,
@@ -27,7 +27,7 @@ export const WEB_AUTOMATION_STEPS: RoadmapStep[] = [
     description:
       "Pelajari JavaScript, TypeScript, atau Java sebagai fondasi web automation.",
     icon: Code2,
-    status: "current",
+    status: "not-started",
   },
   {
     id: 3,
@@ -35,7 +35,7 @@ export const WEB_AUTOMATION_STEPS: RoadmapStep[] = [
     description:
       "Pelajari version control, branching, pull request, dan collaboration workflow.",
     icon: GitBranch,
-    status: "locked",
+    status: "not-started",
   },
   {
     id: 4,
@@ -43,7 +43,7 @@ export const WEB_AUTOMATION_STEPS: RoadmapStep[] = [
     description:
       "Bangun automated test menggunakan Playwright atau Selenium.",
     icon: Globe,
-    status: "locked",
+    status: "not-started",
   },
   {
     id: 5,
@@ -51,7 +51,7 @@ export const WEB_AUTOMATION_STEPS: RoadmapStep[] = [
     description:
       "Integrasikan API testing untuk mendukung end-to-end automation.",
     icon: Network,
-    status: "locked",
+    status: "not-started",
   },
   {
     id: 6,
@@ -59,7 +59,7 @@ export const WEB_AUTOMATION_STEPS: RoadmapStep[] = [
     description:
       "Pelajari Page Object Model, fixtures, test data, reporting, dan reusable architecture.",
     icon: Workflow,
-    status: "locked",
+    status: "not-started",
   },
   {
     id: 7,
@@ -67,7 +67,7 @@ export const WEB_AUTOMATION_STEPS: RoadmapStep[] = [
     description:
       "Jalankan automated test melalui pipeline dan container environment.",
     icon: Container,
-    status: "locked",
+    status: "not-started",
   },
   {
     id: 8,
@@ -75,7 +75,7 @@ export const WEB_AUTOMATION_STEPS: RoadmapStep[] = [
     description:
       "Bangun automation project end-to-end seperti workflow di perusahaan.",
     icon: FolderKanban,
-    status: "locked",
+    status: "not-started",
   },
   {
     id: 9,
@@ -83,6 +83,6 @@ export const WEB_AUTOMATION_STEPS: RoadmapStep[] = [
     description:
       "Persiapkan portfolio, GitHub, CV, dan technical interview.",
     icon: BriefcaseBusiness,
-    status: "locked",
+    status: "not-started",
   },
 ];

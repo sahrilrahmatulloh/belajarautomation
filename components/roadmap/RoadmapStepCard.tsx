@@ -1,6 +1,6 @@
 import {
   Check,
-  Lock,
+  Circle,
   Play,
 } from "lucide-react";
 
@@ -42,8 +42,8 @@ export default function RoadmapStepCard({
               <Play className="h-5 w-5" />
             )}
 
-            {step.status === "locked" && (
-              <Lock className="h-4 w-4 text-muted-foreground" />
+            {step.status === "not-started" && (
+              <Circle className="h-4 w-4 text-muted-foreground" />
             )}
           </div>
 

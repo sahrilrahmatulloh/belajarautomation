@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { BookOpen, Lock } from "lucide-react";
+import { BookOpen } from "lucide-react";
 
 import { Course } from "@/types/Course";
 import { Progress } from "@/components/ui/progress";
@@ -86,14 +86,8 @@ export default function CourseCard({
 
       <div className="border-t border-border bg-muted/30 px-5 py-3">
         <div className="flex items-center justify-between gap-4">
-          <span
-            className={
-              course.isPremium
-                ? "font-medium text-primary"
-                : "font-medium text-green-600 dark:text-green-400"
-            }
-          >
-            {course.isPremium ? "Premium" : "Free"}
+          <span className="font-medium text-green-600 dark:text-green-400">
+            Gratis
           </span>
 
           {course.progress !== undefined ? (
@@ -107,8 +101,6 @@ export default function CourseCard({
                 {course.progress}%
               </span>
             </div>
-          ) : course.isPremium ? (
-            <Lock className="h-4 w-4 text-primary" />
           ) : null}
         </div>
       </div>

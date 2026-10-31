@@ -5,7 +5,8 @@ export interface RoadmapStep {
   title: string;
   description: string;
   icon: LucideIcon;
-  status: "completed" | "current" | "locked";
+  // Hanya "not-started" yang dipakai sampai ada data progress pengguna nyata.
+  status: "completed" | "current" | "not-started";
 }
 
 export interface RoadmapTrack {

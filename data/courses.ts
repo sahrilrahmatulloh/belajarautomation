@@ -23,7 +23,6 @@ export const COURSES: Course[] = [
     category: "Fundamental",
     level: "Beginner",
     lessons: 16,
-    isPremium: false,
     icon: BookOpenCheck,
   },
   {
@@ -35,7 +34,6 @@ export const COURSES: Course[] = [
     category: "Programming",
     level: "Beginner",
     lessons: 24,
-    isPremium: true,
     icon: Code2,
   },
   {
@@ -47,7 +45,6 @@ export const COURSES: Course[] = [
     category: "Programming",
     level: "Beginner",
     lessons: 20,
-    isPremium: false,
     icon: Braces,
   },
   {
@@ -59,7 +56,6 @@ export const COURSES: Course[] = [
     category: "Programming",
     level: "Beginner",
     lessons: 22,
-    isPremium: true,
     icon: Code2,
   },
   {
@@ -71,7 +67,6 @@ export const COURSES: Course[] = [
     category: "Version Control",
     level: "Beginner",
     lessons: 12,
-    isPremium: false,
     icon: GitBranch,
   },
   {
@@ -83,7 +78,6 @@ export const COURSES: Course[] = [
     category: "Web Automation",
     level: "Advanced",
     lessons: 28,
-    isPremium: true,
     icon: Play,
   },
   {
@@ -95,7 +89,6 @@ export const COURSES: Course[] = [
     category: "Web Automation",
     level: "Advanced",
     lessons: 30,
-    isPremium: true,
     icon: Globe,
   },
   {
@@ -107,7 +100,6 @@ export const COURSES: Course[] = [
     category: "Web Automation",
     level: "Advanced",
     lessons: 18,
-    isPremium: true,
     icon: TestTube2,
   },
   {
@@ -119,7 +111,6 @@ export const COURSES: Course[] = [
     category: "BDD",
     level: "Intermediate",
     lessons: 16,
-    isPremium: true,
     icon: Workflow,
   },
   {
@@ -131,7 +122,6 @@ export const COURSES: Course[] = [
     category: "Low-Code",
     level: "Beginner",
     lessons: 14,
-    isPremium: true,
     icon: Blocks,
   },
   {
@@ -143,7 +133,6 @@ export const COURSES: Course[] = [
     category: "Web Automation",
     level: "Advanced",
     lessons: 12,
-    isPremium: true,
     icon: Bot,
   },
 ];

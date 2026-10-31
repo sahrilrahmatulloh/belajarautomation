@@ -20,7 +20,6 @@ export interface Challenge {
   description: string;
   category: ChallengeCategory;
   difficulty: ChallengeDifficulty;
-  rp: number;
   duration: string;
   completed: boolean;
   icon: LucideIcon;

@@ -8,7 +8,6 @@ export interface Course {
   category: string;
   level: "Beginner" | "Intermediate" | "Advanced";
   lessons: number;
-  isPremium: boolean;
   progress?: number;
   icon: LucideIcon;
 }

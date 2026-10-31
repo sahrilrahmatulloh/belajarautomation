@@ -16,7 +16,6 @@ export const COURSE_DETAILS: CourseDetail[] = [
             title: "Apa itu Quality Assurance?",
             duration: "5 menit",
             isCompleted: false,
-            isLocked: false,
           },
           {
             id: 2,
@@ -24,7 +23,6 @@ export const COURSE_DETAILS: CourseDetail[] = [
             title: "QA vs QC",
             duration: "7 menit",
             isCompleted: false,
-            isLocked: false,
           },
           {
             id: 3,
@@ -32,7 +30,6 @@ export const COURSE_DETAILS: CourseDetail[] = [
             title: "Peran QA Engineer",
             duration: "8 menit",
             isCompleted: false,
-            isLocked: false,
           },
         ],
       },
@@ -46,7 +43,6 @@ export const COURSE_DETAILS: CourseDetail[] = [
             title: "Software Development Life Cycle",
             duration: "10 menit",
             isCompleted: false,
-            isLocked: false,
           },
           {
             id: 5,
@@ -54,7 +50,6 @@ export const COURSE_DETAILS: CourseDetail[] = [
             title: "Software Testing Life Cycle",
             duration: "10 menit",
             isCompleted: false,
-            isLocked: false,
           },
           {
             id: 6,
@@ -62,7 +57,6 @@ export const COURSE_DETAILS: CourseDetail[] = [
             title: "Agile & Scrum untuk QA",
             duration: "12 menit",
             isCompleted: false,
-            isLocked: false,
           },
         ],
       },
@@ -76,7 +70,6 @@ export const COURSE_DETAILS: CourseDetail[] = [
             title: "Jenis-Jenis Software Testing",
             duration: "12 menit",
             isCompleted: false,
-            isLocked: false,
           },
           {
             id: 8,
@@ -84,7 +77,6 @@ export const COURSE_DETAILS: CourseDetail[] = [
             title: "Membuat Test Scenario",
             duration: "10 menit",
             isCompleted: false,
-            isLocked: false,
           },
           {
             id: 9,
@@ -92,7 +84,6 @@ export const COURSE_DETAILS: CourseDetail[] = [
             title: "Membuat Test Case",
             duration: "15 menit",
             isCompleted: false,
-            isLocked: false,
           },
           {
             id: 10,
@@ -100,7 +91,6 @@ export const COURSE_DETAILS: CourseDetail[] = [
             title: "Positive & Negative Testing",
             duration: "8 menit",
             isCompleted: false,
-            isLocked: false,
           },
         ],
       },
@@ -114,7 +104,6 @@ export const COURSE_DETAILS: CourseDetail[] = [
             title: "Apa itu Bug?",
             duration: "6 menit",
             isCompleted: false,
-            isLocked: false,
           },
           {
             id: 12,
@@ -122,7 +111,6 @@ export const COURSE_DETAILS: CourseDetail[] = [
             title: "Membuat Bug Report",
             duration: "15 menit",
             isCompleted: false,
-            isLocked: false,
           },
           {
             id: 13,
@@ -130,7 +118,6 @@ export const COURSE_DETAILS: CourseDetail[] = [
             title: "Severity vs Priority",
             duration: "10 menit",
             isCompleted: false,
-            isLocked: false,
           },
           {
             id: 14,
@@ -138,7 +125,6 @@ export const COURSE_DETAILS: CourseDetail[] = [
             title: "Bug Life Cycle",
             duration: "10 menit",
             isCompleted: false,
-            isLocked: false,
           },
         ],
       },
@@ -152,7 +138,6 @@ export const COURSE_DETAILS: CourseDetail[] = [
             title: "Workflow Testing dalam Project",
             duration: "12 menit",
             isCompleted: false,
-            isLocked: false,
           },
           {
             id: 16,
@@ -160,7 +145,6 @@ export const COURSE_DETAILS: CourseDetail[] = [
             title: "Next Step sebagai QA Engineer",
             duration: "8 menit",
             isCompleted: false,
-            isLocked: false,
           },
         ],
       },
@@ -182,7 +166,6 @@ export const COURSE_DETAILS: CourseDetail[] = [
             title: "Apa itu Playwright?",
             duration: "5 menit",
             isCompleted: false,
-            isLocked: false,
           },
           {
             id: 2,
@@ -190,7 +173,6 @@ export const COURSE_DETAILS: CourseDetail[] = [
             title: "Installation & Setup",
             duration: "10 menit",
             isCompleted: false,
-            isLocked: false,
           },
           {
             id: 3,
@@ -198,7 +180,6 @@ export const COURSE_DETAILS: CourseDetail[] = [
             title: "Membuat Test Pertama",
             duration: "12 menit",
             isCompleted: false,
-            isLocked: false,
           },
         ],
       },
@@ -212,7 +193,6 @@ export const COURSE_DETAILS: CourseDetail[] = [
             title: "Memahami Locator",
             duration: "15 menit",
             isCompleted: false,
-            isLocked: false,
           },
           {
             id: 5,
@@ -220,7 +200,6 @@ export const COURSE_DETAILS: CourseDetail[] = [
             title: "User Actions",
             duration: "12 menit",
             isCompleted: false,
-            isLocked: false,
           },
           {
             id: 6,
@@ -228,7 +207,6 @@ export const COURSE_DETAILS: CourseDetail[] = [
             title: "Assertions",
             duration: "15 menit",
             isCompleted: false,
-            isLocked: false,
           },
         ],
       },
@@ -242,7 +220,6 @@ export const COURSE_DETAILS: CourseDetail[] = [
             title: "Page Object Model",
             duration: "20 menit",
             isCompleted: false,
-            isLocked: true,
           },
           {
             id: 8,
@@ -250,7 +227,6 @@ export const COURSE_DETAILS: CourseDetail[] = [
             title: "API Testing dengan Playwright",
             duration: "20 menit",
             isCompleted: false,
-            isLocked: true,
           },
         ],
       },
