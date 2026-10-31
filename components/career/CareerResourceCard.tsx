@@ -18,7 +18,7 @@ export default function CareerResourceCard({
     resource.status === "coming-soon";
 
   return (
-    <article className="flex h-full flex-col rounded-3xl border border-border bg-card p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
+    <article className="flex h-full flex-col rounded-2xl border border-border bg-card p-5 transition-all duration-150 hover:border-primary/30 hover:shadow-md">
       <div className="flex items-start justify-between gap-4">
         <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-muted">
           <Icon className="h-6 w-6" />

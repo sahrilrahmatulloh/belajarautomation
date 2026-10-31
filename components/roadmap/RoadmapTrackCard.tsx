@@ -12,7 +12,7 @@ export default function RoadmapTrackCard({
   const Icon = track.icon;
 
   return (
-    <div className="rounded-3xl border border-border bg-card p-6 transition-all hover:-translate-y-1 hover:shadow-md">
+    <div className="rounded-2xl border border-border bg-card p-5 transition-colors hover:border-primary/30 sm:p-6">
       <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-muted">
         <Icon className="h-6 w-6" />
       </div>
@@ -39,9 +39,10 @@ export default function RoadmapTrackCard({
 
       <button
         type="button"
-        className="mt-6 w-full rounded-xl border border-border py-3 text-sm font-medium transition-colors hover:bg-accent"
+        disabled
+        className="mt-6 w-full cursor-not-allowed rounded-xl border border-border py-3 text-sm font-medium text-muted-foreground opacity-60"
       >
-        Pilih Track
+        Pemilihan track belum tersedia
       </button>
     </div>
   );

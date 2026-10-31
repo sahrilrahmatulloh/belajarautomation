@@ -1,10 +1,11 @@
 import BookCard from "@/components/books/BookCard";
 import { BOOKS } from "@/data/books";
+import Link from "next/link";
 
 export default function BooksSection() {
   return (
     <section>
-      <div className="mb-6 flex items-center justify-between">
+        <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
         <div>
           <h2 className="text-2xl font-bold text-foreground">
             Books & E-Books
@@ -15,9 +16,9 @@ export default function BooksSection() {
           </p>
         </div>
 
-        <button className="text-sm font-medium text-blue-600 hover:underline dark:text-blue-400">
-          View All
-        </button>
+        <Link href="/books" className="text-sm font-medium text-primary hover:underline">
+          Lihat semua buku
+        </Link>
       </div>
 
       <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">

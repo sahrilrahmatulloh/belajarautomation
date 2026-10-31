@@ -15,14 +15,12 @@ const benefits = [
 
 export default function PremiumSection() {
   return (
-    <section className="relative overflow-hidden rounded-3xl border border-border bg-card p-8 text-card-foreground shadow-sm">
-      {/* Decoration */}
-      <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-blue-500/10 blur-3xl" />
+    <section className="relative overflow-hidden rounded-2xl border border-border bg-card p-5 text-card-foreground shadow-sm sm:p-8">
 
       <div className="relative grid items-center gap-8 lg:grid-cols-2">
         {/* Left */}
         <div>
-          <div className="inline-flex items-center gap-2 rounded-full bg-blue-100 px-3 py-1 text-sm font-medium text-blue-700 dark:bg-blue-950 dark:text-blue-300">
+          <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-primary">
             <Crown className="h-4 w-4" />
             Premium Membership
           </div>
@@ -37,8 +35,8 @@ export default function PremiumSection() {
             dan resource premium untuk mempercepat proses belajarmu.
           </p>
 
-          <Button className="mt-6 rounded-xl">
-            Upgrade ke Premium
+          <Button disabled className="mt-6 cursor-not-allowed rounded-xl opacity-50">
+            Upgrade belum tersedia
             <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
         </div>
@@ -46,7 +44,7 @@ export default function PremiumSection() {
         {/* Right */}
         <div className="rounded-2xl border border-border bg-background/60 p-6">
           <div className="mb-5 flex items-center gap-2">
-            <Sparkles className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+            <Sparkles className="h-5 w-5 text-primary" />
 
             <h3 className="font-semibold">
               Yang kamu dapatkan
@@ -59,8 +57,8 @@ export default function PremiumSection() {
                 key={benefit}
                 className="flex items-center gap-3"
               >
-                <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-950">
-                  <Check className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/10">
+                  <Check className="h-4 w-4 text-primary" />
                 </div>
 
                 <span className="text-sm">

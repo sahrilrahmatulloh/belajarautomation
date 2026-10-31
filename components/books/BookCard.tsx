@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 
 import {
@@ -9,6 +8,7 @@ import {
 } from "lucide-react";
 
 import type { Book } from "@/types/book";
+import ContentCover from "@/components/common/ContentCover";
 
 interface BookCardProps {
   book: Book; 
@@ -27,14 +27,15 @@ export default function BookCard({
   ).format(book.price);
 
   return (
-    <article className="group flex h-full flex-col overflow-hidden rounded-3xl border border-border bg-card shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
+    <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-card transition-all duration-150 hover:border-primary/30 hover:shadow-md">
       {/* Cover */}
       <div className="relative aspect-[4/3] overflow-hidden bg-muted">
-        <Image
+        <ContentCover
           src={book.cover}
-          alt={book.title}
-          fill
-          className="object-cover transition-transform duration-300 group-hover:scale-105"
+          title={book.title}
+          category={`${book.level} · ${book.format}`}
+          kind="book"
+          className="object-cover transition-transform duration-200 group-hover:scale-[1.02]"
         />
 
         {book.owned && (
@@ -76,10 +77,11 @@ export default function BookCard({
           {book.owned ? (
             <button
               type="button"
-              className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary py-3 text-sm font-medium text-primary-foreground"
+              disabled
+              className="flex w-full cursor-not-allowed items-center justify-center gap-2 rounded-xl bg-primary py-3 text-sm font-medium text-primary-foreground opacity-50"
             >
               <Download className="h-4 w-4" />
-              Download PDF
+              Download belum tersedia
             </button>
           ) : (
             <Link

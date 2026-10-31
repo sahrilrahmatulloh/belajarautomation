@@ -70,9 +70,16 @@ export default function BlogPage() {
           onCategoryChange={setActiveCategory}
         />
 
-        <ArticleGrid
-          articles={filteredArticles}
-        />
+        {filteredArticles.length > 0 ? (
+          <ArticleGrid articles={filteredArticles} />
+        ) : (
+          <div className="rounded-2xl border border-dashed border-border bg-card px-6 py-12 text-center">
+            <h3 className="font-semibold">Artikel tidak ditemukan</h3>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Coba kata kunci atau kategori lain.
+            </p>
+          </div>
+        )}
       </section>
     </div>
   );

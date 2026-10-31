@@ -29,9 +29,10 @@ export default async function ChallengePage({
     notFound();
   }
 
-  // Hapus React component `icon` sebelum dikirim
-  // dari Server Component ke Client Component
-  const { icon, ...challenge } = challengeData;
+  // Hapus React component `icon` sebelum mengirim data ke Client Component.
+  const challenge = Object.fromEntries(
+    Object.entries(challengeData).filter(([key]) => key !== "icon")
+  ) as Omit<typeof challengeData, "icon">;
 
   return (
     <DashboardLayout>

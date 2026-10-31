@@ -24,7 +24,7 @@ export default function DashboardLayout({
   };
 
   return (
-    <div className="flex h-screen w-full overflow-hidden bg-background text-foreground">
+    <div className="flex h-dvh w-full overflow-hidden bg-background text-foreground">
       {/* Desktop Sidebar */}
       {isDesktopSidebarOpen && (
         <div className="hidden shrink-0 lg:block">
@@ -39,7 +39,7 @@ export default function DashboardLayout({
             type="button"
             aria-label="Tutup sidebar"
             onClick={() => setIsMobileSidebarOpen(false)}
-            className="fixed inset-0 z-40 bg-black/50 lg:hidden"
+            className="fixed inset-0 z-40 bg-slate-950/55 backdrop-blur-[2px] lg:hidden"
           />
 
           <div className="fixed inset-y-0 left-0 z-50 lg:hidden">
@@ -52,7 +52,7 @@ export default function DashboardLayout({
       <div className="flex min-w-0 flex-1 flex-col">
         <Navbar onToggleSidebar={toggleSidebar} />
 
-        <main className="min-w-0 flex-1 overflow-y-auto bg-muted/30 p-4 sm:p-6 lg:p-8">
+        <main className="min-w-0 flex-1 overflow-y-auto bg-background p-4 sm:p-5 lg:p-6">
           {children}
         </main>
       </div>

@@ -22,7 +22,7 @@ export default function ProfileDropdown() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
-        className="flex items-center gap-3 rounded-xl p-1 transition-colors hover:bg-accent"
+        className="flex min-h-11 min-w-11 items-center gap-3 rounded-xl p-1 transition-colors hover:bg-accent"
         aria-label="Buka menu profil"
       >
         <Avatar className="h-8 w-8 sm:h-10 sm:w-10">

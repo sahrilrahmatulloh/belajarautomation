@@ -37,12 +37,13 @@ export default function ChallengeFilters({
           <button
             key={category}
             type="button"
+              aria-pressed={isActive}
             onClick={() =>
               onCategoryChange(category)
             }
             className={`rounded-xl border px-4 py-2 text-sm font-medium transition-colors ${
               isActive
-                ? "border-violet-600 bg-violet-600 text-white"
+                ? "border-primary bg-primary text-primary-foreground"
                 : "border-border bg-background text-muted-foreground hover:bg-accent hover:text-foreground"
             }`}
           >

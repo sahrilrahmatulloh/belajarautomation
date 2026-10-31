@@ -1,46 +1,39 @@
-import { ArrowRight, BookOpen } from "lucide-react";
-import Link from "next/link";
+import { Quote } from "lucide-react";
 
 export default function WelcomeBanner() {
   return (
-    <section className="overflow-hidden rounded-3xl border border-border bg-card p-8 text-card-foreground shadow-sm">
-      <div className="grid items-center gap-8 lg:grid-cols-2">
-        {/* Left */}
-        <div>
-          <span className="rounded-full bg-blue-100 px-3 py-1 text-sm font-medium text-blue-700 dark:bg-blue-950 dark:text-blue-300">
-            👋 Selamat Datang
-          </span>
+    <section className="relative isolate overflow-hidden rounded-xl border border-blue-100 bg-gradient-to-br from-blue-50 via-white to-sky-100 p-5 text-slate-950 shadow-sm dark:border-blue-900/50 dark:from-slate-900 dark:via-slate-900 dark:to-blue-950/70 dark:text-white sm:p-6">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -right-10 -top-16 hidden h-72 w-44 rotate-[38deg] rounded-[2.5rem] border border-blue-400/20 bg-blue-400/10 lg:block"
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute right-20 top-12 hidden h-52 w-28 -rotate-[38deg] rounded-[2rem] border border-sky-400/20 bg-sky-300/15 lg:block"
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute bottom-[-6rem] right-48 hidden h-44 w-28 rotate-[38deg] rounded-[2rem] border border-blue-400/15 bg-blue-500/10 lg:block"
+      />
 
-          <h1 className="mt-5 text-4xl font-bold leading-tight text-foreground">
-            Belajar QA Automation
-            <br />
-            dari Nol hingga Siap Kerja.
-          </h1>
+      <div className="relative max-w-2xl sm:pr-32">
+        <p className="text-xs font-semibold text-brand-blue sm:text-sm">
+          Belajar · Practice · Build · Grow
+        </p>
 
-          <p className="mt-4 max-w-xl text-muted-foreground">
-            Pelajari fondasi software testing, praktikkan automation, dan susun
-            langkah belajar berikutnya melalui materi serta roadmap yang tersedia.
-          </p>
+        <h1 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">
+          Halo, <span className="text-primary">Sobat QA!</span>
+        </h1>
 
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Link href="/learn" className="inline-flex items-center justify-center rounded-xl bg-primary px-4 py-3 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/80">
-              <BookOpen className="mr-2 h-4 w-4" />
-              Mulai Belajar
-            </Link>
+        <p className="mt-2 max-w-xl text-sm leading-5 text-slate-600 dark:text-slate-300 sm:text-base sm:leading-6">
+          Terus belajar dan bangun skill QA Automation untuk masa depan yang lebih baik.
+        </p>
 
-            <Link href="/roadmap" className="inline-flex items-center justify-center rounded-xl border border-border px-4 py-3 text-sm font-medium transition-colors hover:bg-accent">
-              Roadmap
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Link>
-          </div>
-        </div>
+        <blockquote className="mt-3 flex max-w-lg items-start gap-2 rounded-lg border border-white/70 bg-white/75 px-3 py-2.5 text-sm leading-5 text-slate-700 shadow-sm backdrop-blur-sm dark:border-white/10 dark:bg-slate-950/45 dark:text-slate-200">
+          <Quote className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
+          <span>Setiap langkah kecil hari ini membawa kamu lebih dekat ke tujuan besar.</span>
+        </blockquote>
 
-        {/* Right */}
-        <div className="flex justify-center">
-          <div className="flex h-72 w-72 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-950">
-            <span className="text-7xl">👨‍💻</span>
-          </div>
-        </div>
       </div>
     </section>
   );

@@ -42,6 +42,9 @@ export default function PreferenceSettings() {
       <p className="mt-1 text-sm text-muted-foreground">
         Atur notifikasi yang ingin kamu terima.
       </p>
+      <p className="mt-2 text-xs text-muted-foreground">
+        Preferensi hanya berlaku selama halaman ini terbuka dan belum disimpan.
+      </p>
 
       <div className="mt-6 divide-y divide-border">
         {preferences.map((preference) => {

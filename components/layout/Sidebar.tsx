@@ -14,7 +14,6 @@ import {
   Newspaper,
   Briefcase,
   Crown,
-  ArrowRight,
 } from "lucide-react";
 
 const menuItems = [
@@ -44,7 +43,7 @@ const menuItems = [
     icon: FolderKanban,
   },
   {
-    label: "Books",
+    label: "Buku",
     href: "/books",
     icon: Library,
   },
@@ -54,9 +53,14 @@ const menuItems = [
     icon: Newspaper,
   },
   {
-    label: "Career",
+    label: "Karier",
     href: "/career",
     icon: Briefcase,
+  },
+  {
+    label: "Premium",
+    href: "/premium",
+    icon: Crown,
   },
 ];
 
@@ -64,7 +68,7 @@ export default function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="flex h-screen w-64 flex-col border-r border-border bg-background text-foreground">
+    <aside className="flex h-dvh w-60 shrink-0 flex-col border-r border-sidebar-border bg-sidebar text-sidebar-foreground">
       {/* Brand */}
       <div className="p-6">
         <Link
@@ -72,7 +76,7 @@ export default function Sidebar() {
           className="flex items-center gap-3"
         >
           <Image
-            src="/logo.png"
+            src="/logo-v2.png"
             alt="belajarautomation.id logo"
             width={36}
             height={36}
@@ -81,12 +85,12 @@ export default function Sidebar() {
           />
 
           <div className="min-w-0">
-            <h1 className="whitespace-nowrap text-lg font-bold tracking-tight">
+            <h1 className="whitespace-nowrap text-base font-bold tracking-tight">
               belajarautomation.id
             </h1>
 
             <p className="mt-0.5 text-xs text-muted-foreground">
-              Learn QA Automation
+              Learn · Practice · Build · Grow
             </p>
           </div>
         </Link>
@@ -106,17 +110,18 @@ export default function Sidebar() {
             <Link
               key={item.href}
               href={item.href}
+              aria-current={isActive ? "page" : undefined}
               className={`
-                flex w-full items-center gap-3 rounded-xl px-4 py-3
-                transition-colors
+                flex w-full items-center gap-3 rounded-lg px-3 py-2.5
+                text-sm transition-colors duration-150
                 ${
                   isActive
-                    ? "bg-primary text-primary-foreground"
+                    ? "bg-sidebar-primary text-sidebar-primary-foreground shadow-sm"
                     : "text-muted-foreground hover:bg-accent hover:text-foreground"
                 }
               `}
             >
-              <Icon size={20} />
+              <Icon size={18} aria-hidden="true" />
 
               <span className="font-medium">
                 {item.label}
@@ -126,34 +131,6 @@ export default function Sidebar() {
         })}
       </nav>
 
-      {/* Premium CTA */}
-      <div className="p-4">
-        <div className="rounded-2xl border border-border bg-card p-4">
-          <div className="flex items-start gap-3">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground">
-              <Crown className="h-5 w-5" />
-            </div>
-
-            <div>
-              <h3 className="text-sm font-semibold">
-                Upgrade Premium
-              </h3>
-
-              <p className="mt-1 text-xs leading-5 text-muted-foreground">
-                Akses semua materi dan fitur belajar.
-              </p>
-            </div>
-          </div>
-
-          <Link
-            href="/premium"
-            className="mt-4 flex w-full items-center justify-between rounded-xl bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
-          >
-            Lihat Premium
-            <ArrowRight className="h-4 w-4" />
-          </Link>
-        </div>
-      </div>
     </aside>
   );
 }

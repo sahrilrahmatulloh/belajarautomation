@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Bell, Menu, Search, SunMoon } from "lucide-react";
+import { Bell, Menu, SunMoon } from "lucide-react";
 import { useTheme } from "next-themes";
 
 import ProfileDropdown from "@/components/profile/ProfileDropdown";
@@ -22,27 +22,19 @@ export default function Navbar({
   };
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between gap-2 border-b border-border bg-background px-3 sm:px-4 lg:px-6">
+    <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between gap-2 border-b border-border bg-background/95 px-3 backdrop-blur supports-[backdrop-filter]:bg-background/85 sm:px-5 lg:px-7">
       {/* Left */}
-      <div className="flex min-w-0 flex-1 items-center gap-2 sm:gap-4">
+      <div className="flex min-w-0 flex-1 items-center">
         {/* Sidebar Toggle */}
         <button
           type="button"
           onClick={onToggleSidebar}
-          className="shrink-0 rounded-lg p-2 transition-colors hover:bg-accent"
+          className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-lg transition-colors duration-150 hover:bg-accent active:scale-95"
           aria-label="Buka atau tutup sidebar"
         >
           <Menu size={20} />
         </button>
 
-        <Link
-          href="/learn"
-          className="inline-flex min-w-0 items-center gap-2 rounded-lg border border-border px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
-          aria-label="Cari materi"
-        >
-          <Search size={18} aria-hidden="true" />
-          <span className="hidden sm:inline">Cari materi</span>
-        </Link>
       </div>
 
       {/* Right */}
@@ -51,7 +43,7 @@ export default function Navbar({
         <button
           type="button"
           onClick={toggleTheme}
-          className="rounded-lg p-2 transition-colors hover:bg-accent"
+          className="inline-flex h-11 w-11 items-center justify-center rounded-lg transition-colors duration-150 hover:bg-accent active:scale-95"
           aria-label="Ganti tema"
         >
           <SunMoon size={20} aria-hidden="true" />
@@ -60,7 +52,7 @@ export default function Navbar({
         {/* Notifications */}
         <Link
           href="/notifications"
-          className="relative rounded-lg p-2 transition-colors hover:bg-accent"
+          className="relative inline-flex h-11 w-11 items-center justify-center rounded-lg transition-colors duration-150 hover:bg-accent active:scale-95"
           aria-label="Notifikasi"
         >
           <Bell size={20} />

@@ -15,7 +15,7 @@ export default function ProjectCard({
   const Icon = project.icon;
 
   return (
-    <article className="flex h-full flex-col rounded-3xl border border-border bg-card p-5 shadow-sm">
+    <article className="flex h-full flex-col rounded-2xl border border-border bg-card p-5">
       <div className="flex items-start justify-between gap-4">
         <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-muted">
           <Icon className="h-6 w-6" />

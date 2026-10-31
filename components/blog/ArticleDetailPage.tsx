@@ -1,5 +1,5 @@
-import Image from "next/image";
 import Link from "next/link";
+import ContentCover from "@/components/common/ContentCover";
 
 import {
   ArrowLeft,
@@ -60,11 +60,11 @@ export default function ArticleDetailPage({
 
       {/* Cover */}
       <div className="relative mt-10 aspect-video overflow-hidden rounded-3xl border border-border bg-muted">
-        <Image
+        <ContentCover
           src={article.cover}
-          alt={article.title}
-          fill
-          priority
+          title={article.title}
+          category={article.category}
+          kind="article"
           className="object-cover"
         />
       </div>

@@ -1,49 +1,24 @@
-import WelcomeBanner from "@/components/dashboard/sections/WelcomeBanner";
-import CategorySection from "@/components/dashboard/sections/CategorySection";
-import RoadmapCard from "@/components/roadmap/RoadmapCard";
-
-import ProgressCard from "../cards/ProgressCard";
 import ContinueLearningCard from "../cards/ContinueLearningCard";
-import ActivityCard from "../cards/ActivityCard";
-
-import BooksSection from "./BooksSection";
-import PremiumSection from "./PremiumSection";
-import { ROADMAPS } from "@/data/roadmap";
+import DashboardStats from "./DashboardStats";
+import LearningRankCard from "./LearningRankCard";
+import RecommendationsSection from "./RecommendationsSection";
+import StudyCalendar from "./StudyCalendar";
+import WelcomeBanner from "./WelcomeBanner";
 
 export default function DashboardSection() {
   return (
-    <div className="grid w-full min-w-0 grid-cols-1 gap-6 lg:grid-cols-12">
-      <div className="min-w-0 lg:col-span-8">
+    <div className="mx-auto grid w-full max-w-[1600px] min-w-0 grid-cols-1 items-start gap-5 lg:grid-cols-[minmax(0,1.9fr)_minmax(300px,1fr)] lg:gap-6">
+      <div className="flex min-w-0 flex-col gap-5 lg:gap-6">
         <WelcomeBanner />
-      </div>
-
-      <div className="min-w-0 lg:col-span-4">
-        <RoadmapCard roadmap={ROADMAPS[0]} />
-      </div>
-
-      <div className="min-w-0 lg:col-span-4">
-        <ProgressCard />
-      </div>
-
-      <div className="min-w-0 lg:col-span-4">
+        <LearningRankCard />
         <ContinueLearningCard />
+        <RecommendationsSection />
       </div>
 
-      <div className="min-w-0 lg:col-span-4">
-        <ActivityCard />
-      </div>
-
-      <div className="min-w-0 lg:col-span-12">
-        <CategorySection />
-      </div>
-
-      <div className="min-w-0 lg:col-span-12">
-        <BooksSection />
-      </div>
-
-      <div className="min-w-0 lg:col-span-12">
-        <PremiumSection />
-      </div>
+      <aside className="flex min-w-0 flex-col gap-5 lg:gap-6" aria-label="Ringkasan belajar">
+        <StudyCalendar />
+        <DashboardStats />
+      </aside>
     </div>
   );
 }

@@ -1,5 +1,5 @@
-import Image from "next/image";
 import Link from "next/link";
+import ContentCover from "@/components/common/ContentCover";
 
 import {
   ArrowRight,
@@ -18,14 +18,14 @@ export default function FeaturedArticle({
   return (
     <Link
       href={`/blog/${article.slug}`}
-      className="group grid overflow-hidden rounded-3xl border border-border bg-card shadow-sm transition-all hover:shadow-md lg:grid-cols-2"
+      className="group grid overflow-hidden rounded-2xl border border-border bg-card transition-all duration-150 hover:border-primary/30 hover:shadow-md lg:grid-cols-2"
     >
       <div className="relative min-h-[280px] bg-muted">
-        <Image
+        <ContentCover
           src={article.cover}
-          alt={article.title}
-          fill
-          priority
+          title={article.title}
+          category={article.category}
+          kind="article"
           className="object-cover transition-transform duration-500 group-hover:scale-105"
         />
       </div>
