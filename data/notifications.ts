@@ -13,9 +13,9 @@ export const NOTIFICATIONS: Notification[] = [
   },
   {
     id: 2,
-    title: "Challenge selesai",
+    title: "Challenge baru di Playground",
     description:
-      "Kamu berhasil menyelesaikan challenge Playwright Locator dan mendapatkan RP.",
+      "Challenge API Response Validation sekarang bisa dicoba di Playground.",
     type: "playground",
     time: "2 jam lalu",
     read: false,
@@ -23,13 +23,13 @@ export const NOTIFICATIONS: Notification[] = [
   },
   {
     id: 3,
-    title: "E-book baru tersedia",
+    title: "eBook baru tersedia",
     description:
-      "Playwright from Zero to Hero sekarang tersedia di Books.",
+      "Playwright from Zero to Hero sekarang tersedia di eBook.",
     type: "book",
     time: "1 hari lalu",
     read: true,
-    href: "/books",
+    href: "/ebooks",
   },
   {
     id: 4,

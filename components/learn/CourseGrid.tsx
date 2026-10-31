@@ -47,11 +47,18 @@ export default function CourseGrid() {
             />
           ))}
         </div>
-      ) : (
+      ) : search.trim() ? (
         <div className="rounded-2xl border border-dashed border-border bg-card px-6 py-12 text-center">
           <h2 className="font-semibold">Materi tidak ditemukan</h2>
           <p className="mt-2 text-sm text-muted-foreground">
             Coba kata kunci atau kategori lain.
+          </p>
+        </div>
+      ) : (
+        <div className="rounded-2xl border border-dashed border-border bg-card px-6 py-12 text-center">
+          <h2 className="font-semibold">Materi {activeCategory} segera hadir</h2>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Materi untuk kategori ini sedang disiapkan. Sementara itu, coba kategori lain.
           </p>
         </div>
       )}

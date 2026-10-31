@@ -9,11 +9,11 @@ export default function BooksHeader() {
 
       <div>
         <h1 className="text-3xl font-bold tracking-tight">
-          Books
+          eBook
         </h1>
 
         <p className="mt-1 text-muted-foreground">
-          E-book praktis untuk meningkatkan skill QA Automation.
+          eBook praktis untuk meningkatkan skill QA Automation.
         </p>
       </div>
     </section>

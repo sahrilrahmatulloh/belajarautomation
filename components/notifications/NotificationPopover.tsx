@@ -1,44 +1,21 @@
 "use client";
 
-import { Bell, BookOpen, CheckCheck, Trophy } from "lucide-react";
+import Link from "next/link";
+import { Bell } from "lucide-react";
 
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { NOTIFICATIONS } from "@/data/notifications";
 
-const notifications = [
-  {
-    id: 1,
-    icon: BookOpen,
-    title: "Materi baru tersedia",
-    description: "Playwright Advanced sudah bisa dipelajari.",
-    time: "2 jam lalu",
-    unread: true,
-  },
-  {
-    id: 2,
-    icon: Trophy,
-    title: "Progress mingguan",
-    description: "Kamu sudah belajar selama 5 hari minggu ini.",
-    time: "5 jam lalu",
-    unread: true,
-  },
-  {
-    id: 3,
-    icon: CheckCheck,
-    title: "Lesson selesai",
-    description: "CSS Selector berhasil kamu selesaikan.",
-    time: "1 hari lalu",
-    unread: false,
-  },
-];
+import { notificationIcons } from "./NotificationItem";
 
 export default function NotificationPopover() {
-  const hasUnread = notifications.some(
-    (notification) => notification.unread
-  );
+  const unreadCount = NOTIFICATIONS.filter(
+    (notification) => !notification.read
+  ).length;
 
   return (
     <Popover>
@@ -48,7 +25,7 @@ export default function NotificationPopover() {
       >
         <Bell size={20} />
 
-        {hasUnread && (
+        {unreadCount > 0 && (
           <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-primary" />
         )}
       </PopoverTrigger>
@@ -66,7 +43,7 @@ export default function NotificationPopover() {
             </h3>
 
             <p className="text-xs text-muted-foreground">
-              2 notifikasi belum dibaca
+              {unreadCount} notifikasi belum dibaca
             </p>
           </div>
 
@@ -80,13 +57,13 @@ export default function NotificationPopover() {
 
         {/* Notification List */}
         <div className="max-h-[360px] overflow-y-auto">
-          {notifications.map((notification) => {
-            const Icon = notification.icon;
+          {NOTIFICATIONS.map((notification) => {
+            const Icon = notificationIcons[notification.type];
 
             return (
-              <button
+              <Link
                 key={notification.id}
-                type="button"
+                href={notification.href ?? "/notifications"}
                 className="flex w-full gap-3 border-b border-border p-4 text-left transition-colors last:border-b-0 hover:bg-accent"
               >
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/10">
@@ -99,7 +76,7 @@ export default function NotificationPopover() {
                       {notification.title}
                     </p>
 
-                    {notification.unread && (
+                    {!notification.read && (
                       <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-primary" />
                     )}
                   </div>
@@ -112,19 +89,19 @@ export default function NotificationPopover() {
                     {notification.time}
                   </p>
                 </div>
-              </button>
+              </Link>
             );
           })}
         </div>
 
         {/* Footer */}
         <div className="border-t border-border p-3">
-          <button
-            type="button"
-            className="w-full rounded-lg py-2 text-sm font-medium text-primary transition-colors hover:bg-accent"
+          <Link
+            href="/notifications"
+            className="block w-full rounded-lg py-2 text-center text-sm font-medium text-primary transition-colors hover:bg-accent"
           >
             Lihat semua notifikasi
-          </button>
+          </Link>
         </div>
       </PopoverContent>
     </Popover>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import Link from "next/link";
 
 import {
@@ -9,18 +9,21 @@ import {
   Clock3,
   RotateCcw,
   Send,
-  Trophy,
   XCircle,
 } from "lucide-react";
 
+import { checkChallengeAnswer } from "@/app/playground/[slug]/actions";
 import { Challenge } from "@/types/Challenge";
-import { ChallengeDetail } from "@/types/ChallengeDetail";
+import {
+  ChallengeCheckResult,
+  PublicChallengeDetail,
+} from "@/types/ChallengeDetail";
 
 type ChallengeWorkspaceData = Omit<Challenge, "icon">;
 
 interface ChallengeWorkspaceProps {
   challenge: ChallengeWorkspaceData;
-  detail: ChallengeDetail;
+  detail: PublicChallengeDetail;
 }
 
 export default function ChallengeWorkspace({
@@ -28,23 +31,16 @@ export default function ChallengeWorkspace({
   detail,
 }: ChallengeWorkspaceProps) {
   const [answer, setAnswer] = useState("");
-  const [result, setResult] = useState<
-    "success" | "failed" | null
-  >(null);
+  const [result, setResult] =
+    useState<ChallengeCheckResult | null>(null);
+  const [isChecking, startChecking] = useTransition();
 
   const handleSubmit = () => {
-    const normalizedAnswer = answer
-      .trim()
-      .toLowerCase();
-
-    const normalizedExpectedAnswer =
-      detail.expectedAnswer.toLowerCase();
-
-    const isCorrect = normalizedAnswer.includes(
-      normalizedExpectedAnswer
-    );
-
-    setResult(isCorrect ? "success" : "failed");
+    startChecking(async () => {
+      setResult(
+        await checkChallengeAnswer(detail.slug, answer)
+      );
+    });
   };
 
   const handleReset = () => {
@@ -88,11 +84,6 @@ export default function ChallengeWorkspace({
             <span className="flex items-center gap-1.5 rounded-full bg-muted px-3 py-2 text-xs">
               <Clock3 className="h-3.5 w-3.5" />
               {challenge.duration}
-            </span>
-
-            <span className="flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-2 text-xs font-medium text-primary">
-              <Trophy className="h-3.5 w-3.5" />
-              +{challenge.rp} RP
             </span>
           </div>
         </div>
@@ -173,18 +164,18 @@ export default function ChallengeWorkspace({
             <button
               type="button"
               onClick={handleSubmit}
-              disabled={!answer.trim()}
+              disabled={!answer.trim() || isChecking}
               className="flex min-h-11 flex-1 items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
             >
               <Send className="h-4 w-4" />
-              Submit Jawaban
+              {isChecking ? "Memeriksa..." : "Submit Jawaban"}
             </button>
           </div>
         </section>
       </div>
 
       {/* Success */}
-      {result === "success" && (
+      {result?.status === "success" && (
         <section className="rounded-3xl border border-green-500/30 bg-green-500/5 p-6">
           <div className="flex items-start gap-4">
             <CheckCircle2 className="h-7 w-7 shrink-0 text-green-500" />
@@ -195,11 +186,11 @@ export default function ChallengeWorkspace({
               </h2>
 
               <p className="mt-2 text-muted-foreground">
-                {detail.successFeedback}
+                {result.feedback}
               </p>
 
-              <p className="mt-4 font-semibold text-primary">
-                +{challenge.rp} RP · nilai latihan, belum disimpan
+              <p className="mt-4 text-sm text-muted-foreground">
+                Hasil latihan belum disimpan.
               </p>
             </div>
           </div>
@@ -207,7 +198,7 @@ export default function ChallengeWorkspace({
       )}
 
       {/* Failed */}
-      {result === "failed" && (
+      {result?.status === "failed" && (
         <section className="rounded-3xl border border-red-500/30 bg-red-500/5 p-6">
           <div className="flex items-start gap-4">
             <XCircle className="h-7 w-7 shrink-0 text-red-500" />

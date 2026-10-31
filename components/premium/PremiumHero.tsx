@@ -13,13 +13,13 @@ export default function PremiumHero() {
       </div>
 
       <h1 className="mx-auto mt-5 max-w-3xl text-3xl font-bold tracking-tight sm:text-5xl">
-        Tingkatkan skill QA Automation tanpa batas
+        Premium Lifetime untuk pengalaman belajar yang lebih personal
       </h1>
 
       <p className="mx-auto mt-5 max-w-2xl leading-7 text-muted-foreground">
-        Dapatkan akses penuh ke materi premium, roadmap, playground,
-        project, dan berbagai resource untuk membantu perjalanan
-        belajarmu.
+        Semua materi, roadmap, dan playground tetap gratis. Premium
+        memberi tema visual, warna aksen tambahan, serta klaim eBook
+        dan project, cukup sekali beli untuk selamanya.
       </p>
     </section>
   );

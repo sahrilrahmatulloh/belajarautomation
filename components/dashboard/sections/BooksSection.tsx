@@ -8,16 +8,16 @@ export default function BooksSection() {
         <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
         <div>
           <h2 className="text-2xl font-bold text-foreground">
-            Books & E-Books
+            eBook
           </h2>
 
           <p className="text-muted-foreground">
-            Pelajari QA Automation lebih dalam melalui buku dan panduan praktis.
+            Pelajari QA Automation lebih dalam melalui eBook dan panduan praktis.
           </p>
         </div>
 
-        <Link href="/books" className="text-sm font-medium text-primary hover:underline">
-          Lihat semua buku
+        <Link href="/ebooks" className="text-sm font-medium text-primary hover:underline">
+          Lihat semua eBook
         </Link>
       </div>
 

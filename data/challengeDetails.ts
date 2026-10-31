@@ -1,3 +1,6 @@
+// Berisi kunci jawaban: hanya boleh diimpor dari kode server.
+import "server-only";
+
 import { ChallengeDetail } from "@/types/ChallengeDetail";
 
 export const CHALLENGE_DETAILS: ChallengeDetail[] = [
@@ -12,7 +15,7 @@ export const CHALLENGE_DETAILS: ChallengeDetail[] = [
     ],
     code: `<button type="submit">Login</button>`,
     placeholder:
-      'page.getByRole("button", { name: "Login" })',
+      "page.getBy...",
     expectedAnswer:
       'page.getByRole("button", { name: "Login" })',
     successFeedback:
@@ -63,7 +66,7 @@ Displayed Total: Rp100.000`,
       "Expected status adalah 200",
     ],
     code: `GET /api/users/1`,
-    placeholder: "expect(response.status()).toBe(200);",
+    placeholder: "expect(response.status())...",
     expectedAnswer: "200",
     successFeedback:
       "Validasi status code berhasil ditemukan.",
@@ -83,7 +86,7 @@ await page.getByRole("button", { name: "Login" }).click();
 
 // Tulis assertion di bawah ini`,
     placeholder:
-      'await expect(page).toHaveURL(/dashboard/);',
+      "await expect(page)...",
     expectedAnswer: "dashboard",
     successFeedback:
       "Assertion berhasil memvalidasi bahwa user masuk ke halaman dashboard.",

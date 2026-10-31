@@ -1,5 +1,6 @@
+import Image from "next/image";
 import Link from "next/link";
-import { BookOpen, Lock } from "lucide-react";
+import { BookOpen, Clock3 } from "lucide-react";
 
 import { Course } from "@/types/Course";
 import { Progress } from "@/components/ui/progress";
@@ -14,12 +15,7 @@ const categoryAccents: Record<string, { surface: string; icon: string; badge: st
     icon: "text-brand-cyan",
     badge: "bg-brand-cyan/10 text-brand-cyan",
   },
-  Programming: {
-    surface: "bg-brand-indigo/10",
-    icon: "text-brand-indigo",
-    badge: "bg-brand-indigo/10 text-brand-indigo",
-  },
-  "Version Control": {
+  "Manual Testing": {
     surface: "bg-brand-sky/10",
     icon: "text-brand-sky",
     badge: "bg-brand-sky/10 text-brand-sky",
@@ -29,12 +25,7 @@ const categoryAccents: Record<string, { surface: string; icon: string; badge: st
     icon: "text-brand-blue",
     badge: "bg-brand-blue/10 text-brand-blue",
   },
-  BDD: {
-    surface: "bg-brand-sky/10",
-    icon: "text-brand-sky",
-    badge: "bg-brand-sky/10 text-brand-sky",
-  },
-  "Low-Code": {
+  "Mobile Testing": {
     surface: "bg-brand-indigo/10",
     icon: "text-brand-indigo",
     badge: "bg-brand-indigo/10 text-brand-indigo",
@@ -43,6 +34,21 @@ const categoryAccents: Record<string, { surface: string; icon: string; badge: st
     surface: "bg-brand-cyan/10",
     icon: "text-brand-cyan",
     badge: "bg-brand-cyan/10 text-brand-cyan",
+  },
+  "Performance Testing": {
+    surface: "bg-brand-sky/10",
+    icon: "text-brand-sky",
+    badge: "bg-brand-sky/10 text-brand-sky",
+  },
+  "Security Testing": {
+    surface: "bg-brand-blue/10",
+    icon: "text-brand-blue",
+    badge: "bg-brand-blue/10 text-brand-blue",
+  },
+  Programming: {
+    surface: "bg-brand-indigo/10",
+    icon: "text-brand-indigo",
+    badge: "bg-brand-indigo/10 text-brand-indigo",
   },
 };
 
@@ -57,6 +63,18 @@ export default function CourseCard({
       href={`/learn/${course.slug}`}
       className="group flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-card transition-all duration-150 hover:border-primary/30 hover:shadow-md"
     >
+      {course.thumbnail && (
+        <div className="relative aspect-video w-full bg-muted">
+          <Image
+            src={course.thumbnail}
+            alt={`Thumbnail ${course.title}`}
+            fill
+            sizes="(min-width: 1280px) 25vw, (min-width: 640px) 50vw, 100vw"
+            className="object-cover"
+          />
+        </div>
+      )}
+
       <div className="flex flex-1 flex-col p-5">
         <div className={`flex h-14 w-14 items-center justify-center rounded-2xl ${accent.surface}`}>
           <Icon className={`h-7 w-7 ${accent.icon}`} />
@@ -81,19 +99,18 @@ export default function CourseCard({
             <BookOpen className="h-3.5 w-3.5" />
             {course.lessons} Lessons
           </span>
+
+          <span className="flex items-center gap-1">
+            <Clock3 className="h-3.5 w-3.5" />
+            {course.estimatedDuration}
+          </span>
         </div>
       </div>
 
       <div className="border-t border-border bg-muted/30 px-5 py-3">
         <div className="flex items-center justify-between gap-4">
-          <span
-            className={
-              course.isPremium
-                ? "font-medium text-primary"
-                : "font-medium text-green-600 dark:text-green-400"
-            }
-          >
-            {course.isPremium ? "Premium" : "Free"}
+          <span className="font-medium text-green-600 dark:text-green-400">
+            Gratis
           </span>
 
           {course.progress !== undefined ? (
@@ -107,8 +124,6 @@ export default function CourseCard({
                 {course.progress}%
               </span>
             </div>
-          ) : course.isPremium ? (
-            <Lock className="h-4 w-4 text-primary" />
           ) : null}
         </div>
       </div>

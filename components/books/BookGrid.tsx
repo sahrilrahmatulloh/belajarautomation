@@ -12,11 +12,11 @@ export default function BooksGrid({
     return (
       <div className="rounded-3xl border border-dashed border-border py-16 text-center">
         <h3 className="font-semibold">
-          Belum ada buku
+          Belum ada eBook
         </h3>
 
         <p className="mt-2 text-sm text-muted-foreground">
-          Buku yang kamu miliki akan muncul di sini.
+          eBook yang kamu miliki akan muncul di sini.
         </p>
       </div>
     );

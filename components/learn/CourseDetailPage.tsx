@@ -4,8 +4,9 @@ import {
   ArrowLeft,
   CheckCircle2,
   Clock3,
-  Lock,
+  ListChecks,
   PlayCircle,
+  Target,
 } from "lucide-react";
 
 import { Course } from "@/types/Course";
@@ -62,9 +63,16 @@ export default function CourseDetailPage({
             </div>
           </div>
 
-          <span className="w-fit rounded-full bg-muted px-3 py-1.5 text-xs font-medium">
-            {course.level}
-          </span>
+          <div className="flex flex-wrap gap-2">
+            <span className="w-fit rounded-full bg-muted px-3 py-1.5 text-xs font-medium">
+              {course.level}
+            </span>
+
+            <span className="flex w-fit items-center gap-1.5 rounded-full bg-muted px-3 py-1.5 text-xs font-medium">
+              <Clock3 className="h-3.5 w-3.5" />
+              {course.estimatedDuration}
+            </span>
+          </div>
         </div>
 
         <div className="mt-8">
@@ -90,6 +98,47 @@ export default function CourseDetailPage({
               }}
             />
           </div>
+        </div>
+      </section>
+
+      {/* Objectives & Prerequisites */}
+      <section className="grid gap-4 md:grid-cols-2">
+        <div className="rounded-3xl border border-border bg-card p-6">
+          <h2 className="flex items-center gap-2 font-semibold">
+            <Target className="h-5 w-5 text-primary" />
+            Tujuan Pembelajaran
+          </h2>
+
+          <ul className="mt-4 space-y-3">
+            {detail.objectives.map((objective) => (
+              <li
+                key={objective}
+                className="flex items-start gap-3 text-sm leading-6 text-muted-foreground"
+              >
+                <CheckCircle2 className="mt-1 h-4 w-4 shrink-0 text-primary" />
+                {objective}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="rounded-3xl border border-border bg-card p-6">
+          <h2 className="flex items-center gap-2 font-semibold">
+            <ListChecks className="h-5 w-5 text-primary" />
+            Prasyarat
+          </h2>
+
+          <ul className="mt-4 space-y-3">
+            {detail.prerequisites.map((prerequisite) => (
+              <li
+                key={prerequisite}
+                className="flex items-start gap-3 text-sm leading-6 text-muted-foreground"
+              >
+                <span className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-muted-foreground" />
+                {prerequisite}
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 
@@ -138,8 +187,6 @@ export default function CourseDetailPage({
                     <div className="shrink-0">
                       {lesson.isCompleted ? (
                         <CheckCircle2 className="h-5 w-5 text-primary" />
-                      ) : lesson.isLocked ? (
-                        <Lock className="h-5 w-5 text-muted-foreground" />
                       ) : (
                         <PlayCircle className="h-5 w-5 text-muted-foreground" />
                       )}
@@ -157,14 +204,6 @@ export default function CourseDetailPage({
                     </div>
                   </div>
                 );
-
-                if (lesson.isLocked) {
-                  return (
-                    <div key={lesson.id}>
-                      {content}
-                    </div>
-                  );
-                }
 
                 return (
                   <Link

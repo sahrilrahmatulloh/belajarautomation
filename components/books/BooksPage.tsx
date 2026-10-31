@@ -33,7 +33,7 @@ export default function BooksPage() {
               : "border-transparent text-muted-foreground hover:text-foreground"
           }`}
         >
-          Semua Buku
+          Semua eBook
         </button>
 
         <button

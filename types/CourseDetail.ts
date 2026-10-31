@@ -4,7 +4,6 @@ export interface CourseLesson {
   title: string;
   duration: string;
   isCompleted: boolean;
-  isLocked: boolean;
 }
 
 export interface CourseModule {
@@ -16,5 +15,7 @@ export interface CourseModule {
 export interface CourseDetail {
   courseSlug: string;
   overview: string;
+  objectives: string[];
+  prerequisites: string[];
   modules: CourseModule[];
 }

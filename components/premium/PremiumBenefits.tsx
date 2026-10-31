@@ -1,48 +1,35 @@
 import {
   BookOpenCheck,
-  CheckCircle2,
-  FlaskConical,
   FolderKanban,
-  Map,
-  Sparkles,
+  Info,
+  Palette,
+  SwatchBook,
 } from "lucide-react";
 
 const benefits = [
   {
-    title: "Semua Materi Premium",
+    title: "Tema Visual",
     description:
-      "Akses seluruh materi QA Automation dari fundamental hingga advanced.",
+      "Akses tema visual eksklusif untuk mempersonalisasi tampilan belajarmu.",
+    icon: SwatchBook,
+  },
+  {
+    title: "Warna Aksen Tambahan",
+    description:
+      "Pilih dari koleksi warna aksen tambahan di luar pilihan standar.",
+    icon: Palette,
+  },
+  {
+    title: "3 Klaim eBook",
+    description:
+      "Klaim hingga 3 eBook pilihan dari koleksi eBook belajarautomation.id.",
     icon: BookOpenCheck,
   },
   {
-    title: "Roadmap Lengkap",
+    title: "3 Klaim Project",
     description:
-      "Ikuti jalur belajar yang terstruktur sesuai target karier kamu.",
-    icon: Map,
-  },
-  {
-    title: "Playground Challenge",
-    description:
-      "Latih kemampuan melalui challenge dan studi kasus praktis.",
-    icon: FlaskConical,
-  },
-  {
-    title: "Project Portfolio",
-    description:
-      "Bangun project automation untuk meningkatkan portfolio teknis.",
+      "Klaim hingga 3 project pilihan beserta source code-nya.",
     icon: FolderKanban,
-  },
-  {
-    title: "Konten Terbaru",
-    description:
-      "Dapatkan akses ke materi baru yang terus diperbarui.",
-    icon: Sparkles,
-  },
-  {
-    title: "Belajar Tanpa Batas",
-    description:
-      "Pelajari seluruh konten premium sesuai ritme belajar kamu.",
-    icon: CheckCircle2,
   },
 ];
 
@@ -51,15 +38,15 @@ export default function PremiumBenefits() {
     <section className="space-y-6">
       <div className="text-center">
         <h2 className="text-2xl font-bold">
-          Semua yang kamu butuhkan untuk berkembang
+          Yang kamu dapatkan dengan Premium
         </h2>
 
         <p className="mt-2 text-muted-foreground">
-          Satu membership untuk mengakses seluruh ekosistem belajar.
+          Sekali beli, berlaku selamanya. Seluruh materi belajar tetap gratis untuk semua.
         </p>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-4 sm:grid-cols-2">
         {benefits.map((benefit) => {
           const Icon = benefit.icon;
 
@@ -82,6 +69,15 @@ export default function PremiumBenefits() {
             </article>
           );
         })}
+      </div>
+
+      <div className="flex items-start gap-3 rounded-2xl border border-border bg-muted/40 p-4 text-sm text-muted-foreground">
+        <Info className="mt-0.5 h-4 w-4 shrink-0" />
+
+        <p>
+          Premium tidak memberikan XP, rank, atau keunggulan apa pun di
+          leaderboard. Progres dan peringkat hanya didapat dari belajar.
+        </p>
       </div>
     </section>
   );

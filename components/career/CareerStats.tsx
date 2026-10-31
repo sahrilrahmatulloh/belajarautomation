@@ -4,15 +4,21 @@ import {
   Target,
 } from "lucide-react";
 
+import { CAREER_RESOURCES } from "@/data/careerResources";
+
 const stats = [
   {
     label: "Career Resources",
-    value: "6",
+    value: String(CAREER_RESOURCES.length),
     icon: BookOpenCheck,
   },
   {
     label: "Available Resources",
-    value: "5",
+    value: String(
+      CAREER_RESOURCES.filter(
+        (resource) => resource.status === "available"
+      ).length
+    ),
     icon: BriefcaseBusiness,
   },
   {

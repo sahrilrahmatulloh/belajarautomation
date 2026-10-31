@@ -8,9 +8,9 @@ import {
 import { Button } from "@/components/ui/button";
 
 const benefits = [
-  "Akses semua materi premium",
-  "Source code & project automation",
-  "E-book dan update materi terbaru",
+  "Tema visual & warna aksen tambahan",
+  "3 klaim eBook",
+  "3 klaim project",
 ];
 
 export default function PremiumSection() {
@@ -22,17 +22,18 @@ export default function PremiumSection() {
         <div>
           <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-primary">
             <Crown className="h-4 w-4" />
-            Premium Membership
+            Premium Lifetime
           </div>
 
           <h2 className="mt-5 text-3xl font-bold">
-            Upgrade skill QA Automation kamu
-            ke level berikutnya.
+            Personalisasi pengalaman
+            belajarmu, sekali beli selamanya.
           </h2>
 
           <p className="mt-3 max-w-xl text-muted-foreground">
-            Dapatkan akses penuh ke materi, project, source code,
-            dan resource premium untuk mempercepat proses belajarmu.
+            Semua materi tetap gratis. Premium memberi tema visual,
+            warna aksen tambahan, serta klaim eBook dan project, tanpa
+            keunggulan XP, rank, maupun leaderboard.
           </p>
 
           <Button disabled className="mt-6 cursor-not-allowed rounded-xl opacity-50">

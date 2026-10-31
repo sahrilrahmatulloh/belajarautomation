@@ -14,6 +14,7 @@ import {
   Newspaper,
   Briefcase,
   Crown,
+  Trophy,
 } from "lucide-react";
 
 const menuItems = [
@@ -38,19 +39,24 @@ const menuItems = [
     icon: FlaskConical,
   },
   {
-    label: "Project",
-    href: "/projects",
-    icon: FolderKanban,
-  },
-  {
-    label: "Buku",
-    href: "/books",
-    icon: Library,
+    label: "Leaderboard",
+    href: "/leaderboard",
+    icon: Trophy,
   },
   {
     label: "Blog",
     href: "/blog",
     icon: Newspaper,
+  },
+  {
+    label: "eBook",
+    href: "/ebooks",
+    icon: Library,
+  },
+  {
+    label: "Project",
+    href: "/projects",
+    icon: FolderKanban,
   },
   {
     label: "Karier",

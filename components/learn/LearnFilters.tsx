@@ -3,6 +3,7 @@
 import { Search } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
+import { COURSE_CATEGORIES } from "@/data/courseCategories";
 
 interface LearnFiltersProps {
   search: string;
@@ -11,15 +12,7 @@ interface LearnFiltersProps {
   onCategoryChange: (category: string) => void;
 }
 
-const categories = [
-  "Semua",
-  "Fundamental",
-  "Programming",
-  "Version Control",
-  "Web Automation",
-  "BDD",
-  "Low-Code",
-];
+const categories = ["Semua", ...COURSE_CATEGORIES];
 
 export default function LearnFilters({
   search,
