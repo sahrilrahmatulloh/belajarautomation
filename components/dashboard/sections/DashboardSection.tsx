@@ -1,7 +1,6 @@
 import ContinueLearningCard from "../cards/ContinueLearningCard";
 import DashboardStats from "./DashboardStats";
 import LearningRankCard from "./LearningRankCard";
-import RecommendationsSection from "./RecommendationsSection";
 import StudyCalendar from "./StudyCalendar";
 import WelcomeBanner from "./WelcomeBanner";
 
@@ -12,7 +11,6 @@ export default function DashboardSection() {
         <WelcomeBanner />
         <LearningRankCard />
         <ContinueLearningCard />
-        <RecommendationsSection />
       </div>
 
       <aside className="flex min-w-0 flex-col gap-5 lg:gap-6" aria-label="Ringkasan belajar">

@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { Quote } from "lucide-react";
 
 export default function WelcomeBanner() {
   return (
@@ -34,11 +33,6 @@ export default function WelcomeBanner() {
         <p className="mt-2 max-w-md text-sm leading-5 text-muted-foreground sm:text-base sm:leading-6">
           Terus belajar dan bangun skill QA Automation untuk masa depan yang lebih baik.
         </p>
-
-        <blockquote className="mt-3 flex max-w-md items-start gap-2 rounded-lg border border-border bg-background/80 px-3 py-2.5 text-sm leading-5 shadow-sm backdrop-blur-sm">
-          <Quote className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
-          <span>Setiap langkah kecil hari ini membawa kamu lebih dekat ke tujuan besar.</span>
-        </blockquote>
       </div>
     </section>
   );

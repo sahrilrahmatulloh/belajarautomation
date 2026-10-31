@@ -70,16 +70,28 @@ const menuItems = [
   },
 ];
 
-export default function Sidebar() {
+interface SidebarProps {
+  // Mode ringkas: hanya logo dan ikon menu.
+  collapsed?: boolean;
+}
+
+export default function Sidebar({
+  collapsed = false,
+}: SidebarProps) {
   const pathname = usePathname();
 
   return (
-    <aside className="flex h-dvh w-60 shrink-0 flex-col border-r border-sidebar-border bg-sidebar text-sidebar-foreground">
+    <aside
+      className={`flex h-dvh shrink-0 flex-col border-r border-sidebar-border bg-sidebar text-sidebar-foreground transition-[width] duration-200 ${
+        collapsed ? "w-[72px]" : "w-60"
+      }`}
+    >
       {/* Brand */}
-      <div className="p-6">
+      <div className={collapsed ? "flex justify-center px-2 py-6" : "p-6"}>
         <Link
           href="/"
           className="flex items-center gap-3"
+          aria-label={collapsed ? "belajarautomation.id" : undefined}
         >
           <Image
             src="/logo.png"
@@ -90,20 +102,22 @@ export default function Sidebar() {
             priority
           />
 
-          <div className="min-w-0">
-            <h1 className="whitespace-nowrap text-base font-bold tracking-tight">
-              belajarautomation.id
-            </h1>
+          {!collapsed && (
+            <div className="min-w-0">
+              <h1 className="whitespace-nowrap text-base font-bold tracking-tight">
+                belajarautomation.id
+              </h1>
 
-            <p className="mt-0.5 text-xs text-muted-foreground">
-              Learn · Practice · Build · Grow
-            </p>
-          </div>
+              <p className="mt-0.5 text-xs text-muted-foreground">
+                Learn · Practice · Build · Grow
+              </p>
+            </div>
+          )}
         </Link>
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 space-y-2 overflow-y-auto px-4">
+      <nav className={`flex-1 space-y-2 overflow-y-auto ${collapsed ? "px-3" : "px-4"}`}>
         {menuItems.map((item) => {
           const Icon = item.icon;
 
@@ -117,9 +131,11 @@ export default function Sidebar() {
               key={item.href}
               href={item.href}
               aria-current={isActive ? "page" : undefined}
+              title={collapsed ? item.label : undefined}
               className={`
-                flex w-full items-center gap-3 rounded-lg px-3 py-2.5
+                flex w-full items-center gap-3 rounded-lg py-2.5
                 text-sm transition-colors duration-150
+                ${collapsed ? "justify-center px-0" : "px-3"}
                 ${
                   isActive
                     ? "bg-sidebar-primary text-sidebar-primary-foreground shadow-sm"
@@ -127,9 +143,9 @@ export default function Sidebar() {
                 }
               `}
             >
-              <Icon size={18} aria-hidden="true" />
+              <Icon size={collapsed ? 20 : 18} aria-hidden="true" />
 
-              <span className="font-medium">
+              <span className={collapsed ? "sr-only" : "font-medium"}>
                 {item.label}
               </span>
             </Link>

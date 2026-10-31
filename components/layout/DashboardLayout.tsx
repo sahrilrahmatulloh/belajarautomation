@@ -25,12 +25,10 @@ export default function DashboardLayout({
 
   return (
     <div className="flex h-dvh w-full overflow-hidden bg-background text-foreground">
-      {/* Desktop Sidebar */}
-      {isDesktopSidebarOpen && (
-        <div className="hidden shrink-0 lg:block">
-          <Sidebar />
-        </div>
-      )}
+      {/* Desktop Sidebar: saat disembunyikan menjadi rel ikon */}
+      <div className="hidden shrink-0 lg:block">
+        <Sidebar collapsed={!isDesktopSidebarOpen} />
+      </div>
 
       {/* Mobile Sidebar Overlay */}
       {isMobileSidebarOpen && (
