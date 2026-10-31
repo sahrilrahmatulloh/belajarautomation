@@ -9,22 +9,32 @@ import {
 import { Roadmap } from "@/types/Roadmap";
 
 const roadmapAccents: Record<string, { surface: string; icon: string; badge: string }> = {
-  "qa-automation-engineer": {
+  fundamental: {
     surface: "bg-brand-blue/10",
     icon: "text-brand-blue",
     badge: "bg-brand-blue/10 text-brand-blue",
   },
-  "web-automation-engineer": {
+  "qa-manual-engineer": {
     surface: "bg-brand-sky/10",
     icon: "text-brand-sky",
     badge: "bg-brand-sky/10 text-brand-sky",
   },
-  "mobile-automation-engineer": {
+  "qa-automation-web": {
+    surface: "bg-brand-blue/10",
+    icon: "text-brand-blue",
+    badge: "bg-brand-blue/10 text-brand-blue",
+  },
+  "qa-automation-mobile": {
     surface: "bg-brand-cyan/10",
     icon: "text-brand-cyan",
     badge: "bg-brand-cyan/10 text-brand-cyan",
   },
-  "vibe-coding-qa-engineer": {
+  "api-test-engineer": {
+    surface: "bg-brand-sky/10",
+    icon: "text-brand-sky",
+    badge: "bg-brand-sky/10 text-brand-sky",
+  },
+  programming: {
     surface: "bg-brand-indigo/10",
     icon: "text-brand-indigo",
     badge: "bg-brand-indigo/10 text-brand-indigo",
@@ -40,7 +50,7 @@ export default function RoadmapCard({
 }: RoadmapCardProps) {
   const Icon = roadmap.icon;
   const isComingSoon = roadmap.status === "coming-soon";
-  const accent = roadmapAccents[roadmap.id] ?? roadmapAccents["qa-automation-engineer"];
+  const accent = roadmapAccents[roadmap.id] ?? roadmapAccents.fundamental;
 
   return (
     <article
@@ -96,7 +106,7 @@ export default function RoadmapCard({
           <>
             <span className="flex items-center gap-1.5 rounded-full bg-muted px-3 py-1.5 text-xs font-medium">
               <Layers3 className="h-3.5 w-3.5" />
-              {roadmap.modules} Modul
+              {roadmap.steps.length} Langkah
             </span>
 
             <span className="flex items-center gap-1.5 rounded-full bg-muted px-3 py-1.5 text-xs font-medium">
