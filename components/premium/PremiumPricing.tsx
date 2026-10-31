@@ -3,6 +3,11 @@ import {
   Crown,
 } from "lucide-react";
 
+import AddToCartButtons from "@/components/cart/AddToCartButtons";
+import { DUMMY_PREMIUM_PRICE } from "@/data/dummy/pricing";
+import { PREMIUM_PRODUCT_ID } from "@/lib/cartProducts";
+import { formatRupiah } from "@/lib/format";
+
 const features = [
   "Akses tema visual",
   "Warna aksen tambahan",
@@ -39,12 +44,12 @@ export default function PremiumPricing() {
         </div>
 
         <div className="mt-8">
-          <span className="text-3xl font-bold">
-            Segera diumumkan
+          <span className="text-4xl font-bold">
+            {formatRupiah(DUMMY_PREMIUM_PRICE)}
           </span>
 
           <p className="mt-2 text-sm text-muted-foreground">
-            Harga Premium Lifetime belum final dan akan diumumkan kemudian.
+            Sekali bayar, berlaku selamanya. Harga sementara dan dapat berubah sebelum peluncuran.
           </p>
         </div>
 
@@ -67,13 +72,12 @@ export default function PremiumPricing() {
           ))}
         </div>
 
-        <button
-          type="button"
-          disabled
-          className="mt-8 w-full cursor-not-allowed rounded-xl bg-primary px-5 py-3.5 text-sm font-semibold text-primary-foreground opacity-50"
-        >
-          Pembayaran belum tersedia
-        </button>
+        <div className="mt-8">
+          <AddToCartButtons
+            productId={PREMIUM_PRODUCT_ID}
+            buyLabel="Beli Premium"
+          />
+        </div>
 
         <p className="mt-4 text-center text-xs text-muted-foreground">
           Premium tidak memberikan XP, rank, atau keunggulan leaderboard.

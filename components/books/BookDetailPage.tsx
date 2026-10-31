@@ -1,5 +1,7 @@
 import Link from "next/link";
+import AddToCartButtons from "@/components/cart/AddToCartButtons";
 import ContentCover from "@/components/common/ContentCover";
+import { getEbookProductId } from "@/lib/cartProducts";
 
 import {
   ArrowLeft,
@@ -9,7 +11,6 @@ import {
   Download,
   FileText,
   Layers3,
-  ShoppingCart,
 } from "lucide-react";
 
 import type { Book } from "@/types/book";
@@ -134,17 +135,14 @@ export default function BookDetailPage({
                   {formattedPrice}
                 </p>
 
-                <button
-                  type="button"
-                  disabled
-                  className="mt-5 flex w-full cursor-not-allowed items-center justify-center gap-2 rounded-xl bg-primary py-3 text-sm font-medium text-primary-foreground opacity-50"
-                >
-                  <ShoppingCart className="h-4 w-4" />
-                  Pembelian belum tersedia
-                </button>
+                <div className="mt-5">
+                  <AddToCartButtons
+                    productId={getEbookProductId(book.slug)}
+                  />
+                </div>
 
                 <p className="mt-3 text-center text-xs text-muted-foreground">
-                  Pembelian dan file PDF belum tersedia.
+                  Pembayaran masih simulasi; file PDF belum tersedia.
                 </p>
               </>
             )}

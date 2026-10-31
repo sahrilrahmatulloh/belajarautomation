@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Bell, Menu, SunMoon } from "lucide-react";
 import { useTheme } from "next-themes";
 
+import CartButton from "@/components/cart/CartButton";
 import ProfileDropdown from "@/components/profile/ProfileDropdown";
 
 interface NavbarProps {
@@ -48,6 +49,9 @@ export default function Navbar({
         >
           <SunMoon size={20} aria-hidden="true" />
         </button>
+
+        {/* Cart */}
+        <CartButton />
 
         {/* Notifications */}
         <Link

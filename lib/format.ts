@@ -22,3 +22,13 @@ export function daysBetween(fromIsoDate: string, toIsoDate: string) {
 export function formatNumber(value: number) {
   return value.toLocaleString("id-ID");
 }
+
+const rupiahFormatter = new Intl.NumberFormat("id-ID", {
+  style: "currency",
+  currency: "IDR",
+  maximumFractionDigits: 0,
+});
+
+export function formatRupiah(value: number) {
+  return rupiahFormatter.format(value);
+}
