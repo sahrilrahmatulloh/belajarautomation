@@ -6,25 +6,15 @@ import { ArrowRight, BookOpen, Clock3, Layers3 } from "lucide-react";
 
 import { COURSE_DETAILS } from "@/data/courseDetails";
 import { COURSES } from "@/data/courses";
+import {
+  RECOMMENDATION_CATEGORIES as categories,
+  RECOMMENDED_COURSE_SLUGS,
+} from "@/data/recommendations";
 import type { Course } from "@/types/Course";
-
-const categories = [
-  "Semua",
-  "Fundamental",
-  "Automation",
-  "API Testing",
-  "Mobile Testing",
-  "Performance",
-  "Security",
-] as const;
 
 type RecommendationCategory = (typeof categories)[number];
 
-const recommendedSlugs = new Set([
-  "qa-fundamentals",
-  "playwright",
-  "selenium",
-]);
+const recommendedSlugs = new Set(RECOMMENDED_COURSE_SLUGS);
 
 const accents: Record<string, { surface: string; icon: string; label: string; shape: string }> = {
   Fundamental: {

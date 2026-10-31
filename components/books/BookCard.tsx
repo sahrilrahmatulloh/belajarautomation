@@ -85,7 +85,7 @@ export default function BookCard({
             </button>
           ) : (
             <Link
-              href={`/books/${book.slug}`}
+              href={`/ebooks/${book.slug}`}
               className="flex w-full items-center justify-between rounded-xl border border-border px-4 py-3 text-sm font-medium transition-colors hover:bg-accent"
             >
               Lihat Detail

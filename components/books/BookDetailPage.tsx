@@ -34,11 +34,11 @@ export default function BookDetailPage({
     <div className="mx-auto max-w-6xl space-y-8">
       {/* Back */}
       <Link
-        href="/books"
+        href="/ebooks"
         className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
       >
         <ArrowLeft className="h-4 w-4" />
-        Kembali ke Books
+        Kembali ke eBook
       </Link>
 
       {/* Book Hero */}
@@ -108,7 +108,7 @@ export default function BookDetailPage({
             {book.owned ? (
               <>
                 <p className="font-semibold">
-                  Buku ini sudah kamu miliki
+                  eBook ini sudah kamu miliki
                 </p>
 
                 <p className="mt-1 text-sm text-muted-foreground">
@@ -127,7 +127,7 @@ export default function BookDetailPage({
             ) : (
               <>
                 <p className="text-sm text-muted-foreground">
-                  Harga e-book
+                  Harga eBook
                 </p>
 
                 <p className="mt-1 text-3xl font-bold">
@@ -160,7 +160,7 @@ export default function BookDetailPage({
           </h2>
 
           <p className="mt-2 text-muted-foreground">
-            Topik utama yang dibahas di dalam e-book ini.
+            Topik utama yang dibahas di dalam eBook ini.
           </p>
         </div>
 

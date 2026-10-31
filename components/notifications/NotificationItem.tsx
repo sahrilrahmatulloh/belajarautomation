@@ -13,7 +13,7 @@ interface NotificationItemProps {
   notification: Notification;
 }
 
-const notificationIcons = {
+export const notificationIcons = {
   course: BookOpen,
   playground: FlaskConical,
   book: Library,
