@@ -1,14 +1,17 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 import {
   Check,
   Crown,
   Eye,
+  LogIn,
+  LogOut,
   Settings,
   User,
+  UserPlus,
 } from "lucide-react";
 
 import {
@@ -22,12 +25,23 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getRoleFromPath, ROLE_HOME, ROLE_LABELS } from "@/data/navigation";
 import { DEFAULT_AVATAR } from "@/data/profile";
+import { sessionActions, useSession } from "@/lib/session";
 import { UserRole } from "@/types/Role";
 
 const isDevelopment = process.env.NODE_ENV === "development";
 
 export default function ProfileDropdown() {
+  const router = useRouter();
   const activeRole = getRoleFromPath(usePathname());
+  const session = useSession();
+
+  const displayName = session?.name ?? "Tamu";
+  const displayStatus = session ? ROLE_LABELS[session.role] : "Belum masuk";
+
+  const handleSignOut = () => {
+    sessionActions.signOut();
+    router.push("/login");
+  };
 
   return (
     <DropdownMenu>
@@ -43,12 +57,12 @@ export default function ProfileDropdown() {
         </Avatar>
 
         <div className="hidden text-left lg:block">
-          <p className="text-sm font-semibold text-foreground">
-            BelajarAutomation
+          <p className="max-w-40 truncate text-sm font-semibold text-foreground">
+            {displayName}
           </p>
 
           <p className="text-xs text-muted-foreground">
-            Mode lokal
+            {displayStatus}
           </p>
         </div>
       </DropdownMenuTrigger>
@@ -60,16 +74,42 @@ export default function ProfileDropdown() {
       >
         {/* User Info */}
         <div className="px-2 py-3">
-          <p className="text-sm font-semibold">
-            BelajarAutomation
+          <p className="truncate text-sm font-semibold">
+            {displayName}
           </p>
 
-          <p className="mt-1 text-xs text-muted-foreground">
-            Mode lokal
+          <p className="mt-1 truncate text-xs text-muted-foreground">
+            {session ? session.email : displayStatus}
           </p>
         </div>
 
         <DropdownMenuSeparator />
+
+        {!session && (
+          <>
+            <DropdownMenuItem className="p-0">
+              <Link
+                href="/login"
+                className="flex w-full items-center gap-2 px-2 py-1.5 font-medium text-primary"
+              >
+                <LogIn className="h-4 w-4" />
+                Masuk
+              </Link>
+            </DropdownMenuItem>
+
+            <DropdownMenuItem className="p-0">
+              <Link
+                href="/register"
+                className="flex w-full items-center gap-2 px-2 py-1.5"
+              >
+                <UserPlus className="h-4 w-4" />
+                Daftar
+              </Link>
+            </DropdownMenuItem>
+
+            <DropdownMenuSeparator />
+          </>
+        )}
 
         {/* Profile */}
         <DropdownMenuItem className="p-0">
@@ -130,6 +170,20 @@ export default function ProfileDropdown() {
                 </DropdownMenuItem>
               );
             })}
+          </>
+        )}
+
+        {session && (
+          <>
+            <DropdownMenuSeparator />
+
+            <DropdownMenuItem
+              onClick={handleSignOut}
+              className="flex items-center gap-2 px-2 py-1.5 text-destructive"
+            >
+              <LogOut className="h-4 w-4" />
+              Keluar
+            </DropdownMenuItem>
           </>
         )}
       </DropdownMenuContent>

@@ -169,3 +169,43 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Splash screen: tampil sekali per sesi, lalu menghilang sendiri tanpa JavaScript. */
+html[data-splash="seen"] .splash-screen {
+  display: none;
+}
+
+.splash-screen {
+  animation: splash-out 0.4s ease 1.4s forwards;
+}
+
+.splash-content {
+  animation: splash-in 0.5s ease-out both;
+}
+
+.splash-progress {
+  animation: splash-progress 1.4s ease-in-out forwards;
+}
+
+@keyframes splash-out {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+@keyframes splash-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+}
+
+@keyframes splash-progress {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
