@@ -2,7 +2,6 @@ import Link from "next/link";
 
 import {
   ArrowLeft,
-  BookOpen,
   CheckCircle2,
   Clock3,
   Lock,

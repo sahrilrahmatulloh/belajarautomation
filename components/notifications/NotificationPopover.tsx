@@ -49,7 +49,7 @@ export default function NotificationPopover() {
         <Bell size={20} />
 
         {hasUnread && (
-          <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-blue-600" />
+          <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-primary" />
         )}
       </PopoverTrigger>
 
@@ -72,7 +72,7 @@ export default function NotificationPopover() {
 
           <button
             type="button"
-            className="text-xs font-medium text-blue-600 hover:underline dark:text-blue-400"
+            className="text-xs font-medium text-primary hover:underline"
           >
             Tandai dibaca
           </button>
@@ -89,8 +89,8 @@ export default function NotificationPopover() {
                 type="button"
                 className="flex w-full gap-3 border-b border-border p-4 text-left transition-colors last:border-b-0 hover:bg-accent"
               >
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-100 dark:bg-blue-950">
-                  <Icon className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/10">
+                  <Icon className="h-5 w-5 text-primary" />
                 </div>
 
                 <div className="min-w-0 flex-1">
@@ -100,7 +100,7 @@ export default function NotificationPopover() {
                     </p>
 
                     {notification.unread && (
-                      <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-blue-600" />
+                      <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-primary" />
                     )}
                   </div>
 
@@ -121,7 +121,7 @@ export default function NotificationPopover() {
         <div className="border-t border-border p-3">
           <button
             type="button"
-            className="w-full rounded-lg py-2 text-sm font-medium text-blue-600 transition-colors hover:bg-accent dark:text-blue-400"
+            className="w-full rounded-lg py-2 text-sm font-medium text-primary transition-colors hover:bg-accent"
           >
             Lihat semua notifikasi
           </button>

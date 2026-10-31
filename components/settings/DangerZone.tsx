@@ -24,10 +24,11 @@ export default function DangerZone() {
 
         <button
           type="button"
-          className="flex shrink-0 items-center justify-center gap-2 rounded-xl bg-destructive px-4 py-2.5 text-sm font-medium text-destructive-foreground"
+          disabled
+          className="flex shrink-0 cursor-not-allowed items-center justify-center gap-2 rounded-xl bg-destructive px-4 py-2.5 text-sm font-medium text-destructive-foreground opacity-50"
         >
           <Trash2 className="h-4 w-4" />
-          Hapus Akun
+          Hapus akun belum tersedia
         </button>
       </div>
     </section>

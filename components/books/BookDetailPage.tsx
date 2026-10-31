@@ -1,5 +1,5 @@
-import Image from "next/image";
 import Link from "next/link";
+import ContentCover from "@/components/common/ContentCover";
 
 import {
   ArrowLeft,
@@ -45,11 +45,11 @@ export default function BookDetailPage({
       <section className="grid gap-8 lg:grid-cols-[360px_1fr]">
         {/* Cover */}
         <div className="relative aspect-[3/4] overflow-hidden rounded-3xl border border-border bg-muted shadow-sm">
-          <Image
+          <ContentCover
             src={book.cover}
-            alt={book.title}
-            fill
-            priority
+            title={book.title}
+            category={`${book.level} · ${book.format}`}
+            kind="book"
             className="object-cover"
           />
         </div>
@@ -117,10 +117,11 @@ export default function BookDetailPage({
 
                 <button
                   type="button"
-                  className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-primary py-3 text-sm font-medium text-primary-foreground"
+                  disabled
+                  className="mt-5 flex w-full cursor-not-allowed items-center justify-center gap-2 rounded-xl bg-primary py-3 text-sm font-medium text-primary-foreground opacity-50"
                 >
                   <Download className="h-4 w-4" />
-                  Download PDF
+                  Download belum tersedia
                 </button>
               </>
             ) : (
@@ -135,14 +136,15 @@ export default function BookDetailPage({
 
                 <button
                   type="button"
-                  className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-primary py-3 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
+                  disabled
+                  className="mt-5 flex w-full cursor-not-allowed items-center justify-center gap-2 rounded-xl bg-primary py-3 text-sm font-medium text-primary-foreground opacity-50"
                 >
                   <ShoppingCart className="h-4 w-4" />
-                  Beli Sekarang
+                  Pembelian belum tersedia
                 </button>
 
                 <p className="mt-3 text-center text-xs text-muted-foreground">
-                  File PDF tersedia setelah pembayaran berhasil.
+                  Pembelian dan file PDF belum tersedia.
                 </p>
               </>
             )}

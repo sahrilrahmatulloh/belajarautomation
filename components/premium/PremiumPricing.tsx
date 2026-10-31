@@ -123,13 +123,14 @@ export default function PremiumPricing() {
 
         <button
           type="button"
-          className="mt-8 w-full rounded-xl bg-primary px-5 py-3.5 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
+          disabled
+          className="mt-8 w-full cursor-not-allowed rounded-xl bg-primary px-5 py-3.5 text-sm font-semibold text-primary-foreground opacity-50"
         >
-          Upgrade {isYearly ? "Tahunan" : "Bulanan"}
+          Pembayaran belum tersedia
         </button>
 
         <p className="mt-4 text-center text-xs text-muted-foreground">
-          Pembayaran aman dan akses aktif setelah transaksi berhasil.
+          Pilihan paket ditampilkan sebagai informasi. Pembayaran belum tersedia.
         </p>
       </div>
     </section>

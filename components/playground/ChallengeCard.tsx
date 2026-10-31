@@ -8,6 +8,39 @@ import {
 
 import { Challenge } from "@/types/Challenge";
 
+const categoryAccents: Record<string, { surface: string; icon: string; label: string }> = {
+  Locator: {
+    surface: "bg-brand-blue/10",
+    icon: "text-brand-blue",
+    label: "text-brand-blue",
+  },
+  "Test Case": {
+    surface: "bg-brand-cyan/10",
+    icon: "text-brand-cyan",
+    label: "text-brand-cyan",
+  },
+  "Bug Hunt": {
+    surface: "bg-brand-indigo/10",
+    icon: "text-brand-indigo",
+    label: "text-brand-indigo",
+  },
+  API: {
+    surface: "bg-brand-sky/10",
+    icon: "text-brand-sky",
+    label: "text-brand-sky",
+  },
+  Automation: {
+    surface: "bg-brand-blue/10",
+    icon: "text-brand-blue",
+    label: "text-brand-blue",
+  },
+  AI: {
+    surface: "bg-brand-cyan/10",
+    icon: "text-brand-cyan",
+    label: "text-brand-cyan",
+  },
+};
+
 interface ChallengeCardProps {
   challenge: Challenge;
 }
@@ -16,12 +49,13 @@ export default function ChallengeCard({
   challenge,
 }: ChallengeCardProps) {
   const Icon = challenge.icon;
+  const accent = categoryAccents[challenge.category] ?? categoryAccents.Locator;
 
   return (
-    <article className="group flex h-full flex-col rounded-3xl border border-border bg-card p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
+    <article className="group flex h-full flex-col rounded-2xl border border-border bg-card p-5 transition-all duration-150 hover:border-primary/30 hover:shadow-md">
       <div className="flex items-start justify-between gap-4">
-        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-violet-500/10">
-          <Icon className="h-6 w-6 text-violet-600 dark:text-violet-400" />
+        <div className={`flex h-12 w-12 items-center justify-center rounded-xl ${accent.surface}`}>
+          <Icon className={`h-6 w-6 ${accent.icon}`} />
         </div>
 
         {challenge.completed && (
@@ -30,7 +64,7 @@ export default function ChallengeCard({
       </div>
 
       <div className="mt-5 flex-1">
-        <span className="text-xs font-medium text-violet-600 dark:text-violet-400">
+        <span className={`text-xs font-medium ${accent.label}`}>
           {challenge.category}
         </span>
 
@@ -53,7 +87,7 @@ export default function ChallengeCard({
           {challenge.duration}
         </span>
 
-        <span className="flex items-center gap-1 font-medium text-violet-600 dark:text-violet-400">
+        <span className="flex items-center gap-1 font-medium text-primary">
           <Trophy className="h-3.5 w-3.5" />
           +{challenge.rp} RP
         </span>

@@ -9,7 +9,6 @@ import {
   Workflow,
   Bot,
   Blocks,
-  FlaskConical,
 } from "lucide-react";
 
 import { Course } from "@/types/Course";

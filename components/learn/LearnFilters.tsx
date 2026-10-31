@@ -36,6 +36,7 @@ export default function LearnFilters({
         />
 
         <Input
+          aria-label="Cari materi atau teknologi"
           value={search}
           onChange={(event) =>
             onSearchChange(event.target.value)
@@ -54,10 +55,11 @@ export default function LearnFilters({
             <button
               key={category}
               type="button"
+              aria-pressed={isActive}
               onClick={() =>
                 onCategoryChange(category)
               }
-              className={`rounded-xl border px-4 py-2 text-sm font-medium transition-colors ${
+              className={`rounded-full border px-4 py-2 text-sm font-medium transition-colors duration-150 ${
                 isActive
                   ? "border-primary bg-primary text-primary-foreground"
                   : "border-border bg-background text-muted-foreground hover:bg-accent hover:text-foreground"

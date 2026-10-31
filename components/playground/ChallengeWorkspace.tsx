@@ -67,7 +67,7 @@ export default function ChallengeWorkspace({
       <section className="rounded-3xl border border-border bg-card p-6">
         <div className="flex flex-col gap-5 md:flex-row md:items-start md:justify-between">
           <div>
-            <span className="text-sm font-medium text-violet-600 dark:text-violet-400">
+            <span className="text-sm font-medium text-primary">
               {challenge.category}
             </span>
 
@@ -90,7 +90,7 @@ export default function ChallengeWorkspace({
               {challenge.duration}
             </span>
 
-            <span className="flex items-center gap-1.5 rounded-full bg-violet-500/10 px-3 py-2 text-xs font-medium text-violet-600 dark:text-violet-400">
+            <span className="flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-2 text-xs font-medium text-primary">
               <Trophy className="h-3.5 w-3.5" />
               +{challenge.rp} RP
             </span>
@@ -157,7 +157,7 @@ export default function ChallengeWorkspace({
               setResult(null);
             }}
             placeholder={detail.placeholder}
-            className="mt-4 min-h-[280px] flex-1 resize-none rounded-2xl border border-border bg-background p-4 font-mono text-sm outline-none transition-colors placeholder:text-muted-foreground focus:border-violet-500"
+            className="mt-4 min-h-[280px] flex-1 resize-none rounded-xl border border-border bg-background p-4 font-mono text-sm outline-none transition-colors placeholder:text-muted-foreground focus:border-primary"
           />
 
           <div className="mt-4 flex gap-3">
@@ -174,7 +174,7 @@ export default function ChallengeWorkspace({
               type="button"
               onClick={handleSubmit}
               disabled={!answer.trim()}
-              className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-violet-600 px-4 py-3 text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex min-h-11 flex-1 items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
             >
               <Send className="h-4 w-4" />
               Submit Jawaban
@@ -198,8 +198,8 @@ export default function ChallengeWorkspace({
                 {detail.successFeedback}
               </p>
 
-              <p className="mt-4 font-semibold text-violet-600 dark:text-violet-400">
-                +{challenge.rp} RP
+              <p className="mt-4 font-semibold text-primary">
+                +{challenge.rp} RP · nilai latihan, belum disimpan
               </p>
             </div>
           </div>

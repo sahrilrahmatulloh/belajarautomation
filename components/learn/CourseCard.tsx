@@ -8,20 +8,63 @@ interface CourseCardProps {
   course: Course;
 }
 
+const categoryAccents: Record<string, { surface: string; icon: string; badge: string }> = {
+  Fundamental: {
+    surface: "bg-brand-cyan/10",
+    icon: "text-brand-cyan",
+    badge: "bg-brand-cyan/10 text-brand-cyan",
+  },
+  Programming: {
+    surface: "bg-brand-indigo/10",
+    icon: "text-brand-indigo",
+    badge: "bg-brand-indigo/10 text-brand-indigo",
+  },
+  "Version Control": {
+    surface: "bg-brand-sky/10",
+    icon: "text-brand-sky",
+    badge: "bg-brand-sky/10 text-brand-sky",
+  },
+  "Web Automation": {
+    surface: "bg-brand-blue/10",
+    icon: "text-brand-blue",
+    badge: "bg-brand-blue/10 text-brand-blue",
+  },
+  BDD: {
+    surface: "bg-brand-sky/10",
+    icon: "text-brand-sky",
+    badge: "bg-brand-sky/10 text-brand-sky",
+  },
+  "Low-Code": {
+    surface: "bg-brand-indigo/10",
+    icon: "text-brand-indigo",
+    badge: "bg-brand-indigo/10 text-brand-indigo",
+  },
+  "API Testing": {
+    surface: "bg-brand-cyan/10",
+    icon: "text-brand-cyan",
+    badge: "bg-brand-cyan/10 text-brand-cyan",
+  },
+};
+
 export default function CourseCard({
   course,
 }: CourseCardProps) {
   const Icon = course.icon;
+  const accent = categoryAccents[course.category] ?? categoryAccents.Fundamental;
 
   return (
     <Link
       href={`/learn/${course.slug}`}
-      className="group flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md"
+      className="group flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-card transition-all duration-150 hover:border-primary/30 hover:shadow-md"
     >
       <div className="flex flex-1 flex-col p-5">
-        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10">
-          <Icon className="h-7 w-7 text-primary" />
+        <div className={`flex h-14 w-14 items-center justify-center rounded-2xl ${accent.surface}`}>
+          <Icon className={`h-7 w-7 ${accent.icon}`} />
         </div>
+
+        <span className={`mt-4 w-fit rounded-full px-2.5 py-1 text-xs font-medium ${accent.badge}`}>
+          {course.category}
+        </span>
 
         <h2 className="mt-5 text-lg font-semibold text-card-foreground">
           {course.title}
@@ -32,7 +75,7 @@ export default function CourseCard({
         </p>
 
         <div className="mt-5 flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
-          <span>{course.level}</span>
+          <span className="rounded-full bg-muted px-2.5 py-1">{course.level}</span>
 
           <span className="flex items-center gap-1">
             <BookOpen className="h-3.5 w-3.5" />
@@ -46,7 +89,7 @@ export default function CourseCard({
           <span
             className={
               course.isPremium
-                ? "font-medium text-violet-600 dark:text-violet-400"
+                ? "font-medium text-primary"
                 : "font-medium text-green-600 dark:text-green-400"
             }
           >
@@ -65,7 +108,7 @@ export default function CourseCard({
               </span>
             </div>
           ) : course.isPremium ? (
-            <Lock className="h-4 w-4 text-violet-500" />
+            <Lock className="h-4 w-4 text-primary" />
           ) : null}
         </div>
       </div>

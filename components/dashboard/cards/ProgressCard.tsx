@@ -3,7 +3,7 @@ import { ArrowRight, BookOpenCheck } from "lucide-react";
 
 export default function ProgressCard() {
   return (
-    <div className="h-full rounded-3xl border border-border bg-card p-6 text-card-foreground shadow-sm">
+    <div className="h-full rounded-2xl border border-border bg-card p-5 text-card-foreground sm:p-6">
       <BookOpenCheck className="h-5 w-5 text-primary" aria-hidden="true" />
       <h2 className="mt-4 text-lg font-semibold">Progres belajar</h2>
       <p className="mt-2 text-sm leading-6 text-muted-foreground">

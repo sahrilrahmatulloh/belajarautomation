@@ -1,5 +1,5 @@
-import Image from "next/image";
 import Link from "next/link";
+import ContentCover from "@/components/common/ContentCover";
 
 import {
   ArrowRight,
@@ -16,12 +16,13 @@ export default function ArticleCard({
   article,
 }: ArticleCardProps) {
   return (
-    <article className="group flex h-full flex-col overflow-hidden rounded-3xl border border-border bg-card shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
+    <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-card transition-all duration-150 hover:border-primary/30 hover:shadow-md">
       <div className="relative aspect-video overflow-hidden bg-muted">
-        <Image
+        <ContentCover
           src={article.cover}
-          alt={article.title}
-          fill
+          title={article.title}
+          category={article.category}
+          kind="article"
           className="object-cover transition-transform duration-300 group-hover:scale-105"
         />
       </div>

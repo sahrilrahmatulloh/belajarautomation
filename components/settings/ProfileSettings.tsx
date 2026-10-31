@@ -40,19 +40,21 @@ export default function ProfileSettings() {
 
         <button
           type="button"
-          className="rounded-xl border border-border px-4 py-2.5 text-sm font-medium transition-colors hover:bg-accent"
+          disabled
+          className="rounded-xl border border-border px-4 py-2.5 text-sm font-medium opacity-50 disabled:cursor-not-allowed"
         >
-          Ubah Foto
+          Ubah Foto (belum tersedia)
         </button>
       </div>
 
       <div className="mt-8 grid gap-5 sm:grid-cols-2">
         <div>
-          <label className="text-sm font-medium">
+          <label htmlFor="profile-name" className="text-sm font-medium">
             Nama
           </label>
 
           <Input
+            id="profile-name"
             value={name}
             onChange={(event) =>
               setName(event.target.value)
@@ -62,11 +64,12 @@ export default function ProfileSettings() {
         </div>
 
         <div>
-          <label className="text-sm font-medium">
+          <label htmlFor="profile-role" className="text-sm font-medium">
             Role
           </label>
 
           <Input
+            id="profile-role"
             value={role}
             onChange={(event) =>
               setRole(event.target.value)
@@ -76,11 +79,12 @@ export default function ProfileSettings() {
         </div>
 
         <div className="sm:col-span-2">
-          <label className="text-sm font-medium">
+          <label htmlFor="profile-email" className="text-sm font-medium">
             Email
           </label>
 
           <Input
+            id="profile-email"
             type="email"
             value={email}
             onChange={(event) =>
@@ -91,12 +95,16 @@ export default function ProfileSettings() {
         </div>
       </div>
 
-      <div className="mt-6 flex justify-end">
+      <div className="mt-5 flex flex-col-reverse gap-3 border-t border-border pt-5 sm:flex-row sm:items-center sm:justify-between">
+        <p className="text-sm text-muted-foreground">
+          Perubahan belum disimpan ke akun.
+        </p>
         <button
           type="button"
-          className="rounded-xl bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
+          disabled
+          className="rounded-xl bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground opacity-50"
         >
-          Simpan Perubahan
+          Simpan belum tersedia
         </button>
       </div>
     </section>
