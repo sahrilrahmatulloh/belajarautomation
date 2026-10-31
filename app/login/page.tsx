@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import AuthShell from "@/components/auth/AuthShell";
+import GuestOnly from "@/components/auth/GuestOnly";
 import LoginForm from "@/components/auth/LoginForm";
 
 export const metadata: Metadata = {
@@ -10,11 +11,13 @@ export const metadata: Metadata = {
 // Satu halaman masuk untuk semua role (User, Creator, Reviewer, Admin).
 export default function Page() {
   return (
-    <AuthShell
-      title="Selamat datang kembali"
-      description="Masuk untuk melanjutkan belajar atau mengelola konten sesuai role kamu."
-    >
-      <LoginForm />
-    </AuthShell>
+    <GuestOnly>
+      <AuthShell
+        title="Selamat datang kembali"
+        description="Masuk untuk melanjutkan belajar atau mengelola konten sesuai role kamu."
+      >
+        <LoginForm />
+      </AuthShell>
+    </GuestOnly>
   );
 }

@@ -3,7 +3,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
 
 import {
   getRoleFromPath,
@@ -121,22 +120,6 @@ export default function Sidebar({
         })}
       </nav>
 
-      {role !== "user" && (
-        <div className={`border-t border-sidebar-border py-4 ${collapsed ? "px-3" : "px-4"}`}>
-          <Link
-            href="/"
-            title={collapsed ? "Kembali ke mode belajar" : undefined}
-            className={`flex w-full items-center gap-3 rounded-lg py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground ${
-              collapsed ? "justify-center px-0" : "px-3"
-            }`}
-          >
-            <ArrowLeft size={collapsed ? 20 : 18} aria-hidden="true" />
-            <span className={collapsed ? "sr-only" : undefined}>
-              Kembali ke mode belajar
-            </span>
-          </Link>
-        </div>
-      )}
     </aside>
   );
 }
