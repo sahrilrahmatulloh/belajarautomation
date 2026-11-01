@@ -27,6 +27,11 @@ export type CourseAvailability = "available" | "coming-soon";
 // Sebelum rilis, setiap course "available" wajib "ready" (CURRICULUM bagian 1).
 export type CourseContentStatus = "ready" | "draft";
 
+// free: dapat dipelajari semua pengguna, termasuk Basic.
+// premium: hanya untuk pengguna Pro dan Premium; Basic tetap melihat katalog,
+// deskripsi, daftar modul, dan cuplikan (PRD FR-02, FR-10; CURRICULUM bagian 1).
+export type CourseAccess = "free" | "premium";
+
 interface CourseBase {
   id: number;
   slug: string;
@@ -37,6 +42,7 @@ interface CourseBase {
   languages: CourseLanguage[];
   level: "Beginner" | "Intermediate" | "Advanced";
   contentStatus: CourseContentStatus;
+  access: CourseAccess;
   // Path sampul di public/; kosong bila belum ada (tampil placeholder).
   cover?: string;
   progress?: number;

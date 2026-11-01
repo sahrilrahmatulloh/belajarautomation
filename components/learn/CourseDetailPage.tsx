@@ -5,6 +5,7 @@ import {
   CheckCircle2,
   Clock3,
   Code2,
+  Crown,
   ListChecks,
   PlayCircle,
   Target,
@@ -93,8 +94,34 @@ export default function CourseDetailPage({
                 {course.languages.join(", ")}
               </span>
             )}
+
+            {course.access === "premium" && (
+              <span className="flex w-fit items-center gap-1.5 rounded-full bg-amber-400/15 px-3 py-1.5 text-xs font-semibold text-amber-700 dark:text-amber-300">
+                <Crown className="h-3.5 w-3.5" aria-hidden="true" />
+                Premium
+              </span>
+            )}
           </div>
         </div>
+
+        {/* Course premium: pengguna Basic tetap melihat detail dan daftar modul (PRD FR-02).
+            Hak akses sebenarnya wajib diverifikasi backend. */}
+        {course.access === "premium" && (
+          <div className="mt-6 flex flex-col gap-3 rounded-2xl border border-amber-400/40 bg-amber-400/10 p-4 sm:flex-row sm:items-center sm:justify-between">
+            <p className="text-sm">
+              <span className="font-semibold">Course premium.</span>{" "}
+              <span className="text-muted-foreground">
+                Tersedia untuk pengguna Pro dan Premium. Kamu tetap bisa melihat daftar modul dan cuplikannya.
+              </span>
+            </p>
+            <Link
+              href="/membership"
+              className="inline-flex min-h-10 shrink-0 items-center justify-center rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground hover:bg-primary/90"
+            >
+              Lihat Membership
+            </Link>
+          </div>
+        )}
 
         <div className="mt-8">
           <div className="flex items-center justify-between text-sm">

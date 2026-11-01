@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 import ContentCover from "@/components/common/ContentCover";
-import { BookOpen, Clock3, Code2 } from "lucide-react";
+import { BookOpen, Clock3, Code2, Crown } from "lucide-react";
 
 import { Course } from "@/types/Course";
 import { Progress } from "@/components/ui/progress";
@@ -145,6 +145,11 @@ export default function CourseCard({
           {isComingSoon ? (
             <span className="font-medium text-muted-foreground">
               Materi sedang disiapkan
+            </span>
+          ) : course.access === "premium" ? (
+            <span className="inline-flex items-center gap-1.5 font-medium text-amber-700 dark:text-amber-300">
+              <Crown className="h-4 w-4" aria-hidden="true" />
+              Premium
             </span>
           ) : (
             <span className="font-medium text-green-600 dark:text-green-400">
