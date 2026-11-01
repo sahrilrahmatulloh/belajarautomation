@@ -23,7 +23,7 @@ export default function LeaderboardPage() {
         </div>
       </section>
 
-      {/* LeaderboardBoard membaca periode dari URL (useSearchParams). */}
+      {/* LeaderboardBoard membaca tab aktif dari URL (useSearchParams). */}
       <Suspense fallback={<p className="text-sm text-muted-foreground">Memuat leaderboard...</p>}>
         <LeaderboardBoard />
       </Suspense>
@@ -32,8 +32,7 @@ export default function LeaderboardPage() {
 
       <p className="flex items-start gap-2 text-sm text-muted-foreground">
         <Info className="mt-0.5 h-4 w-4 shrink-0" />
-        Peringkat dihitung dari aktivitas belajar yang valid. Pengguna gratis dan Premium
-        memakai aturan XP yang sama, dan pembelian tidak menambah XP.
+        Peringkat berdasarkan total XP dari aktivitas belajar yang valid. Pembelian tidak menambah XP.
       </p>
     </div>
   );

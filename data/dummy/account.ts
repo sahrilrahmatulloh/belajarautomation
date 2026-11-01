@@ -11,8 +11,8 @@ export const DUMMY_ACCOUNT = {
   // Dihitung dari aktivitas dummy dengan nilai XP PRD FR-05,
   // agar XP, "Materi Selesai", dan "Challenge Selesai" saling konsisten.
   xp: getCompletedLessonCount() * XP_PER_LESSON + completedChallenges * XP_PER_CHALLENGE,
-  // XP yang diperoleh pada minggu berjalan (periode Mingguan leaderboard).
-  weeklyXp: 155,
   completedChallenges,
   streakDays: 5,
+  // Nilai awal opsi privasi leaderboard (PRD FR-06).
+  showOnLeaderboard: true,
 };

@@ -38,7 +38,7 @@ export default function LeaderboardRowItem({ row }: { row: LeaderboardRow }) {
 
       <div className="min-w-0 flex-1">
         <p className="flex min-w-0 items-center gap-2 text-sm font-semibold">
-          <span className="truncate">{row.name}</span>
+          <span className="truncate">{row.displayName}</span>
           {row.isCurrentUser && (
             <span className="shrink-0 rounded-full bg-primary px-2 py-0.5 text-[10px] font-semibold text-primary-foreground">
               Kamu
@@ -52,7 +52,7 @@ export default function LeaderboardRowItem({ row }: { row: LeaderboardRow }) {
       </div>
 
       <span className="shrink-0 text-sm font-bold tabular-nums">
-        {formatNumber(row.periodXp)} XP
+        {formatNumber(row.totalXp)} XP
       </span>
     </li>
   );

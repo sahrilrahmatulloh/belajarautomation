@@ -1,15 +1,13 @@
 "use client";
 
+import { useState } from "react";
 import { Trophy } from "lucide-react";
 
-import {
-  setHiddenFromLeaderboard,
-  useHiddenFromLeaderboard,
-} from "@/lib/leaderboardPrivacy";
+import { DUMMY_ACCOUNT } from "@/data/dummy/account";
 
 export default function PrivacySettings() {
-  const hidden = useHiddenFromLeaderboard();
-  const isVisible = !hidden;
+  // Nilai awal dari data dummy; perubahan hanya di state halaman ini.
+  const [isVisible, setIsVisible] = useState(DUMMY_ACCOUNT.showOnLeaderboard);
 
   return (
     <section id="privasi" className="scroll-mt-20 rounded-3xl border border-border bg-card p-6">
@@ -19,7 +17,7 @@ export default function PrivacySettings() {
         Atur apa yang dapat dilihat pengguna lain.
       </p>
       <p className="mt-2 text-xs text-muted-foreground">
-        Pilihan ini sementara hanya tersimpan di browser ini.
+        Pengaturan ini belum tersimpan permanen dan kembali ke nilai awal saat halaman dimuat ulang.
       </p>
 
       <div className="mt-6 flex items-center gap-4">
@@ -43,13 +41,13 @@ export default function PrivacySettings() {
           role="switch"
           aria-checked={isVisible}
           aria-labelledby="leaderboard-visibility-label"
-          onClick={() => setHiddenFromLeaderboard(isVisible)}
+          onClick={() => setIsVisible((value) => !value)}
           className={`relative h-6 w-11 shrink-0 rounded-full transition-colors ${
-            isVisible ? "bg-primary" : "bg-muted"
+            isVisible ? "bg-primary" : "bg-muted-foreground/30"
           }`}
         >
           <span
-            className={`absolute top-1 h-4 w-4 rounded-full bg-white transition-transform ${
+            className={`absolute left-0 top-1 h-4 w-4 rounded-full bg-white shadow-sm transition-transform ${
               isVisible ? "translate-x-6" : "translate-x-1"
             }`}
           />

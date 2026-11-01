@@ -1,20 +1,24 @@
 // DATA DUMMY — hapus sebelum rilis (PRD FR-01, aturan bisnis #16).
-// Peserta leaderboard contoh. Dibentuk secara deterministik agar hasil
-// server dan browser sama, dan cukup banyak untuk menguji batas 50 teratas.
+// Peserta leaderboard contoh (tanpa email atau data pribadi lain). Rank tiap
+// pengguna dihitung dari totalXp dengan getRank, tidak ditulis manual.
+// Dibentuk deterministik agar hasil server dan browser sama.
+//
+// Komposisi (tampil): Master 2, Expert 3, Specialist 4, Practitioner 6,
+// Apprentice 50, Trainee 12, ditambah 3 pengguna yang memilih tidak tampil.
+// Dengan akun dummy (Apprentice, 420 XP), pengguna berada di luar 50 besar
+// Global (#51) tetapi di dalam 50 besar tab Apprentice (#36), dan tab
+// Apprentice berisi lebih dari 50 orang.
 
-export interface LeaderboardMember {
+// Saat ini hanya skin Basic yang tersedia (PRD FR-12).
+export type SkinId = "basic";
+
+export interface LeaderboardUser {
   id: string;
-  name: string;
-  // Total XP (periode Sepanjang Waktu).
-  xp: number;
-  // XP minggu berjalan (periode Mingguan).
-  weeklyXp: number;
-  // Memilih tidak ditampilkan di leaderboard (opsi privasi).
-  hidden?: boolean;
+  displayName: string;
+  totalXp: number;
+  skinId: SkinId;
+  showOnLeaderboard: boolean;
 }
-
-// Minggu berjalan: Senin 00.00 WIB sampai Minggu.
-export const DUMMY_LEADERBOARD_WEEK = { start: "2026-10-26", end: "2026-11-01" };
 
 const FIRST_NAMES = [
   "Rina", "Dimas", "Ayu", "Fajar", "Nadia", "Bagas", "Citra", "Yoga", "Intan", "Raka",
@@ -26,18 +30,29 @@ const LAST_NAMES = [
   "Permata", "Aditya", "Anjani", "Wijaya", "Ningsih", "Setiawan", "Hidayat", "Utami", "Kusuma",
 ];
 
-const roundTo5 = (value: number) => Math.round(value / 5) * 5;
+// Daftar XP per kelompok, dari tertinggi.
+const range = (count: number, start: number, step: number) =>
+  Array.from({ length: count }, (_, index) => start - index * step);
 
-export const DUMMY_LEADERBOARD_MEMBERS: LeaderboardMember[] = Array.from(
-  { length: 70 },
-  (_, index) => {
-    const xp = roundTo5(6400 * 0.955 ** index);
-    return {
-      id: `member-${index + 1}`,
-      name: `${FIRST_NAMES[index % FIRST_NAMES.length]} ${LAST_NAMES[(index * 7) % LAST_NAMES.length]}`,
-      xp,
-      weeklyXp: Math.min(xp, ((index * 37) % 23) * 15),
-      hidden: index === 3 || index === 41,
-    };
-  }
+const VISIBLE_XP = [
+  ...[6400, 5820], // Master
+  ...[5300, 4600, 3950], // Expert
+  ...[3650, 3100, 2700, 2300], // Specialist
+  ...[2100, 1820, 1560, 1340, 1180, 1050], // Practitioner
+  ...range(35, 995, 16), // Apprentice di atas akun dummy: 995–451
+  ...range(15, 415, 8), // Apprentice di bawah akun dummy: 415–303
+  ...range(12, 290, 22), // Trainee: 290–48
+];
+
+// Memilih tidak ditampilkan di leaderboard (opsi privasi).
+const HIDDEN_XP = [1500, 610, 120];
+
+export const DUMMY_LEADERBOARD_USERS: LeaderboardUser[] = [...VISIBLE_XP, ...HIDDEN_XP].map(
+  (totalXp, index) => ({
+    id: `user-${index + 1}`,
+    displayName: `${FIRST_NAMES[index % FIRST_NAMES.length]} ${LAST_NAMES[(index * 7) % LAST_NAMES.length]}`,
+    totalXp,
+    skinId: "basic",
+    showOnLeaderboard: index < VISIBLE_XP.length,
+  })
 );

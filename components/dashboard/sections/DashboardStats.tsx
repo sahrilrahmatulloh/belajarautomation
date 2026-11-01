@@ -4,13 +4,13 @@ import { DUMMY_ACCOUNT } from "@/data/dummy/account";
 import { getCurrentUserPosition } from "@/lib/leaderboard";
 import { getCompletedLessonCount } from "@/lib/learningProgress";
 
-const leaderboardPosition = getCurrentUserPosition("all-time");
+const leaderboardPosition = getCurrentUserPosition("global");
 
 const stats = [
   {
     label: "Total XP",
     value: DUMMY_ACCOUNT.xp.toLocaleString("id-ID"),
-    detail: `Peringkat #${leaderboardPosition} sepanjang waktu`,
+    detail: `Peringkat #${leaderboardPosition} di leaderboard Global`,
     Icon: Trophy,
     iconStyle: "bg-amber-500/10 text-amber-600 dark:text-amber-300",
   },
