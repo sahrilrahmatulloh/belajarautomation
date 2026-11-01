@@ -1,5 +1,9 @@
 import { Suspense } from "react";
 
+import { DUMMY_ACCOUNT } from "@/data/dummy/account";
+import { DUMMY_EARNED_ACHIEVEMENTS } from "@/data/dummy/userAchievements";
+import { getCompletedLessonCount } from "@/lib/learningProgress";
+
 import FeaturedAchievements from "./FeaturedAchievements";
 import LearningProgress from "./LearningProgress";
 import ProfileAchievements from "./ProfileAchievements";
@@ -13,7 +17,12 @@ import RecentActivity from "./RecentActivity";
 export default function ProfilePage() {
   const summary = (
     <div className="space-y-6">
-      <ProfileStats />
+      <ProfileStats
+        xp={DUMMY_ACCOUNT.xp}
+        lessons={getCompletedLessonCount()}
+        challenges={DUMMY_ACCOUNT.completedChallenges}
+        achievements={DUMMY_EARNED_ACHIEVEMENTS.length}
+      />
 
       <FeaturedAchievements />
 

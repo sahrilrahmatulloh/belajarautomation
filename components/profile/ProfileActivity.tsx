@@ -1,19 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import {
-  Award,
-  BookOpen,
-  ClipboardCheck,
-  GraduationCap,
-  LucideIcon,
-  Target,
-  TrendingUp,
-} from "lucide-react";
-
 import FilterChips from "@/components/filters/FilterChips";
 import FilterEmptyState from "@/components/filters/FilterEmptyState";
-import { COURSES } from "@/data/courses";
 import {
   getActivitySummary,
   getDailyActivity,
@@ -23,7 +12,9 @@ import {
 import { validFilterValue } from "@/lib/filters";
 import { dateFromDaysAgo, formatNumber } from "@/lib/format";
 import { useUrlFilters } from "@/lib/useUrlFilters";
-import { ActivityEntry, ActivityType } from "@/types/Activity";
+import { ActivityType } from "@/types/Activity";
+
+import ActivityRow from "./ActivityRow";
 
 // Tab Aktivitas (PRD FR-13): riwayat per tanggal, filter, ringkasan periode,
 // grafik XP harian, dan heatmap konsistensi belajar.
@@ -54,19 +45,6 @@ const PERIOD_OPTIONS = [
   { value: "90", label: "90 hari" },
 ];
 
-const TYPE_STYLES: Record<ActivityType, { icon: LucideIcon; label: string; className: string }> = {
-  lesson: { icon: BookOpen, label: "Materi selesai", className: "bg-brand-blue/10 text-brand-blue" },
-  course_complete: {
-    icon: GraduationCap,
-    label: "Course selesai",
-    className: "bg-indigo-500/10 text-indigo-600 dark:text-indigo-300",
-  },
-  quiz: { icon: ClipboardCheck, label: "Lulus kuis", className: "bg-cyan-500/10 text-cyan-700 dark:text-cyan-300" },
-  challenge: { icon: Target, label: "Challenge selesai", className: "bg-rose-500/10 text-rose-600 dark:text-rose-300" },
-  achievement: { icon: Award, label: "Achievement diperoleh", className: "bg-amber-500/10 text-amber-600 dark:text-amber-300" },
-  rank_up: { icon: TrendingUp, label: "Naik rank", className: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-300" },
-};
-
 const fullDateFormatter = new Intl.DateTimeFormat("id-ID", {
   weekday: "long",
   day: "numeric",
@@ -79,28 +57,6 @@ function dayLabel(today: Date, daysAgo: number) {
   if (daysAgo === 0) return "Hari ini";
   if (daysAgo === 1) return "Kemarin";
   return fullDateFormatter.format(dateFromDaysAgo(today, daysAgo));
-}
-
-function ActivityRow({ entry }: { entry: ActivityEntry }) {
-  const { icon: Icon, label, className } = TYPE_STYLES[entry.type];
-  const courseTitle =
-    entry.type === "lesson" ? COURSES.find((course) => course.slug === entry.courseSlug)?.title : undefined;
-
-  return (
-    <li className="flex items-center gap-3 py-3">
-      <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ${className}`}>
-        <Icon className="h-4 w-4" aria-hidden="true" />
-      </span>
-      <div className="min-w-0 flex-1">
-        <p className="truncate text-sm font-medium">{entry.title}</p>
-        <p className="truncate text-xs text-muted-foreground">{courseTitle ?? label}</p>
-      </div>
-      <div className="shrink-0 text-right">
-        {entry.xp > 0 && <p className="text-sm font-semibold tabular-nums text-primary">+{entry.xp} XP</p>}
-        <p className="text-xs tabular-nums text-muted-foreground">{entry.time}</p>
-      </div>
-    </li>
-  );
 }
 
 function SummaryCard({ label, value }: { label: string; value: string }) {
