@@ -18,10 +18,13 @@ export type ProfileTab = (typeof PROFILE_TABS)[number]["value"];
 
 const FILTER_KEYS = ["tab"] as const;
 
-export default function ProfileTabs({ panels }: { panels: Record<ProfileTab, ReactNode> }) {
+// Hanya tab yang punya isi yang ditampilkan; profil publik tidak mengirim Aktivitas
+// dan Kustomisasi, sehingga keduanya tidak bisa dibuka lewat URL.
+export default function ProfileTabs({ panels }: { panels: Partial<Record<ProfileTab, ReactNode>> }) {
   const { values, setFilters } = useUrlFilters(FILTER_KEYS);
+  const tabs = PROFILE_TABS.filter((item) => panels[item.value] !== undefined);
   // Nilai URL yang tidak dikenal dianggap Ringkasan.
-  const tab: ProfileTab = PROFILE_TABS.some((item) => item.value === values.tab)
+  const tab: ProfileTab = tabs.some((item) => item.value === values.tab)
     ? (values.tab as ProfileTab)
     : "ringkasan";
 
@@ -30,9 +33,9 @@ export default function ProfileTabs({ panels }: { panels: Record<ProfileTab, Rea
       <div
         role="tablist"
         aria-label="Bagian profil"
-        className="grid grid-cols-4 gap-1 rounded-2xl border border-border bg-card p-1.5"
+        className={`grid gap-1 rounded-2xl border border-border bg-card p-1.5 ${tabs.length === 2 ? "grid-cols-2" : "grid-cols-4"}`}
       >
-        {PROFILE_TABS.map((item) => {
+        {tabs.map((item) => {
           const isActive = item.value === tab;
           const Icon = item.icon;
           return (

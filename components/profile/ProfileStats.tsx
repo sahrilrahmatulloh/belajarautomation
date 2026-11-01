@@ -26,7 +26,7 @@ export default function ProfileStats({ xp, lessons, challenges, achievements }: 
             <Icon className="h-5 w-5" aria-hidden="true" />
           </span>
           <div className="min-w-0">
-            <p className="truncate text-xs text-muted-foreground sm:text-sm">{label}</p>
+            <p className="text-xs leading-4 text-muted-foreground sm:text-sm">{label}</p>
             <p className="text-xl font-bold tabular-nums">{formatNumber(value)}</p>
           </div>
         </article>

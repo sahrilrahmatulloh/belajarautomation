@@ -1,8 +1,9 @@
 import { Suspense } from "react";
+import Link from "next/link";
+import { Eye } from "lucide-react";
 
-import { DUMMY_ACCOUNT } from "@/data/dummy/account";
-import { DUMMY_EARNED_ACHIEVEMENTS } from "@/data/dummy/userAchievements";
-import { getCompletedLessonCount } from "@/lib/learningProgress";
+import { getPublicProfile } from "@/data/dummy/publicProfiles";
+import { DUMMY_PROFILE } from "@/data/dummy/profile";
 
 import FeaturedAchievements from "./FeaturedAchievements";
 import LearningProgress from "./LearningProgress";
@@ -15,16 +16,19 @@ import ProfileTabs from "./ProfileTabs";
 import RecentActivity from "./RecentActivity";
 
 export default function ProfilePage() {
+  // Profil akun demo selalu ada; datanya sama dengan yang tampil di profil publik.
+  const profile = getPublicProfile(DUMMY_PROFILE.username)!;
+
   const summary = (
     <div className="space-y-6">
       <ProfileStats
-        xp={DUMMY_ACCOUNT.xp}
-        lessons={getCompletedLessonCount()}
-        challenges={DUMMY_ACCOUNT.completedChallenges}
-        achievements={DUMMY_EARNED_ACHIEVEMENTS.length}
+        xp={profile.xp}
+        lessons={profile.lessons}
+        challenges={profile.challenges}
+        achievements={profile.achievements.filter((state) => state.earned).length}
       />
 
-      <FeaturedAchievements />
+      <FeaturedAchievements featured={profile.featured} allHref="/profile?tab=pencapaian" />
 
       <div className="grid gap-6 lg:grid-cols-2">
         <LearningProgress />
@@ -35,7 +39,26 @@ export default function ProfilePage() {
 
   return (
     <div className="mx-auto max-w-6xl space-y-6">
-      <ProfileHeader />
+      <ProfileHeader
+        displayName={profile.displayName}
+        username={profile.username}
+        bio={profile.bio}
+        avatarImage={profile.avatarImage}
+        avatarName={profile.avatarName}
+        themeImage={profile.themeImage}
+        xp={profile.xp}
+        isOwner
+      />
+
+      <div className="flex justify-end">
+        <Link
+          href={`/u/${profile.username}`}
+          className="inline-flex min-h-10 items-center gap-2 rounded-xl border border-border bg-card px-4 text-sm font-medium transition-colors hover:bg-accent"
+        >
+          <Eye className="h-4 w-4" aria-hidden="true" />
+          Lihat sebagai publik
+        </Link>
+      </div>
 
       {/* Tab dibaca dari URL, jadi butuh Suspense saat prerender. */}
       <Suspense fallback={summary}>
@@ -43,7 +66,7 @@ export default function ProfilePage() {
           panels={{
             ringkasan: summary,
             aktivitas: <ProfileActivity />,
-            pencapaian: <ProfileAchievements />,
+            pencapaian: <ProfileAchievements states={profile.achievements} />,
             kustomisasi: <ProfileCustomization />,
           }}
         />
