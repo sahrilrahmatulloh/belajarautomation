@@ -13,9 +13,9 @@ interface FilterChipsProps {
   options: FilterOption[];
   active: string;
   onChange: (value: string) => void;
-  // "labeled": label di kiri dan chip terbungkus (halaman Belajar).
-  // "scroll": satu baris yang bisa digeser horizontal di mobile.
-  layout?: "labeled" | "scroll";
+  // "stacked": label di atas, chip terbungkus (isi panel Filter).
+  // "scroll": satu baris yang bisa digeser horizontal; halaman tidak ikut melebar.
+  layout?: "stacked" | "scroll";
 }
 
 export default function FilterChips({
@@ -23,7 +23,7 @@ export default function FilterChips({
   options,
   active,
   onChange,
-  layout = "labeled",
+  layout = "stacked",
 }: FilterChipsProps) {
   const isScroll = layout === "scroll";
 
@@ -33,12 +33,12 @@ export default function FilterChips({
       aria-label={`Filter ${label}`}
       className={
         isScroll
-          ? "-mx-1 flex min-w-0 gap-2 overflow-x-auto px-1 pb-1 sm:flex-wrap sm:overflow-visible"
+          ? "-mx-1 flex min-w-0 gap-2 overflow-x-auto px-1 pb-1 [scrollbar-width:thin]"
           : "flex flex-wrap items-center gap-2"
       }
     >
       {!isScroll && (
-        <span className="mr-1 w-full text-xs font-semibold uppercase tracking-wider text-muted-foreground sm:w-20">
+        <span className="w-full text-xs font-semibold uppercase tracking-wider text-muted-foreground">
           {label}
         </span>
       )}

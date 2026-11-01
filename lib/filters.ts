@@ -32,3 +32,18 @@ export function validFilterValue(
     ? value
     : "";
 }
+
+// Opsi chip kategori: "Semua" lalu kategori yang punya item, mengikuti urutan
+// Learning Center. Kategori tanpa item (mis. Security Testing) disembunyikan.
+export function getCategoryOptions(
+  orderedCategories: readonly string[],
+  presentCategories: Iterable<string>
+) {
+  const present = new Set(presentCategories);
+  return [
+    { value: "", label: "Semua" },
+    ...orderedCategories
+      .filter((category) => present.has(category))
+      .map((category) => ({ value: toFilterSlug(category), label: category })),
+  ];
+}

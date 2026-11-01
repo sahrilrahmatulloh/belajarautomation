@@ -18,7 +18,7 @@ export default function FilterResultBar({
   return (
     <div className="flex flex-wrap items-center justify-between gap-2">
       <p aria-live="polite" className="text-sm text-muted-foreground">
-        Menampilkan <span className="font-semibold text-foreground">{count}</span> {noun}
+        <span className="font-semibold text-foreground">{count}</span> {noun}
       </p>
 
       {canReset && (

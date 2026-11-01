@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 
 // Nilai filter disimpan di query URL agar bisa dibagikan dan bertahan saat
@@ -40,4 +40,28 @@ export function useUrlFilters<K extends string>(keys: readonly K[]) {
   }, [keys, setFilters]);
 
   return { values, setFilters, resetFilters };
+}
+
+// Filter katalog dengan pencarian "q". Teks pencarian disimpan lokal agar input
+// tetap responsif, lalu ikut ditulis ke URL. Dipakai halaman Belajar dan Playground.
+export function useCatalogFilters<K extends string>(keys: readonly K[]) {
+  const { values, setFilters, resetFilters } = useUrlFilters(keys);
+  const [search, setSearchState] = useState(
+    (values as Record<string, string>).q ?? ""
+  );
+
+  const setSearch = useCallback(
+    (value: string) => {
+      setSearchState(value);
+      setFilters({ q: value.trim() } as Partial<Record<K, string>>);
+    },
+    [setFilters]
+  );
+
+  const reset = useCallback(() => {
+    setSearchState("");
+    resetFilters();
+  }, [resetFilters]);
+
+  return { values, search, setSearch, setFilters, reset };
 }
