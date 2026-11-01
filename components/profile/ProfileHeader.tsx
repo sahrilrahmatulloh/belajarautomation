@@ -14,79 +14,79 @@ export default function ProfileHeader() {
   const { rank, nextRank, xpToNext, percent } = getRankProgress(DUMMY_ACCOUNT.xp);
 
   return (
-    <section className="overflow-hidden rounded-3xl border border-border bg-card">
-      {/* Banner tema aktif */}
-      <div className="relative h-28 sm:h-40">
-        <Image
-          src={ACTIVE_THEME.image}
-          alt=""
-          fill
-          priority
-          sizes="(min-width: 1152px) 1152px, 100vw"
-          className="object-cover object-[75%_50%]"
-        />
-      </div>
+    <section className="relative isolate overflow-hidden rounded-3xl border border-border bg-slate-900 text-white">
+      <Image
+        src={ACTIVE_THEME.image}
+        alt=""
+        fill
+        priority
+        sizes="(min-width: 1152px) 1152px, 100vw"
+        className="-z-20 object-cover object-[75%_50%]"
+      />
+      {/* Gradasi gelap dari kiri agar teks putih terbaca di tema apa pun */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 -z-10 bg-gradient-to-r from-slate-950/90 via-slate-950/75 to-slate-950/45 sm:via-slate-950/60 sm:to-transparent"
+      />
 
-      <div className="flex flex-col gap-5 px-5 pb-6 sm:px-8 lg:flex-row lg:items-end">
-        <div className="flex min-w-0 flex-1 flex-col gap-4 sm:flex-row sm:items-end">
-          {/* Avatar menumpuk di tepi bawah banner */}
-          <Image
-            src={ACTIVE_AVATAR.image}
-            alt={`Avatar ${ACTIVE_AVATAR.name}`}
-            width={112}
-            height={112}
-            className="relative -mt-12 h-24 w-24 shrink-0 rounded-full bg-card ring-4 ring-card sm:-mt-14 sm:h-28 sm:w-28"
-          />
+      <Link
+        href="/settings"
+        aria-label="Pengaturan profil"
+        className="absolute right-3 top-3 flex h-10 w-10 items-center justify-center rounded-xl bg-slate-950/40 text-white backdrop-blur-sm transition-colors hover:bg-slate-950/60"
+      >
+        <Settings2 className="h-5 w-5" aria-hidden="true" />
+      </Link>
 
+      <div className="flex flex-col gap-5 p-5 sm:p-6 lg:max-w-[72%] lg:flex-row lg:items-center lg:p-8">
+        <div className="flex min-w-0 items-center gap-4 pr-12 sm:gap-5 lg:pr-8">
+          <div className="shrink-0 overflow-hidden rounded-2xl bg-white p-1 shadow-lg">
+            <Image
+              src={ACTIVE_AVATAR.image}
+              alt={`Avatar ${ACTIVE_AVATAR.name}`}
+              width={112}
+              height={112}
+              className="h-20 w-20 sm:h-24 sm:w-24"
+            />
+          </div>
           <div className="min-w-0">
             <h1 className="truncate text-2xl font-bold tracking-tight sm:text-3xl">
               {DUMMY_ACCOUNT.name}
             </h1>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Profil belajar kamu di belajarautomation.com
+            <p className="mt-1 text-sm text-white/75">
+              Belajar QA Automation
             </p>
           </div>
         </div>
 
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center lg:shrink-0">
-          {/* Rank dan progress XP */}
-          <div
-            className="flex min-w-0 items-center gap-3 rounded-2xl border bg-background/60 py-1.5 pl-1.5 pr-4 sm:w-72"
-            style={{ borderColor: `${rank.color}66` }}
-          >
-            <RankEmblem rank={rank} variant="full" size={48} />
-            <div className="min-w-0 flex-1">
-              <p className="flex items-baseline justify-between gap-2">
-                <span className="font-semibold">{rank.name}</span>
-                <span className="text-xs tabular-nums text-muted-foreground">
-                  {formatNumber(DUMMY_ACCOUNT.xp)} XP
-                </span>
-              </p>
-              <div
-                role="progressbar"
-                aria-label={nextRank ? `Progress menuju ${nextRank.name}` : "Rank tertinggi tercapai"}
-                aria-valuenow={percent}
-                aria-valuemin={0}
-                aria-valuemax={100}
-                className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-muted"
-              >
-                <div className="h-full rounded-full" style={{ width: `${percent}%`, backgroundColor: rank.color }} />
-              </div>
-              <p className="mt-1 truncate text-xs text-muted-foreground">
-                {nextRank
-                  ? `${formatNumber(xpToNext)} XP lagi ke ${nextRank.name}`
-                  : "Rank tertinggi tercapai"}
-              </p>
+        <div className="flex items-center gap-5 sm:gap-8">
+          {/* Rank */}
+          <div className="flex shrink-0 items-center gap-3 lg:border-l lg:border-white/20 lg:pl-8">
+            <RankEmblem rank={rank} variant="full" size={56} />
+            <div>
+              <p className="text-xs text-white/70">Rank</p>
+              <p className="font-semibold">{rank.name}</p>
             </div>
           </div>
 
-          <Link
-            href="/settings"
-            className="inline-flex items-center justify-center gap-2 rounded-xl border border-border px-4 py-2.5 text-sm font-medium hover:bg-accent"
-          >
-            <Settings2 className="h-4 w-4" aria-hidden="true" />
-            Pengaturan
-          </Link>
+          {/* XP dan progress menuju rank berikutnya */}
+          <div className="min-w-0 flex-1 border-l border-white/20 pl-5 sm:pl-8 lg:w-56 lg:flex-none">
+            <p className="text-lg font-bold tabular-nums">{formatNumber(DUMMY_ACCOUNT.xp)} XP</p>
+            <div
+              role="progressbar"
+              aria-label={nextRank ? `Progress menuju ${nextRank.name}` : "Rank tertinggi tercapai"}
+              aria-valuenow={percent}
+              aria-valuemin={0}
+              aria-valuemax={100}
+              className="mt-2 h-2 overflow-hidden rounded-full bg-white/20"
+            >
+              <div className="h-full rounded-full" style={{ width: `${percent}%`, backgroundColor: rank.color }} />
+            </div>
+            <p className="mt-1.5 text-xs text-white/75">
+              {nextRank
+                ? `${formatNumber(xpToNext)} XP lagi ke ${nextRank.name} (${percent}%)`
+                : "Rank tertinggi tercapai"}
+            </p>
+          </div>
         </div>
       </div>
     </section>
