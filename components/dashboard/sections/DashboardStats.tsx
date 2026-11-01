@@ -1,6 +1,7 @@
 import { BookOpenCheck, Flame, Target, Trophy } from "lucide-react";
 
 import { DUMMY_ACCOUNT, DUMMY_LEADERBOARD } from "@/data/dummyAccount";
+import { getCompletedLessonCount } from "@/lib/learningProgress";
 
 const leaderboardPosition =
   DUMMY_LEADERBOARD.findIndex((entry) => entry.isCurrentUser) + 1;
@@ -15,7 +16,7 @@ const stats = [
   },
   {
     label: "Materi Selesai",
-    value: String(DUMMY_ACCOUNT.completedLessons),
+    value: String(getCompletedLessonCount()),
     detail: "Lesson yang sudah dipelajari",
     Icon: BookOpenCheck,
     iconStyle: "bg-brand-blue/10 text-brand-blue",

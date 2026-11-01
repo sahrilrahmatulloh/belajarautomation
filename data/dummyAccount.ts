@@ -4,7 +4,6 @@
 export const DUMMY_ACCOUNT = {
   name: "Sobat QA",
   xp: 320,
-  completedLessons: 12,
   completedChallenges: 4,
   streakDays: 5,
 };
