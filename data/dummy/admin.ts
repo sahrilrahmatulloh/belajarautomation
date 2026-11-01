@@ -10,7 +10,8 @@ import {
 
 export const DUMMY_ADMIN_STATS: AdminStats = {
   totalUsers: 1248,
-  premiumUsers: 86,
+  proUsers: 64,
+  premiumUsers: 22,
   publishedContent: 132,
   pendingReview: 5,
   transactionsThisMonth: 23,
@@ -31,7 +32,7 @@ export const DUMMY_RECENT_USERS: AdminRecentUser[] = [
     name: "Dewi Anggraini",
     maskedEmail: "de***@mail.com",
     role: "user",
-    isPremium: false,
+    membership: "basic",
     joinedAt: "2026-10-31",
   },
   {
@@ -39,7 +40,7 @@ export const DUMMY_RECENT_USERS: AdminRecentUser[] = [
     name: "Galih Ramadhan",
     maskedEmail: "ga***@mail.com",
     role: "creator",
-    isPremium: true,
+    membership: "pro",
     joinedAt: "2026-10-29",
   },
   {
@@ -47,7 +48,7 @@ export const DUMMY_RECENT_USERS: AdminRecentUser[] = [
     name: "Yusuf Hidayat",
     maskedEmail: "yu***@mail.com",
     role: "user",
-    isPremium: true,
+    membership: "premium",
     joinedAt: "2026-10-28",
   },
   {
@@ -55,7 +56,7 @@ export const DUMMY_RECENT_USERS: AdminRecentUser[] = [
     name: "Bima Santoso",
     maskedEmail: "bi***@mail.com",
     role: "reviewer",
-    isPremium: false,
+    membership: "basic",
     joinedAt: "2026-10-25",
   },
   {
@@ -63,7 +64,7 @@ export const DUMMY_RECENT_USERS: AdminRecentUser[] = [
     name: "Lestari Wulandari",
     maskedEmail: "le***@mail.com",
     role: "user",
-    isPremium: false,
+    membership: "basic",
     joinedAt: "2026-10-24",
   },
 ];
@@ -81,7 +82,7 @@ export const DUMMY_ADMIN_ACTIVITY: AdminActivityLog[] = [
   },
   {
     id: 3,
-    message: "Pembayaran Premium #1045 berhasil",
+    message: "Pembayaran membership Pro #1045 berhasil",
     time: "2 jam lalu",
   },
   {

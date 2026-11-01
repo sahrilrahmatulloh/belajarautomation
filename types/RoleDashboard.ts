@@ -1,4 +1,5 @@
 import { ContentStatus, ContentType } from "./Content";
+import { MembershipTier } from "./Membership";
 import { UserRole } from "./Role";
 
 // Tanggal disimpan sebagai string ISO (YYYY-MM-DD).
@@ -40,6 +41,7 @@ export interface ReviewActivity {
 
 export interface AdminStats {
   totalUsers: number;
+  proUsers: number;
   premiumUsers: number;
   publishedContent: number;
   pendingReview: number;
@@ -52,7 +54,7 @@ export interface AdminRecentUser {
   name: string;
   maskedEmail: string;
   role: UserRole;
-  isPremium: boolean;
+  membership: MembershipTier;
   joinedAt: string;
 }
 

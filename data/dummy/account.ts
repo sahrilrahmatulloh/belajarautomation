@@ -13,6 +13,8 @@ export const DUMMY_ACCOUNT = {
   xp: getCompletedLessonCount() * XP_PER_LESSON + completedChallenges * XP_PER_CHALLENGE,
   completedChallenges,
   streakDays: 5,
+  // Tingkat membership (PRD FR-10); akun demo memakai Basic (gratis).
+  membership: "basic" as const,
   // Nilai awal opsi privasi leaderboard (PRD FR-06).
   showOnLeaderboard: true,
 };

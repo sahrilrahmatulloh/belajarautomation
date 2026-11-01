@@ -2,7 +2,7 @@
 
 import { useSyncExternalStore } from "react";
 
-import { getCartProduct } from "@/lib/cartProducts";
+import { getCartProduct, isMembershipProductId } from "@/lib/cartProducts";
 import { CartProduct } from "@/types/Cart";
 
 // Keranjang disimpan di localStorage browser (belum ada backend).
@@ -70,12 +70,15 @@ export function useCart() {
 }
 
 export const cartActions = {
-  // Produk digital: setiap item maksimal satu.
+  // Produk digital: setiap item maksimal satu, dan hanya satu membership
+  // (menambah Pro atau Premium menggantikan membership lain di keranjang).
   add(id: string) {
-    const ids = getSnapshot().map((product) => product.id);
-    if (!ids.includes(id) && getCartProduct(id)) {
-      writeIds([...ids, id]);
+    let ids = getSnapshot().map((product) => product.id);
+    if (ids.includes(id) || !getCartProduct(id)) return;
+    if (isMembershipProductId(id)) {
+      ids = ids.filter((item) => !isMembershipProductId(item));
     }
+    writeIds([...ids, id]);
   },
   remove(id: string) {
     writeIds(

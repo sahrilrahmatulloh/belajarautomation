@@ -4,6 +4,8 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       { source: "/books", destination: "/ebooks", permanent: true },
+      // Premium berganti nama menjadi Membership (PRD v2.0).
+      { source: "/premium", destination: "/membership", permanent: true },
       { source: "/books/:slug", destination: "/ebooks/:slug", permanent: true },
       // Jalur roadmap lama sebelum diselaraskan dengan PRD.
       { source: "/roadmap/web-automation-engineer", destination: "/roadmap/qa-automation-web", permanent: true },

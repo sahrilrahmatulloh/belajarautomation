@@ -24,6 +24,7 @@ import {
   DUMMY_RECENT_USERS,
   DUMMY_ROLE_DISTRIBUTION,
 } from "@/data/dummy/admin";
+import { getMembershipPlan } from "@/data/membership";
 import { ROLE_LABELS } from "@/data/navigation";
 import { DEFAULT_AVATAR } from "@/data/profile";
 import { formatDate, formatNumber } from "@/lib/format";
@@ -38,9 +39,9 @@ const stats = [
     iconStyle: "bg-brand-blue/10 text-brand-blue",
   },
   {
-    label: "Pengguna Premium",
-    value: DUMMY_ADMIN_STATS.premiumUsers,
-    detail: "Premium Lifetime",
+    label: "Pengguna Berbayar",
+    value: DUMMY_ADMIN_STATS.proUsers + DUMMY_ADMIN_STATS.premiumUsers,
+    detail: `${DUMMY_ADMIN_STATS.proUsers} Pro · ${DUMMY_ADMIN_STATS.premiumUsers} Premium`,
     icon: Crown,
     iconStyle: "bg-amber-500/10 text-amber-600 dark:text-amber-300",
   },
@@ -85,7 +86,7 @@ const roleBarStyles: Record<UserRole, string> = {
 
 const shortcuts = [
   { label: "Kelola Pengguna", icon: Users },
-  { label: "Kelola Paket Premium", icon: Crown },
+  { label: "Kelola Paket Membership", icon: Crown },
   { label: "Kelola Skin", icon: Palette },
   { label: "Lihat Transaksi", icon: Receipt },
 ];
@@ -193,13 +194,13 @@ export default function AdminDashboard() {
             <div className="relative -mx-4 overflow-x-auto sm:-mx-5">
               <table className="w-full min-w-[560px] text-left text-sm">
                 <caption className="sr-only">
-                  Pengguna yang baru bergabung beserta role dan status Premium
+                  Pengguna yang baru bergabung beserta role dan tingkat membership
                 </caption>
                 <thead className="border-y border-border bg-muted/40 text-xs text-muted-foreground">
                   <tr>
                     <th scope="col" className="px-4 py-2.5 font-medium sm:px-5">Pengguna</th>
                     <th scope="col" className="px-3 py-2.5 font-medium">Role</th>
-                    <th scope="col" className="px-3 py-2.5 font-medium">Premium</th>
+                    <th scope="col" className="px-3 py-2.5 font-medium">Membership</th>
                     <th scope="col" className="px-4 py-2.5 font-medium sm:px-5">Bergabung</th>
                   </tr>
                 </thead>
@@ -223,12 +224,12 @@ export default function AdminDashboard() {
                       </th>
                       <td className="px-3 py-3">{ROLE_LABELS[user.role]}</td>
                       <td className="px-3 py-3">
-                        {user.isPremium ? (
-                          <span className="inline-flex rounded-full bg-amber-500/10 px-2.5 py-1 text-xs font-medium text-amber-700 dark:text-amber-300">
-                            Premium
-                          </span>
+                        {user.membership === "basic" ? (
+                          <span className="text-xs text-muted-foreground">Basic</span>
                         ) : (
-                          <span className="text-xs text-muted-foreground">Gratis</span>
+                          <span className="inline-flex rounded-full bg-amber-500/10 px-2.5 py-1 text-xs font-medium text-amber-700 dark:text-amber-300">
+                            {getMembershipPlan(user.membership).name}
+                          </span>
                         )}
                       </td>
                       <td className="whitespace-nowrap px-4 py-3 text-muted-foreground sm:px-5">

@@ -25,7 +25,7 @@ export default function CartPage() {
             Keranjang
           </h1>
           <p className="mt-1 text-muted-foreground">
-            eBook dan Premium yang siap kamu beli.
+            eBook dan membership yang siap kamu beli.
           </p>
         </div>
       </section>
@@ -35,7 +35,7 @@ export default function CartPage() {
           <EmptyState
             icon={ShoppingCart}
             title="Keranjang masih kosong"
-            description="Tambahkan eBook atau Premium Lifetime untuk mulai berbelanja."
+            description="Tambahkan eBook atau membership Pro/Premium untuk mulai berbelanja."
           />
           <div className="flex flex-wrap justify-center gap-3">
             <Link
@@ -46,10 +46,10 @@ export default function CartPage() {
               Lihat eBook
             </Link>
             <Link
-              href="/premium"
+              href="/membership"
               className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-border px-4 text-sm font-medium hover:bg-accent"
             >
-              Lihat Premium
+              Lihat Membership
             </Link>
           </div>
         </div>

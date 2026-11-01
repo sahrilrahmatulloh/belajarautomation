@@ -39,7 +39,7 @@ export default async function SuccessPage({
 
         <p className="flex items-start gap-2 rounded-lg border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-left text-sm font-medium text-amber-800 dark:text-amber-200">
           <Info className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
-          Ini simulasi. Tidak ada pembayaran yang diproses, dan eBook atau Premium belum aktif di akunmu.
+          Ini simulasi. Tidak ada pembayaran yang diproses, dan eBook atau membership belum aktif di akunmu.
         </p>
 
         <div className="flex flex-wrap justify-center gap-3">

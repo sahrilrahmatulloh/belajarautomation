@@ -1,4 +1,4 @@
-export type CartProductKind = "ebook" | "premium";
+export type CartProductKind = "ebook" | "membership";
 
 export interface CartProduct {
   id: string;

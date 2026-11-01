@@ -54,14 +54,14 @@ export default function CheckoutPage() {
         className="flex items-start gap-2 rounded-lg border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-sm font-medium text-amber-800 dark:text-amber-200"
       >
         <Info className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
-        Mode simulasi — tidak ada pembayaran sungguhan, dan eBook atau Premium belum benar-benar aktif.
+        Mode simulasi — tidak ada pembayaran sungguhan, dan eBook atau membership belum benar-benar aktif.
       </p>
 
       {items.length === 0 ? (
         <EmptyState
           icon={ShoppingCart}
           title="Tidak ada item untuk dibayar"
-          description="Keranjangmu kosong. Tambahkan eBook atau Premium terlebih dahulu."
+          description="Keranjangmu kosong. Tambahkan eBook atau membership terlebih dahulu."
         />
       ) : (
         <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">

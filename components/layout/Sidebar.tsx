@@ -31,10 +31,10 @@ export default function Sidebar({
       }`}
     >
       {/* Brand */}
-      <div className={collapsed ? "flex justify-center px-2 py-6" : "p-6"}>
+      <div className={collapsed ? "flex justify-center px-2 py-6" : "px-4 py-6"}>
         <Link
           href={home}
-          className="flex items-center gap-3"
+          className="flex items-center gap-2.5"
           aria-label={collapsed ? "belajarautomation.com" : undefined}
         >
           <Image

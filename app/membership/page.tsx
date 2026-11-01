@@ -1,10 +1,10 @@
 import DashboardLayout from "@/components/layout/DashboardLayout";
-import PremiumPage from "@/components/premium/PremiumPage";
+import MembershipPage from "@/components/membership/MembershipPage";
 
 export default function Page() {
   return (
     <DashboardLayout>
-      <PremiumPage />
+      <MembershipPage />
     </DashboardLayout>
   );
 }

@@ -127,14 +127,14 @@ export default function ProfileDropdown() {
           </Link>
         </DropdownMenuItem>
 
-        {/* Premium */}
+        {/* Membership */}
         <DropdownMenuItem className="p-0">
           <Link
-            href="/premium"
+            href="/membership"
             className="flex w-full items-center gap-2 px-2 py-1.5"
           >
             <Crown className="h-4 w-4" />
-            Lihat Premium
+            Lihat Membership
           </Link>
         </DropdownMenuItem>
 

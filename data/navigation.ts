@@ -52,7 +52,7 @@ export const NAVIGATION: Record<UserRole, NavItem[]> = {
     { label: "eBook", href: "/ebooks", icon: Library, comingSoon: true },
     { label: "Project", href: "/projects", icon: FolderKanban, comingSoon: true },
     { label: "Karier", href: "/career", icon: Briefcase, comingSoon: true },
-    { label: "Premium", href: "/premium", icon: Crown },
+    { label: "Membership", href: "/membership", icon: Crown },
   ],
   creator: [
     { label: "Dashboard", href: "/creator", icon: LayoutDashboard },
@@ -70,7 +70,7 @@ export const NAVIGATION: Record<UserRole, NavItem[]> = {
     { label: "Dashboard", href: "/admin", icon: LayoutDashboard },
     { label: "Pengguna & Role", icon: Users, comingSoon: true },
     { label: "Konten", icon: Files, comingSoon: true },
-    { label: "Paket Premium", icon: Crown, comingSoon: true },
+    { label: "Paket Membership", icon: Crown, comingSoon: true },
     { label: "Skin", icon: Palette, comingSoon: true },
     { label: "Transaksi", icon: Receipt, comingSoon: true },
     { label: "Pengaturan", icon: Settings, comingSoon: true },

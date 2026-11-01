@@ -1,23 +1,34 @@
 import { BOOKS } from "@/data/books";
-import { DUMMY_PREMIUM_PRICE } from "@/data/dummy/pricing";
+import { getMembershipPlan, MEMBERSHIP_PLANS } from "@/data/membership";
 import { CartProduct } from "@/types/Cart";
-
-export const PREMIUM_PRODUCT_ID = "premium-lifetime";
+import { MembershipTier } from "@/types/Membership";
 
 export function getEbookProductId(slug: string) {
   return `ebook:${slug}`;
 }
 
+export function getMembershipProductId(tier: MembershipTier) {
+  return `membership:${tier}`;
+}
+
+export function isMembershipProductId(id: string) {
+  return id.startsWith("membership:");
+}
+
 // Judul dan harga selalu diambil dari data, keranjang hanya menyimpan id.
 export function getCartProduct(id: string): CartProduct | undefined {
-  if (id === PREMIUM_PRODUCT_ID) {
+  const plan = MEMBERSHIP_PLANS.find(
+    (item) => item.price !== null && getMembershipProductId(item.tier) === id
+  );
+  if (plan) {
+    const { ebookCredits, projectCredits } = getMembershipPlan(plan.tier);
     return {
       id,
-      kind: "premium",
-      title: "Premium Lifetime",
-      subtitle: "Tema visual, warna aksen, 3 klaim eBook, 3 klaim project",
-      price: DUMMY_PREMIUM_PRICE,
-      href: "/premium",
+      kind: "membership",
+      title: `Membership ${plan.name} Lifetime`,
+      subtitle: `Course premium, ${ebookCredits} kredit eBook, ${projectCredits} kredit project`,
+      price: plan.price!,
+      href: "/membership",
     };
   }
 
