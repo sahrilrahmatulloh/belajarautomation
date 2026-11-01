@@ -1,11 +1,11 @@
 # Kurikulum BelajarAutomation
 
-**Versi:** 2.0
-**Acuan:** `docs/PRD.md` v1.8 — FR-02 (Learning Center), FR-03 (Roadmap), FR-05 (XP dan Rank)
+**Versi:** 2.1
+**Acuan:** `docs/PRD.md` v2.0 — FR-02 (Learning Center), FR-03 (Roadmap), FR-05 (XP dan Rank), FR-10 (Membership)
 
 Dokumen ini adalah sumber acuan konten Learning Center dan Roadmap. Data di `data/` wajib mengikuti dokumen ini. Jika kurikulum berubah, perbarui dokumen ini lebih dulu, lalu sesuaikan data. Jika dokumen ini bertentangan dengan PRD, PRD yang berlaku.
 
-> Nama domain final belum ditetapkan (PRD menggunakan BelajarAutomation.com). Dokumen ini memakai nama "BelajarAutomation".
+Website: www.belajarautomation.com
 
 ---
 
@@ -28,6 +28,17 @@ Aturan:
 - Selama pengembangan, course `available` boleh berstatus `draft`.
 - **Sebelum rilis, setiap course `available` wajib berstatus `ready`.** Course yang belum `ready` diubah menjadi `coming-soon`.
 - Course `coming-soon` selalu berstatus `draft`.
+
+### Tingkat akses (`access`)
+- `free`: dapat dipelajari semua pengguna, termasuk Basic.
+- `premium`: hanya dapat dipelajari pengguna Pro dan Premium (PRD FR-02 dan FR-10). Pengguna Basic tetap dapat melihat katalog, deskripsi, daftar modul, dan cuplikan.
+
+Aturan pembagian:
+- Course fondasi wajib `free`, minimal: qa-fundamentals, dasar-web-api, test-design, bug-reporting, git-github, dan setidaknya satu bahasa pemrograman beserta satu tool automation.
+- Total XP dari course dan latihan `free` wajib cukup untuk mencapai rank Master (saat ini 5.500 XP, PRD FR-05). Jika pembagian membuat XP gratis kurang dari itu, batas rank wajib diturunkan.
+- Course yang sudah `free` tidak boleh diubah menjadi `premium` setelah ada pengguna yang mempelajarinya.
+
+> **Status saat ini:** pembagian course gratis dan premium belum ditetapkan. Sampai diputuskan, seluruh course diperlakukan sebagai `free`.
 
 ### Bahasa (`languages`)
 - Berupa daftar, karena satu course dapat memakai lebih dari satu bahasa.

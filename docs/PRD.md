@@ -1,9 +1,18 @@
 # BELAJARAUTOMATION.COM
 ## Product Requirements Document (PRD)
-**Versi:** 1.10  
+**Versi:** 2.0  
 **Status:** Draft — Acuan Pengembangan Produk  
 **Platform:** Web Application  
 **Target Pengguna:** Pemula hingga praktisi QA, Software Testing, dan Programming
+
+### Perubahan di Versi 2.0
+- **Prinsip utama berubah:** materi dasar gratis, sebagian materi lanjutan menjadi materi premium (1.3, FR-02).
+- Membership tiga tingkat: Basic (gratis), Pro, dan Premium, seluruhnya model Lifetime (FR-10).
+- Kredit produk: Pro 1 eBook + 1 project, Premium 3 eBook + 3 project (FR-10).
+- XP dari materi premium dihitung untuk rank dan leaderboard, dengan syarat rank Master tetap dapat dicapai hanya dari materi gratis (FR-05).
+- Skin bertema menjadi benefit Pro dan Premium (FR-12).
+- Domain ditetapkan: www.belajarautomation.com.
+- Menambahkan brand guideline, karakter pendamping, prinsip kualitas konten, dan arah pemasaran (Bagian 15–17).
 
 ### Perubahan di Versi 1.10
 - Leaderboard hanya memiliki 2 tab: Global dan tab rank pengguna sendiri, berlabel nama rank beserta emblemnya. Periode Mingguan dan Sepanjang Waktu dihapus; peringkat menggunakan total XP (FR-06).
@@ -65,7 +74,9 @@ BelajarAutomation menggabungkan tiga pendekatan utama:
 2. **Practice** — menguji pemahaman melalui kuis dan challenge.
 3. **Build** — menerapkan pengetahuan melalui proyek praktis.
 
-Platform menggunakan gamifikasi untuk meningkatkan motivasi belajar tanpa menjadikan pembayaran sebagai keuntungan kompetitif.
+Platform menggunakan gamifikasi untuk meningkatkan motivasi belajar tanpa menjadikan pembayaran sebagai cara membeli rank.
+
+Website: **www.belajarautomation.com**
 
 ## 1.2 Visi Produk
 
@@ -73,7 +84,12 @@ Menjadi platform pembelajaran QA dan Automation yang membantu siapa pun membangu
 
 ## 1.3 Prinsip Utama
 
-> Belajar gratis, berkembang secara adil, dan membayar hanya untuk produk atau benefit tambahan yang jelas.
+> Belajar dasar secara gratis, berkembang secara adil, dan membayar untuk materi lanjutan serta benefit tambahan yang jelas.
+
+Penjelasan:
+- Pengguna Basic (gratis) tetap dapat belajar dari dasar, mengikuti roadmap, berlatih, mengumpulkan XP, dan mencapai rank tertinggi.
+- Membership berbayar memberikan akses materi premium dan benefit tambahan, tetapi tidak membeli rank secara langsung.
+- Rank menunjukkan perkembangan belajar; membership menunjukkan benefit yang dimiliki. Keduanya terpisah.
 
 Prinsip ini menjadi dasar pengambilan keputusan terkait fitur, monetisasi, gamifikasi, dan akses pengguna.
 
@@ -84,7 +100,8 @@ Prinsip ini menjadi dasar pengambilan keputusan terkait fitur, monetisasi, gamif
 - Menyediakan latihan berbasis kuis dan challenge.
 - Memberikan indikator perkembangan belajar melalui XP, rank, dan statistik.
 - Menyediakan produk digital berupa eBook dan proyek praktis.
-- Menyediakan paket Premium Lifetime dengan benefit yang transparan.
+- Menyediakan membership Basic, Pro, dan Premium dengan model Lifetime dan benefit yang transparan.
+- Membangun komunitas pembelajar QA Automation.
 - Membangun identitas platform yang mudah dikenali melalui maskot kucing putih.
 - Membangun fondasi platform yang dapat dikembangkan tanpa harus merombak arsitektur secara keseluruhan.
 
@@ -123,7 +140,7 @@ Navigasi utama platform terdiri dari:
 7. eBook
 8. Project
 9. Career — tahap pengembangan berikutnya
-10. Premium
+10. Membership
 
 Struktur navigasi harus konsisten di seluruh halaman.
 
@@ -251,6 +268,7 @@ Daftar lengkap course, kategori, bahasa, level, dan target lesson ditetapkan di 
 **Status course:**
 - Status katalog: `available` (dapat dipelajari) atau `coming-soon` (tampil dengan badge Segera hadir, halaman detail tetap dapat dibuka).
 - Status konten: `ready` (seluruh lesson sudah ditulis dan ditinjau) atau `draft`.
+- Tingkat akses: `free` atau `premium`.
 - Sebelum rilis, setiap course `available` wajib berstatus `ready`; course yang belum siap diubah menjadi `coming-soon`.
 - Satu course dapat memiliki lebih dari satu bahasa pemrograman, dan filter bahasa menampilkan course yang memuat bahasa tersebut.
 
@@ -292,14 +310,23 @@ Halaman detail dapat menampilkan:
 - Progress diperbarui berdasarkan aktivitas yang valid.
 
 ### Aturan akses
-Seluruh materi pembelajaran utama tersedia secara gratis.
+Setiap course memiliki tingkat akses:
+- **Gratis:** dapat dipelajari semua pengguna, termasuk Basic.
+- **Premium:** dapat dipelajari pengguna Pro dan Premium yang memiliki hak akses ke course tersebut.
 
-Pengguna tidak harus membeli Premium untuk:
-- Membaca materi.
-- Menyelesaikan modul.
-- Mengikuti kuis dan challenge.
+Ketentuan:
+- Materi dasar dan fondasi wajib tersedia gratis, sehingga pengguna Basic tetap dapat belajar dari nol dan menuntaskan jalur belajar dasar.
+- Daftar course gratis dan premium ditetapkan di `docs/CURRICULUM.md`.
+- Pengguna Basic tetap dapat melihat katalog, sampul, deskripsi, daftar modul, dan cuplikan course premium, dengan penanda "Premium" dan ajakan untuk upgrade.
+- Hak akses course premium mengikuti model Lifetime di FR-10: pengguna memperoleh akses permanen ke materi premium yang tersedia pada saat pembelian.
+- Course yang sudah dinyatakan gratis tidak boleh diubah menjadi premium bagi pengguna yang sudah mulai mempelajarinya.
+- Hak akses course premium diverifikasi oleh backend.
+
+Pengguna Basic tidak harus membayar untuk:
+- Mempelajari course gratis.
+- Mengikuti kuis dan challenge pada course gratis.
 - Mendapatkan XP yang valid.
-- Menaikkan rank.
+- Menaikkan rank hingga Master.
 
 ---
 
@@ -412,6 +439,7 @@ Pengguna dapat melihat daftar latihan yang memuat:
 - Jawaban yang benar-benar diperiksa sistem dapat menghasilkan XP sesuai aturan.
 - Mengulang latihan tidak boleh menghasilkan XP tanpa batas.
 - Soal, jawaban, dan hasil penilaian harus diproses secara aman.
+- Latihan yang terkait course gratis dapat diakses semua pengguna. Latihan yang terkait course premium mengikuti hak akses course tersebut.
 
 ---
 
@@ -454,7 +482,7 @@ Ketentuan emblem:
   - Varian penuh (tameng, cap kaki, bintang, ornamen) untuk ukuran 48px ke atas, misalnya kartu Rank & XP dan profil.
   - Varian ringkas (tameng dan cap kaki, dengan atau tanpa bintang) untuk ukuran kecil sekitar 24–32px, misalnya baris leaderboard, agar tetap terbaca.
 - Aset emblem dioptimalkan ukurannya (SVG, atau PNG/WebP terkompresi sesuai ukuran tampil).
-- Emblem rank sama untuk semua pengguna di rank yang sama, gratis maupun Premium, dan tidak berubah karena skin.
+- Emblem rank sama untuk semua pengguna di rank yang sama, apa pun tingkat membership-nya, dan tidak berubah karena skin.
 
 ### Identitas visual
 - Trainee: bronze/oranye.
@@ -494,7 +522,7 @@ XP hanya diberikan saat aktivitas tersebut diselesaikan pertama kali. Pengguna b
 | Expert | 3.800 | Menyelesaikan sebagian besar jalur automation |
 | Master | 5.500 | Menyelesaikan hampir seluruh konten dan challenge |
 
-Batas ini dihitung dari perkiraan total XP konten yang direncanakan (sekitar 6.600 XP) dan wajib ditinjau ulang setiap kali jumlah konten berubah signifikan, agar rank Master tetap dapat dicapai.
+Batas ini dihitung dari perkiraan total XP konten yang direncanakan (sekitar 6.600 XP) dan wajib ditinjau ulang setiap kali jumlah konten atau pembagian course gratis dan premium berubah, agar rank Master tetap dapat dicapai hanya dari konten gratis.
 
 ### Progress Rank
 Sistem menampilkan:
@@ -510,11 +538,16 @@ Sistem menampilkan:
 - Perubahan XP tidak boleh dipercayakan hanya kepada frontend.
 - Aktivitas yang sudah dihitung harus dapat dideteksi.
 
+### XP dari materi premium
+- Course dan latihan premium memberikan XP dengan aturan yang sama seperti materi gratis.
+- **Batas XP setiap rank, termasuk Master, wajib dapat dicapai hanya dari materi dan latihan gratis.** Saat menghitung atau meninjau batas rank, gunakan total XP dari konten gratis sebagai acuan.
+- Konsekuensi yang disadari: pengguna Pro dan Premium memiliki lebih banyak sumber XP sehingga dapat naik rank lebih cepat. Hal ini diterima selama pengguna Basic tetap dapat mencapai rank tertinggi.
+
 ### Prinsip keadilan
-- Pengguna gratis dan Premium menggunakan aturan XP yang sama.
-- Pembelian produk tidak memberikan XP.
-- Pembelian Premium tidak memberikan bonus rank.
-- Tidak ada keunggulan leaderboard yang diperoleh hanya melalui pembayaran.
+- Semua tingkat membership menggunakan aturan XP yang sama per aktivitas.
+- Pembelian membership, eBook, atau project tidak memberikan XP secara langsung.
+- Membership tidak memberikan bonus XP, pengganda XP, atau rank secara langsung.
+- Pengguna Basic tetap dapat mencapai rank tertinggi.
 
 Rank adalah indikator perkembangan belajar di platform, bukan sertifikasi profesional.
 
@@ -533,9 +566,10 @@ Menampilkan peringkat pengguna berdasarkan aktivitas belajar yang valid.
 - Total XP.
 
 ### Aturan
-- Pengguna gratis dan Premium memiliki kesempatan kompetisi yang sama.
+- Semua tingkat membership tampil di leaderboard yang sama dengan aturan XP yang sama.
 - XP harus berasal dari aktivitas yang valid.
-- Pembelian eBook, project, atau Premium tidak meningkatkan peringkat.
+- Pembelian membership, eBook, atau project tidak menambah XP secara langsung.
+- XP dari materi premium ikut dihitung sesuai FR-05.
 - Skin pada avatar bersifat kosmetik dan tidak menggantikan emblem tameng rank di leaderboard.
 - Sistem perlu memiliki perlindungan terhadap farming XP.
 - Informasi pribadi pengguna tidak boleh ditampilkan tanpa dasar dan izin yang sesuai.
@@ -630,13 +664,14 @@ Menampilkan:
 ### Akses produk
 eBook dapat diperoleh melalui:
 1. Pembelian individual.
-2. Klaim dari paket Premium yang memiliki benefit eBook.
+2. Klaim menggunakan kredit eBook dari membership Pro atau Premium.
 
 ### Aturan
 - Katalog dan preview dapat diakses gratis.
 - Isi lengkap hanya dapat diakses pengguna yang memiliki entitlement atau hak akses yang valid.
 - Produk yang telah dibeli dengan lisensi permanen tetap dapat diakses sesuai ketentuan lisensinya.
 - Pembelian eBook tidak memberikan XP atau rank.
+- Pengguna Basic tetap dapat membeli eBook secara terpisah.
 - Hak akses harus diverifikasi oleh backend.
 - URL file atau mekanisme distribusi tidak boleh menjadi satu-satunya lapisan perlindungan akses.
 
@@ -672,57 +707,86 @@ Dapat mencakup:
 ### Akses
 Project dapat diperoleh melalui:
 1. Pembelian individual.
-2. Klaim dari paket Premium yang memiliki benefit project.
+2. Klaim menggunakan kredit project dari membership Pro atau Premium.
 
 ### Aturan
 - Katalog dan preview dapat dilihat tanpa pembayaran.
 - Konten lengkap membutuhkan hak akses yang valid.
 - Pembelian project tidak memberikan XP atau rank.
+- Pengguna Basic tetap dapat membeli project secara terpisah.
+- Project wajib memiliki dokumentasi yang memadai dan kode yang berfungsi (lihat Bagian 16).
 - Hak akses mengikuti lisensi produk.
 - File produk harus dilindungi melalui mekanisme akses yang sesuai.
 
 ---
 
-## FR-10 — Premium Lifetime
+## FR-10 — Membership (Basic, Pro, Premium)
 
 ### Tujuan
-Menyediakan paket benefit tambahan melalui pembayaran satu kali.
+Menyediakan tingkat membership yang memberi akses materi premium dan benefit tambahan, tanpa mengorbankan kesempatan pengguna gratis untuk belajar dan berkembang.
 
-### Model bisnis
-Premium menggunakan model **Lifetime**, bukan langganan bulanan atau tahunan berulang.
+### Tingkat membership
 
-Pengguna membayar satu kali untuk memperoleh benefit yang secara eksplisit dijanjikan dalam paket tersebut.
+| Benefit | Basic | Pro | Premium |
+|---|---|---|---|
+| Harga | Gratis | Berbayar, sekali bayar | Berbayar, sekali bayar |
+| Course gratis | Ya | Ya | Ya |
+| Course premium yang tersedia saat pembelian | Tidak | Ya | Ya |
+| Kuis dan challenge course gratis | Ya | Ya | Ya |
+| Kuis dan challenge course premium | Tidak | Ya | Ya |
+| Skin Basic Cat | Ya | Ya | Ya |
+| Skin bertema | Tidak | Sesuai paket | Sesuai paket |
+| Kredit eBook | 0 | 1 | 3 |
+| Kredit project | 0 | 1 | 3 |
+| XP, rank, dan leaderboard | Ya | Ya | Ya |
+| Pembelian eBook dan project terpisah | Ya | Ya | Ya |
 
-Istilah Lifetime harus disertai ketentuan yang jelas mengenai hak akses, cakupan benefit, dan keberlangsungan layanan.
+### Harga simulasi
+| Paket | Harga simulasi |
+|---|---:|
+| Basic | Gratis |
+| Pro Lifetime | Rp199.000 |
+| Premium Lifetime | Rp399.000 |
 
-### Benefit dasar yang disepakati
-Benefit paket dapat mencakup:
-- Akses skin maskot yang tercantum pada paket (lihat FR-12).
-- Kuota klaim eBook.
-- Kuota klaim project.
+Harga belum final dan masih perlu diuji berdasarkan biaya, nilai produk, dan kesediaan pengguna untuk membayar.
 
-Tema visual dan warna aksen tambahan tidak lagi menjadi benefit Premium. Warna website ditetapkan biru dan putih untuk semua pengguna.
+### Model Lifetime
+Pro dan Premium menggunakan model **Lifetime Access untuk materi yang tersedia pada saat pembelian**, bukan langganan bulanan atau tahunan.
+
+Artinya:
+- Pengguna memperoleh akses permanen ke course premium yang tersedia pada saat pembelian.
+- Course premium baru yang terbit setelah pembelian tidak otomatis termasuk.
+- Perbaikan bug, koreksi, dan pembaruan pada course atau produk yang sama diberikan tanpa biaya tambahan.
+- Produk baru atau versi yang berbeda secara substansial dapat dijual terpisah.
+- Ketentuan ini wajib dijelaskan secara transparan sebelum transaksi, termasuk daftar course premium yang termasuk dalam pembelian.
+
+### Upgrade
+- Pengguna Pro dapat meningkatkan ke Premium. Kebijakan harga upgrade masih perlu ditentukan.
+- Saat upgrade, kredit yang belum dipakai dan hak akses yang sudah dimiliki tetap berlaku.
 
 Benefit yang sebenarnya harus ditampilkan dengan jelas pada detail paket sebelum pembayaran.
 
 ### Skin Maskot
-- Paket membuka skin bertema yang tercantum di dalamnya.
+- Paket Pro dan Premium membuka skin bertema yang tercantum di dalamnya.
 - Akses skin tidak bergantung pada rank pengguna.
 - Pemilik paket dapat memilih salah satu skin yang tersedia untuk ditampilkan; seluruh skin tersedia untuk dipilih, bukan diterapkan sekaligus.
 - Skin tidak mengubah emblem rank maupun warna identitas rank.
 - Tidak boleh diasumsikan bahwa semua skin otomatis termasuk dalam setiap paket; hak akses mengikuti benefit yang tercantum pada paket.
 - Cakupan skin pada paket (apakah termasuk skin yang dirilis setelah pembelian) harus dinyatakan jelas sebelum pembayaran.
 
-### Kuota klaim produk
+### Kredit produk
 
-Untuk setiap paket yang secara eksplisit menyertakan benefit klaim:
+| Paket | Kredit eBook | Kredit project |
+|---|---:|---:|
+| Basic | 0 | 0 |
+| Pro | 1 | 1 |
+| Premium | 3 | 3 |
 
-- 3 klaim eBook.
-- 3 klaim project.
+Kredit bukan uang tunai, tidak dapat ditukar dengan uang, dan tidak dapat dipindahtangankan.
 
 Setiap klaim digunakan untuk memilih satu produk yang memenuhi syarat.
 
-Kuota tersebut:
+Kredit tersebut:
 - Berlaku satu kali untuk setiap paket yang dibeli.
 - Bukan kuota berulang bulanan atau tahunan.
 - Tidak diisi ulang otomatis.
@@ -734,15 +798,15 @@ Setelah klaim berhasil, pengguna memperoleh entitlement produk sesuai lisensi ya
 
 ### Alur klaim
 
-1. Pengguna membuka benefit paket Premium yang dimiliki.
-2. Pengguna melihat kuota klaim yang tersisa.
+1. Pengguna membuka benefit membership yang dimiliki.
+2. Pengguna melihat kredit yang tersisa.
 3. Pengguna memilih produk yang memenuhi syarat.
 4. Sistem menampilkan konfirmasi.
 5. Pengguna mengonfirmasi klaim.
-6. Backend memvalidasi hak paket dan kuota.
+6. Backend memvalidasi hak paket dan kredit.
 7. Backend mencatat klaim secara permanen.
 8. Sistem memberikan entitlement produk.
-9. Kuota tersisa diperbarui.
+9. Kredit tersisa diperbarui.
 
 ### Pembelian paket baru
 - Setiap paket memiliki identitas dan versi yang jelas.
@@ -753,12 +817,12 @@ Setelah klaim berhasil, pengguna memperoleh entitlement produk sesuai lisensi ya
 - Benefit baru dapat disediakan melalui paket baru atau penawaran terpisah.
 - Kebijakan upgrade dan diskon untuk pemilik paket sebelumnya masih perlu ditentukan.
 
-### Batasan Premium
-Premium tidak boleh:
-- Memberikan XP tambahan hanya karena status Premium.
+### Batasan membership
+Pro dan Premium tidak boleh:
+- Memberikan bonus XP, pengganda XP, atau XP hanya karena status membership.
 - Menaikkan rank secara langsung.
-- Memberikan bonus kompetitif pada leaderboard.
-- Mengunci materi pembelajaran utama yang sebelumnya dijanjikan gratis.
+- Mengunci course yang sudah dinyatakan gratis.
+- Membuat rank Master tidak dapat dicapai oleh pengguna Basic.
 - Mengubah emblem rank atau membuat pengguna terlihat memiliki rank lebih tinggi.
 - Menghapus hak produk yang sudah diperoleh secara sah.
 
@@ -770,6 +834,7 @@ Sistem pembayaran harus:
 - Menangani transaksi gagal atau tertunda.
 - Mencatat riwayat pembelian.
 - Memiliki kebijakan refund yang jelas sebelum peluncuran komersial.
+- Tidak menjanjikan hasil karier yang tidak dapat dijamin (lihat Bagian 16).
 
 Harga paket dan metode pembayaran final belum ditetapkan.
 
@@ -808,13 +873,15 @@ Memberikan identitas karakter yang mudah dikenali dan menjadi sarana ekspresi di
 | | Emblem Rank | Skin Maskot |
 |---|---|---|
 | Bentuk | Tameng berwarna identitas rank | Kucing dengan kostum dan tema banner |
-| Cara memperoleh | Naik rank melalui XP yang valid | Basic gratis; skin lain melalui paket Premium |
+| Cara memperoleh | Naik rank melalui XP yang valid | Basic Cat gratis; skin bertema melalui Pro atau Premium |
 | Dipilih bebas | Tidak; mengikuti rank saat ini | Ya, dari skin yang dimiliki |
 | Tampil di | Kartu Rank & XP, profil, leaderboard | Halaman profil, foto profil, karakter dashboard, latar Welcome Banner |
 | Memengaruhi XP/rank/leaderboard | Tidak | Tidak |
 
 ### Maskot
 - Maskot platform adalah seekor kucing putih.
+- Desain kucing mengikuti desain asli yang sudah digunakan di Instagram pembuat. Bentuk dasar dan ciri khasnya tidak diubah, dan tidak diubah menjadi karakter 3D atau fotorealistis.
+- Variasi pose, ekspresi, dan skin dibuat dengan desain asli sebagai referensi.
 - Maskot menjadi benang merah dengan website personal pembuat platform.
 - Logo dan warna brand BelajarAutomation tetap menjadi identitas utama platform; maskot berperan sebagai karakter pendamping.
 
@@ -847,20 +914,20 @@ Setiap skin membutuhkan aset untuk setiap tempat penggunaannya:
 ### Skin
 Skin adalah kostum bertema untuk maskot.
 
-Rilis awal menyediakan **5 skin**: 1 skin gratis (Basic Cat) dan 4 skin Premium. Jumlah ini merupakan rilis awal, bukan batas permanen.
+Rilis awal menyediakan **5 skin**: 1 skin gratis (Basic Cat) dan 4 skin bertema untuk Pro dan Premium. Jumlah ini merupakan rilis awal, bukan batas permanen.
 
 Kandidat konsep skin (nama dan konsep final belum ditetapkan):
 
 | Skin | Akses | Karakteristik visual | Suasana tema banner |
 |---|---|---|---|
 | Basic Cat | Gratis | Kucing putih polos dengan ekspresi sederhana | Minimalis biru-putih |
-| Bug Hunter / Detective Cat | Premium | Kaca pembesar atau aksesori investigasi | Investigasi dan debugging |
-| Scholar Cat | Premium | Kacamata dan buku | Perpustakaan dan belajar |
-| Cyber Tester / Cyber Cat | Premium | Jaket teknis dan visor | Futuristik dan teknologi |
-| Test Wizard / Wizard Cat | Premium | Jubah dengan ornamen fantasi | Fantasi dan pengetahuan |
+| Bug Hunter / Detective Cat | Pro & Premium | Kaca pembesar atau aksesori investigasi | Investigasi dan debugging |
+| Scholar Cat | Pro & Premium | Kacamata dan buku | Perpustakaan dan belajar |
+| Cyber Tester / Cyber Cat | Pro & Premium | Jaket teknis dan visor | Futuristik dan teknologi |
+| Test Wizard / Wizard Cat | Pro & Premium | Jubah dengan ornamen fantasi | Fantasi dan pengetahuan |
 
 - Pengguna gratis mendapat satu skin, yaitu Basic Cat.
-- Skin bertema lainnya diperoleh melalui paket Premium sesuai benefit yang tercantum.
+- Skin bertema diperoleh melalui membership Pro atau Premium sesuai benefit yang tercantum.
 - Skin dapat dipilih bebas tanpa bergantung pada rank pengguna.
 - Pengguna memilih satu skin aktif yang tampil di halaman profil, foto profil, dan Welcome Banner.
 - Skin yang terkunci boleh ditampilkan di koleksi dengan indikator yang jelas.
@@ -885,7 +952,7 @@ Pilihan skin tersimpan sebagai preferensi pengguna dan tetap konsisten saat berp
 
 ### Aturan desain skin
 - Semua skin harus tetap terlihat sebagai kucing yang sama: wajah, proporsi, dan gaya ilustrasi konsisten.
-- Skin Basic harus tetap menarik; Premium terasa sebagai bonus, bukan penebus kekurangan versi gratis.
+- Skin Basic harus tetap menarik; skin berbayar terasa sebagai bonus, bukan penebus kekurangan versi gratis.
 - Skin tidak boleh memakai kombinasi warna identitas rank, misalnya crimson dengan gold milik Master, agar tidak disangka sebagai rank.
 - Gaya ilustrasi konsisten dengan maskot pada website personal pembuat.
 - Tema skin hanya berlaku di dalam Welcome Banner, tidak mengubah warna website.
@@ -943,37 +1010,38 @@ Preferensi notifikasi dan jenis notifikasi yang akan didukung masih perlu ditent
 
 ## 5.1 Matriks Akses
 
-| Fitur atau Produk | Gratis | Premium |
-|---|---|---|
-| Dashboard | Ya | Ya |
-| Materi Learning Center | Ya | Ya |
-| Roadmap | Ya | Ya |
-| Kuis dan challenge | Ya | Ya |
-| XP dan rank | Ya | Ya |
-| Leaderboard | Ya | Ya |
-| Blog publik | Ya | Ya |
-| Katalog eBook | Ya | Ya |
-| Preview eBook | Ya | Ya |
-| Isi lengkap eBook | Perlu pembelian atau entitlement | Sesuai benefit dan entitlement |
-| Katalog project | Ya | Ya |
-| Preview project | Ya | Ya |
-| Isi lengkap project | Perlu pembelian atau entitlement | Sesuai benefit dan entitlement |
-| Mode terang/gelap | Ya | Ya |
-| Emblem tameng rank | Sesuai rank | Sesuai rank (sama dengan gratis) |
-| Skin Basic Cat | Ya | Ya |
-| Skin bertema lainnya | Tidak | Sesuai paket |
-| XP atau rank tambahan karena pembayaran | Tidak ada | Tidak ada |
-| Keuntungan leaderboard karena pembayaran | Tidak ada | Tidak ada |
+| Fitur atau Produk | Basic | Pro | Premium |
+|---|---|---|---|
+| Dashboard | Ya | Ya | Ya |
+| Course gratis | Ya | Ya | Ya |
+| Course premium (yang tersedia saat pembelian) | Katalog dan cuplikan | Ya | Ya |
+| Roadmap | Ya | Ya | Ya |
+| Kuis dan challenge course gratis | Ya | Ya | Ya |
+| Kuis dan challenge course premium | Tidak | Ya | Ya |
+| XP dan rank | Ya, hingga Master | Ya | Ya |
+| Leaderboard | Ya | Ya | Ya |
+| Blog publik | Ya | Ya | Ya |
+| Katalog dan preview eBook | Ya | Ya | Ya |
+| Isi lengkap eBook | Beli terpisah | Beli terpisah atau 1 kredit | Beli terpisah atau 3 kredit |
+| Katalog dan preview project | Ya | Ya | Ya |
+| Isi lengkap project | Beli terpisah | Beli terpisah atau 1 kredit | Beli terpisah atau 3 kredit |
+| Mode terang/gelap | Ya | Ya | Ya |
+| Emblem tameng rank | Sesuai rank | Sesuai rank | Sesuai rank |
+| Skin Basic Cat | Ya | Ya | Ya |
+| Skin bertema | Tidak | Sesuai paket | Sesuai paket |
+| Bonus XP atau rank karena pembayaran | Tidak ada | Tidak ada | Tidak ada |
 
 ## 5.2 Entitlement
 Entitlement adalah catatan hak akses pengguna terhadap suatu produk atau benefit.
 
 Sistem harus dapat membedakan:
 - Hak akses yang berasal dari pembelian individual.
-- Hak akses yang berasal dari klaim paket Premium.
+- Tingkat membership yang dimiliki pengguna (Basic, Pro, Premium) beserta versi paketnya.
+- Hak akses course premium beserta daftar course yang termasuk pada saat pembelian.
+- Hak akses yang berasal dari klaim kredit membership.
 - Benefit skin yang berasal dari paket tertentu.
-- Kuota klaim yang masih tersedia.
-- Kuota klaim yang telah digunakan.
+- Kredit yang masih tersedia.
+- Kredit yang telah digunakan.
 
 Entitlement produk harus tetap mengikuti ketentuan lisensinya.
 
@@ -982,8 +1050,8 @@ Entitlement produk harus tetap mengikuti ketentuan lisensinya.
 - Pembelian yang berhasil harus tercatat.
 - Status pembayaran harus diverifikasi.
 - Klaim produk harus dicatat dan tidak dapat digandakan.
-- Kuota klaim harus terkait dengan paket dan pemiliknya.
-- Akses produk tidak boleh hanya ditentukan oleh status Premium aktif di frontend.
+- Kredit harus terkait dengan paket dan pemiliknya.
+- Akses course premium dan produk tidak boleh hanya ditentukan oleh status membership di frontend.
 - Sistem harus mencegah klaim atau aktivasi benefit berulang melalui permintaan yang dimanipulasi.
 
 ---
@@ -1012,7 +1080,7 @@ Tanggung jawab:
 - Pengelolaan leaderboard.
 - Verifikasi transaksi.
 - Pengelolaan entitlement produk.
-- Pengelolaan Premium dan klaim.
+- Pengelolaan membership, akses course premium, dan klaim kredit.
 - Penyimpanan preferensi pengguna.
 
 ## 6.3 Database
@@ -1024,7 +1092,7 @@ Database menjadi sumber data persisten untuk:
 - XP dan rank.
 - Transaksi.
 - Hak akses produk.
-- Paket Premium.
+- Paket membership.
 - Klaim benefit.
 - Preferensi pengguna.
 
@@ -1076,20 +1144,20 @@ Menyimpan katalog eBook.
 ## 7.11 ProjectProduct
 Menyimpan katalog produk project.
 
-## 7.12 PremiumPackage
-Menyimpan identitas paket, versi, harga, dan benefit yang dijanjikan.
+## 7.12 MembershipPackage
+Menyimpan identitas paket (Pro, Premium), versi, harga, benefit, jumlah kredit, dan daftar course premium yang termasuk.
 
 ## 7.13 Purchase
 Mencatat transaksi pembelian dan status pembayaran.
 
 ## 7.14 PackageEntitlement
-Mencatat benefit paket yang dimiliki pengguna.
+Mencatat membership yang dimiliki pengguna, termasuk tanggal pembelian dan daftar course premium yang menjadi haknya.
 
 ## 7.15 ProductEntitlement
 Mencatat hak akses pengguna terhadap produk tertentu.
 
 ## 7.16 BenefitClaim
-Mencatat penggunaan kuota klaim produk dari paket Premium.
+Mencatat penggunaan kredit produk dari membership Pro atau Premium.
 
 ## 7.17 SkinDefinition
 Menyimpan definisi skin maskot: ID, nama, deskripsi, aset avatar, aset ilustrasi karakter, aksesori, tema banner (latar terang dan gelap, ornamen, warna aksen), serta apakah skin gratis.
@@ -1098,7 +1166,7 @@ Menyimpan definisi skin maskot: ID, nama, deskripsi, aset avatar, aset ilustrasi
 Mencatat skin aktif yang dipilih pengguna. Dapat menjadi bagian dari UserPreferences.
 
 ## 7.19 SkinEntitlement
-Mencatat hak pengguna atas skin tertentu beserta sumbernya (gratis atau paket Premium tertentu). Dapat menjadi bagian dari PackageEntitlement.
+Mencatat hak pengguna atas skin tertentu beserta sumbernya (gratis atau membership tertentu). Dapat menjadi bagian dari PackageEntitlement.
 
 ### Prinsip penting
 - Riwayat transaksi tidak boleh bergantung pada status tampilan frontend.
@@ -1153,15 +1221,15 @@ Aplikasi harus dapat digunakan pada desktop, tablet, dan perangkat mobile.
 
 # 9. Aturan Bisnis Utama
 
-1. Materi pembelajaran utama gratis.
-2. Kuis dan challenge dapat diakses pengguna gratis.
+1. Materi dasar tersedia gratis; sebagian materi lanjutan bersifat premium sesuai `docs/CURRICULUM.md`.
+2. Kuis dan challenge pada course gratis dapat diakses pengguna Basic.
 3. XP hanya berasal dari aktivitas yang memenuhi aturan validasi.
-4. Rank tidak dapat dibeli.
-5. Pembayaran tidak memberikan keuntungan kompetitif di leaderboard.
-6. eBook dan project dijual secara individual.
-7. Paket Premium Lifetime memberikan benefit sesuai deskripsi paket.
-8. Kuota klaim Premium hanya berlaku jika benefit tersebut tercantum pada paket.
-9. Setiap paket yang memiliki benefit klaim menyediakan tiga klaim eBook dan tiga klaim project.
+4. Rank tidak dapat dibeli dan rank Master wajib dapat dicapai hanya dari konten gratis.
+5. Membership tidak memberikan bonus XP atau rank; XP dari materi premium dihitung dengan aturan yang sama.
+6. eBook dan project dijual secara individual dan dapat dibeli oleh semua pengguna.
+7. Membership terdiri dari Basic (gratis), Pro, dan Premium dengan model Lifetime untuk materi yang tersedia pada saat pembelian.
+8. Kredit produk hanya berlaku sesuai paket: Pro 1 eBook + 1 project, Premium 3 eBook + 3 project.
+9. Kredit bukan uang tunai dan tidak dapat dipindahtangankan.
 10. Klaim bersifat satu kali per produk yang dipilih dan tidak diisi ulang secara berkala.
 11. Klaim dicatat secara persisten di backend.
 12. Hak akses produk mengikuti lisensi produk.
@@ -1173,7 +1241,7 @@ Aplikasi harus dapat digunakan pada desktop, tablet, dan perangkat mobile.
 18. Warna website ditetapkan biru dan putih; pengguna hanya memilih mode terang atau gelap.
 19. Skin maskot bersifat kosmetik dan tidak memengaruhi XP, rank, maupun leaderboard.
 20. Emblem rank berupa tameng dan terpisah dari skin; maskot tidak digunakan sebagai emblem rank.
-21. Pengguna gratis mendapat skin Basic Cat; skin bertema lainnya diperoleh melalui paket Premium.
+21. Pengguna Basic mendapat skin Basic Cat; skin bertema diperoleh melalui membership Pro atau Premium.
 22. Skin tidak boleh memakai kombinasi warna identitas rank.
 
 ---
@@ -1249,20 +1317,21 @@ Pengembangan harus dilakukan secara bertahap agar perubahan tidak merusak fitur 
 
 **Output:** Pengguna dapat membeli dan mengakses produk digital sesuai haknya.
 
-## Phase 6 — Premium Lifetime
-- Katalog paket.
+## Phase 6 — Membership
+- Katalog paket Basic, Pro, dan Premium.
+- Penandaan dan pembatasan akses course premium.
 - Detail benefit.
 - Pembelian paket.
 - Aktivasi entitlement.
 - Katalog skin, koleksi skin di profil, dan pemilihan skin aktif.
 - Avatar maskot dan tema Welcome Banner per skin.
-- Kuota klaim.
+- Kredit produk.
 - Alur klaim eBook.
 - Alur klaim project.
 - Riwayat klaim.
 - Pengujian keamanan dan konsistensi transaksi.
 
-**Output:** Sistem Premium dengan benefit yang transparan dan persisten.
+**Output:** Sistem membership dengan akses dan benefit yang transparan dan persisten.
 
 ## Phase 7 — Career dan Pengembangan Lanjutan
 - Konten karier.
@@ -1306,11 +1375,11 @@ Pengembangan harus dilakukan secara bertahap agar perubahan tidak merusak fitur 
 - XP dihitung berdasarkan aturan yang valid.
 - Rank dihitung dari total XP dan konfigurasi rank.
 - Perubahan XP tercatat.
-- Status Premium tidak memberikan keuntungan kompetitif.
+- Status membership tidak memberikan bonus XP atau rank secara langsung.
 
 ## Leaderboard
 - Peringkat berasal dari data valid.
-- Pengguna gratis dan Premium menggunakan aturan yang sama.
+- Semua tingkat membership menggunakan aturan XP yang sama.
 - Aktivitas pembayaran tidak menambah skor.
 
 ## Produk Digital
@@ -1319,12 +1388,16 @@ Pengembangan harus dilakukan secara bertahap agar perubahan tidak merusak fitur 
 - Pembelian tercatat.
 - Hak akses tetap sesuai ketentuan lisensi.
 
-## Premium
+## Membership
+- Perbedaan Basic, Pro, dan Premium terlihat jelas sebelum pembayaran, termasuk daftar course premium yang termasuk.
+- Pengguna Basic dapat melihat katalog dan cuplikan course premium, tetapi tidak dapat membuka isi lengkapnya.
+- Pengguna Pro dan Premium dapat membuka course premium yang termasuk dalam pembeliannya.
+- Rank Master dapat dicapai oleh pengguna Basic.
 - Benefit paket terlihat sebelum pembayaran.
 - Pembayaran diverifikasi.
-- Kuota klaim tercatat.
-- Klaim tidak dapat dilakukan melebihi kuota.
-- Kuota tidak dapat di-reset melalui manipulasi browser.
+- Kredit tercatat.
+- Klaim tidak dapat dilakukan melebihi kredit.
+- Kredit tidak dapat di-reset melalui manipulasi browser.
 - Benefit paket lama tetap dihormati.
 - Paket baru tidak memberikan benefit secara retroaktif tanpa kebijakan yang jelas.
 
@@ -1339,7 +1412,7 @@ Pengembangan harus dilakukan secara bertahap agar perubahan tidak merusak fitur 
 - Teks banner tetap terbaca pada semua skin, di mode terang maupun gelap.
 - Bagian website di luar Welcome Banner tetap biru dan putih apa pun skinnya.
 - Pengguna gratis hanya dapat memilih Basic Cat.
-- Pemilik Premium dapat memilih skin sesuai paket.
+- Pemilik Pro dan Premium dapat memilih skin sesuai paket.
 - Emblem tameng rank di dashboard, profil, dan leaderboard tidak berubah karena skin.
 - Avatar pengguna di header, profil, dan leaderboard menampilkan maskot dengan skin aktif.
 - Jika skin aktif tidak valid, tampilan kembali ke Basic Cat.
@@ -1360,13 +1433,15 @@ Hal berikut harus diputuskan sebelum implementasi fitur terkait mencapai tahap p
 - Apakah perlu periode leaderboard (mingguan atau bulanan) di masa depan.
 - Mekanisme penanganan kecurangan.
 
-## Premium
-- Daftar paket final.
-- Harga setiap paket.
+## Membership
+- Harga final Pro dan Premium.
+- Daftar course gratis dan premium.
 - Daftar skin per paket.
+- Masa berlaku dan ketentuan penggunaan kredit.
+- Kebijakan akses untuk course premium baru dan produk yang dihentikan.
+- Kebijakan harga upgrade dari Pro ke Premium.
 - Apakah paket Lifetime mencakup skin yang dirilis setelah pembelian.
 - Daftar produk yang memenuhi syarat klaim.
-- Kebijakan upgrade paket.
 - Kebijakan diskon pemilik paket sebelumnya.
 - Ketentuan refund.
 - Definisi lisensi produk dan benefit Lifetime.
@@ -1374,8 +1449,8 @@ Hal berikut harus diputuskan sebelum implementasi fitur terkait mencapai tahap p
 ## Maskot dan Skin
 - Nama maskot.
 - Varian ringkas emblem untuk ukuran kecil.
-- Nama dan konsep final 4 skin Premium pada rilis awal.
-- Apakah skin dapat dibeli secara individual di luar paket Premium.
+- Nama dan konsep final 4 skin bertema pada rilis awal.
+- Apakah skin dapat dibeli secara individual di luar membership.
 - Apakah skin baru dirilis secara berkala.
 - Detail animasi setiap skin.
 - Pembuat aset ilustrasi dan format file final.
@@ -1421,24 +1496,96 @@ Jika terdapat konflik antara desain referensi, implementasi yang sudah ada, dan 
 
 BelajarAutomation dianggap berhasil mencapai fondasi produk yang diharapkan ketika:
 
-- Pengguna dapat mempelajari materi secara gratis.
+- Pengguna dapat mempelajari materi dasar secara gratis dan mencapai rank tertinggi tanpa membayar.
 - Progress belajar tersimpan dengan benar.
 - Pengguna dapat berlatih melalui kuis dan challenge.
 - XP dan rank dihitung secara konsisten.
 - Leaderboard tidak dapat dimenangkan melalui pembayaran.
 - Roadmap membantu pengguna memahami urutan belajar.
 - Produk digital dapat dibeli dan diakses dengan aman.
-- Benefit Premium tercatat dan diberikan sesuai paket.
+- Akses course premium dan benefit membership tercatat dan diberikan sesuai paket.
 - Klaim produk tidak dapat digandakan atau di-reset secara tidak sah.
 - Antarmuka konsisten, responsif, dan mudah digunakan.
 - Sistem dapat dikembangkan tanpa mengorbankan integritas data dan hak pengguna.
 
 ---
 
+# 15. Brand Guideline (Rancangan v1.0)
+
+Bagian ini masih rancangan. Implementasi final disesuaikan dengan tampilan website yang sebenarnya.
+
+## 15.1 Kepribadian brand
+Profesional, ramah, praktis, menyenangkan, dan berorientasi pada perkembangan keterampilan.
+
+## 15.2 Palet warna
+
+| Warna | Kode |
+|---|---|
+| Primary Blue | `#2563EB` |
+| Dark Blue | `#1E3A8A` |
+| Accent Blue | `#60A5FA` |
+| Black | `#111827` |
+| Light Gray | `#F3F4F6` |
+| White | `#FFFFFF` |
+
+Warna identitas rank (FR-05) terpisah dari palet brand dan tidak berubah.
+
+## 15.3 Tipografi
+- **Inter:** heading dan teks utama.
+- **JetBrains Mono:** kode pemrograman.
+
+## 15.4 Prinsip desain
+- Minimalis dan terstruktur.
+- Dominan putih dengan aksen biru; hitam untuk teks dan mode gelap.
+- Mudah dibaca di perangkat mobile.
+- Maskot digunakan sebagai aksen, bukan pengganggu konten.
+- Desain konsisten antara website dan media sosial.
+
+## 15.5 Karakter
+| Karakter | Peran |
+|---|---|
+| Kucing putih | Maskot resmi BelajarAutomation, dipakai di website (FR-12) |
+| Pria berkacamata dengan kucing putih di atas kepala | Karakter pendamping untuk konten personal dan edukasi di media sosial; penghubung antara identitas pendiri dan brand. Tidak digunakan sebagai elemen antarmuka website kecuali diputuskan lain. |
+
+BelajarAutomation adalah brand independen yang tetap memiliki hubungan visual dengan identitas personal pendirinya.
+
+---
+
+# 16. Prinsip Kualitas Konten dan Produk
+
+1. Konten boleh dibantu AI dalam proses pembuatannya.
+2. Materi teknis wajib diperiksa sebelum dipublikasikan.
+3. Contoh kode wajib diuji dan dapat dijalankan.
+4. Project wajib memiliki dokumentasi yang jelas dan kode yang berfungsi.
+5. Koreksi dan perbaikan pada produk yang sama dikelola dan diberikan tanpa biaya tambahan.
+6. Klaim pemasaran harus realistis dan tidak menjanjikan hasil karier yang tidak dapat dijamin.
+7. Course hanya boleh berstatus `available` saat rilis jika status kontennya `ready` (FR-02).
+
+---
+
+# 17. Arah Pemasaran (Di Luar Lingkup Aplikasi)
+
+Bagian ini menjadi konteks, bukan kebutuhan fungsional aplikasi.
+
+| Kanal | Fokus konten |
+|---|---|
+| Instagram | Carousel edukasi, tips QA, identitas visual |
+| TikTok | Tips singkat, demo testing, mini tutorial |
+| LinkedIn | Konten profesional, studi kasus, wawasan QA |
+| YouTube | Tutorial lebih panjang dan demonstrasi project |
+
+Strategi awal:
+- Mengutamakan konten organik, tidak langsung mengandalkan iklan berbayar.
+- Satu materi konten diadaptasi ke beberapa platform.
+- Mengutamakan nilai edukasi dan membangun kepercayaan.
+- Menggunakan maskot sebagai elemen pengenal brand.
+
+---
+
 ## Penutup
 
-BelajarAutomation bukan sekadar katalog materi, melainkan platform belajar yang menggabungkan materi gratis, latihan, jalur pembelajaran, gamifikasi dengan maskot kucing putih, dan produk digital.
+BelajarAutomation bukan sekadar katalog materi, melainkan platform belajar yang menggabungkan materi gratis dan premium, latihan, jalur pembelajaran, gamifikasi dengan maskot kucing putih, membership, dan produk digital.
 
-Keputusan desain dan teknis harus mendukung tujuan tersebut tanpa membuat pembelajaran inti bergantung pada pembayaran.
+Keputusan desain dan teknis harus mendukung tujuan tersebut tanpa membuat pembelajaran dasar dan perkembangan rank bergantung pada pembayaran.
 
-**Prinsip produk yang harus selalu dijaga: belajar gratis, berkembang secara adil, dan membayar hanya untuk produk atau benefit tambahan yang jelas.**
+**Prinsip produk yang harus selalu dijaga: belajar dasar secara gratis, berkembang secara adil, dan membayar untuk materi lanjutan serta benefit tambahan yang jelas.**
