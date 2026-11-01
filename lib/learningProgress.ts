@@ -8,12 +8,12 @@ export interface CourseInProgress {
   completedLessons: number;
   totalLessons: number;
   percent: number;
-  lastOpenedAt: string;
+  lastOpenedDaysAgo: number;
 }
 
-// Course yang sedang dipelajari, yang terakhir dibuka lebih dulu.
+// Semua course yang pernah dipelajari, yang terakhir dibuka lebih dulu.
 // Entri untuk course yang tidak ada atau belum tersedia diabaikan.
-export function getCoursesInProgress(): CourseInProgress[] {
+function getStudiedCourses(): CourseInProgress[] {
   return DUMMY_LEARNING_PROGRESS.flatMap((entry) => {
     const course = COURSES.find((item) => item.slug === entry.courseSlug);
     if (!course || course.availability !== "available") return [];
@@ -28,15 +28,20 @@ export function getCoursesInProgress(): CourseInProgress[] {
         completedLessons,
         totalLessons,
         percent: Math.round((completedLessons / totalLessons) * 100),
-        lastOpenedAt: entry.lastOpenedAt,
+        lastOpenedDaysAgo: entry.lastOpenedDaysAgo,
       },
     ];
-  }).sort((a, b) => Date.parse(b.lastOpenedAt) - Date.parse(a.lastOpenedAt));
+  }).sort((a, b) => a.lastOpenedDaysAgo - b.lastOpenedDaysAgo);
+}
+
+// Course yang masih berjalan; course yang sudah tuntas tidak perlu dilanjutkan.
+export function getCoursesInProgress() {
+  return getStudiedCourses().filter((item) => item.completedLessons < item.totalLessons);
 }
 
 // Total lesson selesai; sumber yang sama dengan kartu Lanjutkan Belajar.
 export function getCompletedLessonCount() {
-  return getCoursesInProgress().reduce(
+  return getStudiedCourses().reduce(
     (total, item) => total + item.completedLessons,
     0
   );
