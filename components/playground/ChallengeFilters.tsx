@@ -1,8 +1,7 @@
 "use client";
 
-import FilterChips, { FilterOption } from "@/components/filters/FilterChips";
-import FilterPanel from "@/components/filters/FilterPanel";
-import SearchField from "@/components/filters/SearchField";
+import CatalogFilters from "@/components/filters/CatalogFilters";
+import { FilterOption } from "@/components/filters/FilterChips";
 import { LEVEL_OPTIONS } from "@/lib/filters";
 
 interface ChallengeFiltersProps {
@@ -18,6 +17,7 @@ interface ChallengeFiltersProps {
   onTypeChange: (value: string) => void;
 }
 
+// Konfigurasi filter Playground di atas pola filter katalog bersama (CatalogFilters).
 export default function ChallengeFilters({
   search,
   categoryOptions,
@@ -31,27 +31,17 @@ export default function ChallengeFilters({
   onTypeChange,
 }: ChallengeFiltersProps) {
   return (
-    <div className="space-y-4">
-      <SearchField
-        value={search}
-        onChange={onSearchChange}
-        placeholder="Cari challenge..."
-      />
-
-      <FilterChips
-        label="Kategori"
-        layout="scroll"
-        options={categoryOptions}
-        active={category}
-        onChange={onCategoryChange}
-      />
-
-      <FilterPanel
-        groups={[
-          { label: "Level", options: LEVEL_OPTIONS, value: level, onChange: onLevelChange },
-          { label: "Jenis", options: typeOptions, value: type, onChange: onTypeChange },
-        ]}
-      />
-    </div>
+    <CatalogFilters
+      search={search}
+      searchPlaceholder="Cari challenge..."
+      onSearchChange={onSearchChange}
+      categoryOptions={categoryOptions}
+      category={category}
+      onCategoryChange={onCategoryChange}
+      panelGroups={[
+        { label: "Level", options: LEVEL_OPTIONS, value: level, onChange: onLevelChange },
+        { label: "Jenis", options: typeOptions, value: type, onChange: onTypeChange },
+      ]}
+    />
   );
 }

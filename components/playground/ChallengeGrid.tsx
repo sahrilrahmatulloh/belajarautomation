@@ -1,14 +1,19 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { SearchX } from "lucide-react";
+import { useMemo } from "react";
 
-import EmptyState from "@/components/common/EmptyState";
+import FilterEmptyState from "@/components/filters/FilterEmptyState";
 import FilterResultBar from "@/components/filters/FilterResultBar";
 import { COURSE_CATEGORIES } from "@/data/courseCategories";
 import { CHALLENGES } from "@/data/challenges";
-import { LEVEL_OPTIONS, matchesKeyword, toFilterSlug, validFilterValue } from "@/lib/filters";
-import { useUrlFilters } from "@/lib/useUrlFilters";
+import {
+  getCategoryOptions,
+  LEVEL_OPTIONS,
+  matchesKeyword,
+  toFilterSlug,
+  validFilterValue,
+} from "@/lib/filters";
+import { useCatalogFilters } from "@/lib/useUrlFilters";
 import { ChallengeType } from "@/types/Challenge";
 
 import ChallengeCard from "./ChallengeCard";
@@ -22,12 +27,10 @@ const TYPE_LABELS: Record<ChallengeType, { value: string; label: string }> = {
 };
 
 // Hanya kategori yang punya challenge, mengikuti urutan Learning Center.
-const categoryOptions = [
-  { value: "", label: "Semua" },
-  ...COURSE_CATEGORIES.filter((category) =>
-    CHALLENGES.some((challenge) => challenge.category === category)
-  ).map((category) => ({ value: toFilterSlug(category), label: category })),
-];
+const categoryOptions = getCategoryOptions(
+  COURSE_CATEGORIES,
+  CHALLENGES.map((challenge) => challenge.category)
+);
 
 // Jenis tanpa data tetap tampil, tetapi nonaktif.
 const typeOptions = [
@@ -43,9 +46,7 @@ const typeOptions = [
 ];
 
 export default function ChallengeGrid() {
-  const { values, setFilters, resetFilters } = useUrlFilters(FILTER_KEYS);
-  // Teks pencarian disimpan lokal agar input tetap responsif; URL ikut diperbarui.
-  const [search, setSearch] = useState(values.q);
+  const { values, search, setSearch, setFilters, reset } = useCatalogFilters(FILTER_KEYS);
 
   const category = validFilterValue(values.kategori, categoryOptions);
   const level = validFilterValue(values.level, LEVEL_OPTIONS);
@@ -65,18 +66,8 @@ export default function ChallengeGrid() {
 
   const hasActiveFilter = Boolean(search.trim() || category || level || type);
 
-  function handleSearchChange(value: string) {
-    setSearch(value);
-    setFilters({ q: value.trim() });
-  }
-
-  function handleReset() {
-    setSearch("");
-    resetFilters();
-  }
-
   return (
-    <section className="space-y-6">
+    <section aria-label="Daftar challenge" className="space-y-5">
       <div>
         <h2 className="text-2xl font-bold">Daftar Challenge</h2>
 
@@ -92,7 +83,7 @@ export default function ChallengeGrid() {
         category={category}
         level={level}
         type={type}
-        onSearchChange={handleSearchChange}
+        onSearchChange={setSearch}
         onCategoryChange={(value) => setFilters({ kategori: value })}
         onLevelChange={(value) => setFilters({ level: value })}
         onTypeChange={(value) => setFilters({ jenis: value })}
@@ -102,7 +93,7 @@ export default function ChallengeGrid() {
         count={filteredChallenges.length}
         noun="challenge"
         canReset={hasActiveFilter}
-        onReset={handleReset}
+        onReset={reset}
       />
 
       {filteredChallenges.length > 0 ? (
@@ -112,10 +103,10 @@ export default function ChallengeGrid() {
           ))}
         </div>
       ) : (
-        <EmptyState
-          icon={SearchX}
+        <FilterEmptyState
           title="Challenge tidak ditemukan"
-          description="Coba kata kunci, kategori, atau level lain, atau reset filter."
+          description="Coba kata kunci, kategori, level, atau jenis lain."
+          onReset={reset}
         />
       )}
     </section>
