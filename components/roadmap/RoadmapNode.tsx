@@ -1,84 +1,116 @@
 import Link from "next/link";
-import { ArrowRight, Clock3 } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
-import { RoadmapStep } from "@/types/Roadmap";
+import { Course } from "@/types/Course";
+
+// Badge bersama untuk node course di timeline maupun di dalam cabang.
+export function RoadmapCourseBadges({
+  course,
+  optional,
+}: {
+  course: Course;
+  optional?: boolean;
+}) {
+  if (!optional && course.availability === "available") {
+    return null;
+  }
+
+  return (
+    <span className="flex flex-wrap gap-1.5">
+      {optional && (
+        <span className="rounded-full border border-dashed border-muted-foreground/50 px-2 py-0.5 text-[11px] font-medium text-muted-foreground">
+          Opsional
+        </span>
+      )}
+      {course.availability === "coming-soon" && (
+        <span className="rounded-full bg-muted px-2 py-0.5 text-[11px] font-medium text-muted-foreground">
+          Segera hadir
+        </span>
+      )}
+    </span>
+  );
+}
+
+export function LihatMateriLink({
+  course,
+  size = "default",
+}: {
+  course: Course;
+  size?: "default" | "sm";
+}) {
+  return (
+    <Link
+      href={`/learn/${course.slug}`}
+      aria-label={`Lihat materi ${course.title}`}
+      className={`inline-flex w-fit items-center gap-1.5 rounded-lg border border-border bg-card font-medium transition-colors hover:bg-accent ${
+        size === "sm" ? "min-h-8 px-2.5 text-xs" : "min-h-9 px-3 text-sm"
+      }`}
+    >
+      Lihat Materi
+      <ArrowRight className={size === "sm" ? "h-3.5 w-3.5" : "h-4 w-4"} aria-hidden="true" />
+    </Link>
+  );
+}
 
 interface RoadmapNodeProps {
-  step: RoadmapStep;
-  index: number;
+  course: Course;
+  step: number;
+  optional?: boolean;
   isLast: boolean;
-  prerequisiteTitles: string[];
-  // Diisi hanya jika course-nya benar-benar tersedia di /learn.
-  courseHref?: string;
+  // Garis ke node berikutnya putus-putus bila node berikutnya opsional.
+  nextOptional: boolean;
 }
 
 export default function RoadmapNode({
+  course,
   step,
-  index,
+  optional,
   isLast,
-  prerequisiteTitles,
-  courseHref,
+  nextOptional,
 }: RoadmapNodeProps) {
-  const Icon = step.icon;
-  const isLeft = index % 2 === 0;
+  const Icon = course.icon;
+  const isComingSoon = course.availability === "coming-soon";
 
   return (
-    <li className="relative grid grid-cols-[2.5rem_minmax(0,1fr)] gap-x-4 md:grid-cols-[minmax(0,1fr)_3rem_minmax(0,1fr)] md:gap-x-8">
-      {/* Garis penghubung ke node berikutnya */}
+    <li className="relative grid grid-cols-[2.5rem_minmax(0,1fr)] gap-x-4 pb-6">
       {!isLast && (
         <span
           aria-hidden="true"
-          className="absolute bottom-0 left-5 top-5 w-0.5 -translate-x-1/2 bg-border md:left-1/2 md:top-6"
+          className={`absolute bottom-0 left-5 top-10 -translate-x-1/2 border-l-2 border-primary/40 ${
+            nextOptional ? "border-dashed" : ""
+          }`}
         />
       )}
 
-      {/* Node */}
-      <div className="col-start-1 row-start-1 flex justify-center md:col-start-2">
-        <div className="relative z-10 flex h-10 w-10 items-center justify-center rounded-full border-2 border-primary bg-background text-primary md:h-12 md:w-12">
-          <Icon className="h-5 w-5" aria-hidden="true" />
-        </div>
-      </div>
-
-      {/* Konten */}
       <div
-        className={`col-start-2 row-start-1 flex flex-col pb-10 ${
-          isLeft
-            ? "md:col-start-1 md:items-end md:text-right"
-            : "md:col-start-3"
+        className={`relative z-10 flex h-10 w-10 items-center justify-center rounded-full border-2 bg-background ${
+          isComingSoon || optional
+            ? "border-dashed border-muted-foreground/50 text-muted-foreground"
+            : "border-primary text-primary"
         }`}
       >
-        <p className="text-xs font-semibold uppercase tracking-wider text-primary">
-          Langkah {index + 1}
-        </p>
+        <Icon className="h-5 w-5" aria-hidden="true" />
+      </div>
 
-        <h3 className="mt-1 text-lg font-semibold">
-          {step.title}
+      <div className="min-w-0 rounded-2xl border border-border bg-card p-4">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-xs font-semibold uppercase tracking-wider text-primary">
+            Langkah {step}
+          </span>
+          <RoadmapCourseBadges course={course} optional={optional} />
+        </div>
+
+        <h3 className="mt-1 text-base font-semibold sm:text-lg">
+          {course.title}
         </h3>
 
-        <p className="mt-1 max-w-md text-sm leading-6 text-muted-foreground">
-          {step.description}
+        <p className="mt-1 line-clamp-2 text-sm leading-6 text-muted-foreground">
+          {course.description}
         </p>
 
-        {prerequisiteTitles.length > 0 && (
-          <p className="mt-2 text-xs text-muted-foreground">
-            Prasyarat: {prerequisiteTitles.join(", ")}
-          </p>
-        )}
-
-        {courseHref ? (
-          <Link
-            href={courseHref}
-            className="mt-3 inline-flex min-h-9 w-fit items-center gap-1.5 rounded-lg border border-border bg-card px-3 text-sm font-medium transition-colors hover:bg-accent"
-          >
-            Lihat Materi
-            <ArrowRight className="h-4 w-4" aria-hidden="true" />
-          </Link>
-        ) : (
-          <span className="mt-3 inline-flex min-h-9 w-fit cursor-not-allowed items-center gap-1.5 rounded-lg border border-dashed border-border px-3 text-sm text-muted-foreground">
-            <Clock3 className="h-4 w-4" aria-hidden="true" />
-            Materi segera hadir
-          </span>
-        )}
+        <div className="mt-3">
+          <LihatMateriLink course={course} />
+        </div>
       </div>
     </li>
   );

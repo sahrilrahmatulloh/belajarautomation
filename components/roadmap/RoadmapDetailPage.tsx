@@ -12,6 +12,8 @@ import {
 import ContentCover from "@/components/common/ContentCover";
 import { Roadmap } from "@/types/Roadmap";
 
+import { getRoadmapCourseStats } from "@/lib/roadmap";
+
 import RoadmapTimeline from "./RoadmapTimeline";
 
 interface RoadmapDetailPageProps {
@@ -22,6 +24,7 @@ export default function RoadmapDetailPage({
   roadmap,
 }: RoadmapDetailPageProps) {
   const Icon = roadmap.icon;
+  const stats = getRoadmapCourseStats(roadmap);
 
   return (
     <div className="mx-auto max-w-6xl space-y-10">
@@ -57,7 +60,7 @@ export default function RoadmapDetailPage({
 
                 <span className="flex items-center gap-1.5 rounded-full bg-muted px-3 py-1.5 text-xs font-medium">
                   <Layers3 className="h-3.5 w-3.5" />
-                  {roadmap.steps.length} Langkah
+                  {stats.available} dari {stats.total} course tersedia
                 </span>
 
                 <span className="flex items-center gap-1.5 rounded-full bg-muted px-3 py-1.5 text-xs font-medium">
@@ -148,11 +151,11 @@ export default function RoadmapDetailPage({
         </h2>
 
         <p className="mt-1 text-muted-foreground">
-          Ikuti langkah dari atas ke bawah. Progres belum disimpan.
+          Ikuti langkah dari atas ke bawah. Pada cabang, pilih satu jalur. Progres belum disimpan.
         </p>
 
         <div className="mt-8">
-          <RoadmapTimeline steps={roadmap.steps} />
+          <RoadmapTimeline nodes={roadmap.nodes} />
         </div>
       </section>
     </div>

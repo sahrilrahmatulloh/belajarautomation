@@ -1,41 +1,56 @@
 import { COURSES } from "@/data/courses";
-import { RoadmapStep } from "@/types/Roadmap";
+import { RoadmapNode as RoadmapNodeData } from "@/types/Roadmap";
 
+import RoadmapBranch from "./RoadmapBranch";
 import RoadmapNode from "./RoadmapNode";
 
 interface RoadmapTimelineProps {
-  steps: RoadmapStep[];
+  nodes: RoadmapNodeData[];
 }
 
-const availableCourseSlugs = new Set(
-  COURSES.map((course) => course.slug)
+const courseBySlug = new Map(
+  COURSES.map((course) => [course.slug, course])
 );
 
 export default function RoadmapTimeline({
-  steps,
+  nodes,
 }: RoadmapTimelineProps) {
-  const titleById = new Map(
-    steps.map((step) => [step.id, step.title])
-  );
-
   return (
     <ol>
-      {steps.map((step, index) => (
-        <RoadmapNode
-          key={step.id}
-          step={step}
-          index={index}
-          isLast={index === steps.length - 1}
-          prerequisiteTitles={step.prerequisites
-            .map((id) => titleById.get(id))
-            .filter((title): title is string => Boolean(title))}
-          courseHref={
-            step.courseSlug && availableCourseSlugs.has(step.courseSlug)
-              ? `/learn/${step.courseSlug}`
-              : undefined
-          }
-        />
-      ))}
+      {nodes.map((node, index) => {
+        const next = nodes[index + 1];
+        const nextOptional = next?.type === "course" && Boolean(next.optional);
+        const isLast = index === nodes.length - 1;
+        const step = index + 1;
+
+        if (node.type === "branch") {
+          return (
+            <RoadmapBranch
+              key={`branch-${index}`}
+              options={node.options}
+              courseBySlug={courseBySlug}
+              step={step}
+              isLast={isLast}
+              nextOptional={nextOptional}
+            />
+          );
+        }
+
+        const course = courseBySlug.get(node.courseSlug);
+        // Slug yang hilang sudah dicegah oleh npm run check:roadmaps.
+        if (!course) return null;
+
+        return (
+          <RoadmapNode
+            key={node.courseSlug}
+            course={course}
+            step={step}
+            optional={node.optional}
+            isLast={isLast}
+            nextOptional={nextOptional}
+          />
+        );
+      })}
     </ol>
   );
 }

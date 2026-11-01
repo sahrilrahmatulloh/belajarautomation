@@ -1,12 +1,14 @@
 import Link from "next/link";
 import {
   ArrowRight,
+  CheckCircle2,
   Clock3,
   Layers3,
   Lock,
 } from "lucide-react";
 
 import ContentCover from "@/components/common/ContentCover";
+import { getRoadmapCourseStats } from "@/lib/roadmap";
 import { Roadmap } from "@/types/Roadmap";
 
 const roadmapAccents: Record<string, { surface: string; icon: string; badge: string }> = {
@@ -50,6 +52,7 @@ export default function RoadmapCard({
   roadmap,
 }: RoadmapCardProps) {
   const Icon = roadmap.icon;
+  const stats = getRoadmapCourseStats(roadmap);
   const isComingSoon = roadmap.status === "coming-soon";
   const accent = roadmapAccents[roadmap.id] ?? roadmapAccents.fundamental;
 
@@ -120,7 +123,7 @@ export default function RoadmapCard({
           <>
             <span className="flex items-center gap-1.5 rounded-full bg-muted px-3 py-1.5 text-xs font-medium">
               <Layers3 className="h-3.5 w-3.5" />
-              {roadmap.steps.length} Langkah
+              {stats.total} course
             </span>
 
             <span className="flex items-center gap-1.5 rounded-full bg-muted px-3 py-1.5 text-xs font-medium">
@@ -130,6 +133,13 @@ export default function RoadmapCard({
           </>
         )}
       </div>
+
+      {!isComingSoon && (
+        <p className="mt-3 flex items-center gap-1.5 text-sm text-muted-foreground">
+          <CheckCircle2 className="h-4 w-4 text-primary" aria-hidden="true" />
+          {stats.available} dari {stats.total} course tersedia
+        </p>
+      )}
 
       {/* Action */}
       <div className="mt-auto pt-7">

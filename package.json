@@ -4,11 +4,12 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "prebuild": "npm run check:covers",
+    "prebuild": "npm run check:covers && npm run check:roadmaps",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
     "check:covers": "node scripts/check-covers.mjs",
+    "check:roadmaps": "node scripts/check-roadmaps.mjs",
     "optimize:covers": "node scripts/optimize-covers.mjs"
   },
   "dependencies": {

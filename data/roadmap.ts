@@ -1,37 +1,33 @@
 import {
   BookOpenCheck,
-  Braces,
-  Bug,
   ClipboardCheck,
-  ClipboardList,
   Code2,
-  Container,
-  Crosshair,
-  FileCheck2,
-  FolderKanban,
-  Gauge,
-  GitBranch,
   Globe,
-  Layers3,
   Network,
-  Play,
-  Repeat,
-  Search,
-  Server,
   Smartphone,
-  Workflow,
 } from "lucide-react";
 
-import { Roadmap } from "@/types/Roadmap";
+import { Roadmap, RoadmapCourseNode } from "@/types/Roadmap";
 
-// Jalur roadmap sesuai PRD (FR-03). Status step selalu "not-started"
-// sampai ada data progress pengguna nyata.
+// Jalur roadmap sesuai docs/CURRICULUM.md (PRD FR-03).
+// Setiap node wajib menunjuk ke course di katalog; dicek oleh npm run check:roadmaps.
+// Tidak ada status progress di node sampai ada data pengguna nyata.
+
+const course = (
+  courseSlug: string,
+  optional = false
+): RoadmapCourseNode => ({
+  type: "course",
+  courseSlug,
+  ...(optional && { optional }),
+});
+
 export const ROADMAPS: Roadmap[] = [
   {
     id: "fundamental",
     title: "Fundamental",
     description:
-      "Fondasi wajib QA sebelum memilih jalur manual, automation, atau API testing.",
+      "Fondasi untuk semua jalur: konsep quality assurance, cara kerja web dan API, serta pengenalan AI.",
     icon: BookOpenCheck,
     level: "Beginner",
     duration: "1–2 Bulan",
@@ -39,153 +35,100 @@ export const ROADMAPS: Roadmap[] = [
     status: "active",
     featured: true,
     goals: [
-      "Memahami peran QA dalam siklus pengembangan software",
-      "Mampu menulis test scenario, test case, dan bug report",
-      "Siap melanjutkan ke jalur spesialisasi",
+      "Memahami peran QA, SDLC, STLC, dan jenis testing",
+      "Memahami cara kerja web, HTTP, dan API",
+      "Mengenal dasar AI dan LLM untuk mendukung pekerjaan QA",
     ],
     skills: [
+      "Quality Assurance",
       "SDLC & STLC",
-      "Test Case Design",
-      "Bug Reporting",
-      "Agile & Scrum",
-      "Git Dasar",
+      "HTTP & REST",
+      "JSON",
+      "DevTools",
+      "Dasar AI & LLM",
     ],
     prerequisites: [
       "Tidak ada prasyarat khusus, cocok untuk pemula",
     ],
-    steps: [
-      {
-        id: "qa-basics",
-        title: "Dasar Quality Assurance",
-        description:
-          "Kenali peran QA, perbedaan QA dan QC, serta tanggung jawab QA Engineer.",
-        icon: BookOpenCheck,
-        courseSlug: "qa-fundamentals",
-        prerequisites: [],
-        status: "not-started",
-      },
-      {
-        id: "sdlc-stlc",
-        title: "SDLC, STLC & Agile",
-        description:
-          "Pahami alur pengembangan software dan posisi testing di dalamnya.",
-        icon: Workflow,
-        courseSlug: "qa-fundamentals",
-        prerequisites: ["qa-basics"],
-        status: "not-started",
-      },
-      {
-        id: "test-design",
-        title: "Test Scenario & Test Case",
-        description:
-          "Tulis test scenario dan test case positif maupun negatif.",
-        icon: FileCheck2,
-        courseSlug: "qa-fundamentals",
-        prerequisites: ["sdlc-stlc"],
-        status: "not-started",
-      },
-      {
-        id: "bug-management",
-        title: "Bug Report & Bug Life Cycle",
-        description:
-          "Laporkan bug dengan severity dan priority yang tepat.",
-        icon: Bug,
-        courseSlug: "qa-fundamentals",
-        prerequisites: ["test-design"],
-        status: "not-started",
-      },
-      {
-        id: "git",
-        title: "Git & GitHub",
-        description:
-          "Kelola dokumen dan kode test dengan version control.",
-        icon: GitBranch,
-        courseSlug: "git-github",
-        prerequisites: ["qa-basics"],
-        status: "not-started",
-      },
+    nodes: [
+      course("qa-fundamentals"),
+      course("dasar-web-api"),
+      course("dasar-ai-llm", true),
     ],
   },
   {
     id: "qa-manual-engineer",
     title: "QA Manual Engineer",
     description:
-      "Jalur untuk menjadi QA yang kuat dalam analisis requirement, desain test, dan exploratory testing.",
+      "Jalur QA manual: merancang test case, melaporkan bug, mengelola pengujian, dan memvalidasi data dengan SQL.",
     icon: ClipboardCheck,
     level: "Beginner – Intermediate",
     duration: "2–3 Bulan",
     cover: "/covers/roadmaps/qa-manual-engineer.webp",
     status: "active",
     goals: [
-      "Menerjemahkan requirement menjadi test scenario",
-      "Menerapkan teknik desain test yang sistematis",
-      "Menjalankan exploratory dan regression testing dalam sprint",
+      "Merancang test case dengan teknik desain test yang sistematis",
+      "Melaporkan dan mengelola bug bersama tim",
+      "Mengelola test case dan test run dengan Jira dan TestRail",
+      "Memvalidasi data aplikasi dengan SQL",
     ],
     skills: [
-      "Requirement Analysis",
-      "Test Design Technique",
-      "Exploratory Testing",
-      "Regression Testing",
-      "Test Management",
+      "Test Design",
+      "Bug Reporting",
+      "Jira & TestRail",
+      "SQL",
+      "AI for Testing",
     ],
     prerequisites: [
-      "Menyelesaikan jalur Fundamental",
+      "Tidak ada prasyarat khusus; jalur ini dimulai dari QA Fundamental",
     ],
-    steps: [
+    nodes: [
+      course("qa-fundamentals"),
+      course("test-design"),
+      course("bug-reporting"),
+      course("test-management"),
+      course("sql-untuk-qa"),
+      course("ai-for-testing", true),
+    ],
+  },
+  {
+    id: "programming",
+    title: "Programming",
+    description:
+      "Kuasai Git lalu pilih satu bahasa untuk automation. JavaScript dilanjutkan TypeScript direkomendasikan untuk Playwright.",
+    icon: Code2,
+    level: "Beginner",
+    duration: "1–2 Bulan",
+    cover: "/covers/roadmaps/programming.webp",
+    status: "active",
+    goals: [
+      "Mengelola kode dengan Git dan GitHub",
+      "Menguasai satu bahasa pemrograman untuk automation",
+      "Siap mempelajari framework automation",
+    ],
+    skills: [
+      "Git & GitHub",
+      "JavaScript",
+      "TypeScript",
+      "Java",
+      "Python",
+    ],
+    prerequisites: [
+      "Tidak perlu pengalaman pemrograman sebelumnya",
+    ],
+    nodes: [
+      course("git-github"),
       {
-        id: "qa-fundamentals",
-        title: "QA Fundamentals",
-        description:
-          "Pastikan fondasi QA, test case, dan bug report sudah kuat.",
-        icon: BookOpenCheck,
-        courseSlug: "qa-fundamentals",
-        prerequisites: [],
-        status: "not-started",
-      },
-      {
-        id: "requirement-analysis",
-        title: "Analisis Requirement",
-        description:
-          "Baca user story dan acceptance criteria untuk menemukan skenario dan risiko.",
-        icon: Search,
-        prerequisites: ["qa-fundamentals"],
-        status: "not-started",
-      },
-      {
-        id: "test-design-technique",
-        title: "Teknik Desain Test",
-        description:
-          "Equivalence partitioning, boundary value analysis, dan decision table.",
-        icon: ClipboardList,
-        prerequisites: ["requirement-analysis"],
-        status: "not-started",
-      },
-      {
-        id: "exploratory",
-        title: "Exploratory Testing",
-        description:
-          "Temukan bug di luar skenario tertulis dengan sesi eksplorasi terarah.",
-        icon: Crosshair,
-        prerequisites: ["test-design-technique"],
-        status: "not-started",
-      },
-      {
-        id: "regression",
-        title: "Regression & Smoke Testing",
-        description:
-          "Susun regression suite dan smoke test untuk setiap rilis.",
-        icon: Repeat,
-        prerequisites: ["test-design-technique"],
-        status: "not-started",
-      },
-      {
-        id: "test-management",
-        title: "Test Management",
-        description:
-          "Kelola test case, eksekusi, dan laporan test dalam sprint Agile.",
-        icon: Layers3,
-        prerequisites: ["regression"],
-        status: "not-started",
+        type: "branch",
+        options: [
+          {
+            label: "JavaScript",
+            recommended: true,
+            nodes: [course("javascript"), course("typescript")],
+          },
+          { label: "Java", nodes: [course("java")] },
+          { label: "Python", nodes: [course("python")] },
+        ],
       },
     ],
   },
@@ -193,364 +136,146 @@ export const ROADMAPS: Roadmap[] = [
     id: "qa-automation-web",
     title: "QA Automation Web",
     description:
-      "Kuasai automation testing untuk aplikasi web menggunakan Playwright atau Selenium hingga terintegrasi CI/CD.",
+      "Bangun automation testing web dengan framework pilihanmu, Playwright direkomendasikan, hingga berjalan di CI/CD dan dibantu AI.",
     icon: Globe,
     level: "Beginner – Advanced",
     duration: "3–4 Bulan",
     cover: "/covers/roadmaps/qa-automation-web.webp",
     status: "active",
     goals: [
-      "Membangun automated test web yang stabil",
-      "Menerapkan Page Object Model dan struktur framework",
+      "Merancang test case sebelum diotomasi",
+      "Membangun automated test web dengan framework pilihan",
       "Menjalankan test otomatis di pipeline CI/CD",
+      "Memanfaatkan AI untuk mempercepat pembuatan dan perawatan test",
     ],
     skills: [
-      "JavaScript",
+      "Test Design",
+      "Git & GitHub",
+      "TypeScript",
       "Playwright",
+      "Cypress",
       "Selenium",
-      "Page Object Model",
-      "BDD",
+      "Robot Framework",
+      "Katalon",
       "CI/CD",
+      "AI for Testing",
     ],
     prerequisites: [
-      "Menyelesaikan jalur Fundamental",
-      "Memahami dasar pemrograman",
+      "Tidak ada prasyarat khusus; jalur ini dimulai dari QA Fundamental",
+      "Bahasa pemrograman dipelajari di dalam cabang yang kamu pilih",
     ],
-    steps: [
+    nodes: [
+      course("qa-fundamentals"),
+      course("test-design"),
+      course("git-github"),
       {
-        id: "qa-fundamentals",
-        title: "QA Fundamentals",
-        description:
-          "Fondasi QA sebelum menulis automated test.",
-        icon: BookOpenCheck,
-        courseSlug: "qa-fundamentals",
-        prerequisites: [],
-        status: "not-started",
+        type: "branch",
+        options: [
+          {
+            label: "TypeScript",
+            recommended: true,
+            nodes: [course("typescript"), course("playwright")],
+          },
+          {
+            label: "JavaScript",
+            nodes: [course("javascript"), course("cypress")],
+          },
+          {
+            label: "Java",
+            nodes: [course("java"), course("selenium"), course("cucumber")],
+          },
+          {
+            label: "Python",
+            nodes: [course("python"), course("robot-framework")],
+          },
+          { label: "Low-code", nodes: [course("katalon")] },
+        ],
       },
-      {
-        id: "programming",
-        title: "JavaScript untuk Automation",
-        description:
-          "Function, async/await, dan module sebagai bekal Playwright.",
-        icon: Braces,
-        courseSlug: "javascript",
-        prerequisites: ["qa-fundamentals"],
-        status: "not-started",
-      },
-      {
-        id: "git",
-        title: "Git & GitHub",
-        description:
-          "Kelola kode automation dan berkolaborasi lewat pull request.",
-        icon: GitBranch,
-        courseSlug: "git-github",
-        prerequisites: ["programming"],
-        status: "not-started",
-      },
-      {
-        id: "playwright",
-        title: "Playwright",
-        description:
-          "Locator, assertion, dan Page Object Model dengan Playwright.",
-        icon: Play,
-        courseSlug: "playwright",
-        prerequisites: ["programming", "git"],
-        status: "not-started",
-      },
-      {
-        id: "selenium",
-        title: "Selenium WebDriver",
-        description:
-          "Alternatif berbasis Java yang banyak dipakai di perusahaan.",
-        icon: Globe,
-        courseSlug: "selenium",
-        prerequisites: ["git"],
-        status: "not-started",
-      },
-      {
-        id: "bdd",
-        title: "BDD dengan Cucumber",
-        description:
-          "Tulis skenario Gherkin yang mudah dipahami seluruh tim.",
-        icon: Workflow,
-        courseSlug: "cucumber",
-        prerequisites: ["selenium"],
-        status: "not-started",
-      },
-      {
-        id: "cicd",
-        title: "CI/CD & Docker",
-        description:
-          "Jalankan automated test di pipeline dan container.",
-        icon: Container,
-        prerequisites: ["playwright"],
-        status: "not-started",
-      },
-      {
-        id: "project",
-        title: "Web Automation Project",
-        description:
-          "Bangun project end-to-end seperti workflow di perusahaan.",
-        icon: FolderKanban,
-        prerequisites: ["cicd"],
-        status: "not-started",
-      },
-    ],
-  },
-  {
-    id: "qa-automation-mobile",
-    title: "QA Automation Mobile",
-    description:
-      "Pelajari automation testing untuk aplikasi Android dan iOS hingga eksekusi di device farm.",
-    icon: Smartphone,
-    level: "Intermediate",
-    duration: "3–4 Bulan",
-    cover: "/covers/roadmaps/qa-automation-mobile.webp",
-    status: "active",
-    goals: [
-      "Memahami karakteristik mobile testing",
-      "Membuat automated test mobile dengan Appium",
-      "Menjalankan test di berbagai device",
-    ],
-    skills: [
-      "Mobile Testing",
-      "Java",
-      "Appium",
-      "Device Farm",
-      "CI/CD",
-    ],
-    prerequisites: [
-      "Menyelesaikan jalur Fundamental",
-      "Memahami dasar pemrograman",
-    ],
-    steps: [
-      {
-        id: "qa-fundamentals",
-        title: "QA Fundamentals",
-        description:
-          "Fondasi QA sebelum masuk ke mobile testing.",
-        icon: BookOpenCheck,
-        courseSlug: "qa-fundamentals",
-        prerequisites: [],
-        status: "not-started",
-      },
-      {
-        id: "mobile-basics",
-        title: "Mobile Testing Fundamentals",
-        description:
-          "Android, iOS, emulator, simulator, dan real device.",
-        icon: Smartphone,
-        prerequisites: ["qa-fundamentals"],
-        status: "not-started",
-      },
-      {
-        id: "programming",
-        title: "Java",
-        description:
-          "Fondasi pemrograman untuk menulis test Appium.",
-        icon: Code2,
-        courseSlug: "java",
-        prerequisites: ["qa-fundamentals"],
-        status: "not-started",
-      },
-      {
-        id: "git",
-        title: "Git & GitHub",
-        description:
-          "Kelola project mobile automation dengan version control.",
-        icon: GitBranch,
-        courseSlug: "git-github",
-        prerequisites: ["programming"],
-        status: "not-started",
-      },
-      {
-        id: "appium",
-        title: "Appium",
-        description:
-          "Locator, capabilities, gesture, dan eksekusi test mobile.",
-        icon: Play,
-        prerequisites: ["mobile-basics", "programming"],
-        status: "not-started",
-      },
-      {
-        id: "device-farm",
-        title: "Device Farm",
-        description:
-          "Jalankan test di berbagai device dan versi OS.",
-        icon: Server,
-        prerequisites: ["appium"],
-        status: "not-started",
-      },
-      {
-        id: "cicd",
-        title: "CI/CD",
-        description:
-          "Integrasikan mobile automation ke pipeline.",
-        icon: Container,
-        prerequisites: ["device-farm", "git"],
-        status: "not-started",
-      },
+      course("cicd-testing"),
+      course("ai-for-testing"),
     ],
   },
   {
     id: "api-test-engineer",
     title: "API Test Engineer",
     description:
-      "Fokus menguji REST API secara manual dan otomatis, termasuk validasi schema dan performa dasar.",
+      "Uji API secara manual dan otomatis, validasi data dengan SQL, hingga mengukur performa dengan JMeter dan K6.",
     icon: Network,
     level: "Beginner – Intermediate",
     duration: "2–3 Bulan",
     cover: "/covers/roadmaps/api-test-engineer.webp",
     status: "active",
     goals: [
-      "Memahami HTTP dan desain REST API",
-      "Menguji API secara manual dan otomatis",
-      "Memvalidasi schema, contract, dan performa dasar",
+      "Memahami HTTP dan REST API",
+      "Menguji API secara manual dengan Postman",
+      "Mengotomasi API test dengan Playwright dan REST Assured",
+      "Mengukur performa API dengan JMeter dan K6",
     ],
     skills: [
       "HTTP & REST",
       "Postman",
+      "SQL",
       "API Automation",
-      "Schema Validation",
-      "Performance Testing",
+      "REST Assured",
+      "JMeter & K6",
+      "AI for Testing",
     ],
     prerequisites: [
-      "Menyelesaikan jalur Fundamental",
+      "Tidak ada prasyarat khusus; jalur ini dimulai dari QA Fundamental",
     ],
-    steps: [
-      {
-        id: "qa-fundamentals",
-        title: "QA Fundamentals",
-        description:
-          "Fondasi QA sebelum fokus ke API.",
-        icon: BookOpenCheck,
-        courseSlug: "qa-fundamentals",
-        prerequisites: [],
-        status: "not-started",
-      },
-      {
-        id: "http-rest",
-        title: "HTTP & REST API",
-        description:
-          "Method, status code, header, dan format JSON.",
-        icon: Network,
-        prerequisites: ["qa-fundamentals"],
-        status: "not-started",
-      },
-      {
-        id: "manual-api",
-        title: "Manual API Testing",
-        description:
-          "Uji endpoint dengan Postman: request, environment, dan assertion.",
-        icon: ClipboardList,
-        prerequisites: ["http-rest"],
-        status: "not-started",
-      },
-      {
-        id: "programming",
-        title: "JavaScript",
-        description:
-          "Bekal menulis API test secara otomatis.",
-        icon: Braces,
-        courseSlug: "javascript",
-        prerequisites: ["qa-fundamentals"],
-        status: "not-started",
-      },
-      {
-        id: "api-automation",
-        title: "API Automation dengan Playwright",
-        description:
-          "Tulis API test otomatis menggunakan request context Playwright.",
-        icon: Play,
-        courseSlug: "playwright",
-        prerequisites: ["manual-api", "programming"],
-        status: "not-started",
-      },
-      {
-        id: "schema",
-        title: "Schema & Contract Testing",
-        description:
-          "Pastikan struktur response sesuai kontrak antar tim.",
-        icon: FileCheck2,
-        prerequisites: ["api-automation"],
-        status: "not-started",
-      },
-      {
-        id: "performance",
-        title: "Performance Testing Dasar",
-        description:
-          "Ukur response time dan beban dasar sebuah API.",
-        icon: Gauge,
-        prerequisites: ["api-automation"],
-        status: "not-started",
-      },
+    nodes: [
+      course("qa-fundamentals"),
+      course("dasar-web-api"),
+      course("postman"),
+      course("sql-untuk-qa"),
+      course("api-automation"),
+      course("performance-testing"),
+      course("ai-for-testing"),
     ],
   },
   {
-    id: "programming",
-    title: "Programming",
+    id: "qa-automation-mobile",
+    title: "QA Automation Mobile",
     description:
-      "Fondasi pemrograman untuk automation: pilih satu bahasa utama lalu kelola kode dengan Git.",
-    icon: Code2,
-    level: "Beginner",
-    duration: "1–2 Bulan",
-    cover: "/covers/roadmaps/programming.webp",
+      "Pahami mobile testing Android lalu otomasi dengan Appium atau Katalon, hingga berjalan di CI/CD.",
+    icon: Smartphone,
+    level: "Intermediate",
+    duration: "3–4 Bulan",
+    cover: "/covers/roadmaps/qa-automation-mobile.webp",
     status: "active",
     goals: [
-      "Menguasai satu bahasa pemrograman untuk automation",
-      "Mengelola kode dengan Git dan GitHub",
-      "Siap mempelajari framework automation",
+      "Memahami karakteristik mobile testing di Android",
+      "Mengotomasi aplikasi mobile dengan Appium atau Katalon",
+      "Menjalankan test mobile di pipeline CI/CD",
     ],
     skills: [
-      "JavaScript",
-      "Python",
+      "Mobile Testing",
+      "Android",
       "Java",
-      "Git",
+      "Appium",
+      "Katalon",
+      "CI/CD",
+      "AI for Testing",
     ],
     prerequisites: [
-      "Tidak perlu pengalaman pemrograman sebelumnya",
+      "Tidak ada prasyarat khusus; jalur ini dimulai dari QA Fundamental",
     ],
-    steps: [
+    nodes: [
+      course("qa-fundamentals"),
+      course("mobile-testing-dasar"),
       {
-        id: "git",
-        title: "Git & GitHub",
-        description:
-          "Mulai dengan version control agar setiap latihan tersimpan rapi.",
-        icon: GitBranch,
-        courseSlug: "git-github",
-        prerequisites: [],
-        status: "not-started",
+        type: "branch",
+        options: [
+          {
+            label: "Java",
+            recommended: true,
+            nodes: [course("java"), course("appium")],
+          },
+          { label: "Low-code", nodes: [course("katalon")] },
+        ],
       },
-      {
-        id: "javascript",
-        title: "JavaScript",
-        description:
-          "Pilihan utama untuk Playwright dan Cypress.",
-        icon: Braces,
-        courseSlug: "javascript",
-        prerequisites: ["git"],
-        status: "not-started",
-      },
-      {
-        id: "python",
-        title: "Python",
-        description:
-          "Pilihan untuk pytest dan Robot Framework.",
-        icon: Code2,
-        courseSlug: "python",
-        prerequisites: ["git"],
-        status: "not-started",
-      },
-      {
-        id: "java",
-        title: "Java",
-        description:
-          "Pilihan untuk Selenium dan Appium di lingkungan enterprise.",
-        icon: Code2,
-        courseSlug: "java",
-        prerequisites: ["git"],
-        status: "not-started",
-      },
+      course("cicd-testing"),
+      course("ai-for-testing"),
     ],
   },
 ];

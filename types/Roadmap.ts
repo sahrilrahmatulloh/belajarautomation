@@ -1,17 +1,26 @@
 import { LucideIcon } from "lucide-react";
 
-export interface RoadmapStep {
-  id: string;
-  title: string;
-  description: string;
-  icon: LucideIcon;
-  // Slug course di /learn; kosong jika materinya belum tersedia.
-  courseSlug?: string;
-  // Id step lain di jalur yang sama yang sebaiknya diselesaikan lebih dulu.
-  prerequisites: string[];
-  // Hanya "not-started" yang dipakai sampai ada data progress pengguna nyata.
-  status: "completed" | "current" | "not-started";
+// Node course: selalu terhubung ke course di katalog (data/courses.ts).
+export interface RoadmapCourseNode {
+  type: "course";
+  courseSlug: string;
+  optional?: boolean;
 }
+
+// Satu pilihan jalur di dalam cabang, mis. "TypeScript".
+export interface RoadmapBranchOption {
+  label: string;
+  recommended?: boolean;
+  nodes: RoadmapCourseNode[];
+}
+
+// Cabang: pengguna memilih salah satu opsi, lalu bergabung kembali ke node berikutnya.
+export interface RoadmapBranchNode {
+  type: "branch";
+  options: RoadmapBranchOption[];
+}
+
+export type RoadmapNode = RoadmapCourseNode | RoadmapBranchNode;
 
 export interface Roadmap {
   id: string;
@@ -27,5 +36,5 @@ export interface Roadmap {
   goals: string[];
   skills: string[];
   prerequisites: string[];
-  steps: RoadmapStep[];
+  nodes: RoadmapNode[];
 }
