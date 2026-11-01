@@ -14,3 +14,21 @@ export function toFilterSlug(label: string) {
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
 }
+
+// Opsi level yang dipakai bersama oleh halaman Belajar dan Playground.
+export const LEVEL_OPTIONS = [
+  { value: "", label: "Semua" },
+  { value: "beginner", label: "Beginner" },
+  { value: "intermediate", label: "Intermediate" },
+  { value: "advanced", label: "Advanced" },
+];
+
+// Nilai filter dari URL yang tidak dikenal (atau nonaktif) dianggap "Semua".
+export function validFilterValue(
+  value: string,
+  options: { value: string; disabled?: boolean }[]
+) {
+  return options.some((option) => option.value === value && !option.disabled)
+    ? value
+    : "";
+}

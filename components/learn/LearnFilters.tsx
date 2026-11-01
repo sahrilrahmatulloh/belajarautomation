@@ -1,34 +1,34 @@
 "use client";
 
-import FilterChips from "@/components/filters/FilterChips";
+import FilterChips, { FilterOption } from "@/components/filters/FilterChips";
+import FilterPanel from "@/components/filters/FilterPanel";
 import SearchField from "@/components/filters/SearchField";
-import {
-  COURSE_CATEGORIES,
-  COURSE_LANGUAGE_FILTERS,
-} from "@/data/courseCategories";
+import { LEVEL_OPTIONS } from "@/lib/filters";
 
 interface LearnFiltersProps {
   search: string;
-  activeCategory: string;
-  activeLanguage: string;
+  categoryOptions: FilterOption[];
+  languageOptions: FilterOption[];
+  category: string;
+  language: string;
+  level: string;
   onSearchChange: (value: string) => void;
-  onCategoryChange: (category: string) => void;
-  onLanguageChange: (language: string) => void;
+  onCategoryChange: (value: string) => void;
+  onLanguageChange: (value: string) => void;
+  onLevelChange: (value: string) => void;
 }
-
-const toOptions = (values: string[]) =>
-  ["Semua", ...values].map((value) => ({ value, label: value }));
-
-const categories = toOptions(COURSE_CATEGORIES);
-const languages = toOptions(COURSE_LANGUAGE_FILTERS);
 
 export default function LearnFilters({
   search,
-  activeCategory,
-  activeLanguage,
+  categoryOptions,
+  languageOptions,
+  category,
+  language,
+  level,
   onSearchChange,
   onCategoryChange,
   onLanguageChange,
+  onLevelChange,
 }: LearnFiltersProps) {
   return (
     <div className="space-y-4">
@@ -40,16 +40,17 @@ export default function LearnFilters({
 
       <FilterChips
         label="Kategori"
-        options={categories}
-        active={activeCategory}
+        layout="scroll"
+        options={categoryOptions}
+        active={category}
         onChange={onCategoryChange}
       />
 
-      <FilterChips
-        label="Bahasa"
-        options={languages}
-        active={activeLanguage}
-        onChange={onLanguageChange}
+      <FilterPanel
+        groups={[
+          { label: "Bahasa", options: languageOptions, value: language, onChange: onLanguageChange },
+          { label: "Level", options: LEVEL_OPTIONS, value: level, onChange: onLevelChange },
+        ]}
       />
     </div>
   );

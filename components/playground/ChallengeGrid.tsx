@@ -7,12 +7,12 @@ import EmptyState from "@/components/common/EmptyState";
 import FilterResultBar from "@/components/filters/FilterResultBar";
 import { COURSE_CATEGORIES } from "@/data/courseCategories";
 import { CHALLENGES } from "@/data/challenges";
-import { matchesKeyword, toFilterSlug } from "@/lib/filters";
+import { LEVEL_OPTIONS, matchesKeyword, toFilterSlug, validFilterValue } from "@/lib/filters";
 import { useUrlFilters } from "@/lib/useUrlFilters";
 import { ChallengeType } from "@/types/Challenge";
 
 import ChallengeCard from "./ChallengeCard";
-import ChallengeFilters, { LEVEL_OPTIONS } from "./ChallengeFilters";
+import ChallengeFilters from "./ChallengeFilters";
 
 const FILTER_KEYS = ["q", "kategori", "level", "jenis"] as const;
 
@@ -42,19 +42,14 @@ const typeOptions = [
   }),
 ];
 
-// Nilai URL yang tidak dikenal dianggap "Semua".
-function validValue(value: string, options: { value: string; disabled?: boolean }[]) {
-  return options.some((option) => option.value === value && !option.disabled) ? value : "";
-}
-
 export default function ChallengeGrid() {
   const { values, setFilters, resetFilters } = useUrlFilters(FILTER_KEYS);
   // Teks pencarian disimpan lokal agar input tetap responsif; URL ikut diperbarui.
   const [search, setSearch] = useState(values.q);
 
-  const category = validValue(values.kategori, categoryOptions);
-  const level = validValue(values.level, LEVEL_OPTIONS);
-  const type = validValue(values.jenis, typeOptions);
+  const category = validFilterValue(values.kategori, categoryOptions);
+  const level = validFilterValue(values.level, LEVEL_OPTIONS);
+  const type = validFilterValue(values.jenis, typeOptions);
 
   const filteredChallenges = useMemo(
     () =>

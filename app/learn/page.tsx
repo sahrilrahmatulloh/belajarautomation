@@ -1,3 +1,5 @@
+import { Suspense } from "react";
+
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import LearnHeader from "@/components/learn/LearnHeader";
 import CourseGrid from "@/components/learn/CourseGrid";
@@ -9,9 +11,12 @@ export default function LearnPage() {
       <div className="space-y-8">
         <LearnHeader />
 
-        <CourseGrid />
-
         <RoadmapCTA />
+
+        {/* CourseGrid membaca filter dari URL (useSearchParams). */}
+        <Suspense fallback={<p className="text-sm text-muted-foreground">Memuat materi...</p>}>
+          <CourseGrid />
+        </Suspense>
       </div>
     </DashboardLayout>
   );

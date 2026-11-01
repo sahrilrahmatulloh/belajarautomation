@@ -3,13 +3,7 @@
 import FilterChips, { FilterOption } from "@/components/filters/FilterChips";
 import FilterPanel from "@/components/filters/FilterPanel";
 import SearchField from "@/components/filters/SearchField";
-
-export const LEVEL_OPTIONS: FilterOption[] = [
-  { value: "", label: "Semua" },
-  { value: "beginner", label: "Beginner" },
-  { value: "intermediate", label: "Intermediate" },
-  { value: "advanced", label: "Advanced" },
-];
+import { LEVEL_OPTIONS } from "@/lib/filters";
 
 interface ChallengeFiltersProps {
   search: string;
