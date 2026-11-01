@@ -9,7 +9,7 @@ export default function PremiumHero() {
 
       <div className="mx-auto mt-6 flex w-fit items-center gap-2 rounded-full bg-muted px-3 py-1.5 text-xs font-medium">
         <Sparkles className="h-3.5 w-3.5" />
-        belajarautomation.id Premium
+        belajarautomation.com Premium
       </div>
 
       <h1 className="mx-auto mt-5 max-w-3xl text-3xl font-bold tracking-tight sm:text-5xl">

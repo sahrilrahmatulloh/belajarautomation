@@ -30,7 +30,7 @@ export default function SplashScreen() {
           className="h-24 w-24 object-contain"
         />
         <p className="mt-5 text-2xl font-bold tracking-tight text-foreground">
-          belajarautomation.id
+          belajarautomation.com
         </p>
         <p className="mt-1 text-sm font-medium text-brand-blue">
           Learn · Practice · Build · Grow

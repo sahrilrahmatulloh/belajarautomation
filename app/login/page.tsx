@@ -5,7 +5,7 @@ import GuestOnly from "@/components/auth/GuestOnly";
 import LoginForm from "@/components/auth/LoginForm";
 
 export const metadata: Metadata = {
-  title: "Masuk | belajarautomation.id",
+  title: "Masuk | belajarautomation.com",
 };
 
 // Satu halaman masuk untuk semua role (User, Creator, Reviewer, Admin).

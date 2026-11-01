@@ -7,7 +7,7 @@ export const BOOKS: Book[] = [
     title: "Playwright from Zero to Hero",
     description:
       "Panduan praktis belajar Playwright dari dasar hingga membangun automation framework.",
-    author: "belajarautomation.id",
+    author: "belajarautomation.com",
     level: "Beginner",
     format: "PDF",
     price: 49000,
@@ -32,7 +32,7 @@ export const BOOKS: Book[] = [
     title: "Selenium WebDriver with Java",
     description:
       "Pelajari web automation menggunakan Selenium WebDriver dan Java dari fundamental.",
-    author: "belajarautomation.id",
+    author: "belajarautomation.com",
     level: "Beginner",
     format: "PDF",
     price: 49000,
@@ -57,7 +57,7 @@ export const BOOKS: Book[] = [
     title: "API Testing for QA Engineer",
     description:
       "Kuasai fundamental API testing, validation, authentication, dan automation.",
-    author: "belajarautomation.id",
+    author: "belajarautomation.com",
     level: "Intermediate",
     format: "PDF",
     price: 59000,
@@ -82,7 +82,7 @@ export const BOOKS: Book[] = [
     title: "Appium Mobile Automation",
     description:
       "Bangun mobile automation testing untuk aplikasi Android dan iOS menggunakan Appium.",
-    author: "belajarautomation.id",
+    author: "belajarautomation.com",
     level: "Intermediate",
     format: "PDF",
     price: 69000,
@@ -107,7 +107,7 @@ export const BOOKS: Book[] = [
     title: "Build Your Automation Framework",
     description:
       "Pelajari cara merancang automation framework yang scalable dan maintainable.",
-    author: "belajarautomation.id",
+    author: "belajarautomation.com",
     level: "Advanced",
     format: "PDF",
     price: 79000,
@@ -132,7 +132,7 @@ export const BOOKS: Book[] = [
     title: "Vibe Coding for QA Engineer",
     description:
       "Gunakan AI coding tools secara efektif untuk membangun dan mereview test automation.",
-    author: "belajarautomation.id",
+    author: "belajarautomation.com",
     level: "Intermediate",
     format: "PDF",
     price: 59000,

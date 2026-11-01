@@ -35,7 +35,7 @@ export const NOTIFICATIONS: Notification[] = [
     id: 4,
     title: "Selamat datang!",
     description:
-      "Selamat datang di belajarautomation.id. Mulai perjalanan QA Automation kamu.",
+      "Selamat datang di belajarautomation.com. Mulai perjalanan QA Automation kamu.",
     type: "system",
     time: "3 hari lalu",
     read: true,

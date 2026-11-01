@@ -5,7 +5,7 @@ import GuestOnly from "@/components/auth/GuestOnly";
 import RegisterForm from "@/components/auth/RegisterForm";
 
 export const metadata: Metadata = {
-  title: "Daftar | belajarautomation.id",
+  title: "Daftar | belajarautomation.com",
 };
 
 export default function Page() {

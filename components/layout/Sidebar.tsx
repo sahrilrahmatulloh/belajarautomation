@@ -35,11 +35,11 @@ export default function Sidebar({
         <Link
           href={home}
           className="flex items-center gap-3"
-          aria-label={collapsed ? "belajarautomation.id" : undefined}
+          aria-label={collapsed ? "belajarautomation.com" : undefined}
         >
           <Image
             src="/logo.png"
-            alt="belajarautomation.id logo"
+            alt="belajarautomation.com logo"
             width={36}
             height={36}
             className="h-9 w-9 shrink-0 object-contain"
@@ -49,7 +49,7 @@ export default function Sidebar({
           {!collapsed && (
             <div className="min-w-0">
               <h1 className="whitespace-nowrap text-base font-bold tracking-tight">
-                belajarautomation.id
+                belajarautomation.com
               </h1>
 
               <p className="mt-0.5 text-xs text-muted-foreground">

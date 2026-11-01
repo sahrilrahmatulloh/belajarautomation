@@ -7,7 +7,7 @@ import ThemeProvider from "@/components/providers/ThemeProvider";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
 export const metadata: Metadata = {
-  title: "belajarautomation.id",
+  title: "belajarautomation.com",
   description: "Belajar QA Automation dari nol hingga siap kerja",
 };
 

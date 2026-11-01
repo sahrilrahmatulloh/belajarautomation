@@ -22,7 +22,7 @@ const benefits = [
   {
     title: "3 Klaim eBook",
     description:
-      "Klaim hingga 3 eBook pilihan dari koleksi eBook belajarautomation.id.",
+      "Klaim hingga 3 eBook pilihan dari koleksi eBook belajarautomation.com.",
     icon: BookOpenCheck,
   },
   {

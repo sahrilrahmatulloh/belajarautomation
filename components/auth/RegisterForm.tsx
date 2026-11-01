@@ -125,7 +125,7 @@ export default function RegisterForm() {
             className="mt-0.5 h-4 w-4 accent-primary"
           />
           <span className="text-muted-foreground">
-            Saya menyetujui syarat dan ketentuan serta kebijakan privasi belajarautomation.id.
+            Saya menyetujui syarat dan ketentuan serta kebijakan privasi belajarautomation.com.
           </span>
         </label>
         {errors.agree && (

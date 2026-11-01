@@ -53,7 +53,7 @@ export default function AuthShell({
             className="h-9 w-9 object-contain"
           />
           <span className="text-base font-bold tracking-tight">
-            belajarautomation.id
+            belajarautomation.com
           </span>
         </Link>
 

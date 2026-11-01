@@ -8,7 +8,7 @@ export const ARTICLES: Article[] = [
     excerpt:
       "Bagaimana AI, coding agents, dan modern testing tools mengubah cara QA Engineer bekerja.",
     category: "AI",
-    author: "belajarautomation.id",
+    author: "belajarautomation.com",
     publishedAt: "10 Juli 2026",
     readTime: "8 min",
     cover: "/blog/qa-automation-2026.png",
@@ -43,7 +43,7 @@ export const ARTICLES: Article[] = [
     excerpt:
       "Perbandingan Playwright dan Selenium untuk membantu kamu memilih automation tool.",
     category: "Automation",
-    author: "belajarautomation.id",
+    author: "belajarautomation.com",
     publishedAt: "8 Juli 2026",
     readTime: "6 min",
     cover: "/blog/playwright-vs-selenium.png",
@@ -78,7 +78,7 @@ export const ARTICLES: Article[] = [
     excerpt:
       "Pelajari strategi memilih locator yang readable, resilient, dan mudah dipelihara.",
     category: "Playwright",
-    author: "belajarautomation.id",
+    author: "belajarautomation.com",
     publishedAt: "5 Juli 2026",
     readTime: "5 min",
     cover: "/blog/playwright-locator.png",
@@ -113,7 +113,7 @@ export const ARTICLES: Article[] = [
     excerpt:
       "Panduan awal memahami Appium dan workflow mobile automation untuk Android dan iOS.",
     category: "Mobile",
-    author: "belajarautomation.id",
+    author: "belajarautomation.com",
     publishedAt: "2 Juli 2026",
     readTime: "7 min",
     cover: "/blog/appium-mobile.png",
@@ -148,7 +148,7 @@ export const ARTICLES: Article[] = [
     excerpt:
       "API testing adalah salah satu skill penting untuk membangun strategi testing modern.",
     category: "API Testing",
-    author: "belajarautomation.id",
+    author: "belajarautomation.com",
     publishedAt: "28 Juni 2026",
     readTime: "6 min",
     cover: "/blog/api-testing.png",
@@ -182,7 +182,7 @@ export const ARTICLES: Article[] = [
     excerpt:
       "Susun GitHub dan automation project yang mampu menunjukkan kemampuan teknis kamu.",
     category: "Career",
-    author: "belajarautomation.id",
+    author: "belajarautomation.com",
     publishedAt: "25 Juni 2026",
     readTime: "8 min",
     cover: "/blog/qa-portfolio.png",
