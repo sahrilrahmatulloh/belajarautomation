@@ -11,7 +11,7 @@ export default function RankTiers() {
   const currentIndex = RANKS.indexOf(currentRank);
 
   return (
-    <section id="tingkatan-rank" aria-labelledby="rank-tiers-title" className="scroll-mt-20 space-y-4">
+    <section id="tingkatan-rank" aria-labelledby="rank-tiers-title" className="min-w-0 scroll-mt-20 space-y-4">
       <div>
         <h2 id="rank-tiers-title" className="text-xl font-bold">
           Tingkatan Rank
@@ -22,17 +22,13 @@ export default function RankTiers() {
         </p>
       </div>
 
-      {/* Tangga rank: Master di puncak, Trainee di dasar. Garis jalur di belakang
-          kartu terlihat di sela antarkartu sebagai anak tangga. */}
-      <div className="relative">
-        <div
-          aria-hidden="true"
-          className="absolute bottom-10 left-[2.5rem] top-10 w-1 -translate-x-1/2 rounded-full bg-primary/25"
-        />
-        <ol aria-label="Tingkatan rank, dari tertinggi ke terendah" className="relative space-y-4">
-
-        {[...RANKS].reverse().map((rank) => {
-          const rankIndex = RANKS.indexOf(rank);
+      {/* Kolom berjajar dari Trainee (kiri) ke Master (kanan). Di layar sempit
+          baris ini digeser horizontal tanpa membuat halaman ikut melebar. */}
+      <ol
+        aria-label="Tingkatan rank, dari terendah ke tertinggi"
+        className="-mx-1 flex snap-x snap-mandatory gap-3 overflow-x-auto px-1 pb-2 pt-1 [scrollbar-width:thin] lg:grid lg:grid-cols-6 lg:overflow-visible"
+      >
+        {RANKS.map((rank, rankIndex) => {
           const isCurrent = rankIndex === currentIndex;
           const isAchieved = rankIndex < currentIndex;
           const isLocked = rankIndex > currentIndex;
@@ -41,74 +37,76 @@ export default function RankTiers() {
             <li
               key={rank.name}
               aria-current={isCurrent ? "step" : undefined}
-              className={`relative flex items-center gap-3 rounded-2xl border bg-card p-3 sm:gap-4 ${
-                isCurrent ? "border-primary ring-1 ring-primary/30" : "border-border"
+              className={`relative flex w-40 shrink-0 snap-start flex-col items-center overflow-hidden rounded-2xl border p-3 text-center lg:w-auto ${
+                isCurrent
+                  ? "border-primary bg-primary/[0.07] shadow-md ring-1 ring-primary/40"
+                  : "border-border bg-card"
               }`}
             >
+              {/* Rona warna identitas rank di bagian atas kolom. */}
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-x-0 top-0 h-24"
+                style={{ background: `linear-gradient(to bottom, ${rank.color}2e, transparent)` }}
+              />
+
               <RankEmblem
                 rank={rank}
                 variant="full"
-                size={56}
-                className={isLocked ? "opacity-75 grayscale-[25%]" : undefined}
+                size={72}
+                className={`relative mt-1 ${isLocked ? "opacity-75 grayscale-[25%]" : ""}`}
               />
 
-              <div className="min-w-0 flex-1">
-                <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-                  <p className={`flex items-center gap-2 font-semibold ${isLocked ? "text-muted-foreground" : ""}`}>
-                    <span
-                      aria-hidden="true"
-                      className="h-2.5 w-2.5 shrink-0 rounded-full"
-                      style={{ backgroundColor: rank.color }}
-                    />
-                    {rank.name}
-                  </p>
-                  {isCurrent && (
-                    <span className="rounded-full bg-primary px-2 py-0.5 text-[10px] font-semibold text-primary-foreground">
+              <p
+                className="relative mt-2 w-full truncate rounded-full border bg-background/80 px-2 py-0.5 text-sm font-semibold"
+                style={{ borderColor: `${rank.color}99` }}
+              >
+                {rank.name}
+              </p>
+
+              <p className="mt-2 text-sm font-bold tabular-nums">{formatNumber(rank.minXp)} XP</p>
+              <p className="mt-1 text-[11px] leading-4 text-muted-foreground">{rank.description}</p>
+
+              <div className="mt-auto w-full pt-3">
+                {isCurrent && (
+                  <>
+                    <span className="inline-block rounded-full bg-primary px-2 py-0.5 text-[10px] font-semibold text-primary-foreground">
                       Rank kamu
                     </span>
-                  )}
-                  {isAchieved && (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-semibold text-emerald-700 dark:text-emerald-300">
-                      <Check className="h-3 w-3" aria-hidden="true" />
-                      Tercapai
-                    </span>
-                  )}
-                </div>
-                <p className="mt-0.5 text-xs font-medium text-foreground/80">
-                  Mulai {formatNumber(rank.minXp)} XP
-                </p>
-                <p className="mt-0.5 text-xs text-muted-foreground">{rank.description}</p>
-
-                {isCurrent && nextRank && (
-                  <div className="mt-2 max-w-sm">
-                    <div
-                      role="progressbar"
-                      aria-label={`Progres menuju ${nextRank.name}`}
-                      aria-valuemin={0}
-                      aria-valuemax={100}
-                      aria-valuenow={percent}
-                      className="h-1.5 overflow-hidden rounded-full bg-muted"
-                    >
-                      <div className="h-full rounded-full bg-primary" style={{ width: `${percent}%` }} />
-                    </div>
+                    {nextRank && (
+                      <div
+                        role="progressbar"
+                        aria-label={`Progres menuju ${nextRank.name}`}
+                        aria-valuemin={0}
+                        aria-valuemax={100}
+                        aria-valuenow={percent}
+                        className="mt-2 h-1.5 overflow-hidden rounded-full bg-muted"
+                      >
+                        <div className="h-full rounded-full bg-primary" style={{ width: `${percent}%` }} />
+                      </div>
+                    )}
                     <p className="mt-1 text-[11px] text-muted-foreground">
-                      {formatNumber(DUMMY_ACCOUNT.xp)} XP · {percent}% menuju {nextRank.name}
+                      {nextRank ? `${percent}% menuju ${nextRank.name}` : "Rank tertinggi"}
                     </p>
-                  </div>
+                  </>
+                )}
+                {isAchieved && (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-0.5 text-[11px] font-semibold text-emerald-700 dark:text-emerald-300">
+                    <Check className="h-3 w-3" aria-hidden="true" />
+                    Tercapai
+                  </span>
+                )}
+                {isLocked && (
+                  <span className="inline-flex items-center gap-1 text-[11px] text-muted-foreground">
+                    <Lock className="h-3 w-3" aria-hidden="true" />
+                    Butuh {formatNumber(rank.minXp - DUMMY_ACCOUNT.xp)} XP lagi
+                  </span>
                 )}
               </div>
-
-              {isLocked && (
-                <span className="hidden shrink-0 items-center gap-1 text-xs text-muted-foreground sm:inline-flex">
-                  <Lock className="h-3.5 w-3.5" aria-hidden="true" />
-                  Butuh {formatNumber(rank.minXp - DUMMY_ACCOUNT.xp)} XP lagi
-                </span>
-              )}
             </li>
           );
         })}
       </ol>
-      </div>
 
       <div className="rounded-2xl border border-border bg-card p-4 sm:p-5">
         <h3 className="flex items-center gap-2 font-semibold">
