@@ -9,6 +9,7 @@ import {
   Wrench,
 } from "lucide-react";
 
+import ContentCover from "@/components/common/ContentCover";
 import { Roadmap } from "@/types/Roadmap";
 
 import RoadmapTimeline from "./RoadmapTimeline";
@@ -34,35 +35,50 @@ export default function RoadmapDetailPage({
 
       {/* Informasi jalur */}
       <section className="rounded-3xl border border-border bg-card p-6 sm:p-8">
-        <div className="flex flex-col gap-5 sm:flex-row sm:items-start">
-          <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-primary text-primary-foreground">
-            <Icon className="h-7 w-7" />
+        <div className="flex flex-col gap-6 md:flex-row md:items-start">
+          <div className="flex min-w-0 flex-1 flex-col gap-5 sm:flex-row sm:items-start">
+            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-primary text-primary-foreground">
+              <Icon className="h-7 w-7" />
+            </div>
+
+            <div>
+              <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
+                {roadmap.title}
+              </h1>
+
+              <p className="mt-3 max-w-2xl leading-7 text-muted-foreground">
+                {roadmap.description}
+              </p>
+
+              <div className="mt-5 flex flex-wrap gap-2">
+                <span className="rounded-full bg-muted px-3 py-1.5 text-xs font-medium">
+                  {roadmap.level}
+                </span>
+
+                <span className="flex items-center gap-1.5 rounded-full bg-muted px-3 py-1.5 text-xs font-medium">
+                  <Layers3 className="h-3.5 w-3.5" />
+                  {roadmap.steps.length} Langkah
+                </span>
+
+                <span className="flex items-center gap-1.5 rounded-full bg-muted px-3 py-1.5 text-xs font-medium">
+                  <Clock3 className="h-3.5 w-3.5" />
+                  {roadmap.duration}
+                </span>
+              </div>
+            </div>
           </div>
 
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
-              {roadmap.title}
-            </h1>
-
-            <p className="mt-3 max-w-2xl leading-7 text-muted-foreground">
-              {roadmap.description}
-            </p>
-
-            <div className="mt-5 flex flex-wrap gap-2">
-              <span className="rounded-full bg-muted px-3 py-1.5 text-xs font-medium">
-                {roadmap.level}
-              </span>
-
-              <span className="flex items-center gap-1.5 rounded-full bg-muted px-3 py-1.5 text-xs font-medium">
-                <Layers3 className="h-3.5 w-3.5" />
-                {roadmap.steps.length} Langkah
-              </span>
-
-              <span className="flex items-center gap-1.5 rounded-full bg-muted px-3 py-1.5 text-xs font-medium">
-                <Clock3 className="h-3.5 w-3.5" />
-                {roadmap.duration}
-              </span>
-            </div>
+          {/* Sampul persegi: tampil utuh tanpa dipotong */}
+          <div className="relative aspect-square w-full shrink-0 overflow-hidden rounded-2xl bg-muted sm:mx-auto sm:max-w-sm md:mx-0 md:w-64 lg:w-80">
+            <ContentCover
+              src={roadmap.cover}
+              title={roadmap.title}
+              category={roadmap.level}
+              kind="roadmap"
+              alt={`Sampul roadmap ${roadmap.title}`}
+              sizes="(min-width: 1024px) 320px, (min-width: 768px) 256px, (min-width: 640px) 384px, 100vw"
+              priority
+            />
           </div>
         </div>
 

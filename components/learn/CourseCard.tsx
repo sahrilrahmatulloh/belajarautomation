@@ -1,5 +1,6 @@
-import Image from "next/image";
 import Link from "next/link";
+
+import ContentCover from "@/components/common/ContentCover";
 import { BookOpen, Clock3 } from "lucide-react";
 
 import { Course } from "@/types/Course";
@@ -55,7 +56,6 @@ const categoryAccents: Record<string, { surface: string; icon: string; badge: st
 export default function CourseCard({
   course,
 }: CourseCardProps) {
-  const Icon = course.icon;
   const accent = categoryAccents[course.category] ?? categoryAccents.Fundamental;
 
   return (
@@ -63,24 +63,19 @@ export default function CourseCard({
       href={`/learn/${course.slug}`}
       className="group flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-card transition-all duration-150 hover:border-primary/30 hover:shadow-md"
     >
-      {course.thumbnail && (
-        <div className="relative aspect-video w-full bg-muted">
-          <Image
-            src={course.thumbnail}
-            alt={`Thumbnail ${course.title}`}
-            fill
-            sizes="(min-width: 1280px) 25vw, (min-width: 640px) 50vw, 100vw"
-            className="object-cover"
-          />
-        </div>
-      )}
+      <div className="relative aspect-video w-full overflow-hidden border-b border-border bg-muted">
+        <ContentCover
+          src={course.cover}
+          title={course.title}
+          category={course.category}
+          kind="course"
+          alt={`Sampul course ${course.title}`}
+          sizes="(min-width: 1536px) 18vw, (min-width: 1280px) 22vw, (min-width: 1024px) 30vw, (min-width: 640px) 50vw, 100vw"
+        />
+      </div>
 
       <div className="flex flex-1 flex-col p-5">
-        <div className={`flex h-14 w-14 items-center justify-center rounded-2xl ${accent.surface}`}>
-          <Icon className={`h-7 w-7 ${accent.icon}`} />
-        </div>
-
-        <span className={`mt-4 w-fit rounded-full px-2.5 py-1 text-xs font-medium ${accent.badge}`}>
+        <span className={`w-fit rounded-full px-2.5 py-1 text-xs font-medium ${accent.badge}`}>
           {course.category}
         </span>
 

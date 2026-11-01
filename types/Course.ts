@@ -19,7 +19,8 @@ export interface Course {
   level: "Beginner" | "Intermediate" | "Advanced";
   lessons: number;
   estimatedDuration: string;
-  thumbnail?: string;
+  // Path sampul di public/; kosong bila belum ada (tampil placeholder).
+  cover?: string;
   progress?: number;
   icon: LucideIcon;
 }

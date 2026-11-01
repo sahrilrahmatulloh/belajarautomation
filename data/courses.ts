@@ -24,6 +24,7 @@ export const COURSES: Course[] = [
     level: "Beginner",
     lessons: 16,
     estimatedDuration: "2 jam 40 menit",
+    cover: "/covers/courses/qa-fundamentals.webp",
     icon: BookOpenCheck,
   },
   {
@@ -48,6 +49,7 @@ export const COURSES: Course[] = [
     level: "Beginner",
     lessons: 10,
     estimatedDuration: "2 jam",
+    cover: "/covers/courses/javascript.webp",
     icon: Braces,
   },
   {
@@ -72,6 +74,7 @@ export const COURSES: Course[] = [
     level: "Beginner",
     lessons: 9,
     estimatedDuration: "1 jam 35 menit",
+    cover: "/covers/courses/git-github.webp",
     icon: GitBranch,
   },
   {
@@ -84,6 +87,7 @@ export const COURSES: Course[] = [
     level: "Advanced",
     lessons: 8,
     estimatedDuration: "1 jam 50 menit",
+    cover: "/covers/courses/playwright.webp",
     icon: Play,
   },
   {

@@ -9,6 +9,7 @@ import {
   Target,
 } from "lucide-react";
 
+import ContentCover from "@/components/common/ContentCover";
 import { Course } from "@/types/Course";
 import { CourseDetail } from "@/types/CourseDetail";
 
@@ -42,6 +43,18 @@ export default function CourseDetailPage({
 
       {/* Course Header */}
       <section className="rounded-3xl border border-border bg-card p-6 sm:p-8">
+        <div className="relative mb-6 aspect-video w-full overflow-hidden rounded-2xl bg-muted md:mb-8 md:aspect-[2/1]">
+          <ContentCover
+            src={course.cover}
+            title={course.title}
+            category={course.category}
+            kind="course"
+            alt={`Sampul course ${course.title}`}
+            sizes="(min-width: 1280px) 1100px, (min-width: 1024px) 70vw, 100vw"
+            priority
+          />
+        </div>
+
         <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
           <div className="flex gap-5">
             <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-primary text-primary-foreground">

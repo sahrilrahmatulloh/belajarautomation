@@ -20,6 +20,8 @@ export interface Roadmap {
   icon: LucideIcon;
   level: string;
   duration: string;
+  // Path sampul di public/; kosong bila belum ada (tampil placeholder).
+  cover?: string;
   status: "active" | "coming-soon";
   featured?: boolean;
   goals: string[];

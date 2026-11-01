@@ -4,9 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "prebuild": "npm run check:covers",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "check:covers": "node scripts/check-covers.mjs",
     "optimize:covers": "node scripts/optimize-covers.mjs"
   },
   "dependencies": {

@@ -35,6 +35,7 @@ export const ROADMAPS: Roadmap[] = [
     icon: BookOpenCheck,
     level: "Beginner",
     duration: "1–2 Bulan",
+    cover: "/covers/roadmaps/fundamental.webp",
     status: "active",
     featured: true,
     goals: [
@@ -113,6 +114,7 @@ export const ROADMAPS: Roadmap[] = [
     icon: ClipboardCheck,
     level: "Beginner – Intermediate",
     duration: "2–3 Bulan",
+    cover: "/covers/roadmaps/qa-manual-engineer.webp",
     status: "active",
     goals: [
       "Menerjemahkan requirement menjadi test scenario",
@@ -195,6 +197,7 @@ export const ROADMAPS: Roadmap[] = [
     icon: Globe,
     level: "Beginner – Advanced",
     duration: "3–4 Bulan",
+    cover: "/covers/roadmaps/qa-automation-web.webp",
     status: "active",
     goals: [
       "Membangun automated test web yang stabil",
@@ -302,6 +305,7 @@ export const ROADMAPS: Roadmap[] = [
     icon: Smartphone,
     level: "Intermediate",
     duration: "3–4 Bulan",
+    cover: "/covers/roadmaps/qa-automation-mobile.webp",
     status: "active",
     goals: [
       "Memahami karakteristik mobile testing",
@@ -396,6 +400,7 @@ export const ROADMAPS: Roadmap[] = [
     icon: Network,
     level: "Beginner – Intermediate",
     duration: "2–3 Bulan",
+    cover: "/covers/roadmaps/api-test-engineer.webp",
     status: "active",
     goals: [
       "Memahami HTTP dan desain REST API",
@@ -489,6 +494,7 @@ export const ROADMAPS: Roadmap[] = [
     icon: Code2,
     level: "Beginner",
     duration: "1–2 Bulan",
+    cover: "/covers/roadmaps/programming.webp",
     status: "active",
     goals: [
       "Menguasai satu bahasa pemrograman untuk automation",

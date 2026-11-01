@@ -2,29 +2,45 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { BookOpenText, Newspaper } from "lucide-react";
+import { BookOpenText, GraduationCap, Map, Newspaper } from "lucide-react";
 
 interface ContentCoverProps {
-  src: string;
+  // Kosong berarti belum ada sampul: langsung tampilkan placeholder.
+  src?: string;
   title: string;
   category: string;
-  kind: "book" | "article";
+  kind: "book" | "article" | "course" | "roadmap";
+  alt?: string;
   sizes?: string;
   className?: string;
+  // "contain" menampilkan gambar utuh dengan latar blur dari gambar yang sama,
+  // untuk sampul yang rasionya berbeda dengan area tampilan.
+  fit?: "cover" | "contain";
+  priority?: boolean;
 }
+
+const placeholderIcons = {
+  book: BookOpenText,
+  article: Newspaper,
+  course: GraduationCap,
+  roadmap: Map,
+};
 
 export default function ContentCover({
   src,
   title,
   category,
   kind,
+  alt,
   sizes = "(max-width: 768px) 100vw, 33vw",
   className = "object-cover",
+  fit = "cover",
+  priority = false,
 }: ContentCoverProps) {
   const [unavailable, setUnavailable] = useState(false);
-  const Icon = kind === "book" ? BookOpenText : Newspaper;
+  const Icon = placeholderIcons[kind];
 
-  if (unavailable) {
+  if (!src || unavailable) {
     return (
       <div
         role="img"
@@ -42,12 +58,37 @@ export default function ContentCover({
     );
   }
 
+  if (fit === "contain") {
+    return (
+      <>
+        <Image
+          src={src}
+          alt=""
+          aria-hidden="true"
+          fill
+          sizes={sizes}
+          className="scale-110 object-cover opacity-60 blur-2xl"
+        />
+        <Image
+          src={src}
+          alt={alt ?? title}
+          fill
+          sizes={sizes}
+          priority={priority}
+          className="object-contain"
+          onError={() => setUnavailable(true)}
+        />
+      </>
+    );
+  }
+
   return (
     <Image
       src={src}
-      alt={title}
+      alt={alt ?? title}
       fill
       sizes={sizes}
+      priority={priority}
       className={className}
       onError={() => setUnavailable(true)}
     />

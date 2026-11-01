@@ -6,6 +6,7 @@ import {
   Lock,
 } from "lucide-react";
 
+import ContentCover from "@/components/common/ContentCover";
 import { Roadmap } from "@/types/Roadmap";
 
 const roadmapAccents: Record<string, { surface: string; icon: string; badge: string }> = {
@@ -66,9 +67,9 @@ export default function RoadmapCard({
       `}
     >
       {/* Badge */}
-      <div className="absolute right-5 top-5">
+      <div className="absolute right-4 top-4 z-10">
         {roadmap.featured && (
-          <span className={`rounded-full px-3 py-1 text-xs font-medium ${accent.badge}`}>
+          <span className="rounded-full bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground shadow-sm">
             Recommended
           </span>
         )}
@@ -80,20 +81,33 @@ export default function RoadmapCard({
         )}
       </div>
 
-      {/* Icon */}
-      <div className={`flex h-12 w-12 items-center justify-center rounded-2xl ${accent.surface}`}>
-        <Icon className={`h-6 w-6 ${accent.icon}`} />
+      {/* Sampul: gambar persegi ditampilkan utuh */}
+      <div className="relative -mx-5 -mt-5 mb-5 aspect-[4/3] overflow-hidden border-b border-border bg-muted sm:-mx-6 sm:-mt-6 sm:mb-6">
+        <ContentCover
+          src={roadmap.cover}
+          title={roadmap.title}
+          category={roadmap.level}
+          kind="roadmap"
+          alt={`Sampul roadmap ${roadmap.title}`}
+          fit="contain"
+          sizes="(min-width: 1280px) 30vw, (min-width: 768px) 45vw, 100vw"
+        />
       </div>
 
       {/* Content */}
-      <div className="mt-6">
-        <h3 className="text-xl font-semibold">
-          {roadmap.title}
-        </h3>
+      <div className="flex items-start gap-3">
+        <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ${accent.surface}`}>
+          <Icon className={`h-5 w-5 ${accent.icon}`} aria-hidden="true" />
+        </span>
+        <div className="min-w-0">
+          <h3 className="text-xl font-semibold">
+            {roadmap.title}
+          </h3>
 
-        <p className="mt-3 text-sm leading-6 text-muted-foreground">
-          {roadmap.description}
-        </p>
+          <p className="mt-2 text-sm leading-6 text-muted-foreground">
+            {roadmap.description}
+          </p>
+        </div>
       </div>
 
       {/* Information */}
