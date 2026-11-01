@@ -1,17 +1,14 @@
 import Link from "next/link";
-import Image from "next/image";
-import { ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight, Crown, Sparkles } from "lucide-react";
 
+import RankEmblem from "@/components/common/RankEmblem";
 import { DUMMY_ACCOUNT } from "@/data/dummy/account";
-import { getNextRank, getRank } from "@/data/ranks";
+import { getRankProgress } from "@/data/ranks";
+import { formatNumber } from "@/lib/format";
 
 export default function LearningRankCard() {
   const { xp } = DUMMY_ACCOUNT;
-  const rank = getRank(xp);
-  const nextRank = getNextRank(xp);
-  const progress = nextRank
-    ? ((xp - rank.minXp) / (nextRank.minXp - rank.minXp)) * 100
-    : 100;
+  const { rank, nextRank, xpToNext, percent } = getRankProgress(xp);
 
   return (
     <section className="relative isolate overflow-hidden rounded-xl bg-slate-950 p-4 text-white shadow-sm sm:p-5">
@@ -29,51 +26,56 @@ export default function LearningRankCard() {
           className="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl border p-1.5 sm:h-[4.5rem] sm:w-[4.5rem]"
           style={{ borderColor: `${rank.color}55`, backgroundColor: `${rank.color}1a` }}
         >
-          {rank.emblem && (
-            <Image
-              src={rank.emblem}
-              alt={`Emblem rank ${rank.name}`}
-              width={80}
-              height={80}
-              className="h-full w-full object-contain"
-              style={{ filter: `drop-shadow(0 0 10px ${rank.color}66)` }}
-              priority
-            />
-          )}
+          <RankEmblem
+            rank={rank}
+            variant="full"
+            size={56}
+            priority
+            className="drop-shadow-[0_0_10px_rgba(255,255,255,0.15)]"
+          />
         </div>
 
         <div className="min-w-0 flex-1">
           <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-blue-200">
             Rank kamu
           </p>
-          <h2 className="mt-0.5 text-lg font-bold sm:text-xl" style={{ color: rank.color }}>
+          {/* Latar kartu selalu gelap, jadi warna rank aman dipakai sebagai teks. */}
+          <h2 className="mt-0.5 text-lg font-bold sm:text-xl" style={{ color: rank.accentColor ?? rank.color }}>
             {rank.name}
           </h2>
 
           <div className="mt-2 max-w-md">
-            <div className="flex items-center justify-between text-xs text-slate-300">
-              <span className="font-semibold text-white">
-                {xp.toLocaleString("id-ID")} XP
-              </span>
-              {nextRank && (
-                <span>
-                  {(nextRank.minXp - xp).toLocaleString("id-ID")} XP lagi menuju {nextRank.name}
+            {nextRank ? (
+              <>
+                <div className="flex flex-wrap items-center justify-between gap-x-3 text-xs text-slate-300">
+                  <span className="font-semibold text-white">{formatNumber(xp)} XP</span>
+                  <span>
+                    {formatNumber(xpToNext)} XP lagi menuju {nextRank.name} · {percent}%
+                  </span>
+                </div>
+                <div
+                  className="mt-1.5 h-2 overflow-hidden rounded-full bg-white/10"
+                  role="progressbar"
+                  aria-label={`Progres menuju ${nextRank.name}`}
+                  aria-valuemin={0}
+                  aria-valuemax={100}
+                  aria-valuenow={percent}
+                >
+                  <div
+                    className="h-full rounded-full"
+                    style={{ width: `${percent}%`, backgroundColor: rank.color }}
+                  />
+                </div>
+              </>
+            ) : (
+              <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-300">
+                <span className="font-semibold text-white">{formatNumber(xp)} XP</span>
+                <span className="inline-flex items-center gap-1.5 font-medium" style={{ color: rank.accentColor }}>
+                  <Crown className="h-3.5 w-3.5" aria-hidden="true" />
+                  Rank tertinggi tercapai
                 </span>
-              )}
-            </div>
-            <div
-              className="mt-1.5 h-2 overflow-hidden rounded-full bg-white/10"
-              role="progressbar"
-              aria-label={`Progres menuju ${nextRank?.name ?? rank.name}`}
-              aria-valuemin={0}
-              aria-valuemax={100}
-              aria-valuenow={Math.round(progress)}
-            >
-              <div
-                className="h-full rounded-full"
-                style={{ width: `${progress}%`, backgroundColor: rank.color }}
-              />
-            </div>
+              </p>
+            )}
           </div>
         </div>
 

@@ -79,7 +79,7 @@ export default function LeaderboardBoard() {
         </div>
 
         <div className="flex min-w-0 flex-1 items-center gap-3">
-          <RankEmblem rank={currentUser.rank} size={48} priority />
+          <RankEmblem rank={currentUser.rank} variant="full" size={48} priority />
           <div className="min-w-0">
             <p className="font-semibold">{currentUser.rank.name}</p>
             <p className="text-sm text-muted-foreground">

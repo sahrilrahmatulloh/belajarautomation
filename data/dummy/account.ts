@@ -1,7 +1,7 @@
 // DATA DUMMY — hapus sebelum rilis (PRD FR-01, aturan bisnis #16).
 // Akun contoh untuk demo dashboard dan leaderboard.
 
-import { XP_PER_CHALLENGE, XP_PER_LESSON } from "@/data/ranks";
+import { XP_PER_CHALLENGE, XP_PER_LESSON } from "@/data/xp";
 import { getCompletedLessonCount } from "@/lib/learningProgress";
 
 const completedChallenges = 4;

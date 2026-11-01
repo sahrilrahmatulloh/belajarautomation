@@ -46,7 +46,7 @@ export default function LeaderboardRowItem({ row }: { row: LeaderboardRow }) {
           )}
         </p>
         <p className="mt-0.5 flex items-center gap-1.5 text-xs text-muted-foreground">
-          <RankEmblem rank={row.rank} size={20} />
+          <RankEmblem rank={row.rank} variant="compact" size={24} />
           {row.rank.name}
         </p>
       </div>

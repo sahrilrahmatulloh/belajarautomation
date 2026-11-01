@@ -2,7 +2,8 @@ import { Sparkles } from "lucide-react";
 
 import RankEmblem from "@/components/common/RankEmblem";
 import { DUMMY_ACCOUNT } from "@/data/dummy/account";
-import { getRank, RANKS, XP_REWARDS } from "@/data/ranks";
+import { getRank, RANKS } from "@/data/ranks";
+import { XP_REWARDS } from "@/data/xp";
 import { formatNumber } from "@/lib/format";
 
 export default function RankTiers() {
@@ -31,7 +32,7 @@ export default function RankTiers() {
                 isCurrent ? "border-primary ring-1 ring-primary/30" : "border-border"
               }`}
             >
-              <RankEmblem rank={rank} size={56} />
+              <RankEmblem rank={rank} variant="full" size={56} />
               <div className="min-w-0 flex-1">
                 <p className="flex items-center gap-2 font-semibold">
                   <span
