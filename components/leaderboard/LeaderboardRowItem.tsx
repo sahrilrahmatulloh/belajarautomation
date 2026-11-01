@@ -27,7 +27,7 @@ export default function LeaderboardRowItem({ row }: { row: LeaderboardRow }) {
         {row.position}
       </span>
 
-      {/* Avatar maskot sesuai skin aktif; saat ini semua memakai skin Basic. */}
+      {/* Avatar kucing pengguna; saat ini semua memakai avatar bawaan. */}
       <Image
         src={DEFAULT_AVATAR}
         alt=""

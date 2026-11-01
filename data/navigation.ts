@@ -71,7 +71,7 @@ export const NAVIGATION: Record<UserRole, NavItem[]> = {
     { label: "Pengguna & Role", icon: Users, comingSoon: true },
     { label: "Konten", icon: Files, comingSoon: true },
     { label: "Paket Membership", icon: Crown, comingSoon: true },
-    { label: "Skin", icon: Palette, comingSoon: true },
+    { label: "Avatar & Tema", icon: Palette, comingSoon: true },
     { label: "Transaksi", icon: Receipt, comingSoon: true },
     { label: "Pengaturan", icon: Settings, comingSoon: true },
   ],

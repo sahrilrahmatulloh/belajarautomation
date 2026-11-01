@@ -15,7 +15,8 @@
     "check:content": "node scripts/check-content.mjs",
     "check:content:release": "node scripts/check-content.mjs --strict",
     "optimize:covers": "node scripts/optimize-covers.mjs",
-    "optimize:ranks": "node scripts/optimize-ranks.mjs"
+    "optimize:images": "node scripts/optimize-images.mjs",
+    "optimize:ranks": "node scripts/optimize-images.mjs ranks"
   },
   "dependencies": {
     "@base-ui/react": "^1.6.0",

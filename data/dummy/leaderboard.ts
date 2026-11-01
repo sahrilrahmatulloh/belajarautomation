@@ -9,14 +9,14 @@
 // Global (#51) tetapi di dalam 50 besar tab Apprentice (#36), dan tab
 // Apprentice berisi lebih dari 50 orang.
 
-// Saat ini hanya skin Basic yang tersedia (PRD FR-12).
-export type SkinId = "basic";
+import { DEFAULT_AVATAR_ID } from "@/data/avatars";
 
 export interface LeaderboardUser {
   id: string;
   displayName: string;
   totalXp: number;
-  skinId: SkinId;
+  // Avatar kucing aktif (PRD FR-12). Selama baru ada satu avatar, semua memakai avatar bawaan.
+  avatarId: string;
   showOnLeaderboard: boolean;
 }
 
@@ -52,7 +52,7 @@ export const DUMMY_LEADERBOARD_USERS: LeaderboardUser[] = [...VISIBLE_XP, ...HID
     id: `user-${index + 1}`,
     displayName: `${FIRST_NAMES[index % FIRST_NAMES.length]} ${LAST_NAMES[(index * 7) % LAST_NAMES.length]}`,
     totalXp,
-    skinId: "basic",
+    avatarId: DEFAULT_AVATAR_ID,
     showOnLeaderboard: index < VISIBLE_XP.length,
   })
 );

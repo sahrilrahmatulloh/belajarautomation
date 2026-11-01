@@ -46,7 +46,7 @@ function CompactEmblem({ rank, size, className = "" }: Omit<RankEmblemProps, "va
 }
 
 // Emblem tameng rank (PRD FR-05). Sama untuk semua pengguna di rank yang sama
-// dan tidak dipengaruhi skin maupun mode terang/gelap.
+// dan tidak dipengaruhi avatar, tema, maupun mode terang/gelap.
 export default function RankEmblem({
   rank,
   variant,

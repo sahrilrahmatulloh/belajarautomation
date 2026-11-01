@@ -87,7 +87,7 @@ const roleBarStyles: Record<UserRole, string> = {
 const shortcuts = [
   { label: "Kelola Pengguna", icon: Users },
   { label: "Kelola Paket Membership", icon: Crown },
-  { label: "Kelola Skin", icon: Palette },
+  { label: "Kelola Avatar & Tema", icon: Palette },
   { label: "Lihat Transaksi", icon: Receipt },
 ];
 

@@ -1,5 +1,6 @@
-// Memastikan setiap path `cover` (course, roadmap) dan `emblem` (rank) menunjuk ke file
-// yang ada di public/, dan setiap course punya sampul. Gagal (exit 1) bila tidak.
+// Memastikan setiap path `cover` (course, roadmap), `emblem` (rank), serta `image` dan
+// `thumbnail` (avatar, tema banner) menunjuk ke file yang ada di
+// public/, dan setiap course punya sampul. Gagal (exit 1) bila tidak.
 // Jalankan: npm run check:covers (otomatis sebelum npm run build).
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
@@ -33,9 +34,9 @@ for (const block of courseBlocks) {
 }
 
 if (missing.length > 0) {
-  console.error(`Masalah sampul (${missing.length}):`);
+  console.error(`Masalah path gambar (${missing.length}):`);
   missing.forEach((item) => console.error(`  - ${item}`));
   process.exit(1);
 }
 
-console.log(`Semua ${checked} path sampul dan emblem valid.`);
+console.log(`Semua ${checked} path gambar (sampul, emblem, avatar, tema) valid.`);
