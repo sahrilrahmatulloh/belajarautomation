@@ -21,7 +21,7 @@ import {
   groupActivityByDay,
 } from "@/lib/activity";
 import { validFilterValue } from "@/lib/filters";
-import { formatNumber } from "@/lib/format";
+import { dateFromDaysAgo, formatNumber } from "@/lib/format";
 import { useUrlFilters } from "@/lib/useUrlFilters";
 import { ActivityEntry, ActivityType } from "@/types/Activity";
 
@@ -74,10 +74,6 @@ const fullDateFormatter = new Intl.DateTimeFormat("id-ID", {
   year: "numeric",
 });
 const weekdayFormatter = new Intl.DateTimeFormat("id-ID", { weekday: "short" });
-
-function dateFromDaysAgo(today: Date, daysAgo: number) {
-  return new Date(today.getFullYear(), today.getMonth(), today.getDate() - daysAgo);
-}
 
 function dayLabel(today: Date, daysAgo: number) {
   if (daysAgo === 0) return "Hari ini";

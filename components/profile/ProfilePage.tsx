@@ -1,11 +1,11 @@
 import { Suspense } from "react";
-import { Trophy } from "lucide-react";
 
+import FeaturedAchievements from "./FeaturedAchievements";
 import LearningProgress from "./LearningProgress";
+import ProfileAchievements from "./ProfileAchievements";
 import ProfileActivity from "./ProfileActivity";
 import ProfileCustomization from "./ProfileCustomization";
 import ProfileHeader from "./ProfileHeader";
-import ProfilePlaceholder from "./ProfilePlaceholder";
 import ProfileStats from "./ProfileStats";
 import ProfileTabs from "./ProfileTabs";
 import RecentActivity from "./RecentActivity";
@@ -14,6 +14,8 @@ export default function ProfilePage() {
   const summary = (
     <div className="space-y-6">
       <ProfileStats />
+
+      <FeaturedAchievements />
 
       <div className="grid gap-6 lg:grid-cols-2">
         <LearningProgress />
@@ -32,13 +34,7 @@ export default function ProfilePage() {
           panels={{
             ringkasan: summary,
             aktivitas: <ProfileActivity />,
-            pencapaian: (
-              <ProfilePlaceholder
-                icon={Trophy}
-                title="Achievement segera hadir"
-                description="Achievement dari aktivitas belajar akan tampil di sini, dikelompokkan per kategori. Achievement tidak memberikan XP."
-              />
-            ),
+            pencapaian: <ProfileAchievements />,
             kustomisasi: <ProfileCustomization />,
           }}
         />
