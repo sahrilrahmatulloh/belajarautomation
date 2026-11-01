@@ -11,7 +11,8 @@
     "check:covers": "node scripts/check-covers.mjs",
     "check:roadmaps": "node scripts/check-roadmaps.mjs",
     "check:challenges": "node scripts/check-challenges.mjs",
-    "optimize:covers": "node scripts/optimize-covers.mjs"
+    "optimize:covers": "node scripts/optimize-covers.mjs",
+    "optimize:ranks": "node scripts/optimize-ranks.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.6.0",

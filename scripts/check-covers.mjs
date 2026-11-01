@@ -1,11 +1,11 @@
-// Memastikan setiap path `cover` di data course dan roadmap menunjuk ke file
+// Memastikan setiap path `cover` (course, roadmap) dan `emblem` (rank) menunjuk ke file
 // yang ada di public/, dan setiap course punya sampul. Gagal (exit 1) bila tidak.
 // Jalankan: npm run check:covers (otomatis sebelum npm run build).
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 
-const DATA_FILES = ["data/courses.ts", "data/roadmap.ts"];
-const COVER_PATTERN = /cover:\s*"([^"]+)"/g;
+const DATA_FILES = ["data/courses.ts", "data/roadmap.ts", "data/ranks.ts"];
+const COVER_PATTERN = /(?:cover|emblem):\s*"([^"]+)"/g;
 
 const missing = [];
 let checked = 0;
@@ -38,4 +38,4 @@ if (missing.length > 0) {
   process.exit(1);
 }
 
-console.log(`Semua ${checked} path sampul valid.`);
+console.log(`Semua ${checked} path sampul dan emblem valid.`);
