@@ -1,56 +1,63 @@
 "use client";
 
-import { ChallengeCategory } from "@/types/Challenge";
+import FilterChips, { FilterOption } from "@/components/filters/FilterChips";
+import FilterPanel from "@/components/filters/FilterPanel";
+import SearchField from "@/components/filters/SearchField";
 
-export type ChallengeFilter =
-  | "All"
-  | ChallengeCategory;
-
-interface ChallengeFiltersProps {
-  activeCategory: ChallengeFilter;
-  onCategoryChange: (
-    category: ChallengeFilter
-  ) => void;
-}
-
-const categories: ChallengeFilter[] = [
-  "All",
-  "Locator",
-  "Test Case",
-  "Bug Hunt",
-  "API",
-  "Automation",
-  "AI",
+export const LEVEL_OPTIONS: FilterOption[] = [
+  { value: "", label: "Semua" },
+  { value: "beginner", label: "Beginner" },
+  { value: "intermediate", label: "Intermediate" },
+  { value: "advanced", label: "Advanced" },
 ];
 
+interface ChallengeFiltersProps {
+  search: string;
+  categoryOptions: FilterOption[];
+  typeOptions: FilterOption[];
+  category: string;
+  level: string;
+  type: string;
+  onSearchChange: (value: string) => void;
+  onCategoryChange: (value: string) => void;
+  onLevelChange: (value: string) => void;
+  onTypeChange: (value: string) => void;
+}
+
 export default function ChallengeFilters({
-  activeCategory,
+  search,
+  categoryOptions,
+  typeOptions,
+  category,
+  level,
+  type,
+  onSearchChange,
   onCategoryChange,
+  onLevelChange,
+  onTypeChange,
 }: ChallengeFiltersProps) {
   return (
-    <div className="flex flex-wrap gap-2">
-      {categories.map((category) => {
-        const isActive =
-          activeCategory === category;
+    <div className="space-y-4">
+      <SearchField
+        value={search}
+        onChange={onSearchChange}
+        placeholder="Cari challenge..."
+      />
 
-        return (
-          <button
-            key={category}
-            type="button"
-              aria-pressed={isActive}
-            onClick={() =>
-              onCategoryChange(category)
-            }
-            className={`rounded-xl border px-4 py-2 text-sm font-medium transition-colors ${
-              isActive
-                ? "border-primary bg-primary text-primary-foreground"
-                : "border-border bg-background text-muted-foreground hover:bg-accent hover:text-foreground"
-            }`}
-          >
-            {category}
-          </button>
-        );
-      })}
+      <FilterChips
+        label="Kategori"
+        layout="scroll"
+        options={categoryOptions}
+        active={category}
+        onChange={onCategoryChange}
+      />
+
+      <FilterPanel
+        groups={[
+          { label: "Level", options: LEVEL_OPTIONS, value: level, onChange: onLevelChange },
+          { label: "Jenis", options: typeOptions, value: type, onChange: onTypeChange },
+        ]}
+      />
     </div>
   );
 }

@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 
 import { COURSES } from "@/data/courses";
+import { matchesKeyword } from "@/lib/filters";
 import CourseCard from "./CourseCard";
 import LearnFilters from "./LearnFilters";
 
@@ -21,12 +22,8 @@ export default function CourseGrid() {
     useState("Semua");
 
   const filteredCourses = useMemo(() => {
-    const keyword = search.toLowerCase();
-
     return sortedCourses.filter((course) => {
-      const matchesSearch =
-        course.title.toLowerCase().includes(keyword) ||
-        course.description.toLowerCase().includes(keyword);
+      const matchesSearch = matchesKeyword(search, course.title, course.description);
 
       const matchesCategory =
         activeCategory === "Semua" ||

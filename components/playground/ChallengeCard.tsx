@@ -3,32 +3,24 @@ import {
   ArrowRight,
   CheckCircle2,
   Clock3,
+  GraduationCap,
 } from "lucide-react";
 
+import { COURSES } from "@/data/courses";
 import { Challenge } from "@/types/Challenge";
 
 const categoryAccents: Record<string, { surface: string; icon: string; label: string }> = {
-  Locator: {
-    surface: "bg-brand-blue/10",
-    icon: "text-brand-blue",
-    label: "text-brand-blue",
-  },
-  "Test Case": {
-    surface: "bg-brand-cyan/10",
-    icon: "text-brand-cyan",
-    label: "text-brand-cyan",
-  },
-  "Bug Hunt": {
-    surface: "bg-brand-indigo/10",
-    icon: "text-brand-indigo",
-    label: "text-brand-indigo",
-  },
-  API: {
+  Fundamental: {
     surface: "bg-brand-sky/10",
     icon: "text-brand-sky",
     label: "text-brand-sky",
   },
-  Automation: {
+  "Manual Testing": {
+    surface: "bg-brand-indigo/10",
+    icon: "text-brand-indigo",
+    label: "text-brand-indigo",
+  },
+  "Web Automation": {
     surface: "bg-brand-blue/10",
     icon: "text-brand-blue",
     label: "text-brand-blue",
@@ -48,7 +40,8 @@ export default function ChallengeCard({
   challenge,
 }: ChallengeCardProps) {
   const Icon = challenge.icon;
-  const accent = categoryAccents[challenge.category] ?? categoryAccents.Locator;
+  const course = COURSES.find((item) => item.slug === challenge.courseSlug);
+  const accent = categoryAccents[challenge.category] ?? categoryAccents["Web Automation"];
 
   return (
     <article className="group flex h-full flex-col rounded-2xl border border-border bg-card p-5 transition-all duration-150 hover:border-primary/30 hover:shadow-md">
@@ -74,6 +67,16 @@ export default function ChallengeCard({
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
           {challenge.description}
         </p>
+
+        {course && (
+          <Link
+            href={`/learn/${course.slug}`}
+            className="mt-3 inline-flex items-center gap-1.5 text-xs font-medium text-primary hover:underline"
+          >
+            <GraduationCap className="h-3.5 w-3.5" aria-hidden="true" />
+            Course: {course.title}
+          </Link>
+        )}
       </div>
 
       <div className="mt-5 flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
