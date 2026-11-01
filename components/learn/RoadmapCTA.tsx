@@ -1,12 +1,21 @@
+"use client";
+
+import { useId } from "react";
 import Link from "next/link";
 import {
   ArrowRight,
   BookOpen,
+  ChevronDown,
   Code2,
   FolderKanban,
   Settings,
   BriefcaseBusiness,
 } from "lucide-react";
+
+import {
+  setRoadmapCtaCollapsed,
+  useRoadmapCtaCollapsed,
+} from "@/lib/roadmapCtaPreference";
 
 // Titik pemberhentian di peta. x/y memakai koordinat viewBox SVG (520 x 260);
 // titik "atas" menaruh label di atas lingkaran agar label tidak bertumpuk.
@@ -90,16 +99,44 @@ function RoadmapTrailMap() {
 }
 
 export default function RoadmapCTA() {
+  const collapsed = useRoadmapCtaCollapsed();
+  const contentId = useId();
+
   return (
-    <section className="overflow-hidden rounded-3xl border border-border bg-card p-6 shadow-sm sm:p-8">
-      <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:gap-10">
+    <section
+      aria-labelledby={`${contentId}-title`}
+      className={`overflow-hidden rounded-3xl border border-border bg-card shadow-sm ${
+        collapsed ? "px-6 py-4 sm:px-8" : "p-6 sm:p-8"
+      }`}
+    >
+      <div className="flex items-start justify-between gap-4">
+        <h2 id={`${contentId}-title`} className="text-xl font-bold text-card-foreground">
+          Tidak tahu mulai dari mana?
+        </h2>
+
+        <button
+          type="button"
+          aria-expanded={!collapsed}
+          aria-controls={contentId}
+          onClick={() => setRoadmapCtaCollapsed(!collapsed)}
+          className="inline-flex shrink-0 items-center gap-1.5 rounded-lg px-2 py-1 text-xs font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+        >
+          {collapsed ? "Tampilkan" : "Sembunyikan"}
+          <ChevronDown
+            className={`h-4 w-4 transition-transform ${collapsed ? "" : "rotate-180"}`}
+            aria-hidden="true"
+          />
+        </button>
+      </div>
+
+      <div
+        id={contentId}
+        hidden={collapsed}
+        className="mt-2 flex flex-col gap-6 lg:flex-row lg:items-center lg:gap-10"
+      >
         {/* Content */}
         <div className="max-w-md shrink-0">
-          <h2 className="text-xl font-bold text-card-foreground">
-            Tidak tahu mulai dari mana?
-          </h2>
-
-          <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          <p className="text-sm leading-6 text-muted-foreground">
             Ikuti roadmap terstruktur yang sudah kami siapkan
             sesuai tujuan karirmu.
           </p>
