@@ -1,3 +1,4 @@
+import { ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Settings2 } from "lucide-react";
@@ -16,6 +17,8 @@ interface ProfileHeaderProps {
   xp: number;
   // Pemilik melihat progres rank dan tombol pengaturan; publik hanya rank dan total XP.
   isOwner: boolean;
+  // Tombol bagikan, tampil di bawah tombol pengaturan.
+  shareAction?: ReactNode;
 }
 
 // Header profil (PRD FR-13): banner tema aktif, avatar aktif, rank, dan XP.
@@ -29,6 +32,7 @@ export default function ProfileHeader({
   themeImage,
   xp,
   isOwner,
+  shareAction,
 }: ProfileHeaderProps) {
   const { rank, nextRank, xpToNext, percent } = getRankProgress(xp);
 
@@ -49,13 +53,16 @@ export default function ProfileHeader({
       />
 
       {isOwner && (
-        <Link
-          href="/settings"
-          aria-label="Pengaturan profil"
-          className="absolute right-3 top-3 flex h-10 w-10 items-center justify-center rounded-xl bg-slate-950/40 text-white backdrop-blur-sm transition-colors hover:bg-slate-950/60"
-        >
-          <Settings2 className="h-5 w-5" aria-hidden="true" />
-        </Link>
+        <div className="absolute right-3 top-3 flex flex-col gap-2">
+          <Link
+            href="/settings"
+            aria-label="Pengaturan profil"
+            className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-950/40 text-white backdrop-blur-sm transition-colors hover:bg-slate-950/60"
+          >
+            <Settings2 className="h-5 w-5" aria-hidden="true" />
+          </Link>
+          {shareAction}
+        </div>
       )}
 
       {/* Dua baris di semua ukuran agar nama tidak pernah terhimpit. Lebar mengikuti

@@ -14,10 +14,13 @@ import ProfileHeader from "./ProfileHeader";
 import ProfileStats from "./ProfileStats";
 import ProfileTabs from "./ProfileTabs";
 import RecentActivity from "./RecentActivity";
+import ShareProfileDialog from "./ShareProfileDialog";
 
 export default function ProfilePage() {
   // Profil akun demo selalu ada; datanya sama dengan yang tampil di profil publik.
   const profile = getPublicProfile(DUMMY_PROFILE.username)!;
+
+  const earnedAchievements = profile.achievements.filter((state) => state.earned).length;
 
   const summary = (
     <div className="space-y-6">
@@ -25,7 +28,7 @@ export default function ProfilePage() {
         xp={profile.xp}
         lessons={profile.lessons}
         challenges={profile.challenges}
-        achievements={profile.achievements.filter((state) => state.earned).length}
+        achievements={earnedAchievements}
       />
 
       <FeaturedAchievements featured={profile.featured} allHref="/profile?tab=pencapaian" />
@@ -48,6 +51,19 @@ export default function ProfilePage() {
         themeImage={profile.themeImage}
         xp={profile.xp}
         isOwner
+        shareAction={
+          <ShareProfileDialog
+            displayName={profile.displayName}
+            username={profile.username}
+            avatarImage={profile.avatarImage}
+            themeImage={profile.themeImage}
+            xp={profile.xp}
+            lessons={profile.lessons}
+            challenges={profile.challenges}
+            achievements={earnedAchievements}
+            isProfilePublic={profile.isProfilePublic}
+          />
+        }
       />
 
       <div className="flex justify-end">
