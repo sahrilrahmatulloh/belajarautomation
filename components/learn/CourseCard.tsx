@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 import ContentCover from "@/components/common/ContentCover";
-import { BookOpen, Clock3 } from "lucide-react";
+import { BookOpen, Clock3, Code2 } from "lucide-react";
 
 import { Course } from "@/types/Course";
 import { Progress } from "@/components/ui/progress";
@@ -31,6 +31,16 @@ const categoryAccents: Record<string, { surface: string; icon: string; badge: st
     icon: "text-brand-indigo",
     badge: "bg-brand-indigo/10 text-brand-indigo",
   },
+  AI: {
+    surface: "bg-brand-indigo/10",
+    icon: "text-brand-indigo",
+    badge: "bg-brand-indigo/10 text-brand-indigo",
+  },
+  "Low-Code": {
+    surface: "bg-brand-sky/10",
+    icon: "text-brand-sky",
+    badge: "bg-brand-sky/10 text-brand-sky",
+  },
   "API Testing": {
     surface: "bg-brand-cyan/10",
     icon: "text-brand-cyan",
@@ -57,6 +67,7 @@ export default function CourseCard({
   course,
 }: CourseCardProps) {
   const accent = categoryAccents[course.category] ?? categoryAccents.Fundamental;
+  const isComingSoon = course.availability === "coming-soon";
 
   return (
     <Link
@@ -72,6 +83,12 @@ export default function CourseCard({
           alt={`Sampul course ${course.title}`}
           sizes="(min-width: 1536px) 18vw, (min-width: 1280px) 22vw, (min-width: 1024px) 30vw, (min-width: 640px) 50vw, 100vw"
         />
+
+        {isComingSoon && (
+          <span className="absolute right-3 top-3 rounded-full bg-background/90 px-2.5 py-1 text-xs font-semibold text-foreground shadow-sm backdrop-blur-sm">
+            Segera hadir
+          </span>
+        )}
       </div>
 
       <div className="flex flex-1 flex-col p-5">
@@ -87,28 +104,45 @@ export default function CourseCard({
           {course.description}
         </p>
 
-        <div className="mt-5 flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
+        <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-muted-foreground">
           <span className="rounded-full bg-muted px-2.5 py-1">{course.level}</span>
 
-          <span className="flex items-center gap-1">
-            <BookOpen className="h-3.5 w-3.5" />
-            {course.lessons} Lessons
-          </span>
+          {course.language && (
+            <span className="flex items-center gap-1">
+              <Code2 className="h-3.5 w-3.5" />
+              {course.language}
+            </span>
+          )}
 
-          <span className="flex items-center gap-1">
-            <Clock3 className="h-3.5 w-3.5" />
-            {course.estimatedDuration}
-          </span>
+          {course.availability === "available" && (
+            <>
+              <span className="flex items-center gap-1">
+                <BookOpen className="h-3.5 w-3.5" />
+                {course.lessons} Lessons
+              </span>
+
+              <span className="flex items-center gap-1">
+                <Clock3 className="h-3.5 w-3.5" />
+                {course.estimatedDuration}
+              </span>
+            </>
+          )}
         </div>
       </div>
 
       <div className="border-t border-border bg-muted/30 px-5 py-3">
         <div className="flex items-center justify-between gap-4">
-          <span className="font-medium text-green-600 dark:text-green-400">
-            Gratis
-          </span>
+          {isComingSoon ? (
+            <span className="font-medium text-muted-foreground">
+              Materi sedang disiapkan
+            </span>
+          ) : (
+            <span className="font-medium text-green-600 dark:text-green-400">
+              Gratis
+            </span>
+          )}
 
-          {course.progress !== undefined ? (
+          {!isComingSoon && course.progress !== undefined ? (
             <div className="flex min-w-0 flex-1 items-center justify-end gap-3">
               <Progress
                 value={course.progress}

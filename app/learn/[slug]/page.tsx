@@ -1,10 +1,12 @@
 import { notFound } from "next/navigation";
 
 import DashboardLayout from "@/components/layout/DashboardLayout";
+import CourseComingSoonPage from "@/components/learn/CourseComingSoonPage";
 import CourseDetailPage from "@/components/learn/CourseDetailPage";
 
 import { COURSES } from "@/data/courses";
 import { COURSE_DETAILS } from "@/data/courseDetails";
+import { getRoadmapsForCourse } from "@/lib/courseRoadmaps";
 
 interface CoursePageProps {
   params: Promise<{
@@ -21,11 +23,27 @@ export default async function CoursePage({
     (item) => item.slug === slug
   );
 
+  if (!course) {
+    notFound();
+  }
+
+  // Course "coming-soon" tetap punya halaman, tanpa daftar modul.
+  if (course.availability === "coming-soon") {
+    return (
+      <DashboardLayout>
+        <CourseComingSoonPage
+          course={course}
+          roadmaps={getRoadmapsForCourse(course.slug)}
+        />
+      </DashboardLayout>
+    );
+  }
+
   const detail = COURSE_DETAILS.find(
     (item) => item.courseSlug === slug
   );
 
-  if (!course || !detail) {
+  if (!detail) {
     notFound();
   }
 

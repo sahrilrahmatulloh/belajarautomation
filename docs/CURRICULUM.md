@@ -56,7 +56,7 @@ Catatan slug: course #1 memakai slug lama `qa-fundamentals` (bukan `qa-fundament
 | SQL untuk QA | SELECT, filter, JOIN, dan agregasi untuk memvalidasi data aplikasi dari database. |
 | Git & GitHub untuk QA | Version control, branch, merge, pull request, code review, GitHub Actions dasar. |
 | JavaScript untuk Tester | Variabel, function, array dan object, async/await, module, npm. |
-| TypeScript untuk Tester | Tipe dasar, interface, type, generic sederhana, konfigurasi `tsconfig` untuk project test. |
+| TypeScript untuk Tester | Tipe data, interface, function, async/await, dan dasar TypeScript yang dipakai di Playwright. |
 | Java untuk Tester | Sintaks dasar, OOP, collection, exception, Maven, JUnit. |
 | Python untuk Tester | Sintaks dasar, struktur data, file handling, virtual environment, pytest. |
 | Playwright | Setup project, locator, assertion, Page Object Model, API testing dengan Playwright. |

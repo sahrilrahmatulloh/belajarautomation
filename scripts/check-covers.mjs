@@ -1,5 +1,5 @@
 // Memastikan setiap path `cover` di data course dan roadmap menunjuk ke file
-// yang ada di public/. Gagal (exit 1) bila ada yang hilang.
+// yang ada di public/, dan setiap course punya sampul. Gagal (exit 1) bila tidak.
 // Jalankan: npm run check:covers (otomatis sebelum npm run build).
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
@@ -23,8 +23,17 @@ for (const dataFile of DATA_FILES) {
   }
 }
 
+// Setiap course wajib punya sampul.
+const courseBlocks = readFileSync("data/courses.ts", "utf8").split(/\r?\n  \{/).slice(1);
+for (const block of courseBlocks) {
+  const slug = block.match(/slug:\s*"([^"]+)"/)?.[1];
+  if (slug && !/cover:\s*"/.test(block)) {
+    missing.push(`data/courses.ts: course "${slug}" belum punya cover`);
+  }
+}
+
 if (missing.length > 0) {
-  console.error(`Sampul tidak ditemukan di public/ (${missing.length}):`);
+  console.error(`Masalah sampul (${missing.length}):`);
   missing.forEach((item) => console.error(`  - ${item}`));
   process.exit(1);
 }

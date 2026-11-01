@@ -636,6 +636,165 @@ export const COURSE_DETAILS: CourseDetail[] = [
       },
     ]),
   },
+
+  {
+    courseSlug: "dasar-web-api",
+    overview:
+      "Pahami cara kerja web dan API dari sudut pandang QA: alur client-server, HTTP, browser dan DOM, JSON, hingga membaca request di DevTools.",
+    objectives: [
+      "Menjelaskan alur client-server dan request-response HTTP",
+      "Membedakan HTTP method dan arti status code",
+      "Memahami struktur DOM dan format JSON",
+      "Menginspeksi request dan response lewat DevTools",
+    ],
+    prerequisites: [
+      "Disarankan menyelesaikan QA Fundamental",
+    ],
+    modules: createModules([
+      {
+        title: "Cara Kerja Web",
+        lessons: [
+          ["Client & Server", 8],
+          ["Apa itu HTTP?", 10],
+          ["HTTP Method", 12],
+          ["Status Code", 12],
+        ],
+      },
+      {
+        title: "Browser & Data",
+        lessons: [
+          ["Browser dan DOM", 12],
+          ["Format JSON", 10],
+        ],
+      },
+      {
+        title: "Praktik dengan DevTools",
+        lessons: [
+          ["Mengenal DevTools", 8],
+          ["Membaca Request di Tab Network", 15],
+        ],
+      },
+    ]),
+  },
+
+  {
+    courseSlug: "test-design",
+    overview:
+      "Rancang test scenario dan test case yang efektif dengan teknik desain test yang sistematis.",
+    objectives: [
+      "Membedakan test scenario dan test case",
+      "Menulis test case yang jelas dan dapat diulang",
+      "Menerapkan equivalence partitioning, boundary value analysis, dan decision table",
+      "Menyusun skenario positif dan negatif dari user story",
+    ],
+    prerequisites: [
+      "Menyelesaikan QA Fundamental",
+    ],
+    modules: createModules([
+      {
+        title: "Dasar Test Design",
+        lessons: [
+          ["Test Scenario vs Test Case", 10],
+          ["Struktur Test Case yang Baik", 12],
+          ["Positive & Negative Testing", 10],
+        ],
+      },
+      {
+        title: "Teknik Desain Test",
+        lessons: [
+          ["Equivalence Partitioning", 15],
+          ["Boundary Value Analysis", 15],
+          ["Decision Table", 15],
+        ],
+      },
+      {
+        title: "Praktik",
+        lessons: [
+          ["Menyusun Test Case dari User Story", 15],
+          ["Review Test Case", 10],
+        ],
+      },
+    ]),
+  },
+
+  {
+    courseSlug: "bug-reporting",
+    overview:
+      "Laporkan bug dengan jelas dan kelola defect bersama tim, dari anatomi bug report hingga komunikasi dengan developer.",
+    objectives: [
+      "Menulis bug report yang lengkap dan mudah direproduksi",
+      "Menentukan severity dan priority dengan tepat",
+      "Memahami alur bug life cycle",
+      "Melampirkan bukti dan berkomunikasi efektif dengan developer",
+    ],
+    prerequisites: [
+      "Menyelesaikan QA Fundamental",
+    ],
+    modules: createModules([
+      {
+        title: "Anatomi Bug Report",
+        lessons: [
+          ["Apa itu Bug?", 6],
+          ["Anatomi Bug Report", 12],
+          ["Langkah Reproduksi yang Jelas", 10],
+        ],
+      },
+      {
+        title: "Prioritas & Siklus",
+        lessons: [
+          ["Severity vs Priority", 12],
+          ["Bug Life Cycle", 10],
+        ],
+      },
+      {
+        title: "Bukti & Komunikasi",
+        lessons: [
+          ["Mengumpulkan Bukti: Screenshot & Log", 12],
+          ["Berkomunikasi dengan Developer", 10],
+        ],
+      },
+    ]),
+  },
+
+  {
+    courseSlug: "typescript",
+    overview:
+      "Kuasai dasar TypeScript yang dipakai sehari-hari saat menulis automated test dengan Playwright.",
+    objectives: [
+      "Memahami manfaat TypeScript dibanding JavaScript",
+      "Menggunakan tipe data, interface, dan type",
+      "Menulis function bertipe dan kode asynchronous",
+      "Menyiapkan TypeScript di project Playwright",
+    ],
+    prerequisites: [
+      "Memahami dasar JavaScript",
+    ],
+    modules: createModules([
+      {
+        title: "Dasar TypeScript",
+        lessons: [
+          ["Kenapa TypeScript?", 6],
+          ["Setup & tsconfig", 10],
+          ["Tipe Data Dasar", 12],
+        ],
+      },
+      {
+        title: "Struktur Kode",
+        lessons: [
+          ["Interface & Type", 12],
+          ["Function dengan Tipe", 12],
+          ["Union & Optional", 10],
+        ],
+      },
+      {
+        title: "TypeScript untuk Automation",
+        lessons: [
+          ["Async/Await", 12],
+          ["TypeScript di Project Playwright", 15],
+        ],
+      },
+    ]),
+  },
 ];
 
 interface ModuleInput {

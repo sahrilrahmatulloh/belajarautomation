@@ -4,17 +4,18 @@ import {
   ArrowLeft,
   CheckCircle2,
   Clock3,
+  Code2,
   ListChecks,
   PlayCircle,
   Target,
 } from "lucide-react";
 
 import ContentCover from "@/components/common/ContentCover";
-import { Course } from "@/types/Course";
+import { AvailableCourse } from "@/types/Course";
 import { CourseDetail } from "@/types/CourseDetail";
 
 interface CourseDetailPageProps {
-  course: Course;
+  course: AvailableCourse;
   detail: CourseDetail;
 }
 
@@ -85,6 +86,13 @@ export default function CourseDetailPage({
               <Clock3 className="h-3.5 w-3.5" />
               {course.estimatedDuration}
             </span>
+
+            {course.language && (
+              <span className="flex w-fit items-center gap-1.5 rounded-full bg-muted px-3 py-1.5 text-xs font-medium">
+                <Code2 className="h-3.5 w-3.5" />
+                {course.language}
+              </span>
+            )}
           </div>
         </div>
 
