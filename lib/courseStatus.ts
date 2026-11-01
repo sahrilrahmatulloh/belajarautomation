@@ -1,4 +1,5 @@
 import { COURSES } from "@/data/courses";
+import { isDev } from "@/lib/env";
 import { Course } from "@/types/Course";
 
 // Course "available" yang isinya masih placeholder. Sebelum rilis daftar ini
@@ -10,10 +11,10 @@ export function getDraftAvailableCourses(courses: Course[] = COURSES) {
   );
 }
 
-// Penanda "Draf" hanya tampil saat pengembangan, tidak di build produksi.
+// Penanda "Draf" hanya tampil di lingkungan DEV (PRD Bagian 13.3).
 export function shouldShowDraftBadge(course: Course) {
   return (
-    process.env.NODE_ENV === "development" &&
+    isDev &&
     course.availability === "available" &&
     course.contentStatus === "draft"
   );
