@@ -1,9 +1,12 @@
 # BELAJARAUTOMATION.COM
 ## Product Requirements Document (PRD)
-**Versi:** 2.1  
+**Versi:** 2.2  
 **Status:** Draft — Acuan Pengembangan Produk  
 **Platform:** Web Application  
 **Target Pengguna:** Pemula hingga praktisi QA, Software Testing, dan Programming
+
+### Perubahan di Versi 2.2
+- Menambahkan lingkungan DEV, UAT, dan Production beserta alur rilis (Bagian 13.4).
 
 ### Perubahan di Versi 2.1
 - Sistem skin diganti menjadi dua koleksi terpisah: **avatar kucing** (beberapa jenis kucing) dan **tema banner** (FR-12).
@@ -1559,7 +1562,23 @@ Hal berikut harus diputuskan sebelum implementasi fitur terkait mencapai tahap p
 - Elemen di mockup hanya diimplementasikan setelah dimasukkan ke PRD atau disebutkan secara eksplisit dalam tugas pengembangan.
 - Jika mockup bertentangan dengan PRD, PRD yang berlaku.
 
-## 13.3 Prinsip pengembangan
+## 13.3 Lingkungan dan alur rilis
+
+| Lingkungan | Branch | Fungsi |
+|---|---|---|
+| DEV | `develop` | Tempat menggabungkan hasil pengembangan; boleh berisi data dummy dan alat bantu pengembangan |
+| UAT | `uat` | Pengujian penerimaan oleh pemilik produk berdasarkan Bagian 11 |
+| Production | `main` | Website untuk pengguna; belum digunakan sampai backend, autentikasi, dan pembayaran siap serta data dummy dihapus |
+
+Aturan:
+- Agen pemrograman membuat branch fitur dari `develop` dan hanya membuat pull request ke `develop`.
+- Perubahan naik berurutan: `develop` → `uat` → `main`. Tidak boleh melompati tahap.
+- Tidak ada perbaikan langsung di `uat` maupun `main`; semua perbaikan dimulai dari `develop`.
+- Hanya pemilik produk yang menaikkan perubahan ke `uat` dan `main`.
+- Lingkungan ditentukan oleh variabel `NEXT_PUBLIC_APP_ENV` (`dev`, `uat`, `production`). Fitur bantu pengembangan hanya aktif di `dev`, dan label lingkungan tidak tampil di `production`.
+- Selama domain belum tersedia, setiap lingkungan memakai alamat bawaan Vercel.
+
+## 13.4 Prinsip pengembangan
 Agen pemrograman harus memperlakukan dokumen ini sebagai acuan kebutuhan produk, bukan izin untuk mengubah seluruh aplikasi sekaligus.
 
 Sebelum mengimplementasikan fitur:
