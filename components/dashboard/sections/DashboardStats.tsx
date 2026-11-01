@@ -1,16 +1,16 @@
 import { BookOpenCheck, Flame, Target, Trophy } from "lucide-react";
 
-import { DUMMY_ACCOUNT, DUMMY_LEADERBOARD } from "@/data/dummyAccount";
+import { DUMMY_ACCOUNT } from "@/data/dummy/account";
+import { getCurrentUserPosition } from "@/lib/leaderboard";
 import { getCompletedLessonCount } from "@/lib/learningProgress";
 
-const leaderboardPosition =
-  DUMMY_LEADERBOARD.findIndex((entry) => entry.isCurrentUser) + 1;
+const leaderboardPosition = getCurrentUserPosition("all-time");
 
 const stats = [
   {
     label: "Total XP",
     value: DUMMY_ACCOUNT.xp.toLocaleString("id-ID"),
-    detail: `Peringkat #${leaderboardPosition} di leaderboard`,
+    detail: `Peringkat #${leaderboardPosition} sepanjang waktu`,
     Icon: Trophy,
     iconStyle: "bg-amber-500/10 text-amber-600 dark:text-amber-300",
   },

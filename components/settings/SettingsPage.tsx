@@ -1,5 +1,6 @@
 import DangerZone from "./DangerZone";
 import PreferenceSettings from "./PreferenceSettings";
+import PrivacySettings from "./PrivacySettings";
 import ProfileSettings from "./ProfileSettings";
 import SettingsHeader from "./SettingsHeader";
 
@@ -11,6 +12,8 @@ export default function SettingsPage() {
       <ProfileSettings />
 
       <PreferenceSettings />
+
+      <PrivacySettings />
 
       <DangerZone />
     </div>

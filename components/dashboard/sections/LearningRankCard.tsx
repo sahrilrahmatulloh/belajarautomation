@@ -2,7 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, Sparkles } from "lucide-react";
 
-import { DUMMY_ACCOUNT } from "@/data/dummyAccount";
+import { DUMMY_ACCOUNT } from "@/data/dummy/account";
 import { getNextRank, getRank } from "@/data/ranks";
 
 export default function LearningRankCard() {
