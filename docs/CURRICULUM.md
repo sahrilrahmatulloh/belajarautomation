@@ -1,7 +1,7 @@
 # Kurikulum BelajarAutomation
 
 **Versi:** 2.1
-**Acuan:** `docs/PRD.md` v2.0 — FR-02 (Learning Center), FR-03 (Roadmap), FR-05 (XP dan Rank), FR-10 (Membership)
+**Acuan:** `docs/PRD.md` v2.1 — FR-02 (Learning Center), FR-03 (Roadmap), FR-05 (XP dan Rank), FR-10 (Membership)
 
 Dokumen ini adalah sumber acuan konten Learning Center dan Roadmap. Data di `data/` wajib mengikuti dokumen ini. Jika kurikulum berubah, perbarui dokumen ini lebih dulu, lalu sesuaikan data. Jika dokumen ini bertentangan dengan PRD, PRD yang berlaku.
 

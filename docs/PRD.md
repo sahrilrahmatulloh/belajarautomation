@@ -1,9 +1,18 @@
 # BELAJARAUTOMATION.COM
 ## Product Requirements Document (PRD)
-**Versi:** 2.0  
+**Versi:** 2.1  
 **Status:** Draft — Acuan Pengembangan Produk  
 **Platform:** Web Application  
 **Target Pengguna:** Pemula hingga praktisi QA, Software Testing, dan Programming
+
+### Perubahan di Versi 2.1
+- Sistem skin diganti menjadi dua koleksi terpisah: **avatar kucing** (beberapa jenis kucing) dan **tema banner** (FR-12).
+- Kucing putih tetap maskot resmi brand; pengguna dapat memilih avatar dari beberapa jenis kucing.
+- Rilis awal: 5 avatar dan 5 tema banner.
+- Menambahkan Profil Pengguna (FR-13) dengan 4 tab dan profil publik.
+- Menambahkan Achievement (FR-14) yang hanya ditampilkan di profil dan tidak memberikan XP.
+- Rank tidak memiliki level maupun sub-tingkat.
+- Menambahkan peran dalam pengembangan dan status mockup desain (Bagian 13).
 
 ### Perubahan di Versi 2.0
 - **Prinsip utama berubah:** materi dasar gratis, sebagian materi lanjutan menjadi materi premium (1.3, FR-02).
@@ -151,7 +160,7 @@ Fitur berikut tersedia melalui elemen antarmuka yang sesuai, bukan sebagai menu 
 - Profil pengguna.
 - Pengaturan akun.
 - Preferensi tampilan (mode terang/gelap).
-- Pemilihan skin maskot.
+- Pemilihan avatar kucing dan tema banner.
 - Notifikasi.
 
 Header dapat menyediakan tombol untuk menyembunyikan atau menampilkan sidebar, kontrol mode terang/gelap, notifikasi, dan avatar pengguna.
@@ -173,25 +182,24 @@ Memberikan gambaran ringkas mengenai aktivitas belajar dan perkembangan pengguna
 - Tombol toggle sidebar.
 - Kontrol mode terang/gelap.
 - Notifikasi.
-- Avatar pengguna berupa maskot dengan skin aktif.
+- Avatar kucing aktif pengguna.
 
 **B. Welcome Banner**
 - Sapaan kepada pengguna.
 - Deskripsi singkat platform.
-- Maskot kucing putih dengan skin yang sedang aktif, dalam pose menyapa.
-- Latar, ornamen, dan warna aksen di dalam banner mengikuti tema skin yang sedang aktif.
-- Pengguna yang belum memilih skin, atau pengguna gratis, melihat banner dengan skin Basic.
+- Avatar kucing aktif pengguna dalam ukuran besar.
+- Latar banner sesuai tema banner aktif pengguna (FR-12).
+- Pengguna baru melihat avatar Kucing Putih Basic dan tema gratis bawaan.
 
 Ketentuan Welcome Banner:
-- Tema skin hanya berlaku di dalam Welcome Banner; bagian website lainnya tetap biru dan putih.
-- Setiap skin memiliki identitas banner yang khas, bukan sekadar mengganti satu warna.
-- Struktur konten banner (tagline, sapaan, deskripsi) dan posisinya tetap sama di semua skin.
+- Tema banner hanya berlaku di Welcome Banner dan banner profil; bagian website lainnya mengikuti brand guideline.
+- Struktur konten banner (tagline, sapaan, deskripsi) dan posisinya tetap sama di semua tema.
 - Welcome Banner tidak menampilkan kutipan motivasi.
-- Teks banner harus tetap terbaca dengan kontras memadai pada semua skin, di mode terang maupun gelap.
-- Pada layar kecil, maskot menyesuaikan ukuran atau posisi agar tidak menutupi teks.
+- Teks banner harus tetap terbaca dengan kontras memadai pada semua tema, di mode terang maupun gelap.
+- Pada layar kecil, avatar menyesuaikan ukuran atau posisi agar tidak menutupi teks.
 
 **C. Rank & XP**
-- Emblem tameng rank saat ini (lihat FR-05). Emblem tidak dipengaruhi skin.
+- Emblem tameng rank saat ini (lihat FR-05). Emblem tidak dipengaruhi avatar atau tema.
 - Nama rank.
 - Total XP.
 - Progress menuju rank berikutnya.
@@ -482,7 +490,7 @@ Ketentuan emblem:
   - Varian penuh (tameng, cap kaki, bintang, ornamen) untuk ukuran 48px ke atas, misalnya kartu Rank & XP dan profil.
   - Varian ringkas (tameng dan cap kaki, dengan atau tanpa bintang) untuk ukuran kecil sekitar 24–32px, misalnya baris leaderboard, agar tetap terbaca.
 - Aset emblem dioptimalkan ukurannya (SVG, atau PNG/WebP terkompresi sesuai ukuran tampil).
-- Emblem rank sama untuk semua pengguna di rank yang sama, apa pun tingkat membership-nya, dan tidak berubah karena skin.
+- Emblem rank sama untuk semua pengguna di rank yang sama, apa pun tingkat membership-nya, dan tidak berubah karena avatar atau tema.
 
 ### Identitas visual
 - Trainee: bronze/oranye.
@@ -492,7 +500,7 @@ Ketentuan emblem:
 - Expert: purple.
 - Master: crimson red dengan aksen gold.
 
-Warna dan emblem rank merupakan identitas tetap. Mengubah mode terang/gelap atau skin maskot tidak boleh mengubah emblem maupun warna identitas rank.
+Warna dan emblem rank merupakan identitas tetap. Mengubah mode terang/gelap, avatar, atau tema tidak boleh mengubah emblem maupun warna identitas rank.
 
 ### Sistem XP
 
@@ -560,9 +568,9 @@ Menampilkan peringkat pengguna berdasarkan aktivitas belajar yang valid.
 
 ### Informasi dasar
 - Posisi pengguna.
-- Avatar maskot dengan skin aktif pengguna.
+- Avatar kucing aktif pengguna.
 - Nama atau username.
-- Emblem tameng rank sesuai rank pengguna. Emblem tidak dipengaruhi skin.
+- Emblem tameng rank sesuai rank pengguna. Emblem tidak dipengaruhi avatar atau tema.
 - Total XP.
 
 ### Aturan
@@ -570,7 +578,7 @@ Menampilkan peringkat pengguna berdasarkan aktivitas belajar yang valid.
 - XP harus berasal dari aktivitas yang valid.
 - Pembelian membership, eBook, atau project tidak menambah XP secara langsung.
 - XP dari materi premium ikut dihitung sesuai FR-05.
-- Skin pada avatar bersifat kosmetik dan tidak menggantikan emblem tameng rank di leaderboard.
+- Avatar bersifat kosmetik dan tidak menggantikan emblem tameng rank di leaderboard.
 - Sistem perlu memiliki perlindungan terhadap farming XP.
 - Informasi pribadi pengguna tidak boleh ditampilkan tanpa dasar dan izin yang sesuai.
 
@@ -596,7 +604,7 @@ Ketentuan:
   - Tab Global: posisi di antara seluruh pengguna.
   - Tab rank: posisi di antara sesama rank.
 - Tab rank menampilkan informasi rank berikutnya, mis. "Butuh 320 XP lagi untuk naik ke Practitioner". Pengguna Master melihat keterangan bahwa rank tertinggi telah tercapai.
-- Setiap baris menampilkan posisi, avatar maskot sesuai skin aktif, nama tampilan, emblem tameng rank, dan total XP.
+- Setiap baris menampilkan posisi, avatar kucing aktif, nama tampilan, emblem tameng rank, dan total XP.
 - Tiga posisi teratas di setiap tab boleh diberi penekanan visual.
 
 ### Privasi
@@ -734,8 +742,8 @@ Menyediakan tingkat membership yang memberi akses materi premium dan benefit tam
 | Course premium yang tersedia saat pembelian | Tidak | Ya | Ya |
 | Kuis dan challenge course gratis | Ya | Ya | Ya |
 | Kuis dan challenge course premium | Tidak | Ya | Ya |
-| Skin Basic Cat | Ya | Ya | Ya |
-| Skin bertema | Tidak | Sesuai paket | Sesuai paket |
+| Avatar dan tema banner gratis | Ya | Ya | Ya |
+| Avatar dan tema banner berbayar | Tidak | Sesuai paket | Sesuai paket |
 | Kredit eBook | 0 | 1 | 3 |
 | Kredit project | 0 | 1 | 3 |
 | XP, rank, dan leaderboard | Ya | Ya | Ya |
@@ -766,13 +774,13 @@ Artinya:
 
 Benefit yang sebenarnya harus ditampilkan dengan jelas pada detail paket sebelum pembayaran.
 
-### Skin Maskot
-- Paket Pro dan Premium membuka skin bertema yang tercantum di dalamnya.
-- Akses skin tidak bergantung pada rank pengguna.
-- Pemilik paket dapat memilih salah satu skin yang tersedia untuk ditampilkan; seluruh skin tersedia untuk dipilih, bukan diterapkan sekaligus.
-- Skin tidak mengubah emblem rank maupun warna identitas rank.
-- Tidak boleh diasumsikan bahwa semua skin otomatis termasuk dalam setiap paket; hak akses mengikuti benefit yang tercantum pada paket.
-- Cakupan skin pada paket (apakah termasuk skin yang dirilis setelah pembelian) harus dinyatakan jelas sebelum pembayaran.
+### Avatar dan Tema Banner
+- Paket Pro dan Premium membuka avatar dan tema banner berbayar yang tercantum di dalamnya (FR-12).
+- Akses tidak bergantung pada rank pengguna.
+- Pemilik paket memilih satu avatar dan satu tema aktif dari yang tersedia.
+- Avatar dan tema tidak mengubah emblem rank maupun warna identitas rank.
+- Hak akses mengikuti benefit yang tercantum pada paket; tidak boleh diasumsikan semua item otomatis termasuk.
+- Cakupan avatar dan tema pada paket (apakah termasuk item yang dirilis setelah pembelian) harus dinyatakan jelas sebelum pembayaran.
 
 ### Kredit produk
 
@@ -860,143 +868,192 @@ Fitur ini tidak menjadi prioritas implementasi awal sebelum fondasi pembelajaran
 
 ---
 
-## FR-12 — Maskot dan Skin
+## FR-12 — Maskot, Avatar, dan Tema Banner
 
 ### Tujuan
-Memberikan identitas karakter yang mudah dikenali dan menjadi sarana ekspresi diri pengguna tanpa memengaruhi keadilan sistem belajar.
+Memberikan identitas brand yang mudah dikenali dan sarana ekspresi diri pengguna tanpa memengaruhi keadilan sistem belajar.
 
-### Filosofi maskot
-- Kucing putih melambangkan ilmu yang dimiliki, dipelajari, dan dibagikan kepada orang lain.
-- Maskot merepresentasikan semangat belajar dan identitas visual platform.
+### Maskot resmi
+- Maskot resmi BelajarAutomation adalah **kucing putih**.
+- Desain mengikuti desain asli yang sudah digunakan di Instagram pembuat. Bentuk dasar dan ciri khasnya tidak diubah, dan tidak diubah menjadi karakter 3D atau fotorealistis.
+- Filosofi: kucing putih melambangkan ilmu yang dimiliki, dipelajari, dan dibagikan kepada orang lain.
+- Maskot resmi dipakai sebagai identitas brand: empty state, halaman 404, hasil latihan di Playground, halaman Tentang, dan materi pemasaran.
+- Logo dan warna brand tetap menjadi identitas utama platform; maskot berperan sebagai karakter pendamping.
 
-### Dua sistem visual yang terpisah
-| | Emblem Rank | Skin Maskot |
-|---|---|---|
-| Bentuk | Tameng berwarna identitas rank | Kucing dengan kostum dan tema banner |
-| Cara memperoleh | Naik rank melalui XP yang valid | Basic Cat gratis; skin bertema melalui Pro atau Premium |
-| Dipilih bebas | Tidak; mengikuti rank saat ini | Ya, dari skin yang dimiliki |
-| Tampil di | Kartu Rank & XP, profil, leaderboard | Halaman profil, foto profil, karakter dashboard, latar Welcome Banner |
-| Memengaruhi XP/rank/leaderboard | Tidak | Tidak |
-
-### Maskot
-- Maskot platform adalah seekor kucing putih.
-- Desain kucing mengikuti desain asli yang sudah digunakan di Instagram pembuat. Bentuk dasar dan ciri khasnya tidak diubah, dan tidak diubah menjadi karakter 3D atau fotorealistis.
-- Variasi pose, ekspresi, dan skin dibuat dengan desain asli sebagai referensi.
-- Maskot menjadi benang merah dengan website personal pembuat platform.
-- Logo dan warna brand BelajarAutomation tetap menjadi identitas utama platform; maskot berperan sebagai karakter pendamping.
-
-### Penempatan maskot
-Maskot dengan skin aktif pengguna digunakan pada:
-- **Halaman profil:** ilustrasi utama pengguna dan koleksi skin.
-- **Foto profil (avatar):** di header, profil, leaderboard, dan tempat lain yang menampilkan pengguna.
-- **Karakter di dashboard:** maskot tampil sebagai karakter pada Welcome Banner.
-- **Latar belakang Welcome Banner:** latar, ornamen, dan warna aksen banner mengikuti tema skin.
-
-Maskot dalam versi Basic Cat juga dapat digunakan pada empty state, halaman 404, hasil latihan di Playground, dan halaman Tentang.
-
-Maskot tidak digunakan sebagai emblem rank.
-
-### Ekspresi maskot
-Set ekspresi awal yang dibutuhkan:
-- Menyapa, untuk Welcome Banner.
+### Ekspresi maskot resmi
+- Menyapa, untuk sapaan.
 - Bingung atau mencari, untuk empty state dan halaman 404.
 - Senang, untuk jawaban benar.
 - Berpikir atau semangat, untuk jawaban salah; tetap bernada positif.
 - Membaca, untuk Learning Center dan eBook.
 - Merayakan, untuk kenaikan rank.
 
-### Aset per skin
-Setiap skin membutuhkan aset untuk setiap tempat penggunaannya:
-- Avatar: potongan wajah atau setengah badan, terbaca jelas pada ukuran kecil (sekitar 32–48px).
-- Ilustrasi karakter untuk Welcome Banner dan halaman profil.
-- Latar belakang Welcome Banner versi mode terang dan gelap.
+### Tiga sistem visual yang terpisah
 
-### Skin
-Skin adalah kostum bertema untuk maskot.
-
-Rilis awal menyediakan **5 skin**: 1 skin gratis (Basic Cat) dan 4 skin bertema untuk Pro dan Premium. Jumlah ini merupakan rilis awal, bukan batas permanen.
-
-Kandidat konsep skin (nama dan konsep final belum ditetapkan):
-
-| Skin | Akses | Karakteristik visual | Suasana tema banner |
+| | Emblem Rank | Avatar Kucing | Tema Banner |
 |---|---|---|---|
-| Basic Cat | Gratis | Kucing putih polos dengan ekspresi sederhana | Minimalis biru-putih |
-| Bug Hunter / Detective Cat | Pro & Premium | Kaca pembesar atau aksesori investigasi | Investigasi dan debugging |
-| Scholar Cat | Pro & Premium | Kacamata dan buku | Perpustakaan dan belajar |
-| Cyber Tester / Cyber Cat | Pro & Premium | Jaket teknis dan visor | Futuristik dan teknologi |
-| Test Wizard / Wizard Cat | Pro & Premium | Jubah dengan ornamen fantasi | Fantasi dan pengetahuan |
+| Bentuk | Tameng berwarna identitas rank (FR-05) | Ilustrasi kucing dari beberapa jenis dan gaya | Ilustrasi latar banner |
+| Cara memperoleh | Naik rank melalui XP yang valid | Gratis atau melalui Pro/Premium | Gratis atau melalui Pro/Premium |
+| Dipilih pengguna | Tidak; mengikuti rank | Ya, satu avatar aktif | Ya, satu tema aktif |
+| Tampil di | Kartu Rank & XP, profil, leaderboard | Foto profil, header, leaderboard, Welcome Banner, profil | Welcome Banner dan banner profil |
+| Memengaruhi XP, rank, leaderboard | Tidak | Tidak | Tidak |
 
-- Pengguna gratis mendapat satu skin, yaitu Basic Cat.
-- Skin bertema diperoleh melalui membership Pro atau Premium sesuai benefit yang tercantum.
-- Skin dapat dipilih bebas tanpa bergantung pada rank pengguna.
-- Pengguna memilih satu skin aktif yang tampil di halaman profil, foto profil, dan Welcome Banner.
-- Skin yang terkunci boleh ditampilkan di koleksi dengan indikator yang jelas.
+### Avatar kucing
+- Avatar adalah foto profil pengguna berupa ilustrasi kucing.
+- Tersedia beberapa **jenis kucing** agar pilihan tidak monoton, misalnya kucing putih, oren-putih, hitam-putih, dan abu-abu. Setiap jenis dapat memiliki beberapa **gaya** (mis. Basic, Developer, Scholar).
+- Kucing putih Basic menjadi avatar bawaan setiap pengguna baru.
+- Semua avatar memakai gaya ilustrasi yang sama dengan maskot resmi agar terasa satu keluarga.
+- Avatar tampil di header, halaman profil, leaderboard, dan Welcome Banner.
+- Avatar tidak menggantikan emblem rank.
 
-Setiap skin memiliki:
-- ID unik.
-- Nama dan deskripsi.
-- Aset avatar.
-- Ilustrasi karakter.
-- Aksesori khas.
-- Tema banner: latar, ornamen, dan warna aksen.
-- Status akses pengguna.
+Setiap avatar memiliki:
+- ID unik, nama, jenis kucing, dan gaya.
+- Aset ukuran kecil (32–48px, untuk header dan leaderboard) dan ukuran besar (untuk profil dan Welcome Banner).
+- Tingkat akses: gratis atau berbayar (Pro/Premium).
 
-### Koleksi skin di profil
-Pengguna dapat:
-1. Melihat skin yang dimiliki dan yang masih terkunci.
-2. Melihat informasi setiap skin.
-3. Memilih dan mengaktifkan skin yang dimiliki.
-4. Melihat skin yang sedang aktif.
+### Tema banner
+- Tema adalah ilustrasi latar untuk **Welcome Banner dashboard** dan **banner halaman profil**.
+- Tema tidak mengubah warna website. Warna website tetap mengikuti brand guideline (Bagian 15), dengan pilihan mode terang atau gelap.
+- Setiap tema memiliki versi mode terang dan gelap, atau satu versi yang tetap terbaca di keduanya.
+- Area teks pada banner harus tetap terbaca dengan kontras memadai di setiap tema.
 
-Pilihan skin tersimpan sebagai preferensi pengguna dan tetap konsisten saat berpindah halaman atau kembali mengakses website.
+Setiap tema memiliki:
+- ID unik dan nama.
+- Aset latar (mode terang dan gelap bila diperlukan) dan thumbnail.
+- Tingkat akses: gratis atau berbayar (Pro/Premium).
 
-### Aturan desain skin
-- Semua skin harus tetap terlihat sebagai kucing yang sama: wajah, proporsi, dan gaya ilustrasi konsisten.
-- Skin Basic harus tetap menarik; skin berbayar terasa sebagai bonus, bukan penebus kekurangan versi gratis.
-- Skin tidak boleh memakai kombinasi warna identitas rank, misalnya crimson dengan gold milik Master, agar tidak disangka sebagai rank.
-- Gaya ilustrasi konsisten dengan maskot pada website personal pembuat.
-- Tema skin hanya berlaku di dalam Welcome Banner, tidak mengubah warna website.
-- Kontras teks banner harus tetap baik di semua skin, di mode terang maupun gelap.
+### Rilis awal
+- **5 avatar** dan **5 tema banner**.
+- Komposisi gratis dan berbayar ditetapkan di Bagian 12. Minimal 1 avatar dan 1 tema tersedia gratis.
+- Jumlah ini adalah rilis awal, bukan batas permanen.
+
+### Akses
+- Pengguna Basic memakai avatar dan tema yang berstatus gratis.
+- Pengguna Pro dan Premium dapat memakai avatar dan tema berbayar sesuai benefit paket (FR-10).
+- Avatar dan tema yang terkunci tetap ditampilkan di koleksi dengan indikator terkunci.
+- Hak penggunaan avatar dan tema diverifikasi oleh backend.
+- Jika avatar atau tema aktif tidak lagi valid, sistem kembali ke avatar Kucing Putih Basic dan tema gratis bawaan. Hak yang sudah diperoleh secara sah tidak boleh dicabut secara sepihak.
+
+### Aturan desain
+- Avatar dan tema tidak boleh memakai kombinasi warna identitas rank, terutama crimson dengan gold milik Master, agar tidak disangka sebagai rank.
+- Avatar dan tema gratis harus tetap menarik; versi berbayar terasa sebagai bonus, bukan penebus kekurangan versi gratis.
+- Avatar harus terbaca jelas pada ukuran kecil.
 - Hindari animasi atau efek berlebihan yang mengganggu pengalaman belajar.
 
 ### Aturan
-- Skin bersifat kosmetik dan tidak memengaruhi XP, rank, maupun posisi leaderboard.
-- Hak penggunaan skin diverifikasi oleh backend, bukan hanya berdasarkan data lokal browser.
-- Jika skin aktif tidak lagi valid, sistem kembali ke Basic Cat. Skin yang sudah menjadi hak pengguna tidak boleh dicabut secara sepihak.
-- Tema skin dikelola melalui satu mekanisme yang dapat digunakan kembali, bukan diatur ulang di setiap halaman.
-- Mengganti skin tidak mengubah progress, XP, rank, atau entitlement.
-- Selama database belum tersedia, platform cukup menampilkan Basic Cat; koleksi skin boleh ditampilkan sebagai pratinjau, dan pemilihan skin diaktifkan setelah data pengguna dapat disimpan.
+- Avatar dan tema bersifat kosmetik dan tidak memengaruhi XP, rank, maupun posisi leaderboard.
+- Mengganti avatar atau tema tidak mengubah progress, XP, rank, atau entitlement.
+- Pilihan avatar dan tema tersimpan sebagai preferensi pengguna dan konsisten di semua halaman.
+- Selama database belum tersedia, pilihan boleh disimulasikan dengan data dummy.
+
+---
+
+## FR-13 — Profil Pengguna
+
+### Tujuan
+Menampilkan identitas, perkembangan belajar, dan pencapaian pengguna, serta tempat mengatur tampilan diri.
+
+### Header profil
+Tampil di semua tab:
+- Banner sesuai tema aktif pengguna.
+- Avatar kucing aktif.
+- Nama tampilan dan username.
+- Bio singkat.
+- Emblem tameng dan nama rank.
+- Total XP dan progress menuju rank berikutnya (atau keterangan rank tertinggi untuk Master).
+
+Ketentuan:
+- Tidak ada sistem level. Perkembangan hanya ditunjukkan oleh rank dan XP (FR-05).
+- Rank tidak memiliki sub-tingkat (mis. tidak ada "Apprentice II").
+- Tidak ada lencana verifikasi atau penanda status membership di samping nama.
+
+### Tab profil
+
+| Tab | Isi |
+|---|---|
+| **Ringkasan** | Statistik utama (total XP, materi selesai, challenge selesai, jumlah achievement), progress per kategori materi, progress roadmap yang sedang diikuti, achievement unggulan, dan aktivitas terbaru |
+| **Aktivitas** | Riwayat aktivitas yang dikelompokkan per tanggal beserta XP yang diperoleh; filter jenis aktivitas (materi, challenge, kuis, achievement, rank) dan periode; ringkasan periode; grafik XP harian dan heatmap konsistensi belajar |
+| **Pencapaian** | Achievement yang sudah diperoleh dan yang sedang dalam progres, dikelompokkan per kategori (FR-14) |
+| **Kustomisasi** | Koleksi avatar dan tema banner, preview profil, serta pilihan yang sedang digunakan. Hanya terlihat oleh pemilik profil |
+
+Ketentuan:
+- Nama tab dan seluruh label dalam Bahasa Indonesia.
+- Progress roadmap mengikuti 6 roadmap dan cabangnya (FR-03); roadmap tidak ditampilkan sebagai jalur yang mengunci materi.
+- Nilai XP pada riwayat mengikuti konfigurasi XP di FR-05.
+- Informasi yang sama tidak perlu diulang di beberapa tab.
+
+### Kustomisasi
+- Dua bagian: **Avatar** dan **Tema Banner**.
+- Filter koleksi: Semua, Dimiliki, Terkunci.
+- Avatar dikelompokkan per jenis kucing.
+- Preview profil memperlihatkan hasil pilihan sebelum disimpan.
+- Bagian "Digunakan saat ini" menampilkan avatar dan tema aktif.
+- Item terkunci menampilkan cara memperolehnya (mis. "Tersedia di Pro dan Premium").
+
+### Profil publik
+- Profil dapat dilihat oleh pengguna lain.
+- Yang terlihat publik: banner, avatar, nama tampilan, username, bio, rank, total XP, ringkasan statistik, dan achievement.
+- Yang tidak terlihat publik: tab Kustomisasi, email, data pembelian, dan membership.
+- Riwayat aktivitas detail hanya terlihat oleh pemilik profil, kecuali pengguna memilih membukanya.
+- Pengguna yang memilih tidak tampil di leaderboard tetap dapat memilih apakah profilnya dapat dilihat publik.
+- Fitur melihat profil pengguna lain dari leaderboard dan ruang chat komunitas direncanakan untuk tahap berikutnya (Phase 7).
+
+---
+
+## FR-14 — Achievement
+
+### Tujuan
+Memberikan pengakuan atas pencapaian belajar sebagai motivasi tambahan.
+
+### Ketentuan
+- Achievement **hanya ditampilkan di halaman profil** (tab Ringkasan sebagai achievement unggulan, dan tab Pencapaian). Achievement tidak ditampilkan di dashboard.
+- Achievement **tidak memberikan XP** agar XP tetap murni berasal dari aktivitas belajar.
+- Achievement diperoleh dari aktivitas belajar yang valid dan tidak dapat dibeli.
+- Kategori awal: Belajar, Testing, Automation, Challenge, Konsistensi, dan Milestone.
+- Setiap achievement memiliki: ID, nama, deskripsi syarat, kategori, ikon, dan target progres jika bertahap (mis. "Selesaikan 50 materi").
+- Achievement bertahap menampilkan progres, mis. "28 / 50".
+- Tanggal diperoleh dicatat dan ditampilkan.
+
+### Desain
+- Badge achievement memakai bentuk yang berbeda dari emblem rank (mis. heksagon), dan tidak memakai bentuk tameng bersayap, agar tidak tertukar dengan rank.
+- Badge yang belum diperoleh ditampilkan abu-abu.
+
+### Contoh achievement awal
+| Achievement | Syarat |
+|---|---|
+| First Steps | Menyelesaikan materi pertama |
+| Bug Hunter | Menyelesaikan challenge kategori bug |
+| Automation Starter | Menyelesaikan materi automation pertama |
+| Quiz Master | Mencapai skor minimal 90% di sebuah kuis |
+| Consistent Learner | Aktif belajar 7 hari berturut-turut |
+| Roadmap Finisher | Menuntaskan satu roadmap |
+| Grand Learner | Mencapai rank Master |
+
+Daftar final achievement ditetapkan kemudian (Bagian 12).
 
 ---
 
 # 4. Profil, Preferensi, dan Pengaturan
 
 ## 4.1 Profil
-Informasi dasar pengguna dapat mencakup:
-- Nama tampilan.
-- Username.
-- Avatar berupa maskot dengan skin aktif.
-- Ilustrasi maskot dengan skin aktif.
-- Koleksi skin.
-- Ringkasan progress belajar.
-- Rank beserta emblem tameng.
-- Total XP.
-
-Informasi sensitif tidak boleh ditampilkan secara publik tanpa alasan dan persetujuan yang sesuai.
+Ketentuan profil pengguna diatur di FR-13. Informasi sensitif tidak boleh ditampilkan secara publik tanpa alasan dan persetujuan yang sesuai.
 
 ## 4.2 Preferensi Tampilan
-Warna website ditetapkan biru dan putih untuk semua pengguna. Tema skin hanya berlaku di dalam Welcome Banner.
+Warna website mengikuti brand guideline untuk semua pengguna. Tema banner hanya berlaku untuk Welcome Banner dan banner profil.
 
 Pengguna dapat mengatur:
 - Mode terang atau gelap.
-- Skin maskot aktif, sesuai hak yang dimiliki (FR-12).
+- Avatar kucing aktif, sesuai hak yang dimiliki (FR-12).
+- Tema banner aktif, sesuai hak yang dimiliki (FR-12).
+- Tampil atau tidak di leaderboard (FR-06).
+- Profil dapat dilihat publik atau tidak (FR-13).
 
 ## 4.3 Konsistensi Tampilan
-Perubahan mode tampilan dan skin maskot harus:
+Perubahan mode tampilan, avatar, dan tema harus:
 - Tidak mengubah data belajar.
 - Tidak mengubah XP atau rank.
 - Tidak mengubah entitlement produk.
-- Tidak menghapus hak skin yang telah diperoleh.
+- Tidak menghapus hak avatar atau tema yang telah diperoleh.
 - Tetap mempertahankan keterbacaan dan kontras antarmuka.
 
 ## 4.4 Notifikasi
@@ -1027,8 +1084,8 @@ Preferensi notifikasi dan jenis notifikasi yang akan didukung masih perlu ditent
 | Isi lengkap project | Beli terpisah | Beli terpisah atau 1 kredit | Beli terpisah atau 3 kredit |
 | Mode terang/gelap | Ya | Ya | Ya |
 | Emblem tameng rank | Sesuai rank | Sesuai rank | Sesuai rank |
-| Skin Basic Cat | Ya | Ya | Ya |
-| Skin bertema | Tidak | Sesuai paket | Sesuai paket |
+| Avatar dan tema banner gratis | Ya | Ya | Ya |
+| Avatar dan tema banner berbayar | Tidak | Sesuai paket | Sesuai paket |
 | Bonus XP atau rank karena pembayaran | Tidak ada | Tidak ada | Tidak ada |
 
 ## 5.2 Entitlement
@@ -1039,7 +1096,7 @@ Sistem harus dapat membedakan:
 - Tingkat membership yang dimiliki pengguna (Basic, Pro, Premium) beserta versi paketnya.
 - Hak akses course premium beserta daftar course yang termasuk pada saat pembelian.
 - Hak akses yang berasal dari klaim kredit membership.
-- Benefit skin yang berasal dari paket tertentu.
+- Hak avatar dan tema banner yang berasal dari paket tertentu.
 - Kredit yang masih tersedia.
 - Kredit yang telah digunakan.
 
@@ -1159,14 +1216,23 @@ Mencatat hak akses pengguna terhadap produk tertentu.
 ## 7.16 BenefitClaim
 Mencatat penggunaan kredit produk dari membership Pro atau Premium.
 
-## 7.17 SkinDefinition
-Menyimpan definisi skin maskot: ID, nama, deskripsi, aset avatar, aset ilustrasi karakter, aksesori, tema banner (latar terang dan gelap, ornamen, warna aksen), serta apakah skin gratis.
+## 7.17 AvatarDefinition
+Menyimpan definisi avatar kucing: ID, nama, jenis kucing, gaya, aset ukuran kecil dan besar, serta tingkat akses.
 
-## 7.18 UserSkinSelection
-Mencatat skin aktif yang dipilih pengguna. Dapat menjadi bagian dari UserPreferences.
+## 7.18 ThemeDefinition
+Menyimpan definisi tema banner: ID, nama, aset latar mode terang dan gelap, thumbnail, serta tingkat akses.
 
-## 7.19 SkinEntitlement
-Mencatat hak pengguna atas skin tertentu beserta sumbernya (gratis atau membership tertentu). Dapat menjadi bagian dari PackageEntitlement.
+## 7.19 UserAppearance
+Mencatat avatar dan tema aktif yang dipilih pengguna. Dapat menjadi bagian dari UserPreferences.
+
+## 7.20 CosmeticEntitlement
+Mencatat hak pengguna atas avatar dan tema beserta sumbernya (gratis atau membership tertentu). Dapat menjadi bagian dari PackageEntitlement.
+
+## 7.21 AchievementDefinition
+Menyimpan definisi achievement: ID, nama, deskripsi syarat, kategori, ikon, dan target progres.
+
+## 7.22 UserAchievement
+Mencatat achievement yang diperoleh pengguna, tanggal diperoleh, dan progres achievement bertahap.
 
 ### Prinsip penting
 - Riwayat transaksi tidak boleh bergantung pada status tampilan frontend.
@@ -1208,7 +1274,7 @@ Aplikasi harus dapat digunakan pada desktop, tablet, dan perangkat mobile.
 - Komponen antarmuka harus dapat digunakan kembali.
 - Aturan bisnis tidak boleh tersebar secara tidak terkendali di banyak komponen frontend.
 - Skema database dan migrasi harus terkelola.
-- Konfigurasi rank, skin, dan paket sebaiknya tidak mengharuskan perubahan kode pada setiap perubahan konten.
+- Konfigurasi rank, avatar, tema, achievement, dan paket sebaiknya tidak mengharuskan perubahan kode pada setiap perubahan konten.
 - Dokumentasi implementasi harus diperbarui saat arsitektur berubah.
 
 ## 8.6 Accessibility dan Usability
@@ -1235,14 +1301,16 @@ Aplikasi harus dapat digunakan pada desktop, tablet, dan perangkat mobile.
 12. Hak akses produk mengikuti lisensi produk.
 13. Paket versi baru tidak otomatis memberikan benefit baru kepada pemilik paket lama.
 14. Benefit yang telah dijanjikan kepada pemilik paket lama harus tetap dihormati.
-15. Identitas visual rank tidak berubah saat pengguna mengganti mode tampilan atau skin.
+15. Identitas visual rank tidak berubah saat pengguna mengganti mode tampilan, avatar, atau tema.
 16. Data pengguna tidak boleh dibuat seolah-olah nyata ketika data belum tersedia di lingkungan produksi. Data dummy hanya untuk tahap pengembangan dan wajib dihapus sebelum rilis.
 17. Seluruh aturan akses dan transaksi penting harus divalidasi oleh backend.
 18. Warna website ditetapkan biru dan putih; pengguna hanya memilih mode terang atau gelap.
-19. Skin maskot bersifat kosmetik dan tidak memengaruhi XP, rank, maupun leaderboard.
-20. Emblem rank berupa tameng dan terpisah dari skin; maskot tidak digunakan sebagai emblem rank.
-21. Pengguna Basic mendapat skin Basic Cat; skin bertema diperoleh melalui membership Pro atau Premium.
-22. Skin tidak boleh memakai kombinasi warna identitas rank.
+19. Avatar dan tema banner bersifat kosmetik dan tidak memengaruhi XP, rank, maupun leaderboard.
+20. Emblem rank berupa tameng dan terpisah dari avatar; maskot dan avatar tidak digunakan sebagai emblem rank.
+21. Pengguna Basic memakai avatar dan tema gratis; avatar dan tema berbayar diperoleh melalui membership Pro atau Premium.
+22. Avatar dan tema tidak boleh memakai kombinasi warna identitas rank.
+23. Rank tidak memiliki level maupun sub-tingkat.
+24. Achievement hanya ditampilkan di profil dan tidak memberikan XP.
 
 ---
 
@@ -1323,8 +1391,7 @@ Pengembangan harus dilakukan secara bertahap agar perubahan tidak merusak fitur 
 - Detail benefit.
 - Pembelian paket.
 - Aktivasi entitlement.
-- Katalog skin, koleksi skin di profil, dan pemilihan skin aktif.
-- Avatar maskot dan tema Welcome Banner per skin.
+- Katalog avatar dan tema banner, koleksi di tab Kustomisasi profil, dan pemilihan item aktif.
 - Kredit produk.
 - Alur klaim eBook.
 - Alur klaim project.
@@ -1334,6 +1401,8 @@ Pengembangan harus dilakukan secara bertahap agar perubahan tidak merusak fitur 
 **Output:** Sistem membership dengan akses dan benefit yang transparan dan persisten.
 
 ## Phase 7 — Career dan Pengembangan Lanjutan
+- Melihat profil pengguna lain dari leaderboard.
+- Ruang chat komunitas.
 - Konten karier.
 - Panduan portofolio.
 - Persiapan wawancara.
@@ -1407,15 +1476,18 @@ Pengembangan harus dilakukan secara bertahap agar perubahan tidak merusak fitur 
 - Identitas visual rank tetap konsisten.
 - Pengaturan tampilan tidak mengubah progress, XP, atau entitlement.
 
-## Maskot dan Skin
-- Welcome Banner menampilkan karakter maskot dan latar belakang sesuai skin aktif pengguna.
-- Teks banner tetap terbaca pada semua skin, di mode terang maupun gelap.
-- Bagian website di luar Welcome Banner tetap biru dan putih apa pun skinnya.
-- Pengguna gratis hanya dapat memilih Basic Cat.
-- Pemilik Pro dan Premium dapat memilih skin sesuai paket.
-- Emblem tameng rank di dashboard, profil, dan leaderboard tidak berubah karena skin.
-- Avatar pengguna di header, profil, dan leaderboard menampilkan maskot dengan skin aktif.
-- Jika skin aktif tidak valid, tampilan kembali ke Basic Cat.
+## Avatar, Tema, Profil, dan Achievement
+- Welcome Banner dan banner profil menampilkan avatar dan tema aktif pengguna.
+- Teks banner tetap terbaca pada semua tema, di mode terang maupun gelap.
+- Bagian website di luar banner tetap mengikuti brand guideline apa pun temanya.
+- Pengguna Basic hanya dapat memilih avatar dan tema gratis.
+- Pemilik Pro dan Premium dapat memilih avatar dan tema sesuai paket.
+- Emblem tameng rank tidak berubah karena avatar atau tema.
+- Avatar pengguna di header, profil, dan leaderboard menampilkan avatar aktif.
+- Jika avatar atau tema aktif tidak valid, tampilan kembali ke bawaan gratis.
+- Profil memiliki 4 tab: Ringkasan, Aktivitas, Pencapaian, dan Kustomisasi.
+- Tab Kustomisasi hanya terlihat oleh pemilik profil.
+- Achievement hanya muncul di profil dan tidak menambah XP.
 
 ---
 
@@ -1436,23 +1508,24 @@ Hal berikut harus diputuskan sebelum implementasi fitur terkait mencapai tahap p
 ## Membership
 - Harga final Pro dan Premium.
 - Daftar course gratis dan premium.
-- Daftar skin per paket.
+- Daftar avatar dan tema per paket.
 - Masa berlaku dan ketentuan penggunaan kredit.
 - Kebijakan akses untuk course premium baru dan produk yang dihentikan.
 - Kebijakan harga upgrade dari Pro ke Premium.
-- Apakah paket Lifetime mencakup skin yang dirilis setelah pembelian.
+- Apakah paket Lifetime mencakup avatar dan tema yang dirilis setelah pembelian.
 - Daftar produk yang memenuhi syarat klaim.
 - Kebijakan diskon pemilik paket sebelumnya.
 - Ketentuan refund.
 - Definisi lisensi produk dan benefit Lifetime.
 
-## Maskot dan Skin
-- Nama maskot.
+## Maskot, Avatar, Tema, dan Achievement
+- Nama maskot resmi.
 - Varian ringkas emblem untuk ukuran kecil.
-- Nama dan konsep final 4 skin bertema pada rilis awal.
-- Apakah skin dapat dibeli secara individual di luar membership.
-- Apakah skin baru dirilis secara berkala.
-- Detail animasi setiap skin.
+- Daftar 5 avatar dan 5 tema rilis awal, beserta komposisi gratis dan berbayar.
+- Jenis kucing yang tersedia sebagai avatar.
+- Apakah avatar atau tema dapat dibeli secara individual di luar membership.
+- Apakah avatar dan tema baru dirilis secara berkala.
+- Daftar final achievement.
 - Pembuat aset ilustrasi dan format file final.
 
 ## Pembayaran dan Operasional
@@ -1471,9 +1544,23 @@ Hal berikut harus diputuskan sebelum implementasi fitur terkait mencapai tahap p
 
 ---
 
-# 13. Prinsip Pengembangan dengan Codex
+# 13. Peran dan Prinsip Pengembangan
 
-Codex harus memperlakukan dokumen ini sebagai acuan kebutuhan produk, bukan izin untuk mengubah seluruh aplikasi sekaligus.
+## 13.1 Peran
+| Peran | Pelaksana | Tanggung jawab |
+|---|---|---|
+| Pemilik produk dan pendiri | Sahril Rahmatulloh | Keputusan akhir produk dan bisnis |
+| Product Owner | Claude (diskusi produk) | Menyusun dan menjaga PRD serta kurikulum, menerjemahkan keputusan menjadi kebutuhan dan prompt pengembangan |
+| UI/UX | ChatGPT (diskusi desain) | Mengeksplorasi konsep visual dan mockup |
+| Programmer | Claude Code di VS Code | Mengimplementasikan kebutuhan sesuai PRD |
+
+## 13.2 Status mockup desain
+- Mockup dan konsep desain adalah bahan eksplorasi, **bukan kebutuhan produk**.
+- Elemen di mockup hanya diimplementasikan setelah dimasukkan ke PRD atau disebutkan secara eksplisit dalam tugas pengembangan.
+- Jika mockup bertentangan dengan PRD, PRD yang berlaku.
+
+## 13.3 Prinsip pengembangan
+Agen pemrograman harus memperlakukan dokumen ini sebagai acuan kebutuhan produk, bukan izin untuk mengubah seluruh aplikasi sekaligus.
 
 Sebelum mengimplementasikan fitur:
 
