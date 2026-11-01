@@ -39,7 +39,8 @@ export const ROLE_HOME: Record<UserRole, string> = {
   admin: "/admin",
 };
 
-// Menu sidebar per role. Menu tanpa href ditampilkan sebagai "Segera hadir".
+// Menu sidebar per role. Menu tanpa href atau dengan comingSoon ditampilkan
+// sebagai "Segera hadir" (lihat data/comingSoonFeatures.ts).
 export const NAVIGATION: Record<UserRole, NavItem[]> = {
   user: [
     { label: "Dashboard", href: "/", icon: LayoutDashboard },
@@ -47,10 +48,10 @@ export const NAVIGATION: Record<UserRole, NavItem[]> = {
     { label: "Roadmap", href: "/roadmap", icon: Map },
     { label: "Playground", href: "/playground", icon: FlaskConical },
     { label: "Leaderboard", href: "/leaderboard", icon: Trophy },
-    { label: "Blog", href: "/blog", icon: Newspaper },
-    { label: "eBook", href: "/ebooks", icon: Library },
-    { label: "Project", href: "/projects", icon: FolderKanban },
-    { label: "Karier", href: "/career", icon: Briefcase },
+    { label: "Blog", href: "/blog", icon: Newspaper, comingSoon: true },
+    { label: "eBook", href: "/ebooks", icon: Library, comingSoon: true },
+    { label: "Project", href: "/projects", icon: FolderKanban, comingSoon: true },
+    { label: "Karier", href: "/career", icon: Briefcase, comingSoon: true },
     { label: "Premium", href: "/premium", icon: Crown },
   ],
   creator: [
