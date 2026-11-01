@@ -8,35 +8,93 @@ import {
   BriefcaseBusiness,
 } from "lucide-react";
 
+// Titik pemberhentian di peta. x/y memakai koordinat viewBox SVG (520 x 260);
+// titik "atas" menaruh label di atas lingkaran agar label tidak bertumpuk.
 const steps = [
-  {
-    label: "Fundamental",
-    icon: BookOpen,
-  },
-  {
-    label: "Programming",
-    icon: Code2,
-  },
-  {
-    label: "Automation",
-    icon: Settings,
-  },
-  {
-    label: "Project",
-    icon: FolderKanban,
-  },
-  {
-    label: "Career Ready",
-    icon: BriefcaseBusiness,
-  },
+  { label: "Fundamental", icon: BookOpen, x: 45, y: 190, labelAbove: false },
+  { label: "Programming", icon: Code2, x: 150, y: 80, labelAbove: true },
+  { label: "Automation", icon: Settings, x: 260, y: 180, labelAbove: false },
+  { label: "Project", icon: FolderKanban, x: 370, y: 75, labelAbove: true },
+  { label: "Career Ready", icon: BriefcaseBusiness, x: 475, y: 170, labelAbove: false },
 ];
+
+const TRAIL =
+  "M45 190 C 95 190, 100 80, 150 80 S 210 180, 260 180 S 320 75, 370 75 S 425 170, 475 170";
+
+function RoadmapTrailMap() {
+  return (
+    <div className="relative mx-auto aspect-[2/1] w-full max-w-xl">
+      <svg
+        viewBox="0 0 520 260"
+        className="absolute inset-0 h-full w-full"
+        aria-hidden="true"
+      >
+        <defs>
+          <pattern id="roadmap-map-dots" width="20" height="20" patternUnits="userSpaceOnUse">
+            <circle cx="2" cy="2" r="1.2" className="fill-border" />
+          </pattern>
+        </defs>
+        <rect width="520" height="260" rx="20" fill="url(#roadmap-map-dots)" />
+        {/* Badan jalan, lalu marka putus-putus di tengahnya. */}
+        <path
+          d={TRAIL}
+          fill="none"
+          strokeWidth="16"
+          strokeLinecap="round"
+          className="stroke-primary/10"
+        />
+        <path
+          d={TRAIL}
+          fill="none"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          strokeDasharray="2 9"
+          className="stroke-primary/60"
+        />
+      </svg>
+
+      <ol className="absolute inset-0">
+        {steps.map((step, index) => {
+          const Icon = step.icon;
+          const isLast = index === steps.length - 1;
+
+          return (
+            <li
+              key={step.label}
+              className="absolute -translate-x-1/2 -translate-y-1/2"
+              style={{ left: `${(step.x / 520) * 100}%`, top: `${(step.y / 260) * 100}%` }}
+            >
+              <span
+                className={`flex h-9 w-9 items-center justify-center rounded-full border-2 shadow-sm sm:h-11 sm:w-11 ${
+                  isLast
+                    ? "border-primary bg-primary text-primary-foreground"
+                    : "border-primary/30 bg-card text-primary"
+                }`}
+              >
+                <Icon className="h-4 w-4 sm:h-5 sm:w-5" aria-hidden="true" />
+              </span>
+              <span
+                className={`absolute left-1/2 -translate-x-1/2 whitespace-nowrap text-[11px] font-semibold sm:text-xs ${
+                  step.labelAbove ? "bottom-full mb-1.5" : "top-full mt-1.5"
+                }`}
+              >
+                <span className="sr-only">Langkah {index + 1}: </span>
+                {step.label}
+              </span>
+            </li>
+          );
+        })}
+      </ol>
+    </div>
+  );
+}
 
 export default function RoadmapCTA() {
   return (
     <section className="overflow-hidden rounded-3xl border border-border bg-card p-6 shadow-sm sm:p-8">
-      <div className="flex flex-col gap-8 lg:flex-row lg:items-center">
+      <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:gap-10">
         {/* Content */}
-        <div className="max-w-md">
+        <div className="max-w-md shrink-0">
           <h2 className="text-xl font-bold text-card-foreground">
             Tidak tahu mulai dari mana?
           </h2>
@@ -55,34 +113,9 @@ export default function RoadmapCTA() {
           </Link>
         </div>
 
-        {/* Roadmap Steps */}
-        <div className="flex-1 overflow-x-auto">
-          <div className="flex min-w-[600px] items-start justify-between">
-            {steps.map((step, index) => {
-              const Icon = step.icon;
-
-              return (
-                <div
-                  key={step.label}
-                  className="flex flex-1 items-start"
-                >
-                  <div className="flex flex-col items-center text-center">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
-                      <Icon className="h-5 w-5 text-primary" />
-                    </div>
-
-                    <span className="mt-3 text-xs font-medium">
-                      {step.label}
-                    </span>
-                  </div>
-
-                  {index < steps.length - 1 && (
-                    <div className="mt-6 h-px flex-1 bg-border" />
-                  )}
-                </div>
-              );
-            })}
-          </div>
+        {/* Peta jalur roadmap */}
+        <div className="min-w-0 flex-1">
+          <RoadmapTrailMap />
         </div>
       </div>
     </section>
