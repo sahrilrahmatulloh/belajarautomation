@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
+import EnvironmentBadge from "@/components/common/EnvironmentBadge";
 import SplashScreen from "@/components/common/SplashScreen";
 import { SPLASH_INIT_SCRIPT } from "@/lib/splash";
 import ThemeProvider from "@/components/providers/ThemeProvider";
@@ -28,6 +29,7 @@ export default function RootLayout({
             {children}
           </TooltipProvider>
         </ThemeProvider>
+        <EnvironmentBadge />
       </body>
     </html>
   );

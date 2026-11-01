@@ -20,6 +20,31 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Lingkungan dan Alur Rilis
+
+Mengacu pada `docs/PRD.md` Bagian 13.3.
+
+| Lingkungan | Branch | `NEXT_PUBLIC_APP_ENV` | Fungsi |
+|---|---|---|---|
+| DEV | `develop` | `dev` | Tempat menggabungkan hasil pengembangan; boleh berisi data dummy dan alat bantu pengembangan |
+| UAT | `uat` | `uat` | Pengujian penerimaan oleh pemilik produk (PRD Bagian 11) |
+| Production | `main` | `production` | Website untuk pengguna; **belum dipakai** sampai backend, autentikasi, dan pembayaran siap serta data dummy dihapus |
+
+Aturan alur:
+
+- Branch fitur dibuat dari `develop`, dan pull request hanya ditujukan ke `develop`.
+- Perubahan naik berurutan: `develop` → `uat` → `main`. Tidak boleh melompati tahap.
+- Tidak ada perbaikan langsung di `uat` maupun `main`; semua perbaikan dimulai dari `develop`.
+- Hanya pemilik produk yang menaikkan perubahan ke `uat` dan `main`.
+- Selama domain belum tersedia, setiap lingkungan memakai alamat bawaan Vercel.
+
+Pengaturan lingkungan:
+
+- Salin `.env.example` menjadi `.env.local`. Jika `NEXT_PUBLIC_APP_ENV` kosong, aplikasi memakai `dev`.
+- Fitur bantu pengembangan (mis. badge "Draf" pada course) hanya aktif di `dev`; cek lewat `isDev` dari `lib/env.ts`, bukan `NODE_ENV`.
+- Label lingkungan tampil di pojok kiri bawah: "DEV" (oranye) dan "UAT" (ungu). Tidak tampil di `production`.
+- Di Vercel, isi `NEXT_PUBLIC_APP_ENV` per lingkungan (mis. per branch `develop` dan `uat`). Nilainya disisipkan saat build, jadi perubahan baru berlaku setelah deploy ulang.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
