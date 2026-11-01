@@ -16,13 +16,13 @@ export interface LearningProgressEntry {
 export const DUMMY_LEARNING_PROGRESS: LearningProgressEntry[] = [
   {
     courseSlug: "qa-fundamentals",
-    lastLesson: { slug: "test-case", title: "Test Case" },
+    lastLesson: { slug: "test-case", title: "Membuat Test Case" },
     completedLessons: 8,
     lastOpenedAt: "2026-10-31T19:40:00+07:00",
   },
   {
     courseSlug: "playwright",
-    lastLesson: { slug: "locator", title: "Locator" },
+    lastLesson: { slug: "locator", title: "Memahami Locator" },
     completedLessons: 3,
     lastOpenedAt: "2026-10-29T20:15:00+07:00",
   },
