@@ -1,7 +1,8 @@
 import { Suspense } from "react";
-import { History, Trophy } from "lucide-react";
+import { Trophy } from "lucide-react";
 
 import LearningProgress from "./LearningProgress";
+import ProfileActivity from "./ProfileActivity";
 import ProfileCustomization from "./ProfileCustomization";
 import ProfileHeader from "./ProfileHeader";
 import ProfilePlaceholder from "./ProfilePlaceholder";
@@ -30,13 +31,7 @@ export default function ProfilePage() {
         <ProfileTabs
           panels={{
             ringkasan: summary,
-            aktivitas: (
-              <ProfilePlaceholder
-                icon={History}
-                title="Riwayat aktivitas segera hadir"
-                description="Riwayat per tanggal, filter jenis aktivitas, grafik XP harian, dan heatmap konsistensi belajar akan tampil setelah aktivitas belajar tersimpan."
-              />
-            ),
+            aktivitas: <ProfileActivity />,
             pencapaian: (
               <ProfilePlaceholder
                 icon={Trophy}
