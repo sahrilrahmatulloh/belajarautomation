@@ -56,10 +56,10 @@ export default function CourseComingSoonPage({
             {course.level}
           </span>
 
-          {course.language && (
+          {course.languages.length > 0 && (
             <span className="flex items-center gap-1.5 rounded-full bg-muted px-3 py-1.5 text-xs font-medium">
               <Code2 className="h-3.5 w-3.5" />
-              {course.language}
+              {course.languages.join(", ")}
             </span>
           )}
         </div>

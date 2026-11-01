@@ -5,6 +5,7 @@ import { BookOpen, Clock3, Code2 } from "lucide-react";
 
 import { Course } from "@/types/Course";
 import { Progress } from "@/components/ui/progress";
+import { shouldShowDraftBadge } from "@/lib/courseStatus";
 
 interface CourseCardProps {
   course: Course;
@@ -84,6 +85,15 @@ export default function CourseCard({
           sizes="(min-width: 1536px) 18vw, (min-width: 1280px) 22vw, (min-width: 1024px) 30vw, (min-width: 640px) 50vw, 100vw"
         />
 
+        {shouldShowDraftBadge(course) && (
+          <span
+            title="Isi lesson masih placeholder (hanya tampil saat development)"
+            className="absolute left-3 top-3 rounded-full bg-amber-400 px-2 py-0.5 text-[11px] font-bold text-amber-950 shadow-sm"
+          >
+            Draf
+          </span>
+        )}
+
         {isComingSoon && (
           <span className="absolute right-3 top-3 rounded-full bg-background/90 px-2.5 py-1 text-xs font-semibold text-foreground shadow-sm backdrop-blur-sm">
             Segera hadir
@@ -107,10 +117,10 @@ export default function CourseCard({
         <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-muted-foreground">
           <span className="rounded-full bg-muted px-2.5 py-1">{course.level}</span>
 
-          {course.language && (
+          {course.languages.length > 0 && (
             <span className="flex items-center gap-1">
               <Code2 className="h-3.5 w-3.5" />
-              {course.language}
+              {course.languages.join(", ")}
             </span>
           )}
 

@@ -22,15 +22,21 @@ export type CourseLanguage =
 
 export type CourseAvailability = "available" | "coming-soon";
 
+// ready: seluruh lesson sudah ditulis dan ditinjau.
+// draft: struktur modul ada, tetapi sebagian/seluruh isi lesson masih placeholder.
+// Sebelum rilis, setiap course "available" wajib "ready" (CURRICULUM bagian 1).
+export type CourseContentStatus = "ready" | "draft";
+
 interface CourseBase {
   id: number;
   slug: string;
   title: string;
   description: string;
   category: CourseCategory;
-  // null untuk course konsep yang tidak memakai bahasa pemrograman.
-  language: CourseLanguage | null;
+  // Daftar kosong untuk course konsep yang tidak memakai bahasa pemrograman.
+  languages: CourseLanguage[];
   level: "Beginner" | "Intermediate" | "Advanced";
+  contentStatus: CourseContentStatus;
   // Path sampul di public/; kosong bila belum ada (tampil placeholder).
   cover?: string;
   progress?: number;

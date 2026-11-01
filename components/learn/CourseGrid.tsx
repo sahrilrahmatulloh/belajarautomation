@@ -50,7 +50,7 @@ export default function CourseGrid() {
         (course) =>
           matchesKeyword(search, course.title, course.description) &&
           (!category || toFilterSlug(course.category) === category) &&
-          (!language || toFilterSlug(course.language ?? "") === language) &&
+          (!language || course.languages.some((item) => toFilterSlug(item) === language)) &&
           (!level || course.level.toLowerCase() === level)
       ),
     [search, category, language, level]
