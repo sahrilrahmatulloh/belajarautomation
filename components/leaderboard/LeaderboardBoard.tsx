@@ -1,10 +1,12 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { Crown, EyeOff, Globe2, TrendingUp } from "lucide-react";
 
 import RankEmblem from "@/components/common/RankEmblem";
 import { DUMMY_ACCOUNT } from "@/data/dummy/account";
+import { ACTIVE_AVATAR } from "@/data/dummy/appearance";
 import { getRankProgress } from "@/data/ranks";
 import { formatNumber } from "@/lib/format";
 import { getLeaderboard, LEADERBOARD_LIMIT, LeaderboardTab } from "@/lib/leaderboard";
@@ -84,11 +86,20 @@ export default function LeaderboardBoard() {
           className="flex flex-wrap items-center gap-4 rounded-2xl border bg-card p-4 sm:p-5"
           style={{ borderColor: `${rank.color}80` }}
         >
-          <div>
-            <p className="text-sm text-muted-foreground">
-              Posisi kamu {tab === "global" ? "secara global" : `di ${rank.name}`}
-            </p>
-            <p className="mt-0.5 text-3xl font-bold tabular-nums">#{currentUser.position}</p>
+          <div className="flex items-center gap-3">
+            <Image
+              src={ACTIVE_AVATAR.image}
+              alt=""
+              width={56}
+              height={56}
+              className="h-14 w-14 shrink-0 rounded-full bg-muted"
+            />
+            <div>
+              <p className="text-sm text-muted-foreground">
+                Posisi kamu {tab === "global" ? "secara global" : `di ${rank.name}`}
+              </p>
+              <p className="mt-0.5 text-3xl font-bold tabular-nums">#{currentUser.position}</p>
+            </div>
           </div>
 
           {/* Lebar minimum agar turun ke baris baru di layar sempit, tidak terhimpit. */}

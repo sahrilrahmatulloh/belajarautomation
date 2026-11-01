@@ -22,7 +22,7 @@ import {
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ROLE_LABELS } from "@/data/navigation";
-import { DEFAULT_AVATAR } from "@/data/profile";
+import { ACTIVE_AVATAR } from "@/data/dummy/appearance";
 import { sessionActions, useSession } from "@/lib/session";
 
 export default function ProfileDropdown() {
@@ -44,7 +44,7 @@ export default function ProfileDropdown() {
         aria-label="Buka menu profil"
       >
         <Avatar className="h-8 w-8 sm:h-10 sm:w-10">
-          <AvatarImage src={DEFAULT_AVATAR} alt="Foto profil" />
+          <AvatarImage src={ACTIVE_AVATAR.image} alt="Foto profil" />
           <AvatarFallback>
             BA
           </AvatarFallback>

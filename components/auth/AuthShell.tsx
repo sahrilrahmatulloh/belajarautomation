@@ -1,6 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { DEFAULT_THEME_ID, getTheme } from "@/data/themes";
+
 interface AuthShellProps {
   title: string;
   description: string;
@@ -15,15 +17,15 @@ export default function AuthShell({
 }: AuthShellProps) {
   return (
     <div className="grid min-h-dvh bg-background text-foreground lg:grid-cols-2">
-      {/* Panel ilustrasi (desktop) */}
+      {/* Panel ilustrasi (desktop), memakai tema banner bawaan */}
       <aside className="relative hidden overflow-hidden lg:block">
         <Image
-          src="/banner/basic-banner.png"
+          src={getTheme(DEFAULT_THEME_ID)!.image}
           alt=""
           fill
           priority
           sizes="50vw"
-          className="object-cover"
+          className="object-cover object-[78%_50%]"
         />
         <div
           aria-hidden="true"

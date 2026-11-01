@@ -1,4 +1,5 @@
 import { DUMMY_ACCOUNT } from "@/data/dummy/account";
+import { ACTIVE_AVATAR } from "@/data/dummy/appearance";
 import { DUMMY_LEADERBOARD_USERS } from "@/data/dummy/leaderboard";
 import { getRank, Rank } from "@/data/ranks";
 
@@ -10,6 +11,7 @@ export const LEADERBOARD_LIMIT = 50;
 export interface LeaderboardRow {
   id: string;
   displayName: string;
+  avatarId: string;
   position: number;
   totalXp: number;
   rank: Rank;
@@ -19,6 +21,7 @@ export interface LeaderboardRow {
 interface Participant {
   id: string;
   displayName: string;
+  avatarId: string;
   totalXp: number;
 }
 
@@ -41,7 +44,12 @@ function toRows(participants: Participant[]): LeaderboardRow[] {
 // dihitung agar ia bisa melihatnya.
 export function getLeaderboard(
   tab: LeaderboardTab,
-  currentUser = { id: CURRENT_USER_ID, displayName: DUMMY_ACCOUNT.name, totalXp: DUMMY_ACCOUNT.xp },
+  currentUser: Participant = {
+    id: CURRENT_USER_ID,
+    displayName: DUMMY_ACCOUNT.name,
+    avatarId: ACTIVE_AVATAR.id,
+    totalXp: DUMMY_ACCOUNT.xp,
+  },
   showCurrentUser = DUMMY_ACCOUNT.showOnLeaderboard
 ) {
   const currentRank = getRank(currentUser.totalXp);

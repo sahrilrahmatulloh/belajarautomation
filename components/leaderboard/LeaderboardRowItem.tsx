@@ -1,6 +1,7 @@
 import Image from "next/image";
 
 import RankEmblem from "@/components/common/RankEmblem";
+import { getAvatar } from "@/data/avatars";
 import { DEFAULT_AVATAR } from "@/data/profile";
 import { formatNumber } from "@/lib/format";
 import { LeaderboardRow } from "@/lib/leaderboard";
@@ -27,9 +28,9 @@ export default function LeaderboardRowItem({ row }: { row: LeaderboardRow }) {
         {row.position}
       </span>
 
-      {/* Avatar kucing pengguna; saat ini semua memakai avatar bawaan. */}
+      {/* Avatar kucing aktif pengguna (PRD FR-06). */}
       <Image
-        src={DEFAULT_AVATAR}
+        src={getAvatar(row.avatarId)?.image ?? DEFAULT_AVATAR}
         alt=""
         width={36}
         height={36}

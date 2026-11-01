@@ -1,32 +1,48 @@
 import Image from "next/image";
 
+import { ACTIVE_AVATAR, ACTIVE_THEME } from "@/data/dummy/appearance";
+
+// Welcome Banner (PRD FR-01 bagian B): latar mengikuti tema banner aktif dan
+// avatar aktif tampil besar di kanan bawah, kecuali bila ilustrasi tema sudah
+// memuat karakter kucing sendiri.
 export default function WelcomeBanner() {
   return (
-    <section className="relative isolate flex flex-col overflow-hidden rounded-xl border border-border bg-card text-foreground shadow-sm sm:flex-row sm:items-center sm:min-h-48 lg:min-h-56">
-      {/* Ilustrasi: di atas teks pada mobile, di sisi kanan mulai tablet */}
-      <div className="relative h-40 w-full sm:absolute sm:inset-y-0 sm:right-0 sm:h-auto sm:w-[40%] lg:w-[44%]">
+    <section className="relative isolate flex flex-col overflow-hidden rounded-xl border border-border bg-card text-foreground shadow-sm sm:min-h-48 sm:flex-row sm:items-center lg:min-h-56">
+      {/* Latar tema: strip di atas teks pada mobile, memenuhi banner mulai tablet */}
+      <div className="relative -z-20 h-36 w-full sm:absolute sm:inset-0 sm:h-auto">
         <Image
-          src="/banner/basic-banner.png"
+          src={ACTIVE_THEME.image}
           alt=""
           fill
           priority
-          sizes="(min-width: 1024px) 30vw, (min-width: 640px) 40vw, 100vw"
-          className="object-cover object-[50%_40%]"
-        />
-
-        {/* Gradasi tepi: bawah pada mobile, kiri mulai tablet */}
-        <div
-          aria-hidden="true"
-          className="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-card to-transparent sm:hidden"
-        />
-        <div
-          aria-hidden="true"
-          className="absolute inset-y-0 left-0 hidden w-1/2 bg-gradient-to-r from-card to-transparent sm:block"
+          sizes="(min-width: 1024px) 75vw, 100vw"
+          className="object-cover object-[75%_50%]"
         />
       </div>
 
-      {/* Kolom teks dibatasi agar tidak menimpa ilustrasi; di tengah secara vertikal mulai tablet */}
-      <div className="relative p-5 sm:max-w-[60%] sm:p-6 lg:max-w-[56%]">
+      {/* Gradasi memakai warna kartu agar teks terbaca di mode terang dan gelap:
+          dari bawah pada mobile, dari kiri mulai tablet. */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-x-0 top-24 -z-10 h-12 bg-gradient-to-t from-card to-transparent sm:hidden"
+      />
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 -z-10 hidden bg-gradient-to-r from-card from-20% via-card/80 via-45% to-transparent to-75% sm:block"
+      />
+
+      {!ACTIVE_THEME.hasCharacter && (
+        <Image
+          src={ACTIVE_AVATAR.image}
+          alt=""
+          width={192}
+          height={192}
+          className="absolute bottom-3 right-4 -z-10 hidden h-32 w-32 drop-shadow-lg sm:block lg:bottom-4 lg:right-8 lg:h-44 lg:w-44"
+        />
+      )}
+
+      {/* Struktur teks sama di semua tema */}
+      <div className="relative px-5 pb-5 sm:max-w-[60%] sm:p-6 lg:max-w-[52%]">
         <p className="text-xs font-semibold text-brand-blue sm:text-sm">
           Belajar · Practice · Build · Grow
         </p>
