@@ -75,6 +75,7 @@ if (entries.length < 30 || entries.length > 40) {
 let xp = 0;
 const lessonsDone = new Map();
 const seen = new Set();
+const passedChallenges = new Set();
 
 entries.forEach((entry, index) => {
   const previous = entries[index - 1];
@@ -113,12 +114,15 @@ entries.forEach((entry, index) => {
     }
     xp += XP.XP_PER_COURSE_COMPLETION;
   } else if (entry.kind === "quiz") {
-    const [courseSlug, title] = entry.strings;
+    const [courseSlug, title, slug] = entry.strings;
     if (courses.get(courseSlug)?.title !== title) problems.push(`${label(entry)}: judul course tidak cocok`);
+    if (!challenges.has(slug)) problems.push(`${label(entry)}: latihan kuis tidak ada`);
+    passedChallenges.add(slug);
     xp += XP.XP_PER_QUIZ;
   } else if (entry.kind === "challenge") {
     const [slug, title] = entry.strings;
     if (challenges.get(slug) !== title) problems.push(`${label(entry)}: judul seharusnya "${challenges.get(slug)}"`);
+    passedChallenges.add(slug);
     xp += XP.XP_PER_CHALLENGE;
   } else if (entry.kind === "achievement") {
     const [id, name] = entry.strings;
@@ -156,6 +160,18 @@ for (const courseSlug of lessonsDone.keys()) {
   if (!progress.some(([, slug]) => slug === courseSlug)) {
     problems.push(`${courseSlug}: ada di aktivitas tetapi tidak ada di riwayat belajar`);
   }
+}
+
+// Skor terakhir: latihannya harus ada, dan yang lulus di riwayat harus punya skor.
+const scores = new Map(
+  [...read("data/dummy/challengeAttempts.ts").matchAll(/^\s*"([^"]+)":\s*(\d+),/gm)].map(([, slug, score]) => [slug, Number(score)])
+);
+for (const [slug, score] of scores) {
+  if (!challenges.has(slug)) problems.push(`skor ${slug}: latihan tidak ada`);
+  if (score > 100) problems.push(`skor ${slug}: lebih dari 100`);
+}
+for (const slug of passedChallenges) {
+  if (!scores.has(slug)) problems.push(`${slug}: lulus di riwayat tetapi tidak punya skor terakhir`);
 }
 
 if (problems.length > 0) {

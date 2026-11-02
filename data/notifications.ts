@@ -13,9 +13,9 @@ export const NOTIFICATIONS: Notification[] = [
   },
   {
     id: 2,
-    title: "Challenge baru di Playground",
+    title: "Latihan baru di Playground",
     description:
-      "Challenge API Response Validation sekarang bisa dicoba di Playground.",
+      "Kuis Dasar Web & API sekarang bisa dicoba di Playground.",
     type: "playground",
     time: "2 jam lalu",
     read: false,

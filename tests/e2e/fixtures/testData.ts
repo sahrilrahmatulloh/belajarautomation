@@ -27,17 +27,6 @@ export const OWN_USERNAME = "sobatqa";
 export const PUBLIC_USER = { username: "rina-kartika-1", displayName: "Rina Kartika" };
 export const PRIVATE_USERNAME = "intan-saputra-9";
 
-export const CHALLENGE_ANSWERS = {
-  "playwright-locator": 'page.getByRole("button", { name: "Login" })',
-  "login-test-case": "dashboard",
-  "find-checkout-bug": "shipping",
-  "api-response-validation": "200",
-  "playwright-login-test": "dashboard",
-  "ai-test-generation": "scenario",
-} as const;
-
-export const WRONG_CHALLENGE_ANSWER = "jawaban yang pasti salah";
-
 export const AVAILABLE_COURSE_SLUGS = [
   "qa-fundamentals",
   "dasar-web-api",
@@ -48,3 +37,70 @@ export const AVAILABLE_COURSE_SLUGS = [
   "typescript",
   "playwright",
 ];
+
+// Kunci jawaban untuk test, ditulis terpisah dari data/challengeDetails.ts.
+// Latihan di sini belum lulus di riwayat akun demo, kecuali quiz.alreadyPassed.
+export const CHALLENGE_KEYS = {
+  quiz: {
+    slug: "kuis-dasar-web-api",
+    title: "Kuis Dasar Web & API",
+    courseSlug: "dasar-web-api",
+    answers: [1, 2, 0, 3, 1, 2, 0, 3],
+    firstQuestion: "Pada arsitektur client-server, apa peran client?",
+    firstCorrectOption: "Mengirim request dan menampilkan response dari server",
+    firstExplanation: "Client, misalnya browser, mengirim request ke server",
+    alreadyPassed: {
+      slug: "kuis-qa-fundamental",
+      answers: [1, 0, 2, 3, 1, 0, 2, 3, 1, 0],
+    },
+  },
+  bugHunt: {
+    slug: "bug-hunt-form-login",
+    bugs: ["Tombol Masuk tetap aktif walau email kosong", "Pesan error password mengandung salah ketik"],
+    bugExplanation: "Form seharusnya menolak pengiriman selama email kosong",
+    decoy: "Kolom email tidak memiliki label",
+    decoyExplanation: "Kolom email memiliki label yang terhubung dengan benar",
+  },
+  testCase: {
+    slug: "login-test-case",
+    sampleAnswerStart: "Judul: Login berhasil dengan email dan password yang benar",
+    required: [
+      "Judul test case menjelaskan skenario yang diuji",
+      "Prasyarat menyebutkan akun yang sudah terdaftar",
+      "Langkah ditulis berurutan dan dapat diikuti orang lain",
+      "Skenario positif mengharapkan pengguna masuk ke dashboard",
+    ],
+    optional: ["Ada skenario negatif, misalnya password salah", "Ada skenario kolom email atau password kosong"],
+  },
+  locator: {
+    slug: "locator-form-registrasi",
+    target: "Kotak centang persetujuan syarat dan ketentuan.",
+    css: 'input[name="syarat"]',
+    xpath: '//input[@name="syarat"]',
+    wrongSelector: "#registrasi-email",
+    buttonCount: 2,
+  },
+  // visible: teks yang harus ada, agar HTML yang diperiksa memang memuat isi latihan.
+  secretChecks: [
+    {
+      slug: "kuis-dasar-web-api",
+      visible: "Pada arsitektur client-server, apa peran client?",
+      secrets: ["Client, misalnya browser, mengirim request"],
+    },
+    {
+      slug: "bug-hunt-form-login",
+      visible: "Tombol Masuk tetap aktif walau email kosong",
+      secrets: ["Form seharusnya menolak pengiriman", "Bukan bug."],
+    },
+    {
+      slug: "login-test-case",
+      visible: "Pengguna masuk memakai email dan password.",
+      secrets: ["Login gagal dengan password yang salah", "Prasyarat menyebutkan akun"],
+    },
+    {
+      slug: "playwright-locator",
+      visible: "untuk mengirim form login",
+      secrets: [],
+    },
+  ],
+} as const;
