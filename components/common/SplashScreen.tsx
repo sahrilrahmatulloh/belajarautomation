@@ -22,7 +22,7 @@ export default function SplashScreen() {
     >
       <div className="splash-content flex flex-col items-center text-center">
         <Image
-          src="/logo.png"
+          src="/logo.webp"
           alt=""
           width={96}
           height={96}

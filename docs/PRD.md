@@ -1,12 +1,18 @@
 # BELAJARAUTOMATION.COM
 ## Product Requirements Document (PRD)
-**Versi:** 2.2  
+**Versi:** 2.4  
 **Status:** Draft — Acuan Pengembangan Produk  
 **Platform:** Web Application  
 **Target Pengguna:** Pemula hingga praktisi QA, Software Testing, dan Programming
 
+### Perubahan di Versi 2.4
+- Menambahkan test otomatis end-to-end dan quality gate CI (Bagian 13.4).
+
+### Perubahan di Versi 2.3
+- Bagian "Rekomendasi untukmu" dihapus dari dashboard (FR-01).
+
 ### Perubahan di Versi 2.2
-- Menambahkan lingkungan DEV, UAT, dan Production beserta alur rilis (Bagian 13.4).
+- Menambahkan lingkungan DEV, UAT, dan Production beserta alur rilis (Bagian 13.3).
 
 ### Perubahan di Versi 2.1
 - Sistem skin diganti menjadi dua koleksi terpisah: **avatar kucing** (beberapa jenis kucing) dan **tema banner** (FR-12).
@@ -231,11 +237,6 @@ Empat kartu statistik:
 - Menampilkan progress materi.
 - Menyediakan tombol untuk melanjutkan belajar.
 - Dapat menggunakan carousel jika terdapat beberapa materi relevan.
-
-**G. Rekomendasi untukmu**
-- Menampilkan rekomendasi materi.
-- Mendukung kategori seperti Fundamental, Automation, API Testing, Mobile Testing, Performance, dan Security.
-- Menyediakan akses menuju detail materi.
 
 ### Aturan
 - Dashboard harus responsif.
@@ -1578,7 +1579,15 @@ Aturan:
 - Lingkungan ditentukan oleh variabel `NEXT_PUBLIC_APP_ENV` (`dev`, `uat`, `production`). Fitur bantu pengembangan hanya aktif di `dev`, dan label lingkungan tidak tampil di `production`.
 - Selama domain belum tersedia, setiap lingkungan memakai alamat bawaan Vercel.
 
-## 13.4 Prinsip pengembangan
+## 13.4 Test otomatis dan quality gate
+- Repository memiliki test end-to-end menggunakan Playwright untuk alur utama aplikasi.
+- GitHub Actions menjalankan lint, build (termasuk script pengecekan data), dan test end-to-end pada setiap pull request ke `develop` dan setiap push ke `develop`.
+- Pull request hanya boleh di-merge jika seluruh pemeriksaan CI lulus.
+- Setiap fitur baru atau perubahan perilaku wajib menambah atau memperbarui test yang relevan.
+- Test ditulis dengan pola Page Object Model, locator berbasis peran dan label yang dapat diakses, serta tanpa jeda waktu tetap (hard wait).
+- Test otomatis tidak menggantikan UAT; pemilik produk tetap melakukan UAT sebelum perubahan naik ke `main`.
+
+## 13.5 Prinsip pengembangan
 Agen pemrograman harus memperlakukan dokumen ini sebagai acuan kebutuhan produk, bukan izin untuk mengubah seluruh aplikasi sekaligus.
 
 Sebelum mengimplementasikan fitur:
