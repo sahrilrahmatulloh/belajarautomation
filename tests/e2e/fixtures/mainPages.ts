@@ -4,6 +4,7 @@ import { BasePage } from "../pages/BasePage";
 import { DashboardPage } from "../pages/DashboardPage";
 import { LeaderboardPage } from "../pages/LeaderboardPage";
 import { LearnPage } from "../pages/LearnPage";
+import { LessonPage } from "../pages/LessonPage";
 import { PlaygroundPage } from "../pages/PlaygroundPage";
 import { ProfilePage } from "../pages/ProfilePage";
 import { RoadmapPage } from "../pages/RoadmapPage";
@@ -19,6 +20,7 @@ async function open<T extends BasePage>(pageObject: T, content: (pageObject: T) 
 export const MAIN_PAGES: { name: string; open: (page: Page) => Promise<BasePage> }[] = [
   { name: "Dashboard", open: (page) => open(new DashboardPage(page), (p) => p.greeting) },
   { name: "Belajar", open: (page) => open(new LearnPage(page), (p) => p.courseTitles.first()) },
+  { name: "Lesson", open: (page) => open(new LessonPage(page, "playwright", "apa-itu-playwright"), (p) => p.writingNotice) },
   { name: "Roadmap", open: (page) => open(new RoadmapPage(page), (p) => p.cards.first()) },
   { name: "Playground", open: (page) => open(new PlaygroundPage(page), (p) => p.cards.first()) },
   { name: "Leaderboard", open: (page) => open(new LeaderboardPage(page), (p) => p.topList.first()) },

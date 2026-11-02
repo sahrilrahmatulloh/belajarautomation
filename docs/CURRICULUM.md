@@ -69,7 +69,7 @@ Beginner, Intermediate, atau Advanced, sesuai kesiapan yang dibutuhkan untuk mem
 
 | # | Slug | Judul | Kategori | Bahasa | Level | Target lesson | Status | Konten |
 |---|---|---|---|---|---|---|---|---|
-| 1 | qa-fundamentals | QA Fundamental | Fundamental | – | Beginner | 16 | available | ready |
+| 1 | qa-fundamentals | QA Fundamental | Fundamental | – | Beginner | 16 | available | draft |
 | 2 | dasar-web-api | Dasar Web & API untuk QA | Fundamental | – | Beginner | 8 | available | draft |
 | 3 | test-design | Test Design & Test Case | Manual Testing | – | Beginner | 8 | available | draft |
 | 4 | bug-reporting | Bug Reporting & Defect Management | Manual Testing | – | Beginner | 6 | available | draft |
@@ -80,7 +80,7 @@ Beginner, Intermediate, atau Advanced, sesuai kesiapan yang dibutuhkan untuk mem
 | 9 | typescript | TypeScript untuk Tester | Programming | TypeScript | Beginner | 8 | available | draft |
 | 10 | java | Java untuk Tester | Programming | Java | Beginner | 10 | coming-soon | draft |
 | 11 | python | Python untuk Tester | Programming | Python | Beginner | 10 | coming-soon | draft |
-| 12 | playwright | Playwright | Web Automation | TypeScript | Intermediate | 10 | available | ready |
+| 12 | playwright | Playwright | Web Automation | TypeScript | Intermediate | 10 | available | draft |
 | 13 | cypress | Cypress | Web Automation | JavaScript | Intermediate | 8 | coming-soon | draft |
 | 14 | selenium | Selenium WebDriver + TestNG | Web Automation | Java | Intermediate | 10 | coming-soon | draft |
 | 15 | cucumber | BDD dengan Cucumber | Web Automation | Java | Intermediate | 6 | coming-soon | draft |
@@ -95,9 +95,9 @@ Beginner, Intermediate, atau Advanced, sesuai kesiapan yang dibutuhkan untuk mem
 | 24 | dasar-ai-llm | Dasar AI & LLM | AI | – | Beginner | 6 | coming-soon | draft |
 | 25 | ai-for-testing | AI for Testing | AI | – | Intermediate | 8 | coming-soon | draft |
 
-**Ringkasan:** 8 course `available` (2 `ready`, 6 `draft`), 17 course `coming-soon`, total target 206 lesson.
+**Ringkasan:** 8 course `available` (semuanya `draft`), 17 course `coming-soon`, total target 206 lesson.
 
-> Status konten `ready` untuk QA Fundamental dan Playwright perlu diverifikasi: pastikan seluruh lesson benar-benar berisi materi, bukan placeholder. Playwright saat ini memiliki 8 lesson dari target 10.
+> Isi lesson belum ditulis di course mana pun; data lesson baru berisi judul, slug, dan durasi. Halaman lesson menampilkan keterangan "Materi sedang ditulis" sampai isinya tersedia. Playwright saat ini memiliki 8 lesson dari target 10.
 
 ---
 

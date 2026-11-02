@@ -1,0 +1,25 @@
+import { Locator, Page } from "@playwright/test";
+
+import { BasePage } from "./BasePage";
+
+export class LessonPage extends BasePage {
+  readonly title: Locator;
+  readonly writingNotice: Locator;
+  readonly position: Locator;
+  readonly previousLink: Locator;
+  readonly nextLink: Locator;
+  readonly allLessonsLink: Locator;
+
+  constructor(page: Page, courseSlug: string, lessonSlug: string) {
+    super(page, `/learn/${courseSlug}/${lessonSlug}`);
+    // Logo di sidebar juga berupa h1.
+    this.title = page.getByRole("main").getByRole("heading", { level: 1 });
+    this.writingNotice = page.getByRole("heading", { name: "Materi sedang ditulis" });
+    this.position = page.getByText(/^Materi \d+ dari \d+$/);
+
+    const nav = page.getByRole("navigation", { name: "Navigasi lesson" });
+    this.previousLink = nav.getByRole("link", { name: /^Sebelumnya/ });
+    this.nextLink = nav.getByRole("link", { name: /^Berikutnya/ });
+    this.allLessonsLink = nav.getByRole("link", { name: "Lihat semua materi" });
+  }
+}
