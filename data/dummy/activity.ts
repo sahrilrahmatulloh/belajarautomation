@@ -35,12 +35,13 @@ const courseComplete = (courseSlug: string, title: string, daysAgo: number, time
   time,
 });
 
-const quiz = (courseSlug: string, title: string, daysAgo: number, time: string): ActivityEntry => ({
+const quiz = (courseSlug: string, title: string, challengeSlug: string, daysAgo: number, time: string): ActivityEntry => ({
   id: `quiz-${courseSlug}`,
   type: "quiz",
   title,
   xp: XP_PER_QUIZ,
   courseSlug,
+  challengeSlug,
   daysAgo,
   time,
 });
@@ -99,7 +100,7 @@ export const DUMMY_ACTIVITY: ActivityEntry[] = [
 
   lesson("qa-fundamentals", "agile-scrum", "Agile & Scrum untuk QA", 10, "19:35"),
   lesson("qa-fundamentals", "jenis-software-testing", "Jenis-Jenis Software Testing", 9, "20:40"),
-  quiz("qa-fundamentals", "QA Fundamental", 7, "20:25"),
+  quiz("qa-fundamentals", "QA Fundamental", "kuis-qa-fundamental", 7, "20:25"),
   achievement("quiz-master", "Quiz Master", 7, "20:26"),
   // XP melewati 300 pada lesson ini, jadi diikuti kenaikan rank.
   lesson("test-design", "test-scenario-vs-test-case", "Test Scenario vs Test Case", 6, "09:05"),

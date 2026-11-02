@@ -21,6 +21,8 @@ export interface Challenge {
   courseSlug: string;
   difficulty: ChallengeDifficulty;
   duration: string;
+  // Opsional; bila kosong memakai sampul course terkait.
+  cover?: string;
   // Hanya untuk kuis.
   questionCount?: number;
 }

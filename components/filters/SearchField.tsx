@@ -8,9 +8,10 @@ interface SearchFieldProps {
   value: string;
   placeholder: string;
   onChange: (value: string) => void;
+  inputClassName?: string;
 }
 
-export default function SearchField({ value, placeholder, onChange }: SearchFieldProps) {
+export default function SearchField({ value, placeholder, onChange, inputClassName = "" }: SearchFieldProps) {
   return (
     <div className="relative">
       <Search
@@ -23,7 +24,7 @@ export default function SearchField({ value, placeholder, onChange }: SearchFiel
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
-        className="h-11 pl-10"
+        className={`h-11 pl-10 ${inputClassName}`}
       />
     </div>
   );

@@ -1,4 +1,5 @@
 import { DUMMY_ACTIVITY } from "@/data/dummy/activity";
+import { DUMMY_CHALLENGE_SCORES } from "@/data/dummy/challengeAttempts";
 import { ActivityEntry, ActivityType } from "@/types/Activity";
 
 // Statistik akun dihitung dari riwayat aktivitas agar tampilan di dashboard,
@@ -11,9 +12,20 @@ export function getActivityCount(type: ActivityType) {
   return DUMMY_ACTIVITY.filter((entry) => entry.type === type).length;
 }
 
-// Slug challenge yang sudah diselesaikan.
+// Slug latihan yang sudah lulus, termasuk kuis.
 export function getCompletedChallengeSlugs() {
   return new Set(DUMMY_ACTIVITY.flatMap((entry) => entry.challengeSlug ?? []));
+}
+
+// Status dan skor terakhir latihan. Sekali lulus tetap lulus walau diulang.
+export function getChallengeProgress(slug: string) {
+  const lastScore: number | undefined = DUMMY_CHALLENGE_SCORES[slug];
+  const status = getCompletedChallengeSlugs().has(slug)
+    ? ("passed" as const)
+    : lastScore === undefined
+      ? ("not-started" as const)
+      : ("failed" as const);
+  return { status, lastScore };
 }
 
 // Jumlah aktivitas dan XP per hari, dengan kunci jumlah hari sebelum hari ini.
