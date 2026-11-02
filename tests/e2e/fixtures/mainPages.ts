@@ -6,10 +6,12 @@ import { DashboardPage } from "../pages/DashboardPage";
 import { LeaderboardPage } from "../pages/LeaderboardPage";
 import { LearnPage } from "../pages/LearnPage";
 import { LessonPage } from "../pages/LessonPage";
+import { NotificationsPage } from "../pages/NotificationsPage";
 import { PlaygroundPage } from "../pages/PlaygroundPage";
 import { ProfilePage } from "../pages/ProfilePage";
 import { PublicProfilePage } from "../pages/PublicProfilePage";
 import { RoadmapPage } from "../pages/RoadmapPage";
+import { SettingsPage } from "../pages/SettingsPage";
 import { OWN_USERNAME } from "./testData";
 
 // Halaman memuat isinya di browser setelah sesi terbaca, jadi pemeriksaan
@@ -48,4 +50,6 @@ export const MAIN_PAGES: { name: string; open: (page: Page) => Promise<BasePage>
     name: "Profil publik",
     open: (page) => open(new PublicProfilePage(page, OWN_USERNAME), (p) => p.stats),
   },
+  { name: "Notifikasi", open: (page) => open(new NotificationsPage(page), (p) => p.list) },
+  { name: "Pengaturan", open: (page) => open(new SettingsPage(page), (p) => p.notificationSection) },
 ];

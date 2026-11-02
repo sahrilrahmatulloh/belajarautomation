@@ -104,3 +104,46 @@ export const CHALLENGE_KEYS = {
     },
   ],
 } as const;
+
+// Notifikasi akun demo pada jam tetap: 16 November 2026 pukul 12.00 WIB (data/dummy/notifications.ts).
+export const NOTIFICATIONS = {
+  now: "2026-11-16T05:00:00Z",
+  timezone: "Asia/Jakarta",
+  preferencesKey: "belajarautomation-notification-preferences",
+  unreadCount: 10,
+  unreadWithoutContent: 5,
+  entryCount: 11,
+  transactionCount: 3,
+  newestTitle: "Latihan baru tersedia",
+  unavailableTitle: "Materi baru tersedia",
+  announcement: { title: "Jadwal maintenance", bodyPart: "Progres belajarmu tetap aman" },
+  merged: {
+    title: "3 course baru tersedia",
+    body: "Tersedia Playwright, Git & GitHub untuk QA, dan TypeScript untuk Tester.",
+    item: "Git & GitHub untuk QA",
+    href: "/learn/git-github",
+  },
+  targets: [
+    { title: "Latihan baru tersedia", href: "/playground/kuis-playwright" },
+    { title: "Pembayaran tertunda", href: "/membership" },
+    { title: "Membership aktif", href: "/membership" },
+    { title: "Lulus latihan", href: "/playground/playwright-locator" },
+    { title: "Naik rank", href: "/profile" },
+    { title: "Achievement diperoleh", href: "/profile?tab=pencapaian" },
+    { title: "Selamat datang", href: "/learn" },
+  ],
+  times: [
+    { title: "Latihan baru tersedia", time: "5 menit lalu" },
+    { title: "Membership aktif", time: "2 jam lalu" },
+    { title: "Lulus latihan", time: "16 jam lalu" },
+    { title: "3 course baru tersedia", time: "Kemarin, 10.15" },
+    { title: "Materi baru tersedia", time: "13 Nov, 14.22" },
+    { title: "Selamat datang", time: "19 Okt, 19.00" },
+  ],
+  dayHeadings: ["Hari ini", "Kemarin", /13 November 2026/, /10 November 2026/, /9 November 2026/, /19 Oktober 2026/],
+  roles: [
+    { role: "creator", title: "Konten perlu revisi", href: "/creator" },
+    { role: "reviewer", title: "Konten baru di antrean", href: "/reviewer" },
+    { role: "admin", title: "Transaksi tertunda", href: "/admin" },
+  ],
+} as const;

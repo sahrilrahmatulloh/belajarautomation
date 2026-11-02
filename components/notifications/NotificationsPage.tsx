@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Bell, Check, ChevronDown, CircleAlert, X } from "lucide-react";
 
@@ -39,6 +39,13 @@ export default function NotificationsPage() {
   const { mutedGroups } = useNotificationPreferences();
   const { values, setFilters } = useUrlFilters(FILTER_KEYS);
   const [announcement, setAnnouncement] = useState<Notification | null>(null);
+  const unavailableRef = useRef<HTMLDivElement>(null);
+  const showUnavailable = values[UNAVAILABLE_PARAM] === UNAVAILABLE_VALUE;
+
+  // Baris yang diklik bisa jauh di bawah, sedangkan pesannya ada di atas daftar.
+  useEffect(() => {
+    if (showUnavailable) unavailableRef.current?.scrollIntoView({ block: "center" });
+  }, [showUnavailable]);
 
   // Kelompok "Khusus role" hanya untuk pengguna dengan role tersebut, dan kelompok
   // yang dimatikan di pengaturan tidak bisa dipilih.
@@ -94,8 +101,9 @@ export default function NotificationsPage() {
         </div>
       </header>
 
-      {values[UNAVAILABLE_PARAM] === UNAVAILABLE_VALUE && (
+      {showUnavailable && (
         <div
+          ref={unavailableRef}
           role="alert"
           className="flex items-center gap-3 rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-2.5 text-sm font-medium"
         >
