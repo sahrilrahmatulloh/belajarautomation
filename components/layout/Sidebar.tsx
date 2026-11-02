@@ -38,7 +38,7 @@ export default function Sidebar({
           aria-label={collapsed ? "belajarautomation.com" : undefined}
         >
           <Image
-            src="/logo.png"
+            src="/logo.webp"
             alt="belajarautomation.com logo"
             width={36}
             height={36}
