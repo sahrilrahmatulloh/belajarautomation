@@ -19,7 +19,7 @@ export interface ShareCardData {
   achievements: number;
 }
 
-const LOGO_IMAGE = "/logo.png";
+const LOGO_IMAGE = "/logo.webp";
 const CONTENT_LEFT = 64;
 
 function loadImage(src: string) {
