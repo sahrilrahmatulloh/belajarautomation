@@ -55,3 +55,12 @@ export function getDailyActivity(days: number) {
     };
   });
 }
+
+// Slug lesson yang sudah diselesaikan di satu course.
+export function getCompletedLessonSlugs(courseSlug: string) {
+  return new Set(
+    DUMMY_ACTIVITY.flatMap((entry) =>
+      entry.type === "lesson" && entry.courseSlug === courseSlug && entry.lessonSlug ? entry.lessonSlug : []
+    )
+  );
+}
