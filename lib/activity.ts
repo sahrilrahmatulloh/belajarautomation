@@ -11,7 +11,7 @@ export function getActivityCount(type: ActivityType) {
   return DUMMY_ACTIVITY.filter((entry) => entry.type === type).length;
 }
 
-// Slug challenge yang sudah diselesaikan.
+// Slug latihan yang sudah lulus, termasuk kuis.
 export function getCompletedChallengeSlugs() {
   return new Set(DUMMY_ACTIVITY.flatMap((entry) => entry.challengeSlug ?? []));
 }

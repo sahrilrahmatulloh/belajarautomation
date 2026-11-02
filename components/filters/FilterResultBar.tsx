@@ -7,6 +7,8 @@ interface FilterResultBarProps {
   noun: string;
   canReset: boolean;
   onReset: () => void;
+  // Tampil sebagai judul daftar, bukan keterangan kecil.
+  prominent?: boolean;
 }
 
 export default function FilterResultBar({
@@ -14,10 +16,14 @@ export default function FilterResultBar({
   noun,
   canReset,
   onReset,
+  prominent = false,
 }: FilterResultBarProps) {
   return (
     <div className="flex flex-wrap items-center justify-between gap-2">
-      <p aria-live="polite" className="text-sm text-muted-foreground">
+      <p
+        aria-live="polite"
+        className={prominent ? "font-semibold" : "text-sm text-muted-foreground"}
+      >
         <span className="font-semibold text-foreground">{count}</span> {noun}
       </p>
 

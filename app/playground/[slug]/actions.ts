@@ -1,38 +1,128 @@
 "use server";
 
 import { CHALLENGE_DETAILS } from "@/data/challengeDetails";
-import { ChallengeCheckResult } from "@/types/ChallengeDetail";
+import { CHALLENGES } from "@/data/challenges";
+import { canAccessChallengeCourse } from "@/lib/challengeAccess";
+import {
+  BugHuntDetail,
+  BugHuntResult,
+  ChallengeDetail,
+  ChallengeScore,
+  LocatorDetail,
+  LocatorResult,
+  QuizDetail,
+  QuizResult,
+  TestCaseDetail,
+  TestCaseReveal,
+} from "@/types/ChallengeDetail";
 
 const MAX_ANSWER_LENGTH = 5000;
+const MAX_LOCATOR_MATCHES = 1000;
 
-// Hanya memeriksa jawaban. Tidak menyimpan hasil dan tidak memberi XP
-// sampai backend (auth, progress, anti-abuse) tersedia.
-export async function checkChallengeAnswer(
-  slug: string,
-  answer: string
-): Promise<ChallengeCheckResult> {
-  if (typeof slug !== "string" || typeof answer !== "string") {
-    return { status: "failed" };
-  }
+// Mengembalikan null bila latihan tidak ada, jenisnya berbeda, atau tidak bisa diakses.
+function findDetail<T extends ChallengeDetail>(slug: unknown, type: T["type"]) {
+  const challenge = CHALLENGES.find((item) => item.slug === slug);
+  if (!challenge || !canAccessChallengeCourse(challenge.courseSlug)) return null;
+  const detail = CHALLENGE_DETAILS.find((item) => item.slug === slug);
+  return detail?.type === type ? (detail as T) : null;
+}
 
-  const detail = CHALLENGE_DETAILS.find(
-    (item) => item.slug === slug
+const uniqueStrings = (value: unknown) =>
+  Array.isArray(value) ? [...new Set(value.filter((item): item is string => typeof item === "string"))] : [];
+
+export async function submitQuiz(slug: string, answers: number[]): Promise<QuizResult | null> {
+  const detail = findDetail<QuizDetail>(slug, "quiz");
+  if (!detail || !Array.isArray(answers) || answers.length !== detail.questions.length) return null;
+
+  const isValid = detail.questions.every(
+    ({ options }, index) =>
+      Number.isInteger(answers[index]) && answers[index] >= 0 && answers[index] < options.length
   );
+  if (!isValid) return null;
 
-  const normalizedAnswer = answer
-    .slice(0, MAX_ANSWER_LENGTH)
-    .trim()
-    .toLowerCase();
+  const correctCount = detail.questions.filter(
+    ({ correctIndex }, index) => answers[index] === correctIndex
+  ).length;
+  const score = Math.round((correctCount / detail.questions.length) * 100);
 
-  if (!detail || !normalizedAnswer) {
-    return { status: "failed" };
-  }
+  return {
+    score,
+    passed: score >= detail.passingScore,
+    correctCount,
+    passingScore: detail.passingScore,
+    review: detail.questions.map((question, index) => ({
+      question: question.question,
+      options: question.options,
+      userIndex: answers[index],
+      correctIndex: question.correctIndex,
+      explanation: question.explanation,
+    })),
+  };
+}
 
-  const isCorrect = normalizedAnswer.includes(
-    detail.expectedAnswer.toLowerCase()
-  );
+export async function submitBugHunt(slug: string, selectedIds: string[]): Promise<BugHuntResult | null> {
+  const detail = findDetail<BugHuntDetail>(slug, "bug-hunt");
+  if (!detail) return null;
 
-  return isCorrect
-    ? { status: "success", feedback: detail.successFeedback }
-    : { status: "failed" };
+  const selected = new Set(uniqueStrings(selectedIds));
+  const isBug = (id: string) => detail.bugIds.includes(id);
+  const found = detail.findings.filter(({ id }) => isBug(id) && selected.has(id));
+  const missed = detail.findings.filter(({ id }) => isBug(id) && !selected.has(id));
+  const falsePositives = detail.findings.filter(({ id }) => !isBug(id) && selected.has(id));
+
+  return {
+    // Setiap salah tandai mengurangi satu temuan yang benar.
+    score: Math.round((Math.max(found.length - falsePositives.length, 0) / detail.bugIds.length) * 100),
+    passed: missed.length === 0 && falsePositives.length <= detail.maxFalsePositives,
+    found,
+    missed,
+    falsePositives,
+    maxFalsePositives: detail.maxFalsePositives,
+  };
+}
+
+// Contoh jawaban dan checklist baru dikirim setelah pengguna mengirim jawabannya.
+export async function revealTestCase(slug: string, answer: string): Promise<TestCaseReveal | null> {
+  const detail = findDetail<TestCaseDetail>(slug, "test-case");
+  if (!detail || typeof answer !== "string") return null;
+  if (!answer.slice(0, MAX_ANSWER_LENGTH).trim()) return null;
+
+  return { sampleAnswer: detail.sampleAnswer, checklist: detail.checklist };
+}
+
+export async function submitTestCaseCheck(slug: string, checkedIds: string[]): Promise<ChallengeScore | null> {
+  const detail = findDetail<TestCaseDetail>(slug, "test-case");
+  if (!detail) return null;
+
+  const checked = new Set(uniqueStrings(checkedIds));
+  const met = detail.checklist.filter(({ id }) => checked.has(id)).length;
+
+  return {
+    score: Math.round((met / detail.checklist.length) * 100),
+    passed: detail.checklist.every(({ id, required }) => !required || checked.has(id)),
+  };
+}
+
+// matchedIds: nilai data-practice-id tiap elemen yang cocok; string kosong untuk
+// elemen tanpa identitas. Lulus hanya bila elemen target saja yang cocok.
+export async function submitLocator(slug: string, matchedIds: string[]): Promise<LocatorResult | null> {
+  const detail = findDetail<LocatorDetail>(slug, "locator");
+  if (!detail || !Array.isArray(matchedIds) || matchedIds.length > MAX_LOCATOR_MATCHES) return null;
+  if (!matchedIds.every((id) => typeof id === "string")) return null;
+
+  const outcome =
+    matchedIds.length === 0
+      ? "none"
+      : matchedIds.length > 1
+        ? "multiple"
+        : matchedIds[0] === detail.targetElementId
+          ? "target"
+          : "wrong";
+
+  return {
+    score: outcome === "target" ? 100 : 0,
+    passed: outcome === "target",
+    outcome,
+    matchCount: matchedIds.length,
+  };
 }
