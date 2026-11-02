@@ -26,3 +26,12 @@ export function formatNotificationTime(createdAt: string, now = new Date()) {
   const year = date.getFullYear() === now.getFullYear() ? "" : ` ${date.getFullYear()}`;
   return `${date.getDate()} ${MONTHS[date.getMonth()]}${year}, ${clock(date)}`;
 }
+
+// Judul kelompok tanggal: "Hari ini", "Kemarin", lalu tanggal lengkap.
+export function formatNotificationDay(createdAt: string, now = new Date()) {
+  const date = new Date(createdAt);
+  const days = calendarDaysBetween(date, now);
+  if (days <= 0) return "Hari ini";
+  if (days === 1) return "Kemarin";
+  return date.toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" });
+}
