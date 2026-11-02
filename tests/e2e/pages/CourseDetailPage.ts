@@ -16,10 +16,26 @@ export class CourseDetailPage extends BasePage {
     this.preparingNotice = page.getByRole("heading", { name: "Materi sedang disiapkan" });
     this.lessonLinks = page.locator(`a[href^="/learn/${slug}/"]`);
     this.progressText = page.getByText(/^\d+ \/ \d+ materi$/);
-    this.completedMarks = this.lessonLinks.getByRole("img", { name: "Selesai" });
+    // Lesson di modul yang tertutup tetap dihitung.
+    this.completedMarks = this.lessonLinks.getByRole("img", { name: "Selesai", includeHidden: true });
   }
 
   completedMark(lessonTitle: string) {
-    return this.lessonLinks.filter({ hasText: lessonTitle }).getByRole("img", { name: "Selesai" });
+    return this.lessonLinks
+      .filter({ hasText: lessonTitle })
+      .getByRole("img", { name: "Selesai", includeHidden: true });
+  }
+
+  module(title: string) {
+    return this.page.locator("details").filter({ hasText: title });
+  }
+
+  // Judul modul berada di dalam elemen summary yang membuka dan menutup modul.
+  moduleToggle(title: string) {
+    return this.module(title).locator("summary");
+  }
+
+  moduleLessons(title: string) {
+    return this.module(title).getByRole("link");
   }
 }
