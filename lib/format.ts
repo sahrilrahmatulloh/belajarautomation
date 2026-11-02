@@ -19,6 +19,18 @@ export function daysBetween(fromIsoDate: string, toIsoDate: string) {
   return Math.max(0, Math.round(diff / 86_400_000));
 }
 
+// Tanggal lokal N hari sebelum tanggal acuan.
+export function dateFromDaysAgo(today: Date, daysAgo: number) {
+  return new Date(today.getFullYear(), today.getMonth(), today.getDate() - daysAgo);
+}
+
+// Label relatif yang tidak bergantung pada jam, jadi aman dirender di server.
+export function formatDaysAgo(daysAgo: number) {
+  if (daysAgo === 0) return "hari ini";
+  if (daysAgo === 1) return "kemarin";
+  return `${daysAgo} hari lalu`;
+}
+
 export function formatNumber(value: number) {
   return value.toLocaleString("id-ID");
 }

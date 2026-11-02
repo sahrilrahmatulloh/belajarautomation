@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "prebuild": "npm run check:covers && npm run check:roadmaps && npm run check:challenges && npm run check:progress && npm run check:content",
+    "prebuild": "npm run check:covers && npm run check:roadmaps && npm run check:challenges && npm run check:progress && npm run check:activity && npm run check:content",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
@@ -15,6 +15,7 @@
     "check:roadmaps": "node scripts/check-roadmaps.mjs",
     "check:challenges": "node scripts/check-challenges.mjs",
     "check:progress": "node scripts/check-learning-progress.mjs",
+    "check:activity": "node scripts/check-activity.mjs",
     "check:content": "node scripts/check-content.mjs",
     "check:content:release": "node scripts/check-content.mjs --strict",
     "optimize:covers": "node scripts/optimize-covers.mjs",

@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ArrowRight, BookOpen, CalendarClock, Layers3 } from "lucide-react";
 
 import ContentCover from "@/components/common/ContentCover";
-import { formatDate } from "@/lib/format";
+import { formatDaysAgo } from "@/lib/format";
 import { CourseInProgress, getCoursesInProgress } from "@/lib/learningProgress";
 
 function ProgressBar({ percent, label }: { percent: number; label: string }) {
@@ -21,7 +21,7 @@ function ProgressBar({ percent, label }: { percent: number; label: string }) {
 }
 
 function lastOpenedLabel(item: CourseInProgress) {
-  return `Terakhir dibuka ${formatDate(item.lastOpenedAt.slice(0, 10))}`;
+  return `Terakhir dibuka ${formatDaysAgo(item.lastOpenedDaysAgo)}`;
 }
 
 function OtherCourseItem({ item }: { item: CourseInProgress }) {
