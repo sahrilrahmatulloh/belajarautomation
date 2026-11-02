@@ -11,6 +11,21 @@ export function getActivityCount(type: ActivityType) {
   return DUMMY_ACTIVITY.filter((entry) => entry.type === type).length;
 }
 
+// Slug challenge yang sudah diselesaikan.
+export function getCompletedChallengeSlugs() {
+  return new Set(DUMMY_ACTIVITY.flatMap((entry) => entry.challengeSlug ?? []));
+}
+
+// Jumlah aktivitas dan XP per hari, dengan kunci jumlah hari sebelum hari ini.
+export function getActivityByDaysAgo() {
+  const days = new Map<number, { count: number; xp: number }>();
+  for (const entry of DUMMY_ACTIVITY) {
+    const day = days.get(entry.daysAgo) ?? { count: 0, xp: 0 };
+    days.set(entry.daysAgo, { count: day.count + 1, xp: day.xp + entry.xp });
+  }
+  return days;
+}
+
 // Jumlah hari aktif berturut-turut sampai hari ini.
 export function getStreakDays() {
   const activeDays = new Set(DUMMY_ACTIVITY.map((entry) => entry.daysAgo));

@@ -21,7 +21,6 @@ export const CHALLENGES: Challenge[] = [
     type: "challenge",
     difficulty: "Beginner",
     duration: "5 menit",
-    completed: false,
     icon: Crosshair,
   },
   {
@@ -35,7 +34,6 @@ export const CHALLENGES: Challenge[] = [
     type: "challenge",
     difficulty: "Beginner",
     duration: "10 menit",
-    completed: false,
     icon: FileCheck2,
   },
   {
@@ -49,7 +47,6 @@ export const CHALLENGES: Challenge[] = [
     type: "challenge",
     difficulty: "Intermediate",
     duration: "15 menit",
-    completed: false,
     icon: Bug,
   },
   {
@@ -63,7 +60,6 @@ export const CHALLENGES: Challenge[] = [
     type: "challenge",
     difficulty: "Intermediate",
     duration: "15 menit",
-    completed: false,
     icon: Network,
   },
   {
@@ -77,7 +73,6 @@ export const CHALLENGES: Challenge[] = [
     type: "challenge",
     difficulty: "Advanced",
     duration: "20 menit",
-    completed: false,
     icon: Code2,
   },
   {
@@ -91,7 +86,6 @@ export const CHALLENGES: Challenge[] = [
     type: "challenge",
     difficulty: "Intermediate",
     duration: "15 menit",
-    completed: false,
     icon: Sparkles,
   },
 ];
