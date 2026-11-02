@@ -22,8 +22,10 @@ import ChallengeFilters from "./ChallengeFilters";
 const FILTER_KEYS = ["q", "kategori", "level", "jenis"] as const;
 
 const TYPE_LABELS: Record<ChallengeType, { value: string; label: string }> = {
-  challenge: { value: "challenge", label: "Challenge" },
-  "multiple-choice": { value: "pilihan-ganda", label: "Pilihan Ganda" },
+  quiz: { value: "kuis", label: "Kuis" },
+  "bug-hunt": { value: "bug-hunt", label: "Bug Hunt" },
+  "test-case": { value: "test-case", label: "Test Case Writing" },
+  locator: { value: "locator", label: "Locator Challenge" },
 };
 
 // Hanya kategori yang punya challenge, mengikuti urutan Learning Center.
@@ -99,7 +101,7 @@ export default function ChallengeGrid() {
       {filteredChallenges.length > 0 ? (
         <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
           {filteredChallenges.map((challenge) => (
-            <ChallengeCard key={challenge.id} challenge={challenge} />
+            <ChallengeCard key={challenge.slug} challenge={challenge} />
           ))}
         </div>
       ) : (

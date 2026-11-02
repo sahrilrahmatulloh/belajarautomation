@@ -1,5 +1,3 @@
-import { LucideIcon } from "lucide-react";
-
 import { CourseCategory } from "./Course";
 
 export type ChallengeDifficulty =
@@ -7,20 +5,22 @@ export type ChallengeDifficulty =
   | "Intermediate"
   | "Advanced";
 
-// "multiple-choice" disiapkan untuk soal pilihan ganda (belum ada datanya).
-export type ChallengeType = "challenge" | "multiple-choice";
+// Empat jenis latihan Playground (PRD FR-04).
+export type ChallengeType = "quiz" | "bug-hunt" | "test-case" | "locator";
 
+// Data publik yang tampil di daftar latihan. Isi latihan dan kunci jawaban ada di
+// data/challengeDetails.ts dan hanya boleh dibaca dari kode server.
 export interface Challenge {
-  id: number;
   slug: string;
   title: string;
   description: string;
-  // Kategori yang sama dengan Learning Center.
+  type: ChallengeType;
+  // Kategori course terkait, sama dengan Learning Center.
   category: CourseCategory;
   // Course terkait di katalog (data/courses.ts).
   courseSlug: string;
-  type: ChallengeType;
   difficulty: ChallengeDifficulty;
   duration: string;
-  icon: LucideIcon;
+  // Hanya untuk kuis.
+  questionCount?: number;
 }

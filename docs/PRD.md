@@ -1,9 +1,13 @@
 # BELAJARAUTOMATION.COM
 ## Product Requirements Document (PRD)
-**Versi:** 2.4  
+**Versi:** 2.5  
 **Status:** Draft — Acuan Pengembangan Produk  
 **Platform:** Web Application  
 **Target Pengguna:** Pemula hingga praktisi QA, Software Testing, dan Programming
+
+### Perubahan di Versi 2.5
+- Playground memiliki 4 jenis latihan: Kuis, Bug Hunt, Test Case Writing, dan Locator Challenge, beserta halaman latihan untuk Bug Hunt dan Locator Challenge (FR-04).
+- Kuis per course berada di Playground; Playground tidak memiliki forum diskusi.
 
 ### Perubahan di Versi 2.4
 - Menambahkan test otomatis end-to-end dan quality gate CI (Bagian 13.4).
@@ -421,37 +425,47 @@ Pengguna dapat melihat daftar latihan yang memuat:
 - Status latihan.
 - Nilai atau hasil sebelumnya, jika tersedia.
 
-### Jenis soal
+### Jenis latihan
 
-**A. Pilihan Ganda**
-- Satu pertanyaan dengan beberapa opsi.
-- Sistem memvalidasi jawaban.
-- Hasil dinilai berdasarkan kunci jawaban yang telah ditentukan.
+| Jenis | Bentuk | Penilaian | XP (penyelesaian pertama) |
+|---|---|---|---|
+| **Kuis** | 5–10 soal pilihan ganda tentang satu course | Otomatis; lulus jika skor minimal 70% | 30 XP (kuis lulus) |
+| **Bug Hunt** | Pengguna menjelajahi halaman latihan yang sengaja berisi bug, lalu menandai bug yang ditemukan dari daftar pilihan | Otomatis; dicocokkan dengan daftar bug yang sudah ditentukan; lulus jika seluruh bug ditemukan tanpa salah tandai melebihi batas | 75 XP |
+| **Test Case Writing** | Pengguna menulis test case untuk sebuah fitur berdasarkan deskripsi kebutuhan | Self-check: setelah mengirim, pengguna membandingkan jawabannya dengan contoh jawaban dan checklist, lalu mencentang poin yang terpenuhi; lulus jika poin wajib terpenuhi | 75 XP |
+| **Locator Challenge** | Pengguna menulis selector CSS atau XPath untuk elemen tertentu di halaman latihan | Otomatis; selector dijalankan di halaman latihan dan lulus jika tepat mengenai elemen target saja | 75 XP |
 
-**B. Challenge**
-- Pengguna diminta menyelesaikan tugas atau persoalan.
-- Bentuknya dapat berupa analisis kasus, penulisan kode, atau penyelesaian skenario pengujian.
-- Penilaian dapat menggunakan pemeriksaan otomatis atau rubrik yang sesuai.
+Ketentuan:
+- Kuis per course ditempatkan di Playground, bukan di akhir lesson, agar semua latihan terkumpul di satu tempat.
+- Penilaian penulisan kode yang dijalankan di server (mis. menjalankan test Playwright milik pengguna) tidak termasuk rilis awal karena membutuhkan sandbox yang aman.
+
+### Halaman latihan
+- Bug Hunt dan Locator Challenge memakai halaman latihan berupa aplikasi tiruan di dalam BelajarAutomation, misalnya form login dan halaman checkout.
+- Halaman latihan diberi tanda jelas sebagai halaman latihan, bukan fitur sungguhan.
+- Practice Site yang lengkap, yang juga dapat diotomasi pengguna dari komputer mereka sendiri, direncanakan untuk fase berikutnya.
 
 ### Alur pengerjaan
 
 1. Pengguna memilih latihan.
-2. Sistem menampilkan informasi latihan.
+2. Sistem menampilkan informasi latihan: jenis, course terkait, tingkat kesulitan, jumlah soal, dan estimasi waktu.
 3. Pengguna memulai sesi.
-4. Sistem menyajikan soal pilihan ganda dan/atau challenge.
+4. Pengguna mengerjakan seluruh soal atau tugas.
 5. Pengguna mengirim jawaban.
 6. Sistem memvalidasi jawaban.
-7. Sistem menampilkan hasil dan pembahasan sesuai kebijakan latihan.
-8. XP diberikan jika syarat validasi terpenuhi.
-9. Hasil tersimpan pada riwayat pengguna.
+7. Sistem menampilkan skor atau hasil, lalu pembahasan. Pada Kuis, pembahasan ditampilkan setelah seluruh soal dikirim, bukan per soal.
+8. XP diberikan jika lulus dan merupakan penyelesaian pertama.
+9. Hasil tersimpan pada riwayat aktivitas pengguna.
 
 ### Aturan
-- Jumlah soal ditentukan oleh konfigurasi latihan; contoh awal dapat berupa 10 soal.
+- Jumlah soal ditentukan oleh konfigurasi latihan.
 - Tidak semua latihan harus memiliki komposisi soal yang sama.
-- Jawaban yang benar-benar diperiksa sistem dapat menghasilkan XP sesuai aturan.
-- Mengulang latihan tidak boleh menghasilkan XP tanpa batas.
-- Soal, jawaban, dan hasil penilaian harus diproses secara aman.
+- Mengulang latihan diperbolehkan, tetapi tidak memberikan XP lagi.
+- Soal, kunci jawaban, daftar bug, dan hasil penilaian diproses di server dan tidak dikirim ke browser sebelum jawaban dikirim.
 - Latihan yang terkait course gratis dapat diakses semua pengguna. Latihan yang terkait course premium mengikuti hak akses course tersebut.
+- Playground tidak memiliki forum diskusi.
+
+### Konten awal
+- Tahap pengembangan memakai 10 latihan dummy: 4 Kuis, 2 Bug Hunt, 2 Test Case Writing, dan 2 Locator Challenge, yang terhubung ke course yang tersedia.
+- Target saat rilis: minimal satu Kuis untuk setiap course yang tersedia.
 
 ---
 

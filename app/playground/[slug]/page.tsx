@@ -1,11 +1,9 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ArrowLeft } from "lucide-react";
 
 import DashboardLayout from "@/components/layout/DashboardLayout";
-import ChallengeWorkspace from "@/components/playground/ChallengeWorkspace";
-
 import { CHALLENGES } from "@/data/challenges";
-import { CHALLENGE_DETAILS } from "@/data/challengeDetails";
-import { PublicChallengeDetail } from "@/types/ChallengeDetail";
 
 interface ChallengePageProps {
   params: Promise<{
@@ -13,43 +11,32 @@ interface ChallengePageProps {
   }>;
 }
 
-export default async function ChallengePage({
-  params,
-}: ChallengePageProps) {
+// Sementara: halaman pengerjaan per jenis latihan menyusul (PRD FR-04).
+export default async function ChallengePage({ params }: ChallengePageProps) {
   const { slug } = await params;
+  const challenge = CHALLENGES.find((item) => item.slug === slug);
 
-  const challengeData = CHALLENGES.find(
-    (item) => item.slug === slug
-  );
-
-  const detail = CHALLENGE_DETAILS.find(
-    (item) => item.slug === slug
-  );
-
-  if (!challengeData || !detail) {
+  if (!challenge) {
     notFound();
   }
 
-  // Hapus React component `icon` sebelum mengirim data ke Client Component.
-  const challenge = Object.fromEntries(
-    Object.entries(challengeData).filter(([key]) => key !== "icon")
-  ) as Omit<typeof challengeData, "icon">;
-
-  // Kunci jawaban tidak boleh dikirim ke browser; pengecekan ada di actions.ts.
-  const publicDetail: PublicChallengeDetail = {
-    slug: detail.slug,
-    instruction: detail.instruction,
-    requirements: detail.requirements,
-    code: detail.code,
-    placeholder: detail.placeholder,
-  };
-
   return (
     <DashboardLayout>
-      <ChallengeWorkspace
-        challenge={challenge}
-        detail={publicDetail}
-      />
+      <div className="mx-auto max-w-3xl space-y-6">
+        <Link
+          href="/playground"
+          className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
+        >
+          <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+          Kembali ke Playground
+        </Link>
+
+        <section className="rounded-3xl border border-border bg-card p-6">
+          <h1 className="text-3xl font-bold">{challenge.title}</h1>
+          <p className="mt-2 text-muted-foreground">{challenge.description}</p>
+          <p className="mt-4 text-sm text-muted-foreground">Pengerjaan latihan sedang disiapkan.</p>
+        </section>
+      </div>
     </DashboardLayout>
   );
 }

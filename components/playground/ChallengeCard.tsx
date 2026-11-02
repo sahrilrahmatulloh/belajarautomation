@@ -1,14 +1,25 @@
 import Link from "next/link";
 import {
   ArrowRight,
+  Bug,
   CheckCircle2,
+  ClipboardList,
   Clock3,
+  Crosshair,
+  FileCheck2,
   GraduationCap,
 } from "lucide-react";
 
 import { COURSES } from "@/data/courses";
 import { getCompletedChallengeSlugs } from "@/lib/activity";
-import { Challenge } from "@/types/Challenge";
+import { Challenge, ChallengeType } from "@/types/Challenge";
+
+const typeIcons: Record<ChallengeType, typeof Bug> = {
+  quiz: ClipboardList,
+  "bug-hunt": Bug,
+  "test-case": FileCheck2,
+  locator: Crosshair,
+};
 
 const categoryAccents: Record<string, { surface: string; icon: string; label: string }> = {
   Fundamental: {
@@ -43,7 +54,7 @@ interface ChallengeCardProps {
 export default function ChallengeCard({
   challenge,
 }: ChallengeCardProps) {
-  const Icon = challenge.icon;
+  const Icon = typeIcons[challenge.type];
   const isCompleted = completedSlugs.has(challenge.slug);
   const course = COURSES.find((item) => item.slug === challenge.courseSlug);
   const accent = categoryAccents[challenge.category] ?? categoryAccents["Web Automation"];

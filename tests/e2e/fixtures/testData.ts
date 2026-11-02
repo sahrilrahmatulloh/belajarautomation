@@ -27,17 +27,6 @@ export const OWN_USERNAME = "sobatqa";
 export const PUBLIC_USER = { username: "rina-kartika-1", displayName: "Rina Kartika" };
 export const PRIVATE_USERNAME = "intan-saputra-9";
 
-export const CHALLENGE_ANSWERS = {
-  "playwright-locator": 'page.getByRole("button", { name: "Login" })',
-  "login-test-case": "dashboard",
-  "find-checkout-bug": "shipping",
-  "api-response-validation": "200",
-  "playwright-login-test": "dashboard",
-  "ai-test-generation": "scenario",
-} as const;
-
-export const WRONG_CHALLENGE_ANSWER = "jawaban yang pasti salah";
-
 export const AVAILABLE_COURSE_SLUGS = [
   "qa-fundamentals",
   "dasar-web-api",
