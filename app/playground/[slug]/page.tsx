@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 
 import DashboardLayout from "@/components/layout/DashboardLayout";
+import PracticePage from "@/components/practice/PracticePage";
+import { CHALLENGE_DETAILS } from "@/data/challengeDetails";
 import { CHALLENGES } from "@/data/challenges";
 
 interface ChallengePageProps {
@@ -20,6 +22,9 @@ export default async function ChallengePage({ params }: ChallengePageProps) {
     notFound();
   }
 
+  const detail = CHALLENGE_DETAILS.find((item) => item.slug === slug);
+  const practicePage = detail && "practicePage" in detail ? detail.practicePage : null;
+
   return (
     <DashboardLayout>
       <div className="mx-auto max-w-3xl space-y-6">
@@ -36,6 +41,8 @@ export default async function ChallengePage({ params }: ChallengePageProps) {
           <p className="mt-2 text-muted-foreground">{challenge.description}</p>
           <p className="mt-4 text-sm text-muted-foreground">Pengerjaan latihan sedang disiapkan.</p>
         </section>
+
+        {practicePage && <PracticePage pageId={practicePage} />}
       </div>
     </DashboardLayout>
   );
