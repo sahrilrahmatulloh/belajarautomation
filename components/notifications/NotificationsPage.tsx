@@ -9,6 +9,7 @@ import { NOTIFICATION_GROUPS } from "@/data/notificationGroups";
 import { toFilterSlug, validFilterValue } from "@/lib/filters";
 import { toNotificationEntries } from "@/lib/notificationEntries";
 import { UNAVAILABLE_PARAM, UNAVAILABLE_VALUE } from "@/lib/notificationTarget";
+import { useNotificationPreferences } from "@/lib/notificationPreferences";
 import { formatNotificationDay } from "@/lib/notificationTime";
 import { notificationActions, useNotifications } from "@/lib/notifications";
 import { useSession } from "@/lib/session";
@@ -35,11 +36,15 @@ export default function NotificationsPage() {
   const router = useRouter();
   const session = useSession();
   const notifications = useNotifications();
+  const { mutedGroups } = useNotificationPreferences();
   const { values, setFilters } = useUrlFilters(FILTER_KEYS);
   const [announcement, setAnnouncement] = useState<Notification | null>(null);
 
-  // Kelompok "Khusus role" hanya untuk pengguna dengan role tersebut.
-  const groupOptions = GROUP_OPTIONS.filter(({ group }) => group !== "role" || session?.role !== "user");
+  // Kelompok "Khusus role" hanya untuk pengguna dengan role tersebut, dan kelompok
+  // yang dimatikan di pengaturan tidak bisa dipilih.
+  const groupOptions = GROUP_OPTIONS.filter(
+    ({ group }) => (group !== "role" || session?.role !== "user") && !mutedGroups.includes(group)
+  );
 
   const tab = validFilterValue(values.tab, TAB_OPTIONS);
   const groupValue = validFilterValue(values.kelompok, groupOptions);

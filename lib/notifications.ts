@@ -3,6 +3,7 @@
 import { useMemo, useSyncExternalStore } from "react";
 
 import { DUMMY_NOTIFICATIONS } from "@/data/dummy/notifications";
+import { useNotificationPreferences } from "@/lib/notificationPreferences";
 import { useSession } from "@/lib/session";
 import { Notification } from "@/types/Notification";
 
@@ -56,18 +57,20 @@ function subscribe(listener: () => void) {
   };
 }
 
-// Notifikasi untuk pengguna saat ini, terbaru lebih dulu. Notifikasi khusus role
-// hanya tampil untuk role tersebut.
+// Notifikasi untuk pengguna saat ini, terbaru lebih dulu. Notifikasi khusus role hanya
+// tampil untuk role tersebut, dan kelompok yang dimatikan di pengaturan tidak ditampilkan.
 export function useNotifications() {
   const session = useSession();
   const readIdList = useSyncExternalStore(subscribe, getSnapshot, () => EMPTY);
+  const { mutedGroups } = useNotificationPreferences();
 
   return useMemo<Notification[]>(() => {
     const readSet = new Set(readIdList);
     return DUMMY_NOTIFICATIONS.filter((item) => !item.role || item.role === session?.role)
+      .filter((item) => !mutedGroups.includes(item.group))
       .map((item) => ({ ...item, read: item.read || readSet.has(item.id) }))
       .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
-  }, [readIdList, session?.role]);
+  }, [readIdList, session?.role, mutedGroups]);
 }
 
 export const notificationActions = {
