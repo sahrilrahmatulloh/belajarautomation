@@ -1,6 +1,7 @@
 import { expect, Locator, Page } from "@playwright/test";
 
 import { BasePage } from "../pages/BasePage";
+import { ChallengePage } from "../pages/ChallengePage";
 import { DashboardPage } from "../pages/DashboardPage";
 import { LeaderboardPage } from "../pages/LeaderboardPage";
 import { LearnPage } from "../pages/LearnPage";
@@ -29,6 +30,10 @@ export const MAIN_PAGES: { name: string; open: (page: Page) => Promise<BasePage>
   { name: "Lesson", open: (page) => open(new LessonPage(page, "playwright", "apa-itu-playwright"), (p) => p.writingNotice) },
   { name: "Roadmap", open: (page) => open(new RoadmapPage(page), (p) => p.cards.first()) },
   { name: "Playground", open: (page) => open(new PlaygroundPage(page), (p) => p.cards.first()) },
+  { name: "Pengerjaan Kuis", open: (page) => open(new ChallengePage(page, "kuis-dasar-web-api"), (p) => p.quiz) },
+  { name: "Pengerjaan Bug Hunt", open: (page) => open(new ChallengePage(page, "find-checkout-bug"), (p) => p.findingsPanel) },
+  { name: "Pengerjaan Test Case", open: (page) => open(new ChallengePage(page, "login-test-case"), (p) => p.answerInput) },
+  { name: "Pengerjaan Locator", open: (page) => open(new ChallengePage(page, "locator-form-registrasi"), (p) => p.selectorPanel) },
   { name: "Leaderboard", open: (page) => open(new LeaderboardPage(page), (p) => p.topList.first()) },
   { name: "Profil", open: (page) => open(new ProfilePage(page), (p) => p.featuredAchievements) },
   {

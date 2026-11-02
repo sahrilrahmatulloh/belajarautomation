@@ -47,7 +47,7 @@ export default function ChallengeWorkspace({ challenge, detail, locked }: Challe
       </Link>
 
       <header>
-        <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary">
+        <span className="inline-flex items-center gap-1 rounded-full border border-primary/20 bg-card px-2.5 py-1 text-xs font-medium text-primary">
           <TypeIcon className="h-3.5 w-3.5" aria-hidden="true" />
           {type.label}
         </span>
