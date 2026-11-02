@@ -7,6 +7,7 @@ import { ChevronDown, ChevronRight, Clock3 } from "lucide-react";
 import { NOTIFICATION_GROUPS } from "@/data/notificationGroups";
 import { NotificationEntry } from "@/lib/notificationEntries";
 import { formatNotificationTime } from "@/lib/notificationTime";
+import { resolveNotificationHref } from "@/lib/notificationTarget";
 import { notificationActions } from "@/lib/notifications";
 import { Notification } from "@/types/Notification";
 
@@ -54,7 +55,12 @@ function RowContent({ group, title, body, createdAt, read, arrow }: RowContentPr
   );
 }
 
-function NotificationRow({ notification }: { notification: Notification }) {
+interface NotificationRowProps {
+  notification: Notification;
+  onAnnouncement: (notification: Notification) => void;
+}
+
+function NotificationRow({ notification, onAnnouncement }: NotificationRowProps) {
   const content = (
     <RowContent
       group={notification.group}
@@ -66,19 +72,32 @@ function NotificationRow({ notification }: { notification: Notification }) {
     />
   );
   const markRead = () => notificationActions.markRead([notification.id]);
+  const href = resolveNotificationHref(notification);
 
-  return notification.href ? (
-    <Link href={notification.href} onClick={markRead} className={rowClassName}>
+  return href ? (
+    <Link href={href} onClick={markRead} className={rowClassName}>
       {content}
     </Link>
   ) : (
-    <button type="button" onClick={markRead} className={rowClassName}>
+    <button
+      type="button"
+      onClick={() => {
+        markRead();
+        onAnnouncement(notification);
+      }}
+      className={rowClassName}
+    >
       {content}
     </button>
   );
 }
 
-export default function NotificationItem({ entry }: { entry: NotificationEntry }) {
+interface NotificationItemProps {
+  entry: NotificationEntry;
+  onAnnouncement: (notification: Notification) => void;
+}
+
+export default function NotificationItem({ entry, onAnnouncement }: NotificationItemProps) {
   const [expanded, setExpanded] = useState(false);
   const isMerged = entry.items.length > 1;
 
@@ -115,14 +134,14 @@ export default function NotificationItem({ entry }: { entry: NotificationEntry }
             <ul className="divide-y divide-border border-t border-border bg-card">
               {entry.items.map((item) => (
                 <li key={item.id}>
-                  <NotificationRow notification={item} />
+                  <NotificationRow notification={item} onAnnouncement={onAnnouncement} />
                 </li>
               ))}
             </ul>
           )}
         </>
       ) : (
-        <NotificationRow notification={entry.items[0]} />
+        <NotificationRow notification={entry.items[0]} onAnnouncement={onAnnouncement} />
       )}
     </article>
   );

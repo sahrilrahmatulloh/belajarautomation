@@ -1,21 +1,24 @@
 "use client";
 
+import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Bell, Check, ChevronDown } from "lucide-react";
+import { ArrowLeft, Bell, Check, ChevronDown, CircleAlert, X } from "lucide-react";
 
 import FilterChips from "@/components/filters/FilterChips";
 import { NOTIFICATION_GROUPS } from "@/data/notificationGroups";
 import { toFilterSlug, validFilterValue } from "@/lib/filters";
 import { toNotificationEntries } from "@/lib/notificationEntries";
+import { UNAVAILABLE_PARAM, UNAVAILABLE_VALUE } from "@/lib/notificationTarget";
 import { formatNotificationDay } from "@/lib/notificationTime";
 import { notificationActions, useNotifications } from "@/lib/notifications";
 import { useSession } from "@/lib/session";
 import { useUrlFilters } from "@/lib/useUrlFilters";
-import { NotificationGroup } from "@/types/Notification";
+import { Notification, NotificationGroup } from "@/types/Notification";
 
 import NotificationItem from "./NotificationItem";
+import NotificationModal from "./NotificationModal";
 
-const FILTER_KEYS = ["tab", "kelompok"] as const;
+const FILTER_KEYS = ["tab", "kelompok", UNAVAILABLE_PARAM] as const;
 const UNREAD_TAB = "belum-dibaca";
 const TAB_OPTIONS = [
   { value: "", label: "Semua" },
@@ -33,6 +36,7 @@ export default function NotificationsPage() {
   const session = useSession();
   const notifications = useNotifications();
   const { values, setFilters } = useUrlFilters(FILTER_KEYS);
+  const [announcement, setAnnouncement] = useState<Notification | null>(null);
 
   // Kelompok "Khusus role" hanya untuk pengguna dengan role tersebut.
   const groupOptions = GROUP_OPTIONS.filter(({ group }) => group !== "role" || session?.role !== "user");
@@ -85,6 +89,24 @@ export default function NotificationsPage() {
         </div>
       </header>
 
+      {values[UNAVAILABLE_PARAM] === UNAVAILABLE_VALUE && (
+        <div
+          role="alert"
+          className="flex items-center gap-3 rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-2.5 text-sm font-medium"
+        >
+          <CircleAlert className="h-4 w-4 shrink-0 text-amber-700 dark:text-amber-300" aria-hidden="true" />
+          <span className="min-w-0 flex-1">Konten ini sudah tidak tersedia</span>
+          <button
+            type="button"
+            aria-label="Tutup pesan"
+            onClick={() => setFilters({ [UNAVAILABLE_PARAM]: "" })}
+            className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-colors hover:bg-accent"
+          >
+            <X className="h-4 w-4" aria-hidden="true" />
+          </button>
+        </div>
+      )}
+
       <div className="flex flex-wrap items-center gap-3">
         <div className="min-w-0 flex-1 basis-56">
           <FilterChips
@@ -134,7 +156,7 @@ export default function NotificationsPage() {
               <h2 className="font-semibold">{day}</h2>
               <div className="space-y-2.5">
                 {entries.map((entry) => (
-                  <NotificationItem key={entry.key} entry={entry} />
+                  <NotificationItem key={entry.key} entry={entry} onAnnouncement={setAnnouncement} />
                 ))}
               </div>
             </div>
@@ -149,6 +171,8 @@ export default function NotificationsPage() {
           </div>
         )}
       </section>
+
+      <NotificationModal notification={announcement} onClose={() => setAnnouncement(null)} />
     </div>
   );
 }

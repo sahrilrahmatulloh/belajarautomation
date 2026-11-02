@@ -7,8 +7,12 @@ import { ArrowRight, Bell, Check, Clock3 } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { NOTIFICATION_GROUPS } from "@/data/notificationGroups";
 import { NotificationEntry, toNotificationEntries } from "@/lib/notificationEntries";
+import { resolveNotificationHref } from "@/lib/notificationTarget";
 import { formatNotificationTime } from "@/lib/notificationTime";
 import { notificationActions, useNotifications } from "@/lib/notifications";
+import { Notification } from "@/types/Notification";
+
+import NotificationModal from "./NotificationModal";
 
 const POPOVER_LIMIT = 5;
 
@@ -31,22 +35,19 @@ function BellIcon({ unreadCount }: { unreadCount: number }) {
   );
 }
 
-function PopoverEntry({ entry, onNavigate }: { entry: NotificationEntry; onNavigate: () => void }) {
-  const { icon: Icon, iconStyle } = NOTIFICATION_GROUPS[entry.group];
-  // Notifikasi gabungan dibuka di halaman, tempat rinciannya bisa dilihat.
-  const href = (entry.items.length === 1 && entry.items[0].href) || "/notifications";
+interface PopoverEntryProps {
+  entry: NotificationEntry;
+  onClose: () => void;
+  onAnnouncement: (notification: Notification) => void;
+}
 
-  return (
-    <Link
-      href={href}
-      onClick={() => {
-        notificationActions.markRead(entry.items.map((item) => item.id));
-        onNavigate();
-      }}
-      className={`flex gap-3 rounded-xl p-3 transition-colors hover:bg-accent ${
-        entry.read ? "" : "bg-primary/[0.06]"
-      }`}
-    >
+function PopoverEntry({ entry, onClose, onAnnouncement }: PopoverEntryProps) {
+  const { icon: Icon, iconStyle } = NOTIFICATION_GROUPS[entry.group];
+  const className = `flex w-full gap-3 rounded-xl p-3 text-left transition-colors hover:bg-accent ${
+    entry.read ? "" : "bg-primary/[0.06] dark:bg-primary/10"
+  }`;
+  const content = (
+    <>
       <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${iconStyle}`}>
         <Icon className="h-5 w-5" aria-hidden="true" />
       </span>
@@ -66,7 +67,45 @@ function PopoverEntry({ entry, onNavigate }: { entry: NotificationEntry; onNavig
           {formatNotificationTime(entry.createdAt)}
         </span>
       </span>
+    </>
+  );
+
+  // Notifikasi gabungan dibuka di halaman, dan ditandai dibaca saat isinya diklik di sana.
+  if (entry.items.length > 1) {
+    return (
+      <Link href="/notifications" onClick={onClose} className={className}>
+        {content}
+      </Link>
+    );
+  }
+
+  const [notification] = entry.items;
+  const href = resolveNotificationHref(notification);
+  const markRead = () => notificationActions.markRead([notification.id]);
+
+  return href ? (
+    <Link
+      href={href}
+      onClick={() => {
+        markRead();
+        onClose();
+      }}
+      className={className}
+    >
+      {content}
     </Link>
+  ) : (
+    <button
+      type="button"
+      onClick={() => {
+        markRead();
+        onClose();
+        onAnnouncement(notification);
+      }}
+      className={className}
+    >
+      {content}
+    </button>
   );
 }
 
@@ -74,6 +113,7 @@ function PopoverEntry({ entry, onNavigate }: { entry: NotificationEntry; onNavig
 export default function NotificationBell() {
   const notifications = useNotifications();
   const [open, setOpen] = useState(false);
+  const [announcement, setAnnouncement] = useState<Notification | null>(null);
 
   const unread = notifications.filter((notification) => !notification.read);
   const entries = useMemo(
@@ -117,7 +157,7 @@ export default function NotificationBell() {
               <ul className="max-h-[min(36rem,calc(100dvh-10rem))] space-y-1 overflow-y-auto px-2">
                 {entries.map((entry) => (
                   <li key={entry.key}>
-                    <PopoverEntry entry={entry} onNavigate={() => setOpen(false)} />
+                    <PopoverEntry entry={entry} onClose={() => setOpen(false)} onAnnouncement={setAnnouncement} />
                   </li>
                 ))}
               </ul>
@@ -144,6 +184,8 @@ export default function NotificationBell() {
           </PopoverContent>
         </Popover>
       </div>
+
+      <NotificationModal notification={announcement} onClose={() => setAnnouncement(null)} />
     </>
   );
 }
