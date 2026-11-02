@@ -11,8 +11,12 @@ Mengikuti PRD Bagian 13.3:
 - Buat pull request hanya ke `develop`.
 - Jangan pernah push ke `uat` atau `main`.
 
+## Test
+Mengikuti PRD Bagian 13.4; cara menjalankan dan aturan menulis test ada di bagian Testing pada `README.md`.
+- Setiap fitur baru atau perubahan perilaku wajib menambah atau memperbarui test end-to-end di `tests/e2e/`.
+
 ## Sebelum membuat PR
-Selalu jalankan `npm run lint` dan `npm run build`.
+Selalu jalankan `npm run lint`, `npm run build`, dan `npm run test:e2e`. Buat PR hanya jika ketiganya lulus.
 
 ## Aturan kode
 - Data dummy hanya di `data/dummy/`, dengan komentar `DATA DUMMY — hapus sebelum rilis`.
