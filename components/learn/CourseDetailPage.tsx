@@ -3,6 +3,7 @@ import Link from "next/link";
 import {
   ArrowLeft,
   CheckCircle2,
+  ChevronDown,
   Clock3,
   Code2,
   Crown,
@@ -12,6 +13,7 @@ import {
 } from "lucide-react";
 
 import ContentCover from "@/components/common/ContentCover";
+import { getCompletedLessonSlugs } from "@/lib/activity";
 import { AvailableCourse } from "@/types/Course";
 import { CourseDetail } from "@/types/CourseDetail";
 
@@ -26,12 +28,21 @@ export default function CourseDetailPage({
 }: CourseDetailPageProps) {
   const Icon = course.icon;
 
+  // Status selesai berasal dari riwayat aktivitas, sama dengan dashboard dan profil.
+  const completedSlugs = getCompletedLessonSlugs(course.slug);
+
   const completedLessons = detail.modules
     .flatMap((module) => module.lessons)
-    .filter((lesson) => lesson.isCompleted).length;
+    .filter((lesson) => completedSlugs.has(lesson.slug)).length;
 
   const totalLessons = detail.modules
     .flatMap((module) => module.lessons).length;
+
+  // Modul yang sedang berjalan terbuka lebih dulu; bila semua tuntas, modul pertama.
+  const currentModule =
+    detail.modules.find((module) =>
+      module.lessons.some((lesson) => !completedSlugs.has(lesson.slug))
+    ) ?? detail.modules[0];
 
   return (
     <div className="mx-auto max-w-6xl space-y-8">
@@ -202,28 +213,38 @@ export default function CourseDetailPage({
           </p>
         </div>
 
-        {detail.modules.map((module, moduleIndex) => (
-          <div
+        {detail.modules.map((module, moduleIndex) => {
+          const completedInModule = module.lessons.filter((lesson) =>
+            completedSlugs.has(lesson.slug)
+          ).length;
+
+          return (
+          <details
             key={module.id}
-            className="overflow-hidden rounded-3xl border border-border bg-card"
+            open={module.id === currentModule?.id}
+            className="group overflow-hidden rounded-3xl border border-border bg-card"
           >
-            <div className="border-b border-border p-5">
-              <div className="flex items-center gap-3">
-                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-muted text-sm font-bold">
-                  {moduleIndex + 1}
-                </div>
-
-                <div>
-                  <h3 className="font-semibold">
-                    {module.title}
-                  </h3>
-
-                  <p className="mt-1 text-xs text-muted-foreground">
-                    {module.lessons.length} materi
-                  </p>
-                </div>
+            <summary className="flex cursor-pointer list-none items-center gap-3 p-5 transition-colors hover:bg-accent group-open:border-b group-open:border-border [&::-webkit-details-marker]:hidden">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-muted text-sm font-bold">
+                {moduleIndex + 1}
               </div>
-            </div>
+
+              <div className="min-w-0 flex-1">
+                <h3 className="font-semibold">
+                  {module.title}
+                </h3>
+
+                <p className="mt-1 text-xs text-muted-foreground">
+                  {module.lessons.length} materi
+                  {completedInModule > 0 && ` · ${completedInModule} selesai`}
+                </p>
+              </div>
+
+              <ChevronDown
+                className="h-5 w-5 shrink-0 text-muted-foreground transition-transform group-open:rotate-180"
+                aria-hidden="true"
+              />
+            </summary>
 
             <div className="divide-y divide-border">
               {module.lessons.map((lesson) => {
@@ -233,8 +254,8 @@ export default function CourseDetailPage({
                 const content = (
                   <div className="flex items-center gap-4 px-5 py-4 transition-colors hover:bg-accent">
                     <div className="shrink-0">
-                      {lesson.isCompleted ? (
-                        <CheckCircle2 className="h-5 w-5 text-primary" />
+                      {completedSlugs.has(lesson.slug) ? (
+                        <CheckCircle2 role="img" aria-label="Selesai" className="h-5 w-5 text-primary" />
                       ) : (
                         <PlayCircle className="h-5 w-5 text-muted-foreground" />
                       )}
@@ -263,8 +284,9 @@ export default function CourseDetailPage({
                 );
               })}
             </div>
-          </div>
-        ))}
+          </details>
+          );
+        })}
       </section>
     </div>
   );

@@ -7,7 +7,7 @@ export default function AuthLoading() {
       className="flex min-h-dvh flex-col items-center justify-center gap-4 bg-background"
     >
       <Image
-        src="/logo.png"
+        src="/logo.webp"
         alt=""
         width={56}
         height={56}

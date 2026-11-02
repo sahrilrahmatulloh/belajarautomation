@@ -45,6 +45,42 @@ Pengaturan lingkungan:
 - Label lingkungan tampil di pojok kiri bawah: "DEV" (oranye) dan "UAT" (ungu). Tidak tampil di `production`.
 - Di Vercel, isi `NEXT_PUBLIC_APP_ENV` per lingkungan (mis. per branch `develop` dan `uat`). Nilainya disisipkan saat build, jadi perubahan baru berlaku setelah deploy ulang.
 
+## Testing
+
+Test end-to-end memakai [Playwright](https://playwright.dev) dan berjalan di dua project: `desktop-chromium` dan `mobile-chromium` (Pixel 7). CI GitHub Actions menjalankan lint, build, dan test ini pada setiap pull request dan push ke `develop`.
+
+Menjalankan di lokal:
+
+```bash
+npx playwright install chromium   # sekali saja, setelah npm install
+npm run test:e2e                  # semua test
+npm run test:e2e:ui               # mode UI untuk men-debug test
+npm run test:e2e:report           # membuka laporan HTML test terakhir
+```
+
+- `npm run test:e2e` menjalankan `npm run build && npm run start` di port 3000, kecuali sudah ada server di port itu.
+- Bila server dev sedang berjalan, test akan memakai server dev tersebut. Untuk menguji hasil build, pakai port lain: `PORT=3100 npm run test:e2e` (Git Bash) atau `$env:PORT=3100; npm run test:e2e` (PowerShell).
+- Test label "DEV" mengharapkan `NEXT_PUBLIC_APP_ENV` bernilai `dev`.
+
+Struktur folder:
+
+```text
+tests/e2e/
+├── fixtures/   # auth.ts (login per role), testData.ts (data test), mainPages.ts (halaman utama)
+├── pages/      # Page Object, satu kelas per halaman
+└── specs/      # skenario test per fitur
+```
+
+Aturan menulis test:
+
+- Pakai `test` dan `expect` dari `fixtures/auth.ts`. Test yang butuh login memakai `test.use({ role: "user" })`; role lainnya `creator`, `reviewer`, dan `admin`.
+- Locator mengutamakan `getByRole`, `getByLabel`, dan `getByText`. `data-testid` hanya bila elemen tidak bisa dijangkau dengan cara lain.
+- Tidak memakai `waitForTimeout`; gunakan assertion `expect` yang menunggu otomatis.
+- Data test, termasuk kunci jawaban challenge, ditulis di `fixtures/testData.ts`. Jangan mengimpor file `server-only`.
+- Nama test dalam Bahasa Indonesia.
+
+Laporan CI tersedia sebagai artifact `playwright-report` selama 14 hari di halaman run GitHub Actions. Setelah diunduh dan diekstrak, buka dengan `npx playwright show-report <folder>`.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

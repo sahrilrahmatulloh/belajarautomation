@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 
 import { COURSES } from "@/data/courses";
+import { getCompletedChallengeSlugs } from "@/lib/activity";
 import { Challenge } from "@/types/Challenge";
 
 const categoryAccents: Record<string, { surface: string; icon: string; label: string }> = {
@@ -32,6 +33,9 @@ const categoryAccents: Record<string, { surface: string; icon: string; label: st
   },
 };
 
+// Status selesai berasal dari riwayat aktivitas, sama dengan statistik akun.
+const completedSlugs = getCompletedChallengeSlugs();
+
 interface ChallengeCardProps {
   challenge: Challenge;
 }
@@ -40,6 +44,7 @@ export default function ChallengeCard({
   challenge,
 }: ChallengeCardProps) {
   const Icon = challenge.icon;
+  const isCompleted = completedSlugs.has(challenge.slug);
   const course = COURSES.find((item) => item.slug === challenge.courseSlug);
   const accent = categoryAccents[challenge.category] ?? categoryAccents["Web Automation"];
 
@@ -50,8 +55,8 @@ export default function ChallengeCard({
           <Icon className={`h-6 w-6 ${accent.icon}`} />
         </div>
 
-        {challenge.completed && (
-          <CheckCircle2 className="h-5 w-5 text-green-500" />
+        {isCompleted && (
+          <CheckCircle2 role="img" aria-label="Selesai" className="h-5 w-5 text-green-500" />
         )}
       </div>
 
@@ -94,7 +99,7 @@ export default function ChallengeCard({
         href={`/playground/${challenge.slug}`}
         className="mt-6 flex items-center justify-between rounded-xl border border-border px-4 py-3 text-sm font-medium transition-colors hover:bg-accent"
       >
-        {challenge.completed
+        {isCompleted
           ? "Main Lagi"
           : "Mulai Challenge"}
 

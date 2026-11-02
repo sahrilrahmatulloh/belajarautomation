@@ -1,18 +1,37 @@
 import { Suspense } from "react";
-import { History, Trophy } from "lucide-react";
+import Link from "next/link";
+import { Eye } from "lucide-react";
 
+import { getPublicProfile } from "@/data/dummy/publicProfiles";
+import { DUMMY_PROFILE } from "@/data/dummy/profile";
+
+import FeaturedAchievements from "./FeaturedAchievements";
 import LearningProgress from "./LearningProgress";
+import ProfileAchievements from "./ProfileAchievements";
+import ProfileActivity from "./ProfileActivity";
 import ProfileCustomization from "./ProfileCustomization";
 import ProfileHeader from "./ProfileHeader";
-import ProfilePlaceholder from "./ProfilePlaceholder";
 import ProfileStats from "./ProfileStats";
 import ProfileTabs from "./ProfileTabs";
 import RecentActivity from "./RecentActivity";
+import ShareProfileDialog from "./ShareProfileDialog";
 
 export default function ProfilePage() {
+  // Profil akun demo selalu ada; datanya sama dengan yang tampil di profil publik.
+  const profile = getPublicProfile(DUMMY_PROFILE.username)!;
+
+  const earnedAchievements = profile.achievements.filter((state) => state.earned).length;
+
   const summary = (
     <div className="space-y-6">
-      <ProfileStats />
+      <ProfileStats
+        xp={profile.xp}
+        lessons={profile.lessons}
+        challenges={profile.challenges}
+        achievements={earnedAchievements}
+      />
+
+      <FeaturedAchievements featured={profile.featured} allHref="/profile?tab=pencapaian" />
 
       <div className="grid gap-6 lg:grid-cols-2">
         <LearningProgress />
@@ -23,27 +42,47 @@ export default function ProfilePage() {
 
   return (
     <div className="mx-auto max-w-6xl space-y-6">
-      <ProfileHeader />
+      <ProfileHeader
+        displayName={profile.displayName}
+        username={profile.username}
+        bio={profile.bio}
+        avatarImage={profile.avatarImage}
+        avatarName={profile.avatarName}
+        themeImage={profile.themeImage}
+        xp={profile.xp}
+        isOwner
+        shareAction={
+          <ShareProfileDialog
+            displayName={profile.displayName}
+            username={profile.username}
+            avatarImage={profile.avatarImage}
+            themeImage={profile.themeImage}
+            xp={profile.xp}
+            lessons={profile.lessons}
+            challenges={profile.challenges}
+            achievements={earnedAchievements}
+            isProfilePublic={profile.isProfilePublic}
+          />
+        }
+      />
+
+      <div className="flex justify-end">
+        <Link
+          href={`/u/${profile.username}`}
+          className="inline-flex min-h-10 items-center gap-2 rounded-xl border border-border bg-card px-4 text-sm font-medium transition-colors hover:bg-accent"
+        >
+          <Eye className="h-4 w-4" aria-hidden="true" />
+          Lihat sebagai publik
+        </Link>
+      </div>
 
       {/* Tab dibaca dari URL, jadi butuh Suspense saat prerender. */}
       <Suspense fallback={summary}>
         <ProfileTabs
           panels={{
             ringkasan: summary,
-            aktivitas: (
-              <ProfilePlaceholder
-                icon={History}
-                title="Riwayat aktivitas segera hadir"
-                description="Riwayat per tanggal, filter jenis aktivitas, grafik XP harian, dan heatmap konsistensi belajar akan tampil setelah aktivitas belajar tersimpan."
-              />
-            ),
-            pencapaian: (
-              <ProfilePlaceholder
-                icon={Trophy}
-                title="Achievement segera hadir"
-                description="Achievement dari aktivitas belajar akan tampil di sini, dikelompokkan per kategori. Achievement tidak memberikan XP."
-              />
-            ),
+            aktivitas: <ProfileActivity />,
+            pencapaian: <ProfileAchievements states={profile.achievements} />,
             kustomisasi: <ProfileCustomization />,
           }}
         />

@@ -18,6 +18,10 @@ export interface LeaderboardUser {
   // Avatar kucing aktif (PRD FR-12). Selama baru ada satu avatar, semua memakai avatar bawaan.
   avatarId: string;
   showOnLeaderboard: boolean;
+  // Untuk profil publik /u/<username> (PRD FR-13).
+  username: string;
+  bio: string;
+  isProfilePublic: boolean;
 }
 
 const FIRST_NAMES = [
@@ -28,6 +32,13 @@ const FIRST_NAMES = [
 const LAST_NAMES = [
   "Kartika", "Pratama", "Lestari", "Nugroho", "Safitri", "Saputra", "Maharani", "Permana",
   "Permata", "Aditya", "Anjani", "Wijaya", "Ningsih", "Setiawan", "Hidayat", "Utami", "Kusuma",
+];
+
+const BIOS = [
+  "Manual tester yang sedang belajar automation.",
+  "Suka menemukan bug sebelum pengguna menemukannya.",
+  "Belajar Playwright sedikit demi sedikit setiap hari.",
+  "Fresh graduate yang menyiapkan karier sebagai QA Engineer.",
 ];
 
 // Daftar XP per kelompok, dari tertinggi.
@@ -51,6 +62,11 @@ export const DUMMY_LEADERBOARD_USERS: LeaderboardUser[] = [...VISIBLE_XP, ...HID
   (totalXp, index) => ({
     id: `user-${index + 1}`,
     displayName: `${FIRST_NAMES[index % FIRST_NAMES.length]} ${LAST_NAMES[(index * 7) % LAST_NAMES.length]}`,
+    // Nama bisa sama, jadi username diberi nomor agar tetap unik.
+    username: `${FIRST_NAMES[index % FIRST_NAMES.length]}-${LAST_NAMES[(index * 7) % LAST_NAMES.length]}-${index + 1}`.toLowerCase(),
+    bio: BIOS[index % BIOS.length],
+    // Setiap pengguna ke-9 memilih profil privat.
+    isProfilePublic: index % 9 !== 8,
     totalXp,
     avatarId: DEFAULT_AVATAR_ID,
     showOnLeaderboard: index < VISIBLE_XP.length,
