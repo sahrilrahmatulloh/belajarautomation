@@ -1,10 +1,10 @@
 "use client";
 
-import Link from "next/link";
-import { Bell, Menu, SunMoon } from "lucide-react";
+import { Menu, SunMoon } from "lucide-react";
 import { useTheme } from "next-themes";
 
 import CartButton from "@/components/cart/CartButton";
+import NotificationBell from "@/components/notifications/NotificationBell";
 import ProfileDropdown from "@/components/profile/ProfileDropdown";
 
 interface NavbarProps {
@@ -54,16 +54,7 @@ export default function Navbar({
         <CartButton />
 
         {/* Notifications */}
-        <Link
-          href="/notifications"
-          className="relative inline-flex h-11 w-11 items-center justify-center rounded-lg transition-colors duration-150 hover:bg-accent active:scale-95"
-          aria-label="Notifikasi"
-        >
-          <Bell size={20} />
-
-          {/* Unread Badge */}
-          <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-primary ring-2 ring-background" />
-        </Link>
+        <NotificationBell />
 
         {/* User Profile Dropdown */}
         <ProfileDropdown />
