@@ -23,6 +23,10 @@ export const USER_RANK = "Apprentice";
 export const ACTIVE_AVATAR_NAME = "Kucing Oren";
 export const ACTIVE_THEME_NAME = "Mountain Workspace";
 
+export const OWN_USERNAME = "sobatqa";
+export const PUBLIC_USER = { username: "rina-kartika-1", displayName: "Rina Kartika" };
+export const PRIVATE_USERNAME = "intan-saputra-9";
+
 export const CHALLENGE_ANSWERS = {
   "playwright-locator": 'page.getByRole("button", { name: "Login" })',
   "login-test-case": "dashboard",
