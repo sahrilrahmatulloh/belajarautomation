@@ -22,6 +22,12 @@ export class LearnPage extends CatalogPage {
     return this.list.getByRole("heading", { level: 2, name: title, exact: true });
   }
 
+  courseCard(title: string) {
+    return this.list
+      .getByRole("link")
+      .filter({ has: this.page.getByRole("heading", { level: 2, name: title, exact: true }) });
+  }
+
   async toggleAvailableOnly() {
     await this.filterButton.click();
     await this.availableOnlySwitch.click();

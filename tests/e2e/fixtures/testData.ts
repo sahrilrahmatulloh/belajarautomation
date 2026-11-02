@@ -37,3 +37,14 @@ export const CHALLENGE_ANSWERS = {
 } as const;
 
 export const WRONG_CHALLENGE_ANSWER = "jawaban yang pasti salah";
+
+export const AVAILABLE_COURSE_SLUGS = [
+  "qa-fundamentals",
+  "dasar-web-api",
+  "test-design",
+  "bug-reporting",
+  "git-github",
+  "javascript",
+  "typescript",
+  "playwright",
+];
