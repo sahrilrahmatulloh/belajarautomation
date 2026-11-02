@@ -66,3 +66,52 @@ export type ChallengeDetail =
   | BugHuntDetail
   | TestCaseDetail
   | LocatorDetail;
+
+// Data yang aman dikirim ke browser sebelum jawaban dikirim: tanpa kunci jawaban,
+// pembahasan, daftar bug, contoh jawaban, checklist, dan elemen target.
+export type PublicChallengeDetail =
+  | { type: "quiz"; passingScore: number; questions: { question: string; options: string[] }[] }
+  | { type: "bug-hunt"; practicePage: PracticePageId; findings: { id: string; label: string }[] }
+  | { type: "test-case"; requirement: string[] }
+  | {
+      type: "locator";
+      practicePage: PracticePageId;
+      targetDescription: string;
+      selectorTypes: SelectorType[];
+    };
+
+export interface ChallengeScore {
+  score: number;
+  passed: boolean;
+}
+
+export interface QuizResult extends ChallengeScore {
+  correctCount: number;
+  passingScore: number;
+  review: {
+    question: string;
+    options: string[];
+    userIndex: number;
+    correctIndex: number;
+    explanation: string;
+  }[];
+}
+
+export interface BugHuntResult extends ChallengeScore {
+  found: BugFinding[];
+  missed: BugFinding[];
+  falsePositives: BugFinding[];
+  maxFalsePositives: number;
+}
+
+export interface TestCaseReveal {
+  sampleAnswer: string;
+  checklist: TestCaseChecklistItem[];
+}
+
+export type LocatorOutcome = "target" | "none" | "multiple" | "wrong";
+
+export interface LocatorResult extends ChallengeScore {
+  outcome: LocatorOutcome;
+  matchCount: number;
+}

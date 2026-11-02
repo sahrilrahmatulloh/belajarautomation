@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import {
   ArrowRight,
@@ -12,7 +14,7 @@ import {
 
 import ContentCover from "@/components/common/ContentCover";
 import { COURSES } from "@/data/courses";
-import { getChallengeProgress } from "@/lib/activity";
+import { useChallengeProgress } from "@/lib/challengeAttempts";
 import { Challenge, ChallengeDifficulty } from "@/types/Challenge";
 
 import { CHALLENGE_TYPES } from "./challengeTypes";
@@ -62,7 +64,7 @@ export default function ChallengeCard({ challenge }: ChallengeCardProps) {
   const type = CHALLENGE_TYPES[challenge.type];
   const TypeIcon = type.icon;
   const course = COURSES.find((item) => item.slug === challenge.courseSlug);
-  const { status: statusKey, lastScore } = getChallengeProgress(challenge.slug);
+  const { status: statusKey, lastScore } = useChallengeProgress(challenge.slug);
   const status = STATUS[statusKey];
   const StatusIcon = status.icon;
   const ActionIcon = status.actionIcon;

@@ -27,7 +27,7 @@ export default function PracticeFrame({ pageId, rootRef, children }: PracticeFra
         </span>
       </div>
 
-      <div ref={rootRef} data-practice-root className="bg-background p-4 sm:p-6">
+      <div ref={rootRef} data-practice-root className="bg-background p-4 sm:p-6 [&_[data-practice-match]]:outline-2 [&_[data-practice-match]]:outline-offset-2 [&_[data-practice-match]]:outline-amber-500">
         {children}
       </div>
     </section>
