@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 
 import ContentCover from "@/components/common/ContentCover";
+import { getCompletedLessonSlugs } from "@/lib/activity";
 import { AvailableCourse } from "@/types/Course";
 import { CourseDetail } from "@/types/CourseDetail";
 
@@ -26,9 +27,12 @@ export default function CourseDetailPage({
 }: CourseDetailPageProps) {
   const Icon = course.icon;
 
+  // Status selesai berasal dari riwayat aktivitas, sama dengan dashboard dan profil.
+  const completedSlugs = getCompletedLessonSlugs(course.slug);
+
   const completedLessons = detail.modules
     .flatMap((module) => module.lessons)
-    .filter((lesson) => lesson.isCompleted).length;
+    .filter((lesson) => completedSlugs.has(lesson.slug)).length;
 
   const totalLessons = detail.modules
     .flatMap((module) => module.lessons).length;
@@ -233,8 +237,8 @@ export default function CourseDetailPage({
                 const content = (
                   <div className="flex items-center gap-4 px-5 py-4 transition-colors hover:bg-accent">
                     <div className="shrink-0">
-                      {lesson.isCompleted ? (
-                        <CheckCircle2 className="h-5 w-5 text-primary" />
+                      {completedSlugs.has(lesson.slug) ? (
+                        <CheckCircle2 role="img" aria-label="Selesai" className="h-5 w-5 text-primary" />
                       ) : (
                         <PlayCircle className="h-5 w-5 text-muted-foreground" />
                       )}

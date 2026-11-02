@@ -3,7 +3,6 @@ export interface CourseLesson {
   slug: string;
   title: string;
   duration: string;
-  isCompleted: boolean;
 }
 
 export interface CourseModule {
