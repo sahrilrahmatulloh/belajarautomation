@@ -1,53 +1,31 @@
 import Link from "next/link";
 
-import {
-  Bell,
-  BookOpen,
-  FlaskConical,
-  Library,
-} from "lucide-react";
-
+import { NOTIFICATION_GROUPS } from "@/data/notificationGroups";
+import { formatNotificationTime } from "@/lib/notificationTime";
 import { Notification } from "@/types/Notification";
 
 interface NotificationItemProps {
   notification: Notification;
 }
 
-export const notificationIcons = {
-  course: BookOpen,
-  playground: FlaskConical,
-  book: Library,
-  system: Bell,
-};
-
-export default function NotificationItem({
-  notification,
-}: NotificationItemProps) {
-  const Icon =
-    notificationIcons[notification.type];
+export default function NotificationItem({ notification }: NotificationItemProps) {
+  const { icon: Icon, iconStyle } = NOTIFICATION_GROUPS[notification.group];
 
   const content = (
     <div
       className={`flex gap-4 rounded-2xl border border-border p-4 transition-colors hover:bg-accent ${
-        !notification.read
-          ? "bg-primary/[0.03]"
-          : "bg-card"
+        !notification.read ? "bg-primary/[0.03]" : "bg-card"
       }`}
     >
-      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-muted">
-        <Icon className="h-5 w-5" />
+      <div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${iconStyle}`}>
+        <Icon className="h-5 w-5" aria-hidden="true" />
       </div>
 
       <div className="min-w-0 flex-1">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <h2 className="text-sm font-semibold">
-              {notification.title}
-            </h2>
-
-            <p className="mt-1 text-sm leading-6 text-muted-foreground">
-              {notification.description}
-            </p>
+            <h2 className="text-sm font-semibold">{notification.title}</h2>
+            <p className="mt-1 text-sm leading-6 text-muted-foreground">{notification.body}</p>
           </div>
 
           {!notification.read && (
@@ -56,18 +34,14 @@ export default function NotificationItem({
         </div>
 
         <p className="mt-2 text-xs text-muted-foreground">
-          {notification.time}
+          {formatNotificationTime(notification.createdAt)}
         </p>
       </div>
     </div>
   );
 
   if (notification.href) {
-    return (
-      <Link href={notification.href}>
-        {content}
-      </Link>
-    );
+    return <Link href={notification.href}>{content}</Link>;
   }
 
   return content;

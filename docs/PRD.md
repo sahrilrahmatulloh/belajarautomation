@@ -1,9 +1,15 @@
 # BELAJARAUTOMATION.COM
 ## Product Requirements Document (PRD)
-**Versi:** 2.5  
+**Versi:** 2.7  
 **Status:** Draft — Acuan Pengembangan Produk  
 **Platform:** Web Application  
 **Target Pengguna:** Pemula hingga praktisi QA, Software Testing, dan Programming
+
+### Perubahan di Versi 2.7
+- Menambahkan acuan tampilan notifikasi: ikon dan warna per kelompok, format waktu, dan teks notifikasi membership (Bagian 4.4).
+
+### Perubahan di Versi 2.6
+- Menetapkan sistem notifikasi: 5 kelompok, popover lonceng, halaman arsip, tujuan klik, dan preferensi (Bagian 4.4).
 
 ### Perubahan di Versi 2.5
 - Playground memiliki 4 jenis latihan: Kuis, Bug Hunt, Test Case Writing, dan Locator Challenge, beserta halaman latihan untuk Bug Hunt dan Locator Challenge (FR-04).
@@ -1075,9 +1081,75 @@ Perubahan mode tampilan, avatar, dan tema harus:
 - Tetap mempertahankan keterbacaan dan kontras antarmuka.
 
 ## 4.4 Notifikasi
-Notifikasi dapat digunakan untuk memberi informasi mengenai aktivitas atau perubahan yang relevan.
 
-Preferensi notifikasi dan jenis notifikasi yang akan didukung masih perlu ditentukan.
+### Kelompok notifikasi
+| Kelompok | Contoh | Dapat dimatikan |
+|---|---|---|
+| Progres belajar | Naik rank, course selesai, lulus latihan untuk pertama kali, achievement diperoleh | Ya |
+| Konten baru | Course "Segera hadir" menjadi tersedia, latihan baru, eBook atau project baru | Ya |
+| Transaksi | Pembayaran berhasil, gagal, atau tertunda; membership aktif; kredit eBook atau project terpakai | Tidak |
+| Akun dan sistem | Selamat datang, perubahan kebijakan, jadwal maintenance | Tidak |
+| Khusus role | Creator: konten disetujui atau perlu revisi. Reviewer: konten baru di antrean. Admin: transaksi tertunda | Ya |
+
+Tidak dibuat notifikasi untuk: setiap perolehan XP, setiap lesson selesai, perubahan posisi leaderboard, dan pengingat streak harian (dapat dipertimbangkan setelah ada penjadwal di server).
+
+Notifikasi achievement hanya berfungsi sebagai penunjuk ke tab Pencapaian di profil; badge achievement tetap hanya ditampilkan di profil (FR-14).
+
+### Tampilan
+- **Lonceng di header:** menampilkan jumlah belum dibaca, maksimal "9+".
+- **Desktop:** klik lonceng membuka popover di bawahnya berisi maksimal 5 notifikasi terbaru, tombol "Tandai semua dibaca", dan tautan "Lihat semua notifikasi". Klik lonceng tidak memindahkan halaman.
+- **Mobile:** klik lonceng membuka halaman notifikasi atau panel dari bawah layar.
+- **Halaman `/notifications`** berfungsi sebagai arsip: judul "Notifikasi", tab Semua dan Belum dibaca, filter per kelompok, tombol "Tandai semua dibaca", dan pengelompokan per tanggal (Hari ini, Kemarin, lalu tanggal lengkap).
+- Notifikasi belum dibaca dibedakan secara visual.
+- Notifikasi sejenis yang muncul berdekatan digabung, mis. "3 course baru tersedia".
+- Empty state saat tidak ada notifikasi.
+
+### Acuan tampilan
+| Kelompok | Warna aksen | Ikon |
+|---|---|---|
+| Konten baru | Biru | Buku |
+| Progres belajar | Ungu | Target atau piala |
+| Transaksi | Hijau | Kartu pembayaran |
+| Akun dan sistem | Kuning | Roda gigi |
+| Khusus role | Oranye | Pensil |
+
+- Ikon dan warna konsisten di popover, halaman, mobile, dan modal.
+- Format waktu: relatif untuk kurang dari 24 jam ("5 menit lalu", "2 jam lalu"); di atas itu "Kemarin, 20.14" atau "30 Okt, 14.22".
+- Popover: lebar sekitar 360px; setiap item berisi ikon kelompok dalam kotak membulat, judul tebal, isi maksimal 2 baris, dan waktu.
+- Halaman: tab berupa tombol pil, filter kelompok berupa dropdown "Semua kelompok", tombol "Tandai semua dibaca", dan setiap item memiliki penanda panah.
+- Mobile: halaman notifikasi dengan tombol kembali di kiri judul.
+- Modal pengumuman: ikon kelompok, judul, isi lengkap, dan tombol "Mengerti".
+- Teks notifikasi membership mengikuti model Lifetime (FR-10), mis. "Membership Premium aktif. Kamu dapat mengakses materi premium yang termasuk dalam paketmu." Notifikasi tidak boleh menjanjikan akses ke seluruh konten premium.
+
+### Tujuan klik
+Klik notifikasi menandainya sebagai dibaca dan langsung membuka halaman terkait:
+
+| Notifikasi | Tujuan |
+|---|---|
+| Naik rank, achievement diperoleh | Profil (tab Ringkasan atau Pencapaian) |
+| Course selesai, course baru tersedia | Halaman detail course |
+| Lulus latihan, latihan baru | Halaman latihan |
+| eBook atau project baru | Halaman detail produk |
+| Transaksi | Detail transaksi |
+| Membership aktif | Halaman membership |
+| Konten perlu revisi atau disetujui (Creator) | Konten terkait beserta catatan |
+| Konten baru di antrean (Reviewer) | Antrean review |
+
+- Pengumuman tanpa halaman tujuan (kebijakan, maintenance) dibuka dalam modal berisi teks lengkap.
+- Jika halaman tujuan sudah tidak tersedia, arahkan ke halaman notifikasi dengan pesan "Konten ini sudah tidak tersedia".
+
+### Saluran
+1. Di website (lonceng dan halaman notifikasi): tahap awal.
+2. Email: setelah backend tersedia; wajib untuk transaksi, opsional untuk kelompok lain.
+3. Push notification browser: fase berikutnya.
+
+### Preferensi
+- Halaman pengaturan menyediakan toggle per kelompok yang dapat dimatikan, serta toggle email terpisah.
+- Kelompok Transaksi dan Akun ditampilkan sebagai "Selalu aktif".
+
+### Penyimpanan
+- Notifikasi berusia lebih dari 90 hari dihapus otomatis.
+- Status dibaca tersimpan per pengguna di backend.
 
 ---
 
