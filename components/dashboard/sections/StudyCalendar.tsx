@@ -4,6 +4,8 @@ import { useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 
+import { getActivityByDaysAgo } from "@/lib/activity";
+
 interface CalendarDate {
   year: number;
   month: number;
@@ -28,12 +30,41 @@ function getJakartaDate(): CalendarDate {
   };
 }
 
+function dateKey({ year, month, day }: CalendarDate) {
+  return `${year}-${month}-${day}`;
+}
+
+// Mengubah "N hari sebelum hari ini" menjadi tanggal kalender.
+function getActivityByDate(today: CalendarDate) {
+  const days = new Map<string, { count: number; xp: number }>();
+  for (const [daysAgo, activity] of getActivityByDaysAgo()) {
+    const date = new Date(Date.UTC(today.year, today.month, today.day - daysAgo, 12));
+    days.set(
+      dateKey({ year: date.getUTCFullYear(), month: date.getUTCMonth(), day: date.getUTCDate() }),
+      activity
+    );
+  }
+  return days;
+}
+
+function selectedDateSummary(date: CalendarDate, activity?: { count: number; xp: number }) {
+  const label = new Date(Date.UTC(date.year, date.month, date.day, 12)).toLocaleDateString("id-ID", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    timeZone: "UTC",
+  });
+  if (!activity) return `${label}: tidak ada aktivitas belajar.`;
+  return `${label}: ${activity.count} aktivitas${activity.xp > 0 ? `, +${activity.xp} XP` : ""}.`;
+}
+
 export default function StudyCalendar() {
   const [today] = useState(getJakartaDate);
   const [displayedMonth, setDisplayedMonth] = useState(
     () => new Date(Date.UTC(today.year, today.month, 1, 12)),
   );
   const [selectedDate, setSelectedDate] = useState(today);
+  const [activityByDate] = useState(() => getActivityByDate(today));
 
   const year = displayedMonth.getUTCFullYear();
   const month = displayedMonth.getUTCMonth();
@@ -60,7 +91,7 @@ export default function StudyCalendar() {
           Kalender Belajar
         </h2>
         <Link
-          href="/profile"
+          href="/profile?tab=aktivitas"
           className="inline-flex min-h-9 items-center gap-1 text-sm font-medium text-primary hover:underline"
         >
           Aktivitas <ArrowRight className="h-4 w-4" aria-hidden="true" />
@@ -111,17 +142,19 @@ export default function StudyCalendar() {
             dateParts.year === selectedDate.year &&
             dateParts.month === selectedDate.month &&
             dateParts.day === selectedDate.day;
+          const hasActivity = activityByDate.has(dateKey(dateParts));
+          const dateLabel = date.toLocaleDateString("id-ID", {
+            day: "numeric",
+            month: "long",
+            year: "numeric",
+            timeZone: "UTC",
+          });
 
           return (
             <button
               key={`${dateParts.year}-${dateParts.month}-${dateParts.day}`}
               type="button"
-              aria-label={date.toLocaleDateString("id-ID", {
-                day: "numeric",
-                month: "long",
-                year: "numeric",
-                timeZone: "UTC",
-              })}
+              aria-label={hasActivity ? `${dateLabel}, ada aktivitas belajar` : dateLabel}
               aria-pressed={isSelected}
               onClick={() => {
                 if (!inCurrentMonth) {
@@ -129,7 +162,7 @@ export default function StudyCalendar() {
                 }
                 setSelectedDate(dateParts);
               }}
-              className={`mx-auto flex h-8 w-full max-w-8 items-center justify-center rounded-md text-sm transition-colors ${
+              className={`relative mx-auto flex h-8 w-full max-w-8 items-center justify-center rounded-md text-sm transition-colors ${
                 isSelected
                   ? "bg-primary font-semibold text-primary-foreground shadow-sm"
                   : isToday
@@ -140,14 +173,28 @@ export default function StudyCalendar() {
               }`}
             >
               {dateParts.day}
+              {hasActivity && (
+                <span
+                  aria-hidden="true"
+                  className={`absolute bottom-0.5 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full ${
+                    isSelected ? "bg-primary-foreground" : inCurrentMonth ? "bg-primary" : "bg-primary/50"
+                  }`}
+                />
+              )}
             </button>
           );
         })}
       </div>
 
-      <p className="mt-3 border-t border-border pt-3 text-xs text-muted-foreground">
-        Aktivitas belajar belum tersimpan, jadi kalender ini belum menandai hari belajar.
-      </p>
+      <div className="mt-3 space-y-1.5 border-t border-border pt-3 text-xs text-muted-foreground">
+        <p aria-live="polite" className="font-medium text-foreground">
+          {selectedDateSummary(selectedDate, activityByDate.get(dateKey(selectedDate)))}
+        </p>
+        <p className="flex items-center gap-1.5">
+          <span aria-hidden="true" className="h-1 w-1 rounded-full bg-primary" />
+          Hari dengan aktivitas belajar
+        </p>
+      </div>
     </section>
   );
 }

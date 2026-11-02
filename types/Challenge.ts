@@ -22,6 +22,5 @@ export interface Challenge {
   type: ChallengeType;
   difficulty: ChallengeDifficulty;
   duration: string;
-  completed: boolean;
   icon: LucideIcon;
 }

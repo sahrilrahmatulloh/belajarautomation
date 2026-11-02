@@ -14,6 +14,10 @@ export class PlaygroundPage extends CatalogPage {
     return this.cards.filter({ has: this.page.getByRole("heading", { name: title, exact: true }) });
   }
 
+  completedMark(challengeTitle: string) {
+    return this.card(challengeTitle).getByRole("img", { name: "Selesai" });
+  }
+
   relatedCourseLink(challengeTitle: string) {
     return this.card(challengeTitle).getByRole("link", { name: /^Course: / });
   }

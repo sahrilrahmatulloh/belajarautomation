@@ -32,6 +32,18 @@ test.describe("Daftar challenge", () => {
     await expect(playground.card("Build Login Automation")).toBeVisible();
   });
 
+  test("status selesai mengikuti riwayat aktivitas", async () => {
+    await expect(playground.list.getByRole("img", { name: "Selesai" })).toHaveCount(2);
+
+    for (const title of ["Playwright Locator", "Find the Checkout Bug"]) {
+      await expect(playground.completedMark(title)).toBeVisible();
+      await expect(playground.card(title).getByRole("link", { name: "Main Lagi" })).toBeVisible();
+    }
+
+    await expect(playground.completedMark("Login Test Case")).toBeHidden();
+    await expect(playground.card("Login Test Case").getByRole("link", { name: "Mulai Challenge" })).toBeVisible();
+  });
+
   test("kartu challenge menampilkan tautan course terkait", async ({ page }) => {
     const link = playground.relatedCourseLink("Playwright Locator");
     await expect(link).toHaveText("Course: Playwright");
