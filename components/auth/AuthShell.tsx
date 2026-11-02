@@ -48,7 +48,7 @@ export default function AuthShell({
           className="flex w-fit items-center gap-3"
         >
           <Image
-            src="/logo.png"
+            src="/logo.webp"
             alt=""
             width={36}
             height={36}
