@@ -14,7 +14,7 @@ export abstract class BasePage {
   }
 
   async goto() {
-    await this.page.goto(this.path);
+    return this.page.goto(this.path);
   }
 
   async logout() {
@@ -22,13 +22,17 @@ export abstract class BasePage {
     await this.page.getByRole("menuitem", { name: "Keluar" }).click();
   }
 
+  // Yang digulir adalah <main>, sedangkan <html> hanya melebar bila layout rusak,
+  // jadi keduanya diperiksa.
   async expectNoHorizontalScroll() {
     await expect
       .poll(() =>
-        this.page.evaluate(
-          () => document.documentElement.scrollWidth - document.documentElement.clientWidth
+        this.page.evaluate(() =>
+          [document.documentElement, document.querySelector("main")].map((element) =>
+            element ? element.scrollWidth - element.clientWidth : 0
+          )
         )
       )
-      .toBeLessThanOrEqual(0);
+      .toEqual([0, 0]);
   }
 }

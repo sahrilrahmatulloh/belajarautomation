@@ -18,6 +18,11 @@ export const ROLES = Object.keys(ACCOUNTS) as Role[];
 // Penanda sessionStorage bahwa splash sudah tampil (lib/splash.ts).
 export const SPLASH_SEEN_KEY = "belajarautomation-splash-seen";
 
+export const USER_RANK = "Apprentice";
+
+export const ACTIVE_AVATAR_NAME = "Kucing Oren";
+export const ACTIVE_THEME_NAME = "Mountain Workspace";
+
 export const CHALLENGE_ANSWERS = {
   "playwright-locator": 'page.getByRole("button", { name: "Login" })',
   "login-test-case": "dashboard",

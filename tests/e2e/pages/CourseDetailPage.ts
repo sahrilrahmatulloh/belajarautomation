@@ -8,7 +8,8 @@ export class CourseDetailPage extends BasePage {
 
   constructor(page: Page, slug: string) {
     super(page, `/learn/${slug}`);
-    this.title = page.getByRole("heading", { level: 1 });
+    // Logo di sidebar juga berupa h1.
+    this.title = page.getByRole("main").getByRole("heading", { level: 1 });
     this.preparingNotice = page.getByRole("heading", { name: "Materi sedang disiapkan" });
   }
 }

@@ -16,7 +16,12 @@ export class MembershipPage extends BasePage {
     return this.plans.filter({ has: this.page.getByRole("heading", { name, exact: true }) });
   }
 
-  comparisonRow(feature: RegExp) {
-    return this.comparisonTable.getByRole("row", { name: feature });
+  // Sel nilai saja, tanpa judul baris: urutannya Basic, Pro, Premium.
+  comparisonValues(feature: string) {
+    return this.comparisonTable.getByRole("row", { name: feature }).getByRole("cell");
+  }
+
+  async buy(planName: string) {
+    await this.page.getByRole("button", { name: `Beli ${planName}`, exact: true }).click();
   }
 }
