@@ -13,8 +13,8 @@ test.describe("Progres di halaman detail course", () => {
 
     await expect(course.progressText).toHaveText("8 / 16 materi");
     await expect(course.completedMarks).toHaveCount(8);
-    await expect(course.completedMark("QA vs QC")).toBeVisible();
-    await expect(course.completedMark("Membuat Test Case")).toBeHidden();
+    await expect(course.completedMark("QA vs QC")).toBeAttached();
+    await expect(course.completedMark("Membuat Test Case")).toHaveCount(0);
   });
 
   test("course yang tuntas menandai semua lesson", async ({ page }) => {
@@ -48,7 +48,7 @@ test.describe("Progres di halaman detail course", () => {
     for (const slug of AVAILABLE_COURSE_SLUGS) {
       const course = new CourseDetailPage(page, slug);
       await course.goto();
-      await expect(course.lessonLinks.first()).toBeVisible();
+      await expect(course.lessonLinks.first()).toBeAttached();
       total += await course.completedMarks.count();
     }
 

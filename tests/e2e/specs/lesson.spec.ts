@@ -5,6 +5,7 @@ import { LearnPage } from "../pages/LearnPage";
 import { LessonPage } from "../pages/LessonPage";
 
 const COURSE = "playwright";
+const FIRST_MODULE = "Introduction to Playwright";
 const FIRST_LESSON = "apa-itu-playwright";
 const LAST_LESSON = "api-testing";
 
@@ -14,7 +15,8 @@ test.describe("Halaman lesson setelah login", () => {
   test("lesson dari halaman course terbuka dengan keterangan materi sedang ditulis", async ({ page }) => {
     const course = new CourseDetailPage(page, COURSE);
     await course.goto();
-    await course.lessonLinks.first().click();
+    await course.moduleToggle(FIRST_MODULE).click();
+    await course.moduleLessons(FIRST_MODULE).first().click();
 
     await expect(page).toHaveURL(`/learn/${COURSE}/${FIRST_LESSON}`);
 
@@ -52,7 +54,7 @@ test.describe("Halaman lesson setelah login", () => {
     for (const slug of AVAILABLE_COURSE_SLUGS) {
       const course = new CourseDetailPage(page, slug);
       await course.goto();
-      await expect(course.lessonLinks.first()).toBeVisible();
+      await expect(course.lessonLinks.first()).toBeAttached();
 
       const hrefs = await course.lessonLinks.evaluateAll((links) =>
         links.map((link) => link.getAttribute("href"))
