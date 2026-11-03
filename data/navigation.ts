@@ -48,7 +48,7 @@ export const NAVIGATION: Record<UserRole, NavItem[]> = {
     { label: "Roadmap", href: "/roadmap", icon: Map },
     { label: "Playground", href: "/playground", icon: FlaskConical },
     { label: "Leaderboard", href: "/leaderboard", icon: Trophy },
-    { label: "Blog", href: "/blog", icon: Newspaper, comingSoon: true },
+    { label: "Blog", href: "/blog", icon: Newspaper },
     { label: "eBook", href: "/ebooks", icon: Library, comingSoon: true },
     { label: "Project", href: "/projects", icon: FolderKanban, comingSoon: true },
     { label: "Karier", href: "/career", icon: Briefcase, comingSoon: true },

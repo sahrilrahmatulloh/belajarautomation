@@ -1,7 +1,7 @@
 import Image from "next/image";
-import Link from "next/link";
 import { ArrowRight, Map } from "lucide-react";
 
+import AuthLink from "@/components/auth/AuthLink";
 import { resolveArticleCta } from "@/lib/articleCta";
 import { ArticleCta } from "@/types/Article";
 
@@ -25,13 +25,13 @@ export default function Ajakan(props: ArticleCta) {
         <p className="mt-1 line-clamp-2 text-sm leading-6 text-muted-foreground">{cta.description}</p>
       </div>
 
-      <Link
+      <AuthLink
         href={cta.href}
         className="inline-flex min-h-10 shrink-0 items-center justify-center gap-1.5 rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground no-underline transition-colors hover:bg-primary/90"
       >
         {cta.action}
         <ArrowRight className="h-4 w-4" aria-hidden="true" />
-      </Link>
+      </AuthLink>
     </aside>
   );
 }

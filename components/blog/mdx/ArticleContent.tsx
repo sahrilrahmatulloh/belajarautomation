@@ -1,8 +1,9 @@
 import { isValidElement } from "react";
 import * as jsxRuntime from "react/jsx-runtime";
-import Link from "next/link";
 import { evaluate } from "@mdx-js/mdx";
 import remarkGfm from "remark-gfm";
+
+import AuthLink from "@/components/auth/AuthLink";
 
 import Ajakan from "./Ajakan";
 import { Peringatan, Tips } from "./Callouts";
@@ -21,9 +22,9 @@ function Pre({ children }: Props<"pre">) {
 function Anchor({ href = "", children }: Props<"a">) {
   if (href.startsWith("/")) {
     return (
-      <Link href={href} className="font-medium text-primary underline underline-offset-2">
+      <AuthLink href={href} className="font-medium text-primary underline underline-offset-2">
         {children}
-      </Link>
+      </AuthLink>
     );
   }
   return (

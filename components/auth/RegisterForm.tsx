@@ -6,7 +6,9 @@ import { useRouter } from "next/navigation";
 import { UserPlus } from "lucide-react";
 
 import { DUMMY_ACCOUNTS } from "@/data/dummy/accounts";
+import { getNextTarget, withNextParam } from "@/lib/authRedirect";
 import { sessionActions } from "@/lib/session";
+import { useHydrated } from "@/lib/useHydrated";
 import { isValidEmail } from "@/lib/validation";
 
 import AuthField from "./AuthField";
@@ -23,6 +25,7 @@ interface RegisterErrors {
 
 export default function RegisterForm() {
   const router = useRouter();
+  const isHydrated = useHydrated();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -64,7 +67,7 @@ export default function RegisterForm() {
         email: normalizedEmail,
         role: "user",
       });
-      router.replace("/");
+      router.replace(getNextTarget() ?? "/");
     }, 600);
   };
 
@@ -146,7 +149,7 @@ export default function RegisterForm() {
 
       <p className="text-center text-sm text-muted-foreground">
         Sudah punya akun?{" "}
-        <Link href="/login" className="font-semibold text-primary hover:underline">
+        <Link href={isHydrated ? withNextParam("/login") : "/login"} className="font-semibold text-primary hover:underline">
           Masuk
         </Link>
       </p>
