@@ -4,13 +4,14 @@ import { useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 
 import ContentStatusBadge from "@/components/roles/ContentStatusBadge";
-import { DUMMY_CREATOR_CONTENTS } from "@/data/dummy/creator";
+import { useCreatorStudio } from "@/lib/creatorStudio";
 import { formatDate } from "@/lib/format";
 
 // Tabel konten. Notifikasi mengarah ke ?konten=<id> untuk menandai konten terkait,
-// karena halaman detail konten baru ada setelah backend tersedia (PRD FR-15).
+// karena halaman konten beserta catatannya baru sungguhan setelah backend tersedia (PRD FR-15).
 export default function CreatorContentsTable() {
   const highlightedId = useSearchParams().get("konten");
+  const { contents } = useCreatorStudio();
   const highlightedRow = useRef<HTMLTableRowElement>(null);
 
   useEffect(() => {
@@ -30,7 +31,7 @@ export default function CreatorContentsTable() {
           </tr>
         </thead>
         <tbody className="divide-y divide-border">
-          {DUMMY_CREATOR_CONTENTS.map((content) => {
+          {contents.map((content) => {
             const isHighlighted = String(content.id) === highlightedId;
 
             return (
