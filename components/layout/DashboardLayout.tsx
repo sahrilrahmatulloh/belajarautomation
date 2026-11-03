@@ -62,8 +62,9 @@ export default function DashboardLayout({
           <Navbar onToggleSidebar={toggleSidebar} />
 
           {/* relative: elemen absolute di dalam isi (mis. teks sr-only) tidak memperpanjang
-              dokumen, yang membuat seluruh layout bergeser saat lompat ke heading. */}
-          <main className="relative min-w-0 flex-1 overflow-y-auto bg-background p-4 sm:p-5 lg:p-6">
+              dokumen, yang membuat seluruh layout bergeser saat lompat ke heading.
+              tabIndex: halaman panjang tanpa tautan tetap bisa digulir dengan keyboard. */}
+          <main tabIndex={0} className="relative min-w-0 flex-1 overflow-y-auto bg-background p-4 outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring sm:p-5 lg:p-6">
             {isRoleMode && isLearnerPath(pathname) ? <SwitchToLearningPrompt /> : children}
           </main>
         </div>
