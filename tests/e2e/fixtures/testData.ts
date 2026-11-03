@@ -236,6 +236,12 @@ export const ROLE_MODE = {
   ],
 } as const;
 
+// Data dummy pada halaman pratinjau video (data/dummy/videoReferensi.ts).
+export const VIDEO_REFERENSI = {
+  embedded: { id: "dummyVideo1", judul: "Video Contoh Berbahasa Indonesia", channel: "Channel Contoh", durasi: "12:34" },
+  english: { id: "dummyVideo2", judul: "Video Contoh Berbahasa Inggris" },
+  linkOnly: { id: "dummyVideo3", judul: "Video Contoh Tanpa Embed", channel: "Channel Tanpa Embed" },
+} as const;
 // Warna tombol utama berteks putih (PRD 15.2).
 export const COLORS = {
   primaryButton: "rgb(37, 99, 235)",

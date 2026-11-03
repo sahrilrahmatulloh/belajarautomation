@@ -56,6 +56,8 @@ Blok kode ditulis dengan tiga backtick dan nama bahasanya, mis. `ts`. Tabel mema
 <Gambar src="/covers/blog/contoh.webp" alt="Deskripsi gambar" keterangan="Keterangan di bawah gambar" />
 
 <Ajakan type="course" slug="playwright" />
+
+<VideoYouTube id="ID_VIDEO" judul="Judul asli" channel="Nama channel" durasi="12:34" bahasa="Inggris" />
 ```
 
 Karakter `<` dan `{` di teks biasa harus ditulis di dalam backtick agar tidak dibaca sebagai komponen.

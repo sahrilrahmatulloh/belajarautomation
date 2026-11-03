@@ -1,6 +1,7 @@
 // Memastikan setiap artikel di content/blog valid (PRD FR-07): frontmatter lengkap,
 // kategori valid, slug unik dan sama dengan nama file, file sampul ada, setiap ajakan
-// menuju course "available", latihan, atau roadmap yang ada, dan MDX bisa dikompilasi.
+// menuju course "available", latihan, atau roadmap yang ada, video referensi valid (maksimal
+// 3 per artikel), dan MDX bisa dikompilasi.
 // Gagal (exit 1) bila tidak. Jalankan: npm run check:blog (otomatis sebelum npm run build).
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
@@ -9,9 +10,14 @@ import { compile } from "@mdx-js/mdx";
 import matter from "gray-matter";
 import remarkGfm from "remark-gfm";
 
+import { findVideos } from "./blog-videos.mjs";
+
 const CONTENT_DIR = process.argv[2] ?? "content/blog";
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 const REQUIRED_TEXT = ["title", "slug", "excerpt", "category", "cover"];
+const VIDEO_ID_PATTERN = /^[A-Za-z0-9_-]{11}$/;
+const VIDEO_DURATION_PATTERN = /^(\d+:[0-5]\d|\d+:[0-5]\d:[0-5]\d)$/;
+const MAX_VIDEOS = 3;
 
 const categories = [...readFileSync("types/Article.ts", "utf8").match(/ARTICLE_CATEGORIES = \[([\s\S]*?)\]/)[1].matchAll(/"([^"]+)"/g)].map(
   (match) => match[1]
@@ -103,6 +109,17 @@ for (const file of files) {
 
   for (const [, src] of content.matchAll(/<Gambar\b[^>]*\bsrc="([^"]+)"/g)) {
     if (!existsSync(path.join("public", src))) report(`<Gambar>: file "${src}" tidak ada di public/`);
+  }
+
+  // Video referensi YouTube (PRD FR-02 bagian G).
+  const videos = findVideos(content);
+  if (videos.length > MAX_VIDEOS) report(`maksimal ${MAX_VIDEOS} video per artikel, ada ${videos.length}`);
+  for (const video of videos) {
+    const label = `<VideoYouTube id="${video.id ?? ""}">`;
+    if (!VIDEO_ID_PATTERN.test(video.id ?? "")) report(`${label}: "id" harus 11 karakter huruf, angka, - atau _`);
+    if (!video.judul?.trim()) report(`${label}: "judul" wajib diisi`);
+    if (!video.channel?.trim()) report(`${label}: "channel" wajib diisi`);
+    if (!VIDEO_DURATION_PATTERN.test(video.durasi ?? "")) report(`${label}: "durasi" wajib berformat m:ss atau h:mm:ss`);
   }
 
   try {

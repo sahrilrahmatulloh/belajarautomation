@@ -72,6 +72,12 @@ test.describe("Lingkungan UAT", () => {
     expect(response?.status()).toBe(404);
   });
 
+  test("halaman pratinjau video tidak tersedia", async ({ page }) => {
+    const response = await page.goto("/dev/video-referensi");
+
+    expect(response?.status()).toBe(404);
+  });
+
   test("halaman tetap noindex", async ({ page }) => {
     await page.goto("/blog");
 

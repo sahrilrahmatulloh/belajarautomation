@@ -20,6 +20,7 @@
     "check:content": "node scripts/check-content.mjs",
     "check:content:release": "node scripts/check-content.mjs --strict",
     "check:blog": "node scripts/check-blog.mjs",
+    "check:youtube": "node scripts/check-youtube-links.mjs",
     "optimize:covers": "node scripts/optimize-covers.mjs",
     "optimize:images": "node scripts/optimize-images.mjs",
     "optimize:ranks": "node scripts/optimize-images.mjs ranks"
