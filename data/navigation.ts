@@ -15,9 +15,6 @@ import {
   Map,
   MessageSquareText,
   Newspaper,
-  Palette,
-  Receipt,
-  Settings,
   Trophy,
   Users,
 } from "lucide-react";
@@ -68,12 +65,8 @@ export const NAVIGATION: Record<UserRole, NavItem[]> = {
   ],
   admin: [
     { label: "Dashboard", href: "/admin", icon: LayoutDashboard },
-    { label: "Pengguna & Role", href: "/admin/pengguna", icon: Users },
-    { label: "Konten", href: "/admin/konten", icon: Files },
-    { label: "Paket Membership", href: "/admin/paket", icon: Crown },
-    { label: "Avatar & Tema", href: "/admin/avatar-tema", icon: Palette },
-    { label: "Transaksi", href: "/admin/transaksi", icon: Receipt },
-    { label: "Pengaturan", href: "/admin/pengaturan", icon: Settings },
+    { label: "Semua Konten", href: "/admin/konten", icon: Files },
+    { label: "Kelola Peran", href: "/admin/pengguna", icon: Users },
   ],
 };
 
