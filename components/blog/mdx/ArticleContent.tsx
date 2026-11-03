@@ -5,6 +5,7 @@ import rehypeSlug from "rehype-slug";
 import remarkGfm from "remark-gfm";
 
 import AuthLink from "@/components/auth/AuthLink";
+import VideoReferensi from "@/components/content/VideoReferensi";
 
 import Ajakan from "./Ajakan";
 import { Peringatan, Tips } from "./Callouts";
@@ -42,6 +43,7 @@ const MDX_COMPONENTS = {
   Gambar,
   Peringatan,
   Tips,
+  VideoYouTube: VideoReferensi,
   a: Anchor,
   pre: Pre,
   h2: (props: Props<"h2">) => <h2 className="mt-10 scroll-mt-4 text-2xl font-bold tracking-tight first:mt-0" {...props} />,
