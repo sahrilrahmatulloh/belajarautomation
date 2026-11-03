@@ -142,9 +142,9 @@ export const NOTIFICATIONS = {
   ],
   dayHeadings: ["Hari ini", "Kemarin", /13 November 2026/, /10 November 2026/, /9 November 2026/, /19 Oktober 2026/],
   roles: [
-    { role: "creator", title: "Konten perlu revisi", href: "/creator?konten=3", count: 2 },
-    { role: "reviewer", title: "Konten baru di antrean", href: "/reviewer", count: 1 },
-    { role: "admin", title: "Transaksi tertunda", href: "/admin", count: 1 },
+    { role: "creator", title: "Cara Menulis Bug Report", href: "/creator/revisi/konten-bug-report", count: 7 },
+    { role: "reviewer", title: "Manual Testing vs Automation Testing", href: "/reviewer/review/konten-manual", count: 4 },
+    { role: "admin", title: "Konten siap diterbitkan", href: "/admin/konten?status=disetujui", count: 1 },
   ],
 } as const;
 
@@ -212,9 +212,10 @@ export const ROLE_MODE = {
   adminTasks: ["Menerbitkan konten yang sudah disetujui", "Mengelola peran pengguna"],
   publicUsername: "sobatqa",
   notifications: {
-    revision: { title: "Konten perlu revisi", contentId: 3, contentTitle: "Soal: Validasi Status Code API" },
-    approved: { title: "Konten disetujui", contentId: 5, contentTitle: "Modul Page Object Model" },
+    revision: { title: "Konten perlu revisi", href: "/creator/revisi/konten-bug-report", contentTitle: "Cara Menulis Bug Report" },
+    approved: { title: "Konten disetujui", href: "/creator/konten/konten-login", contentTitle: "Contoh Test Case Login yang Lengkap" },
   },
+  multiRoleEmail: "bima@demo.belajarautomation.com",
   googleDocsStages: ["Draf", "Menunggu Review", "Perlu Revisi", "Disetujui", "Terbit"],
   writingStepCount: 7,
   templateDisabledLabel: "Template sedang disiapkan. Hubungi Admin.",

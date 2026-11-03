@@ -1,8 +1,8 @@
 import { Page } from "@playwright/test";
 
 import { expect, test } from "../fixtures/auth";
-import { ACCOUNTS, ROLE_MODE } from "../fixtures/testData";
-import { CreatorDashboardPage } from "../pages/CreatorDashboardPage";
+import { ACCOUNTS, DEMO_PASSWORD, ROLE_MODE } from "../fixtures/testData";
+import { LoginPage } from "../pages/LoginPage";
 import { DashboardPage } from "../pages/DashboardPage";
 import { NotificationsPage } from "../pages/NotificationsPage";
 import { RoleDashboardPage } from "../pages/RoleDashboardPage";
@@ -112,6 +112,23 @@ test.describe("Pengalih mode", () => {
       await expect(page.getByRole("menuitem", { name: "Profil" })).toBeVisible();
       await expect(page.getByRole("menuitemradio")).toHaveCount(0);
     });
+  });
+});
+
+test.describe("Akun dengan beberapa peran", () => {
+  test("menu profil memuat setiap mode yang dimiliki", async ({ page }) => {
+    const login = new LoginPage(page);
+    await login.goto();
+    await login.login(ROLE_MODE.multiRoleEmail, DEMO_PASSWORD);
+    await expect(page).toHaveURL("/reviewer");
+    const dashboard = new RoleDashboardPage(page, "reviewer");
+
+    await dashboard.profileMenuButton.click();
+
+    await expect(dashboard.modeOption("Mode Belajar")).toBeVisible();
+    await expect(dashboard.modeOption("Mode Reviewer")).toHaveAttribute("aria-checked", "true");
+    await dashboard.modeOption("Mode Creator").click();
+    await expect(page).toHaveURL("/creator");
   });
 });
 
@@ -270,7 +287,7 @@ test.describe("Notifikasi per mode", () => {
   test("mode peran hanya menampilkan Khusus role serta Akun dan sistem", async ({ page }) => {
     const notifications = await openNotifications(page);
 
-    await expect(notifications.item(ROLE_MODE.notifications.revision.title)).toBeVisible();
+    await expect(notifications.item(ROLE_MODE.notifications.revision.contentTitle)).toBeVisible();
     await expect(notifications.item("Jadwal maintenance")).toBeVisible();
     await expect(notifications.item("Membership aktif")).toBeHidden();
     await expect(notifications.item("Lulus latihan")).toBeHidden();
@@ -287,7 +304,7 @@ test.describe("Notifikasi per mode", () => {
 
     await expect(notifications.item("Membership aktif")).toBeVisible();
     await expect(notifications.item("Jadwal maintenance")).toBeVisible();
-    await expect(notifications.item(ROLE_MODE.notifications.revision.title)).toBeHidden();
+    await expect(notifications.item(ROLE_MODE.notifications.revision.contentTitle)).toBeHidden();
     await expect(notifications.groupFilter.getByRole("option", { name: "Khusus role" })).toHaveCount(0);
   });
 
@@ -301,16 +318,14 @@ test.describe("Notifikasi per mode", () => {
     await expect(section.getByText("Transaksi", { exact: true })).toHaveCount(0);
   });
 
-  for (const { title, contentId, contentTitle } of [ROLE_MODE.notifications.revision, ROLE_MODE.notifications.approved]) {
-    test(`"${title}" menandai konten terkait di tabel`, async ({ page }) => {
+  for (const { title, href, contentTitle } of [ROLE_MODE.notifications.revision, ROLE_MODE.notifications.approved]) {
+    test(`"${title}" dibuat dari riwayat status dan membuka konten terkait`, async ({ page }) => {
       const notifications = await openNotifications(page);
-      await expect(notifications.item(title)).toContainText(contentTitle);
+      await expect(notifications.item(contentTitle)).toContainText(title);
 
-      await notifications.item(title).click();
+      await notifications.item(contentTitle).click();
 
-      await expect(page).toHaveURL(`/creator?konten=${contentId}`);
-      const dashboard = new CreatorDashboardPage(page);
-      await expect(dashboard.contentRow(contentTitle)).toHaveAttribute("aria-current", "true");
+      await expect(page).toHaveURL(href);
     });
   }
 });

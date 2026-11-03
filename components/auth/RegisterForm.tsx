@@ -66,6 +66,7 @@ export default function RegisterForm() {
         name: name.trim(),
         email: normalizedEmail,
         role: "user",
+        roles: ["user"],
       });
       router.replace(getNextTarget() ?? "/");
     }, 600);

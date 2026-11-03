@@ -11,6 +11,7 @@ import { DUMMY_REVIEWER_STATS } from "@/data/dummy/reviewer";
 import { useCreatorStudio } from "@/lib/creatorStudio";
 import { formatDate } from "@/lib/format";
 import { useSession } from "@/lib/session";
+import { useViewMode } from "@/lib/viewMode";
 
 const ADMIN_TASKS = ["Menerbitkan konten yang sudah disetujui", "Mengelola peran pengguna"];
 
@@ -107,6 +108,7 @@ function AdminProfile() {
 // rank, achievement, dan membership.
 export default function RoleProfile() {
   const session = useSession();
+  const { activeRole } = useViewMode();
   if (!session) return null;
 
   return (
@@ -120,14 +122,14 @@ export default function RoleProfile() {
           <h1 className="truncate text-2xl font-bold tracking-tight">{session.name}</h1>
           <p className="truncate text-sm text-muted-foreground">{session.email}</p>
           <span className="mt-2 inline-flex rounded-full bg-blue-500/10 px-2.5 py-0.5 text-xs font-semibold text-blue-700 dark:text-blue-300">
-            {ROLE_LABELS[session.role]}
+            {ROLE_LABELS[activeRole]}
           </span>
         </div>
       </header>
 
-      {session.role === "creator" && <CreatorProfile />}
-      {session.role === "reviewer" && <StatsSection title="Aktivitas Review" stats={REVIEWER_STATS} />}
-      {session.role === "admin" && <AdminProfile />}
+      {activeRole === "creator" && <CreatorProfile />}
+      {activeRole === "reviewer" && <StatsSection title="Aktivitas Review" stats={REVIEWER_STATS} />}
+      {activeRole === "admin" && <AdminProfile />}
     </div>
   );
 }

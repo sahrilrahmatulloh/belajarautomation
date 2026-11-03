@@ -27,22 +27,22 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ROLE_HOME, ROLE_LABELS } from "@/data/navigation";
 import { ACTIVE_AVATAR } from "@/data/dummy/appearance";
 import { sessionActions, useSession } from "@/lib/session";
+import { UserRole } from "@/types/Role";
 import { useViewMode, viewModeActions } from "@/lib/viewMode";
 
 const LEARNING_MODE = "belajar";
-const ROLE_MODE = "peran";
 
 export default function ProfileDropdown() {
   const router = useRouter();
   const session = useSession();
 
   const displayName = session?.name ?? "Tamu";
-  const { hasRole, isRoleMode } = useViewMode();
+  const { activeRole, extraRoles, hasRole, isRoleMode } = useViewMode();
   const displayStatus = !session
     ? "Belum masuk"
     : hasRole && !isRoleMode
       ? `${ROLE_LABELS[session.role]} · Mode Belajar`
-      : ROLE_LABELS[session.role];
+      : ROLE_LABELS[isRoleMode ? activeRole : session.role];
 
   const switchMode = (mode: string) => {
     if (!session) return;
@@ -50,8 +50,9 @@ export default function ProfileDropdown() {
       viewModeActions.switchToLearning(session.email);
       router.push(ROLE_HOME.user);
     } else {
-      viewModeActions.switchToRole();
-      router.push(ROLE_HOME[session.role]);
+      const role = mode as UserRole;
+      viewModeActions.switchToRole(session.email, role);
+      router.push(ROLE_HOME[role]);
     }
   };
 
@@ -135,14 +136,16 @@ export default function ProfileDropdown() {
         {/* Pengalih mode (PRD FR-15) */}
         {session && hasRole && (
           <>
-            <DropdownMenuRadioGroup value={isRoleMode ? ROLE_MODE : LEARNING_MODE} onValueChange={switchMode}>
+            <DropdownMenuRadioGroup value={isRoleMode ? activeRole : LEARNING_MODE} onValueChange={switchMode}>
               <DropdownMenuLabel>Mode tampilan</DropdownMenuLabel>
               <DropdownMenuRadioItem value={LEARNING_MODE} closeOnClick>
                 Mode Belajar
               </DropdownMenuRadioItem>
-              <DropdownMenuRadioItem value={ROLE_MODE} closeOnClick>
-                Mode {ROLE_LABELS[session.role]}
-              </DropdownMenuRadioItem>
+              {extraRoles.map((role) => (
+                <DropdownMenuRadioItem key={role} value={role} closeOnClick>
+                  Mode {ROLE_LABELS[role]}
+                </DropdownMenuRadioItem>
+              ))}
             </DropdownMenuRadioGroup>
 
             <DropdownMenuSeparator />
