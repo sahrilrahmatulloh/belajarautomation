@@ -56,9 +56,9 @@ export const NAVIGATION: Record<UserRole, NavItem[]> = {
   ],
   creator: [
     { label: "Dashboard", href: "/creator", icon: LayoutDashboard },
-    { label: "Konten Saya", icon: FileText, comingSoon: true },
-    { label: "Buat Konten", icon: FilePlus2, comingSoon: true },
-    { label: "Catatan Revisi", icon: MessageSquareText, comingSoon: true },
+    { label: "Konten Saya", href: "/creator/konten", icon: FileText },
+    { label: "Buat Konten", href: "/creator/buat", icon: FilePlus2 },
+    { label: "Catatan Revisi", href: "/creator/revisi", icon: MessageSquareText },
   ],
   reviewer: [
     { label: "Dashboard", href: "/reviewer", icon: LayoutDashboard },

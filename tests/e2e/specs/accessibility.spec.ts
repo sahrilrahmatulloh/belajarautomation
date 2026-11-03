@@ -2,7 +2,7 @@ import AxeBuilder from "@axe-core/playwright";
 import { Page, TestInfo } from "@playwright/test";
 
 import { expect, test } from "../fixtures/auth";
-import { MAIN_PAGES, openRoleDashboard, ROLE_PAGES } from "../fixtures/mainPages";
+import { MAIN_PAGES, openRolePage, ROLE_PAGES } from "../fixtures/mainPages";
 
 test.use({ role: "user" });
 
@@ -32,12 +32,12 @@ test.describe("Aksesibilitas", () => {
     });
   }
 
-  for (const { role, name } of ROLE_PAGES) {
+  for (const { role, name, path } of ROLE_PAGES) {
     test.describe(name, () => {
       test.use({ role });
 
       test(`halaman ${name} tanpa pelanggaran critical`, async ({ page }, testInfo) => {
-        await openRoleDashboard(page, role);
+        await openRolePage(page, role, path);
 
         await expectNoCriticalViolations(page, testInfo);
       });

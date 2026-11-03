@@ -1,9 +1,13 @@
 # BELAJARAUTOMATION.COM
 ## Product Requirements Document (PRD)
-**Versi:** 2.9  
+**Versi:** 2.10  
 **Status:** Draft — Acuan Pengembangan Produk  
 **Platform:** Web Application  
 **Target Pengguna:** Pemula hingga praktisi QA, Software Testing, dan Programming
+
+### Perubahan di Versi 2.10
+- Tampilan mengikuti mode: Mode Creator, Reviewer, dan Admin tanpa keranjang, membership, serta data pelajar; profil per mode; notifikasi per mode (FR-15, Bagian 4.4).
+- Admin juga memiliki Mode Belajar.
 
 ### Perubahan di Versi 2.9
 - Menambahkan peran Creator, Reviewer, dan Admin beserta alur penerbitan konten (FR-15).
@@ -1114,8 +1118,32 @@ Memungkinkan konten ditulis oleh lebih dari satu orang dengan kualitas yang teta
 | **Admin** | Menerbitkan konten yang sudah disetujui, mengelola peran pengguna | — |
 
 - Satu akun dapat memiliki beberapa peran. Selama tim masih kecil, pemilik produk dapat merangkap Reviewer dan Admin.
-- Creator dan Reviewer tetap merupakan pelajar: XP, rank, profil, dan membership tetap berlaku.
-- Pengguna dengan peran tambahan memiliki pengalih **"Mode Belajar"** dan **"Mode Creator"** (atau Reviewer/Admin) di menu profil. Sidebar, dashboard, dan menu mengikuti mode yang aktif. Identitas (nama dan avatar) sama di semua mode.
+- Creator, Reviewer, dan Admin tetap dapat belajar: XP, rank, profil pelajar, dan membership tetap berlaku di **Mode Belajar**.
+- Pengguna dengan peran tambahan memiliki pengalih **"Mode Belajar"** dan **"Mode Creator"**, **"Mode Reviewer"**, atau **"Mode Admin"** di menu profil. Mode tersimpan dan bertahan saat berpindah halaman.
+- Identitas (nama, avatar, dan email) sama di semua mode.
+
+### Tampilan per mode
+| Elemen | Mode Belajar | Mode Creator / Reviewer / Admin |
+|---|---|---|
+| Sidebar dan dashboard | Menu pelajar | Menu sesuai peran |
+| Keranjang | Ya | Tidak |
+| Membership (menu, halaman, dan info di profil) | Ya | Tidak |
+| XP, rank, achievement, leaderboard | Ya | Tidak ditampilkan |
+| Notifikasi | Progres belajar, Konten baru, Transaksi, Akun dan sistem | Khusus role, Akun dan sistem |
+
+Jika pengguna dalam mode peran membuka halaman khusus pelajar (mis. keranjang, membership, leaderboard), tampilkan ajakan untuk beralih ke Mode Belajar.
+
+### Profil per mode
+- **Mode Belajar:** profil pelajar sesuai FR-13.
+- **Mode peran:** nama, avatar, email, dan peran, tanpa XP, rank, achievement, maupun membership. Isi khusus:
+
+| Peran | Isi profil |
+|---|---|
+| Creator | Jumlah konten per status dan daftar konten yang sudah terbit |
+| Reviewer | Jumlah konten yang direview, disetujui, dan diminta revisi |
+| Admin | Peran dan tugas, tanpa statistik |
+
+- Profil publik (FR-13) tetap menampilkan profil pelajar.
 
 ### Jenis konten yang dapat dibuat Creator (bertahap)
 1. **Artikel blog** — tahap pertama.
@@ -1190,6 +1218,8 @@ Perubahan mode tampilan, avatar, dan tema harus:
 | Khusus role | Creator: konten disetujui atau perlu revisi. Reviewer: konten baru di antrean. Admin: transaksi tertunda | Ya |
 
 Tidak dibuat notifikasi untuk: setiap perolehan XP, setiap lesson selesai, perubahan posisi leaderboard, dan pengingat streak harian (dapat dipertimbangkan setelah ada penjadwal di server).
+
+Notifikasi mengikuti mode aktif (FR-15): di mode peran hanya tampil notifikasi Khusus role serta Akun dan sistem; kelompok lain tampil di Mode Belajar.
 
 Notifikasi achievement hanya berfungsi sebagai penunjuk ke tab Pencapaian di profil; badge achievement tetap hanya ditampilkan di profil (FR-14).
 

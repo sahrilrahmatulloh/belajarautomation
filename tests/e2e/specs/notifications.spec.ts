@@ -354,7 +354,7 @@ test.describe("Notifikasi khusus role", () => {
     });
   });
 
-  for (const { role, title, href } of NOTIFICATIONS.roles) {
+  for (const { role, title, href, count } of NOTIFICATIONS.roles) {
     test.describe(`akun ${role}`, () => {
       test.use({ role });
 
@@ -367,7 +367,7 @@ test.describe("Notifikasi khusus role", () => {
         }
 
         await notifications.groupFilter.selectOption({ label: "Khusus role" });
-        await expect(notifications.entries).toHaveCount(1);
+        await expect(notifications.entries).toHaveCount(count);
 
         await notifications.item(title).click();
         await expect(page).toHaveURL(href);

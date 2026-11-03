@@ -59,13 +59,22 @@ export const MAIN_PAGES: { name: string; open: (page: Page) => Promise<BasePage>
   { name: "Pengaturan", open: (page) => open(new SettingsPage(page), (p) => p.notificationSection) },
 ];
 
-// Dashboard yang hanya bisa dibuka dengan role tertentu.
-export const ROLE_PAGES: { role: Exclude<Role, "user">; name: string }[] = [
-  { role: "creator", name: "Dashboard Creator" },
-  { role: "reviewer", name: "Dashboard Reviewer" },
-  { role: "admin", name: "Dashboard Admin" },
+// Halaman yang dibuka dalam mode peran.
+export const ROLE_PAGES: { role: Exclude<Role, "user">; name: string; path: string }[] = [
+  { role: "creator", name: "Dashboard Creator", path: "/creator" },
+  { role: "creator", name: "Konten Saya", path: "/creator/konten" },
+  { role: "creator", name: "Buat Konten", path: "/creator/buat" },
+  { role: "creator", name: "Catatan Revisi", path: "/creator/revisi" },
+  { role: "creator", name: "Profil Creator", path: "/profile" },
+  { role: "creator", name: "Ajakan Mode Belajar", path: "/membership" },
+  { role: "reviewer", name: "Dashboard Reviewer", path: "/reviewer" },
+  { role: "reviewer", name: "Profil Reviewer", path: "/profile" },
+  { role: "admin", name: "Dashboard Admin", path: "/admin" },
+  { role: "admin", name: "Profil Admin", path: "/profile" },
 ];
 
-export function openRoleDashboard(page: Page, role: Exclude<Role, "user">) {
-  return open(new RoleDashboardPage(page, role), (p) => p.greeting);
+export async function openRolePage(page: Page, role: Exclude<Role, "user">, path: string) {
+  await page.goto(path);
+  await expect(page.getByRole("main").getByRole("heading", { level: 1 })).toBeVisible();
+  return new RoleDashboardPage(page, role);
 }

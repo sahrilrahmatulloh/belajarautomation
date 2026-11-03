@@ -1,9 +1,12 @@
+"use client";
+
 import { Suspense } from "react";
 import Link from "next/link";
 import { Eye } from "lucide-react";
 
 import { getPublicProfile } from "@/data/dummy/publicProfiles";
 import { DUMMY_PROFILE } from "@/data/dummy/profile";
+import { useSession } from "@/lib/session";
 
 import FeaturedAchievements from "./FeaturedAchievements";
 import LearningProgress from "./LearningProgress";
@@ -19,6 +22,9 @@ import ShareProfileDialog from "./ShareProfileDialog";
 export default function ProfilePage() {
   // Profil akun demo selalu ada; datanya sama dengan yang tampil di profil publik.
   const profile = getPublicProfile(DUMMY_PROFILE.username)!;
+  // Nama mengikuti akun yang masuk, agar sama di semua mode (PRD FR-15).
+  const session = useSession();
+  const displayName = session?.name ?? profile.displayName;
 
   const earnedAchievements = profile.achievements.filter((state) => state.earned).length;
 
@@ -43,7 +49,7 @@ export default function ProfilePage() {
   return (
     <div className="mx-auto max-w-6xl space-y-6">
       <ProfileHeader
-        displayName={profile.displayName}
+        displayName={displayName}
         username={profile.username}
         bio={profile.bio}
         avatarImage={profile.avatarImage}
@@ -53,7 +59,7 @@ export default function ProfilePage() {
         isOwner
         shareAction={
           <ShareProfileDialog
-            displayName={profile.displayName}
+            displayName={displayName}
             username={profile.username}
             avatarImage={profile.avatarImage}
             themeImage={profile.themeImage}

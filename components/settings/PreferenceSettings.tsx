@@ -9,7 +9,7 @@ import {
   notificationPreferenceActions,
   useNotificationPreferences,
 } from "@/lib/notificationPreferences";
-import { useSession } from "@/lib/session";
+import { getVisibleNotificationGroups, useViewMode } from "@/lib/viewMode";
 
 const GROUP_DESCRIPTIONS = {
   progress: "Naik rank, achievement, dan latihan yang kamu selesaikan.",
@@ -83,11 +83,13 @@ function PreferenceSwitch({
 }
 
 export default function PreferenceSettings() {
-  const session = useSession();
+  const { isRoleMode } = useViewMode();
   const { mutedGroups, email } = useNotificationPreferences();
 
-  // Kelompok "Khusus role" hanya untuk pengguna dengan role tersebut.
-  const mutableGroups = MUTABLE_GROUPS.filter((group) => group !== "role" || session?.role !== "user");
+  // Kelompok mengikuti mode aktif (PRD FR-15).
+  const visibleGroups = getVisibleNotificationGroups(isRoleMode);
+  const mutableGroups = MUTABLE_GROUPS.filter((group) => visibleGroups.includes(group));
+  const alwaysOnGroups = ALWAYS_ON_GROUPS.filter((group) => visibleGroups.includes(group));
 
   return (
     <section id="notifikasi" className="scroll-mt-20 rounded-3xl border border-border bg-card p-6">
@@ -123,7 +125,7 @@ export default function PreferenceSettings() {
           );
         })}
 
-        {ALWAYS_ON_GROUPS.map((group) => {
+        {alwaysOnGroups.map((group) => {
           const { label, icon, iconStyle } = NOTIFICATION_GROUPS[group];
 
           return (

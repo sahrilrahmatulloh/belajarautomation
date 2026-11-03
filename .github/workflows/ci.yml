@@ -32,6 +32,9 @@ jobs:
       # Build berjalan di sini lewat webServer pada playwright.config.ts.
       - run: npm run test:e2e
 
+      # Perilaku di luar DEV, memakai build sendiri dengan lingkungan UAT.
+      - run: npm run test:e2e:non-dev
+
       - uses: actions/upload-artifact@v7
         if: ${{ !cancelled() }}
         with:

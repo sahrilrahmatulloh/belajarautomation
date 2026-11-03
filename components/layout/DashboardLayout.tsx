@@ -1,11 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 
 import RequireAuth from "@/components/auth/RequireAuth";
+import { isLearnerPath, useViewMode } from "@/lib/viewMode";
 
 import Sidebar from "./Sidebar";
 import Navbar from "./Navbar";
+import SwitchToLearningPrompt from "./SwitchToLearningPrompt";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -18,6 +21,8 @@ export default function DashboardLayout({
   children,
   publicAccess = false,
 }: DashboardLayoutProps) {
+  const pathname = usePathname();
+  const { isRoleMode } = useViewMode();
   const [isDesktopSidebarOpen, setIsDesktopSidebarOpen] = useState(true);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
@@ -59,7 +64,7 @@ export default function DashboardLayout({
           {/* relative: elemen absolute di dalam isi (mis. teks sr-only) tidak memperpanjang
               dokumen, yang membuat seluruh layout bergeser saat lompat ke heading. */}
           <main className="relative min-w-0 flex-1 overflow-y-auto bg-background p-4 sm:p-5 lg:p-6">
-            {children}
+            {isRoleMode && isLearnerPath(pathname) ? <SwitchToLearningPrompt /> : children}
           </main>
         </div>
       </div>
