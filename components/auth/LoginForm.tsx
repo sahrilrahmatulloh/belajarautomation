@@ -8,6 +8,7 @@ import { AlertCircle, LogIn } from "lucide-react";
 import { DUMMY_ACCOUNTS, DUMMY_PASSWORD } from "@/data/dummy/accounts";
 import { ROLE_HOME, ROLE_LABELS } from "@/data/navigation";
 import { sessionActions } from "@/lib/session";
+import { useHydrated } from "@/lib/useHydrated";
 import { isValidEmail } from "@/lib/validation";
 
 import AuthField from "./AuthField";
@@ -20,6 +21,7 @@ interface LoginErrors {
 
 export default function LoginForm() {
   const router = useRouter();
+  const isHydrated = useHydrated();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<LoginErrors>({});
@@ -108,7 +110,8 @@ export default function LoginForm() {
 
         <button
           type="submit"
-          disabled={isSubmitting}
+          // Sebelum halaman siap, klik akan memuat ulang halaman dan menghapus isian.
+          disabled={isSubmitting || !isHydrated}
           className="flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90 disabled:cursor-wait disabled:opacity-70"
         >
           <LogIn className="h-4 w-4" aria-hidden="true" />

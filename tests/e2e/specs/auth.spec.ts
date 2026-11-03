@@ -24,6 +24,22 @@ test.describe("Login sebagai tamu", () => {
     await expect(page).toHaveURL("/login");
   });
 
+  test("isian yang diketik sebelum halaman siap tetap terpakai saat masuk", async ({ page }) => {
+    const loginPage = new LoginPage(page);
+    const release = await loginPage.gotoBeforeHydration();
+
+    await loginPage.emailInput.fill(ACCOUNTS.user.email);
+    await loginPage.passwordInput.fill(DEMO_PASSWORD);
+    await expect(loginPage.submitButton).toBeDisabled();
+
+    release();
+    await expect(loginPage.submitButton).toBeEnabled();
+    await expect(loginPage.emailInput).toHaveValue(ACCOUNTS.user.email);
+
+    await loginPage.submitButton.click();
+    await expect(page).toHaveURL(ACCOUNTS.user.home);
+  });
+
   test("membuka /profile tanpa login diarahkan ke halaman login", async ({ page }) => {
     await new ProfilePage(page).goto();
 
