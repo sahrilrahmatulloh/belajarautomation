@@ -176,6 +176,10 @@ test.describe("Prototipe editor artikel", () => {
 
     await expect(page.getByRole("list", { name: "Referensi video" }).getByRole("listitem")).toHaveCount(3);
     await expect(addVideo).toBeDisabled();
+
+    // Pratinjau memakai kartu video yang sama dengan halaman publik.
+    await page.getByRole("button", { name: "Pratinjau" }).click();
+    await expect(editor.dialog.getByRole("button", { name: /^Putar video:/ })).toHaveCount(3);
   });
 
   test("upload gambar menolak format dan ukuran yang salah", async ({ page, isMobile }) => {

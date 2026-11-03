@@ -1,3 +1,4 @@
+import VideoReferensi from "@/components/content/VideoReferensi";
 import { DraftVideo } from "@/types/RoleDashboard";
 
 // Pratinjau sederhana isi draf di browser. Versi setelah backend memakai tampilan halaman
@@ -49,11 +50,16 @@ export default function ArticlePreview({ title, body, videos }: { title: string;
       {videos.length > 0 && (
         <section className="mt-8">
           <h3 className="text-lg font-bold">Referensi Video</h3>
-          <ul className="mt-2 space-y-1 text-sm">
-            {videos.map((video) => (
-              <li key={video.id}>{video.title} · {video.channel} · Bahasa {video.language}</li>
-            ))}
-          </ul>
+          {videos.map((video) => (
+            <VideoReferensi
+              key={video.id}
+              id={video.id}
+              judul={video.title}
+              channel={video.channel}
+              durasi={video.duration}
+              bahasa={video.language}
+            />
+          ))}
         </section>
       )}
     </article>
