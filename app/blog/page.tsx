@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 
-import BlogPage from "@/components/blog/BlogPage";
+import BlogPage, { BlogPageFallback } from "@/components/blog/BlogPage";
 import { getArticles } from "@/lib/blog";
 
 const DESCRIPTION = "Artikel, tutorial, dan insight seputar Quality Assurance dan Automation Testing.";
@@ -13,5 +14,11 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  return <BlogPage articles={getArticles()} />;
+  const articles = getArticles();
+
+  return (
+    <Suspense fallback={<BlogPageFallback articles={articles} />}>
+      <BlogPage articles={articles} />
+    </Suspense>
+  );
 }
