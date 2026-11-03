@@ -206,9 +206,9 @@ export const ROLE_MODE = {
   creatorStatLabels: ["Draf", "Menunggu Review", "Perlu Revisi", "Disetujui", "Terbit"],
   publishedTitle: "Best Practice Locator di Playwright",
   reviewerStats: [
-    { label: "Direview", value: "18" },
-    { label: "Disetujui", value: "14" },
-    { label: "Diminta Revisi", value: "4" },
+    { label: "Direview", value: "4" },
+    { label: "Disetujui", value: "2" },
+    { label: "Diminta Revisi", value: "2" },
   ],
   adminTasks: ["Menerbitkan konten yang sudah disetujui", "Mengelola peran pengguna"],
   publicUsername: "sobatqa",
@@ -226,8 +226,6 @@ export const ROLE_MODE = {
     { menu: "Catatan Revisi", path: "/creator/revisi", title: "Catatan Revisi" },
   ],
   guidePages: [
-    { role: "reviewer", menuName: "Menu Reviewer", menu: "Antrean Review", path: "/reviewer/antrean", heading: "Sementara, review dilakukan di Google Docs" },
-    { role: "reviewer", menuName: "Menu Reviewer", menu: "Riwayat Review", path: "/reviewer/riwayat", heading: "Sementara, review dilakukan di Google Docs" },
     { role: "reviewer", menuName: "Menu Reviewer", menu: "Panduan Review", path: "/reviewer/panduan", heading: "Sementara, review dilakukan di Google Docs" },
     { role: "admin", menuName: "Menu Admin", menu: "Pengguna & Role", path: "/admin/pengguna", heading: "Sementara, Admin menerbitkan lewat pull request" },
     { role: "admin", menuName: "Menu Admin", menu: "Konten", path: "/admin/konten", heading: "Sementara, Admin menerbitkan lewat pull request" },
@@ -267,6 +265,24 @@ export const LEARNER_PAGES = [
   { name: "Pembayaran", path: "/checkout" },
   { name: "Profil kustomisasi", path: "/profile?tab=kustomisasi" },
 ];
+
+// Ruang kerja Reviewer (data/dummy/contents.ts, akun reviewer@).
+export const REVIEWER_WORKSPACE = {
+  columns: ["Judul", "Jenis", "Creator", "Tanggal dikirim", "Kiriman", "Lama menunggu", "Aksi"],
+  counts: { assigned: 2, unassigned: 2, history: 4 },
+  assignedTitle: "Manual Testing vs Automation Testing",
+  firstRoundId: "konten-manual",
+  resubmittedId: "konten-pemula",
+  resubmittedTitle: "Mengenal Playwright untuk Pemula",
+  unassignedId: "konten-api",
+  unassignedTitle: "Pengenalan API Testing dengan Postman",
+  ownId: "konten-regression",
+  ownTitle: "Strategi Regression Testing",
+  approvedId: "konten-login",
+  approvedTitle: "Contoh Test Case Login yang Lengkap",
+  draftId: "konten-qa",
+  axePaths: ["/reviewer", "/reviewer/antrean", "/reviewer/riwayat", "/reviewer/review/konten-pemula", "/reviewer/review/konten-login"],
+} as const;
 
 // Ruang kerja Creator (data/dummy/contents.ts, akun creator@).
 export const CREATOR_STUDIO = {

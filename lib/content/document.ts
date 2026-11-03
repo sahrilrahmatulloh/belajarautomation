@@ -1,7 +1,7 @@
 import GithubSlugger from "github-slugger";
 
 import { formatDate } from "@/lib/format";
-import { ContentKind, ContentNode, ContentStatusId, ContentVideo } from "@/types/ContentWorkflow";
+import { ContentItem, ContentKind, ContentNode, ContentStatusId, ContentVideo, ReviewNote } from "@/types/ContentWorkflow";
 
 export const VIDEO_NODE = "videoYoutube";
 const WORDS_PER_MINUTE = 200;
@@ -56,6 +56,12 @@ export function countWords(body: ContentNode) {
 
 export function readingMinutes(wordCount: number) {
   return Math.max(1, Math.ceil(wordCount / WORDS_PER_MINUTE));
+}
+
+export function noteLabel(note: ReviewNote, content: Pick<ContentItem, "body" | "videos">) {
+  if (note.kind === "umum") return "Catatan Umum";
+  if (note.kind === "bagian") return `Bagian: ${listHeadings(content.body).find((heading) => heading.id === note.anchor)?.text ?? note.anchor}`;
+  return `Video: ${content.videos.find((video) => video.id === note.anchor)?.judul ?? note.anchor}`;
 }
 
 // Tanggal di data konten berupa ISO lengkap.

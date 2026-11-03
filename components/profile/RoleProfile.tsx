@@ -4,42 +4,42 @@ import { CheckCircle2, ClipboardCheck, RotateCcw, ShieldCheck } from "lucide-rea
 
 import { getCreatorStats } from "@/components/creator/creatorStats";
 import { useCreatorData } from "@/components/creator/studio/useCreatorData";
+import { ownDecisions, useReviewerData } from "@/components/reviewer/useReviewerData";
 import RoleStatCard from "@/components/roles/RoleStatCard";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ROLE_LABELS } from "@/data/navigation";
 import { ACTIVE_AVATAR } from "@/data/dummy/appearance";
-import { DUMMY_REVIEWER_STATS } from "@/data/dummy/reviewer";
 import { formatContentDate, KIND_LABELS } from "@/lib/content/document";
 import { useSession } from "@/lib/session";
 import { useViewMode } from "@/lib/viewMode";
 
 const ADMIN_TASKS = ["Menerbitkan konten yang sudah disetujui", "Mengelola peran pengguna"];
 
-const REVIEWER_STATS = [
+const REVIEWER_STATS = (approved: number, returned: number) => [
   {
     label: "Direview",
-    value: String(DUMMY_REVIEWER_STATS.approvedThisMonth + DUMMY_REVIEWER_STATS.returnedThisMonth),
-    detail: "Konten yang selesai direview bulan ini",
+    value: String(approved + returned),
+    detail: "Keputusan review yang sudah dibuat",
     icon: ClipboardCheck,
     iconStyle: "bg-sky-500/10 text-sky-700 dark:text-sky-300",
   },
   {
     label: "Disetujui",
-    value: String(DUMMY_REVIEWER_STATS.approvedThisMonth),
-    detail: "Lolos review bulan ini",
+    value: String(approved),
+    detail: "Lolos review",
     icon: CheckCircle2,
     iconStyle: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-300",
   },
   {
     label: "Diminta Revisi",
-    value: String(DUMMY_REVIEWER_STATS.returnedThisMonth),
-    detail: "Dikembalikan ke creator bulan ini",
+    value: String(returned),
+    detail: "Dikembalikan ke creator",
     icon: RotateCcw,
     iconStyle: "bg-rose-500/10 text-rose-600 dark:text-rose-300",
   },
 ];
 
-function StatsSection({ title, stats }: { title: string; stats: typeof REVIEWER_STATS }) {
+function StatsSection({ title, stats }: { title: string; stats: ReturnType<typeof REVIEWER_STATS> }) {
   return (
     <section aria-labelledby="statistik-peran">
       <h2 id="statistik-peran" className="text-lg font-bold">
@@ -87,6 +87,14 @@ function CreatorProfile() {
   );
 }
 
+function ReviewerProfile() {
+  const { userId, data } = useReviewerData();
+  const decisions = ownDecisions(data?.events ?? [], userId);
+  const approved = decisions.filter((event) => event.action === "setujui").length;
+
+  return <StatsSection title="Aktivitas Review" stats={REVIEWER_STATS(approved, decisions.length - approved)} />;
+}
+
 function AdminProfile() {
   return (
     <section aria-labelledby="tugas-admin" className="rounded-2xl border border-border bg-card p-5">
@@ -129,7 +137,7 @@ export default function RoleProfile() {
       </header>
 
       {activeRole === "creator" && <CreatorProfile />}
-      {activeRole === "reviewer" && <StatsSection title="Aktivitas Review" stats={REVIEWER_STATS} />}
+      {activeRole === "reviewer" && <ReviewerProfile />}
       {activeRole === "admin" && <AdminProfile />}
     </div>
   );

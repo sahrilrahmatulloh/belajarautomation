@@ -7,18 +7,12 @@ import { ArrowLeft, CircleCheck, Info } from "lucide-react";
 
 import ContentStatusBadge from "@/components/roles/ContentStatusBadge";
 import { runContentAction } from "@/lib/content";
-import { formatContentDate, KIND_LABELS, listHeadings } from "@/lib/content/document";
+import { formatContentDate, KIND_LABELS, noteLabel } from "@/lib/content/document";
 import { latestRoundNotes } from "@/lib/content/rules";
 import { ContentItem, ReviewNote } from "@/types/ContentWorkflow";
 
 import PrototypeNotice from "./PrototypeNotice";
 import { useCreatorData, userName } from "./useCreatorData";
-
-export function noteLabel(note: ReviewNote, content: ContentItem) {
-  if (note.kind === "umum") return "Catatan Umum";
-  if (note.kind === "bagian") return `Bagian: ${listHeadings(content.body).find((heading) => heading.id === note.anchor)?.text ?? note.anchor}`;
-  return `Video: ${content.videos.find((video) => video.id === note.anchor)?.judul ?? note.anchor}`;
-}
 
 function NoteCard({ note, content, userId, isEditable, onError }: { note: ReviewNote; content: ContentItem; userId: string; isEditable: boolean; onError: (message: string) => void }) {
   const [reply, setReply] = useState(note.creatorReply);
