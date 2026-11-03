@@ -46,6 +46,10 @@ Pengaturan lingkungan:
 - `NEXT_PUBLIC_SITE_URL` berisi alamat situs untuk Open Graph dan sitemap. Isi di Production saat domain sudah pasti; jika kosong, memakai alamat dari Vercel.
 - Di Vercel, isi `NEXT_PUBLIC_APP_ENV` per lingkungan (mis. per branch `develop` dan `uat`). Nilainya disisipkan saat build, jadi perubahan baru berlaku setelah deploy ulang.
 
+## Blog
+
+Artikel disimpan sebagai file MDX di `content/blog/`, dan menambah artikel tidak perlu mengubah kode aplikasi. Panduannya ada di [`content/blog/README.md`](content/blog/README.md).
+
 ## Testing
 
 Test end-to-end memakai [Playwright](https://playwright.dev) dan berjalan di dua project: `desktop-chromium` dan `mobile-chromium` (Pixel 7). CI GitHub Actions menjalankan lint, build, dan test ini pada setiap pull request dan push ke `develop`.

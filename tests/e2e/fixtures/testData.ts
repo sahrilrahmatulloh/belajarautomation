@@ -147,3 +147,41 @@ export const NOTIFICATIONS = {
     { role: "admin", title: "Transaksi tertunda", href: "/admin" },
   ],
 } as const;
+
+// Artikel di content/blog. Saat lingkungan DEV semua artikel tampil, termasuk draf.
+export const BLOG = {
+  articleCount: 10,
+  featuredTitle: "Roadmap Jadi QA Automation Engineer dari Nol (2026)",
+  newestCardTitle: "Apa Itu QA Engineer? Tugas, Skill, dan Gaji di Indonesia",
+  oldestTitle: "Manual Testing vs Automation Testing: Kapan Pakai yang Mana?",
+  outlineSlug: "severity-vs-priority",
+  search: { keyword: "bug report", title: "Cara Menulis Bug Report yang Disukai Developer" },
+  category: { name: "Manual Testing", slug: "manual-testing", count: 2 },
+  visibleCategories: ["Semua", "QA Fundamentals", "Manual Testing", "Automation Testing", "Career", "Tools dan teknologi"],
+  emptyCategories: ["API Testing", "Programming"],
+  article: {
+    slug: "locator-playwright-best-practice",
+    title: "Best Practice Locator di Playwright",
+    excerpt: "Panduan memilih locator Playwright agar test stabil, mudah dibaca, dan tidak mudah gagal saat tampilan berubah.",
+    category: "Automation Testing",
+    categorySlug: "automation-testing",
+    date: "28 Okt 2026",
+    cover: "/covers/courses/playwright.webp",
+    bodyText: "Mengapa Locator Penting?",
+    headings: [
+      "Pendahuluan",
+      "Mengapa Locator Penting?",
+      "Jenis-Jenis Locator",
+      "Best Practice Locator",
+      "Contoh Implementasi",
+      "Kesalahan Umum",
+      "Kesimpulan",
+    ],
+    tocTarget: { title: "Kesalahan Umum", id: "kesalahan-umum" },
+    firstCode: 'await page.getByLabel("Email").fill("qa@contoh.com");\nawait page.getByRole("button", { name: "Masuk" }).click();',
+    courseHref: "/learn/playwright",
+    practiceHref: "/playground/playwright-locator",
+    sourceCount: 2,
+    relatedFirst: "Playwright vs Selenium di 2026: Pilih yang Mana?",
+  },
+} as const;
