@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
@@ -31,6 +31,15 @@ export default function AuthField({
   action,
 }: AuthFieldProps) {
   const [showPassword, setShowPassword] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // Isian yang diketik atau diisi otomatis browser sebelum halaman siap belum masuk ke
+  // state. Tanpa ini kolom terlihat terisi, tetapi form menganggapnya kosong.
+  useEffect(() => {
+    const domValue = inputRef.current?.value;
+    if (domValue !== undefined && domValue !== value) onChange(domValue);
+  }, [value, onChange]);
+
   const isPassword = type === "password";
   const describedBy = error ? `${id}-error` : hint ? `${id}-hint` : undefined;
 
@@ -45,6 +54,7 @@ export default function AuthField({
 
       <div className="relative mt-1.5">
         <Input
+          ref={inputRef}
           id={id}
           type={isPassword && showPassword ? "text" : type}
           value={value}

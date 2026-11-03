@@ -16,6 +16,22 @@ export class LoginPage extends BasePage {
     this.formError = page.getByRole("alert").filter({ hasText: "Email atau password salah." });
   }
 
+  // Membuka halaman dengan JavaScript tertahan, seperti di koneksi lambat: form sudah
+  // tampil tetapi belum interaktif. Fungsi yang dikembalikan melepas JavaScript-nya.
+  async gotoBeforeHydration() {
+    let release = () => {};
+    const gate = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    await this.page.route("**/_next/static/**/*.js", async (route) => {
+      await gate;
+      await route.continue();
+    });
+    await this.page.goto(this.path, { waitUntil: "commit" });
+    await this.emailInput.waitFor();
+    return release;
+  }
+
   async login(email: string, password: string) {
     await this.emailInput.fill(email);
     await this.passwordInput.fill(password);
