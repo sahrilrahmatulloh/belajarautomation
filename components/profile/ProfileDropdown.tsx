@@ -87,6 +87,8 @@ export default function ProfileDropdown() {
       </DropdownMenuTrigger>
 
       <DropdownMenuContent
+        // Menu dirender di luar struktur halaman, jadi diberi landmark sendiri.
+        positionerProps={{ role: "navigation", "aria-label": "Menu profil" }}
         align="end"
         sideOffset={10}
         className="w-64"
@@ -109,7 +111,7 @@ export default function ProfileDropdown() {
             <DropdownMenuItem className="p-0">
               <Link
                 href="/login"
-                className="flex w-full items-center gap-2 px-2 py-1.5 font-medium text-primary"
+                className="flex w-full items-center gap-2 px-2 py-1.5 font-medium text-primary-accent"
               >
                 <LogIn className="h-4 w-4" />
                 Masuk

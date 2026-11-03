@@ -114,7 +114,7 @@ export default function LoginForm() {
           type="submit"
           // Sebelum halaman siap, klik akan memuat ulang halaman dan menghapus isian.
           disabled={isSubmitting || !isHydrated}
-          className="flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90 disabled:cursor-wait disabled:opacity-70"
+          className="flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary-hover disabled:cursor-wait disabled:opacity-70"
         >
           <LogIn className="h-4 w-4" aria-hidden="true" />
           {isSubmitting ? "Memproses..." : "Masuk"}
@@ -122,7 +122,7 @@ export default function LoginForm() {
 
         <p className="text-center text-sm text-muted-foreground">
           Belum punya akun?{" "}
-          <Link href={isHydrated ? withNextParam("/register") : "/register"} className="font-semibold text-primary hover:underline">
+          <Link href={isHydrated ? withNextParam("/register") : "/register"} className="font-semibold text-primary-accent hover:underline">
             Daftar sekarang
           </Link>
         </p>

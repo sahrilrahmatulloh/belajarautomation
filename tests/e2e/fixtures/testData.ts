@@ -220,4 +220,39 @@ export const ROLE_MODE = {
     { menu: "Buat Konten", path: "/creator/buat", title: "Buat Konten" },
     { menu: "Catatan Revisi", path: "/creator/revisi", title: "Catatan Revisi" },
   ],
+  guidePages: [
+    { role: "reviewer", menuName: "Menu Reviewer", menu: "Antrean Review", path: "/reviewer/antrean", heading: /review dilakukan lewat pull request/ },
+    { role: "reviewer", menuName: "Menu Reviewer", menu: "Riwayat Review", path: "/reviewer/riwayat", heading: /review dilakukan lewat pull request/ },
+    { role: "reviewer", menuName: "Menu Reviewer", menu: "Panduan Review", path: "/reviewer/panduan", heading: /review dilakukan lewat pull request/ },
+    { role: "admin", menuName: "Menu Admin", menu: "Pengguna & Role", path: "/admin/pengguna", heading: /penerbitan dilakukan lewat pull request/ },
+    { role: "admin", menuName: "Menu Admin", menu: "Konten", path: "/admin/konten", heading: /penerbitan dilakukan lewat pull request/ },
+    { role: "admin", menuName: "Menu Admin", menu: "Paket Membership", path: "/admin/paket", heading: /penerbitan dilakukan lewat pull request/ },
+    { role: "admin", menuName: "Menu Admin", menu: "Avatar & Tema", path: "/admin/avatar-tema", heading: /penerbitan dilakukan lewat pull request/ },
+    { role: "admin", menuName: "Menu Admin", menu: "Transaksi", path: "/admin/transaksi", heading: /penerbitan dilakukan lewat pull request/ },
+    { role: "admin", menuName: "Menu Admin", menu: "Pengaturan", path: "/admin/pengaturan", heading: /penerbitan dilakukan lewat pull request/ },
+  ],
 } as const;
+
+// Warna tombol utama berteks putih (PRD 15.2).
+export const COLORS = {
+  primaryButton: "rgb(37, 99, 235)",
+  white: "rgb(255, 255, 255)",
+};
+
+// Halaman yang diperiksa axe di luar MAIN_PAGES.
+export const GUEST_PAGES = [
+  { name: "Login", path: "/login" },
+  { name: "Daftar", path: "/register" },
+  { name: "Blog tamu", path: "/blog" },
+  { name: "Artikel tamu", path: "/blog/locator-playwright-best-practice" },
+  { name: "Artikel tidak ditemukan", path: "/blog/tidak-ada" },
+];
+
+export const LEARNER_PAGES = [
+  { name: "Detail Course", path: "/learn/playwright" },
+  { name: "Detail Roadmap", path: "/roadmap/qa-automation-web" },
+  { name: "Membership", path: "/membership" },
+  { name: "Keranjang", path: "/cart" },
+  { name: "Pembayaran", path: "/checkout" },
+  { name: "Profil kustomisasi", path: "/profile?tab=kustomisasi" },
+];

@@ -167,7 +167,7 @@ export default function QuizWorkspace({ slug, data }: { slug: string; data: Quiz
           type="button"
           disabled={!allAnswered || isPending}
           onClick={submit}
-          className="min-h-11 w-full rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground transition-colors enabled:hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50"
+          className="min-h-11 w-full rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground transition-colors enabled:hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50"
         >
           {isPending ? "Mengirim..." : "Kirim jawaban"}
         </button>

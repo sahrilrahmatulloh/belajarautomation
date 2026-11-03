@@ -92,7 +92,7 @@ export default function StudyCalendar() {
         </h2>
         <Link
           href="/profile?tab=aktivitas"
-          className="inline-flex min-h-9 items-center gap-1 text-sm font-medium text-primary hover:underline"
+          className="inline-flex min-h-9 items-center gap-1 text-sm font-medium text-primary-accent hover:underline"
         >
           Aktivitas <ArrowRight className="h-4 w-4" aria-hidden="true" />
         </Link>
@@ -166,10 +166,10 @@ export default function StudyCalendar() {
                 isSelected
                   ? "bg-primary font-semibold text-primary-foreground shadow-sm"
                   : isToday
-                    ? "border border-primary/40 font-semibold text-primary"
+                    ? "border border-primary/40 font-semibold text-primary-accent"
                     : inCurrentMonth
                       ? "text-foreground hover:bg-accent"
-                      : "text-muted-foreground/50 hover:bg-accent"
+                      : "text-muted-foreground hover:bg-accent"
               }`}
             >
               {dateParts.day}

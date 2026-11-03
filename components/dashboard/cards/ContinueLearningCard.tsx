@@ -119,7 +119,7 @@ export default function ContinueLearningCard() {
                     <Layers3 className="h-3.5 w-3.5" aria-hidden="true" />
                     {current.completedLessons} dari {current.totalLessons} lesson
                   </span>
-                  <span className="text-sm font-bold text-primary">{current.percent}%</span>
+                  <span className="text-sm font-bold text-primary-accent">{current.percent}%</span>
                 </div>
                 <ProgressBar
                   percent={current.percent}
@@ -130,7 +130,7 @@ export default function ContinueLearningCard() {
               <div className="mt-4 flex justify-end border-t border-border pt-3">
                 <Link
                   href={`/learn/${current.course.slug}`}
-                  className="inline-flex min-h-9 items-center justify-center gap-2 rounded-lg bg-primary px-3 py-2 text-xs font-semibold text-primary-foreground transition-colors hover:bg-primary/90 sm:text-sm"
+                  className="inline-flex min-h-9 items-center justify-center gap-2 rounded-lg bg-primary px-3 py-2 text-xs font-semibold text-primary-foreground transition-colors hover:bg-primary-hover sm:text-sm"
                 >
                   Lanjutkan <ArrowRight className="h-4 w-4" aria-hidden="true" />
                 </Link>
@@ -153,14 +153,14 @@ export default function ContinueLearningCard() {
         </>
       ) : (
         <div className="flex flex-col items-center rounded-xl border border-dashed border-border bg-card px-4 py-8 text-center">
-          <BookOpen className="h-7 w-7 text-primary" aria-hidden="true" />
+          <BookOpen className="h-7 w-7 text-primary-accent" aria-hidden="true" />
           <p className="mt-3 font-semibold">Belum ada materi yang sedang dipelajari</p>
           <p className="mt-1 text-sm text-muted-foreground">
             Pilih course pertamamu di Learning Center.
           </p>
           <Link
             href="/learn"
-            className="mt-4 inline-flex min-h-9 items-center gap-2 rounded-lg bg-primary px-3 py-2 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
+            className="mt-4 inline-flex min-h-9 items-center gap-2 rounded-lg bg-primary px-3 py-2 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary-hover"
           >
             Jelajahi course <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </Link>

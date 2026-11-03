@@ -7,7 +7,7 @@ export default function ProjectGrid() {
     <section className="space-y-6">
       <div>
         <h2 className="text-2xl font-bold">
-          Project Library
+          Koleksi Project
         </h2>
 
         <p className="mt-1 text-muted-foreground">

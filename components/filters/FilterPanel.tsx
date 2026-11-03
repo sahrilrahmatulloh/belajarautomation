@@ -107,7 +107,7 @@ export default function FilterPanel({ groups, toggles = [] }: FilterPanelProps) 
       <div className="hidden md:block">
         <Popover>
           <PopoverTrigger className={triggerClassName}>{triggerContent}</PopoverTrigger>
-          <PopoverContent align="start" sideOffset={8} className="w-[420px] max-w-[calc(100vw-2rem)] p-4 text-sm">
+          <PopoverContent aria-label="Filter" align="start" sideOffset={8} className="w-[420px] max-w-[calc(100vw-2rem)] p-4 text-sm">
             <PanelBody groups={groups} toggles={toggles} />
           </PopoverContent>
         </Popover>
@@ -125,7 +125,7 @@ export default function FilterPanel({ groups, toggles = [] }: FilterPanelProps) 
               <PanelBody groups={groups} toggles={toggles} />
             </div>
             <SheetFooter>
-              <SheetClose className="inline-flex min-h-11 items-center justify-center rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground hover:bg-primary/90">
+              <SheetClose className="inline-flex min-h-11 items-center justify-center rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground hover:bg-primary-hover">
                 Lihat hasil
               </SheetClose>
             </SheetFooter>

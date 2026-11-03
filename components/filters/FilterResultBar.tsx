@@ -31,7 +31,7 @@ export default function FilterResultBar({
         <button
           type="button"
           onClick={onReset}
-          className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
+          className="inline-flex items-center gap-1.5 text-sm font-medium text-primary-accent hover:underline"
         >
           <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
           Reset filter

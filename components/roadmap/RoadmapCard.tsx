@@ -73,13 +73,13 @@ export default function RoadmapCard({
       <div className="absolute right-4 top-4 z-10">
         {roadmap.featured && (
           <span className="rounded-full bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground shadow-sm">
-            Recommended
+            Direkomendasikan
           </span>
         )}
 
         {isComingSoon && (
           <span className="rounded-full bg-muted px-3 py-1 text-xs font-medium text-muted-foreground">
-            Coming Soon
+            Segera hadir
           </span>
         )}
       </div>
@@ -136,7 +136,7 @@ export default function RoadmapCard({
 
       {!isComingSoon && (
         <p className="mt-3 flex items-center gap-1.5 text-sm text-muted-foreground">
-          <CheckCircle2 className="h-4 w-4 text-primary" aria-hidden="true" />
+          <CheckCircle2 className="h-4 w-4 text-primary-accent" aria-hidden="true" />
           {stats.available} dari {stats.total} course tersedia
         </p>
       )}
@@ -150,12 +150,12 @@ export default function RoadmapCard({
             className="flex w-full cursor-not-allowed items-center justify-center gap-2 rounded-xl border py-3 text-sm font-medium text-muted-foreground"
           >
             <Lock className="h-4 w-4" />
-            Coming Soon
+            Segera hadir
           </button>
         ) : (
           <Link
             href={`/roadmap/${roadmap.id}`}
-            className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary py-3 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
+            className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary py-3 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary-hover"
           >
             Lihat Roadmap
             <ArrowRight className="h-4 w-4" />

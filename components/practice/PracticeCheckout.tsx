@@ -143,7 +143,7 @@ export default function PracticeCheckout() {
       <button
         type="submit"
         data-practice-id="checkout-submit"
-        className="min-h-10 w-full rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
+        className="min-h-10 w-full rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary-hover"
       >
         Buat Pesanan
       </button>

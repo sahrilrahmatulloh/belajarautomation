@@ -155,7 +155,7 @@ export default function NotificationsPage() {
           type="button"
           disabled={unread.length === 0}
           onClick={() => notificationActions.markRead(unread.map((item) => item.id))}
-          className="inline-flex min-h-10 w-full items-center justify-center gap-1.5 rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground transition-colors enabled:hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
+          className="inline-flex min-h-10 w-full items-center justify-center gap-1.5 rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground transition-colors enabled:hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
         >
           <Check className="h-4 w-4" aria-hidden="true" />
           Tandai semua dibaca

@@ -315,6 +315,31 @@ test.describe("Notifikasi per mode", () => {
   }
 });
 
+test.describe("Halaman informasi Reviewer dan Admin", () => {
+  for (const { role, menuName, menu, path, heading } of ROLE_MODE.guidePages) {
+    test.describe(`${menu}`, () => {
+      test.use({ role });
+
+      test(`menu ${menu} membuka halaman informasi dengan tautan panduan`, async ({ page, isMobile }) => {
+        await openDashboard(page, role);
+        await openSidebar(page, isMobile);
+
+        const link = page.getByRole("navigation", { name: menuName }).getByRole("link", { name: menu, exact: true });
+        await expect(link).not.toContainText("Segera hadir");
+        await link.click();
+
+        await expect(page).toHaveURL(path);
+        await expect(page.getByRole("heading", { level: 1, name: menu })).toBeVisible();
+        await expect(page.getByRole("heading", { level: 2, name: heading })).toBeVisible();
+        await expect(page.getByRole("link", { name: "Buka Panduan Kontribusi" })).toHaveAttribute(
+          "href",
+          /\/docs\/CONTENT_GUIDE\.md$/
+        );
+      });
+    });
+  }
+});
+
 test.describe("Halaman informasi Creator", () => {
   test.use({ role: "creator" });
 

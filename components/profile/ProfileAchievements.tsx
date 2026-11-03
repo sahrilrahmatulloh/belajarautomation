@@ -49,7 +49,7 @@ function AchievementCard({ state, today }: { state: AchievementState; today: Dat
         <p className="mt-0.5 text-sm leading-5 text-muted-foreground">{achievement.description}</p>
 
         {earned && (
-          <p className="mt-2 text-xs font-medium text-primary">
+          <p className="mt-2 text-xs font-medium text-primary-accent">
             Diperoleh {dateFormatter.format(dateFromDaysAgo(today, earned.daysAgo))}
           </p>
         )}

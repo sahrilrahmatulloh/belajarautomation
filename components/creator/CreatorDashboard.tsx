@@ -37,7 +37,7 @@ export default function CreatorDashboard() {
         action={
           <Link
             href="/creator/buat"
-            className="inline-flex min-h-11 items-center justify-center gap-2 whitespace-nowrap rounded-xl bg-sidebar-primary px-4 text-sm font-semibold text-sidebar-primary-foreground transition-opacity hover:opacity-90"
+            className="inline-flex min-h-11 items-center justify-center gap-2 whitespace-nowrap rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary-hover"
           >
             <FilePlus2 className="h-4 w-4" aria-hidden="true" />
             Buat Konten Baru

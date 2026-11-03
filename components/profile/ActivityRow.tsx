@@ -41,7 +41,7 @@ export default function ActivityRow({ entry, whenLabel }: { entry: ActivityEntry
         <p className="truncate text-xs text-muted-foreground">{courseTitle ?? label}</p>
       </div>
       <div className="shrink-0 text-right">
-        {entry.xp > 0 && <p className="text-sm font-semibold tabular-nums text-primary">+{entry.xp} XP</p>}
+        {entry.xp > 0 && <p className="text-sm font-semibold tabular-nums text-primary-accent">+{entry.xp} XP</p>}
         <p className="text-xs tabular-nums text-muted-foreground">{whenLabel ?? entry.time}</p>
       </div>
     </li>

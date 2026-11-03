@@ -26,6 +26,7 @@ export default function RankTiers() {
           baris ini digeser horizontal tanpa membuat halaman ikut melebar. */}
       <ol
         aria-label="Tingkatan rank, dari terendah ke tertinggi"
+        tabIndex={0}
         className="-mx-1 flex snap-x snap-mandatory gap-3 overflow-x-auto px-1 pb-2 pt-1 [scrollbar-width:thin] lg:grid lg:grid-cols-6 lg:overflow-visible"
       >
         {RANKS.map((rank, rankIndex) => {
@@ -110,7 +111,7 @@ export default function RankTiers() {
 
       <div className="rounded-2xl border border-border bg-card p-4 sm:p-5">
         <h3 className="flex items-center gap-2 font-semibold">
-          <Sparkles className="h-4 w-4 text-primary" aria-hidden="true" />
+          <Sparkles className="h-4 w-4 text-primary-accent" aria-hidden="true" />
           Cara mendapatkan XP
         </h3>
         <ul className="mt-3 divide-y divide-border text-sm">

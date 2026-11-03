@@ -81,7 +81,7 @@ export default function MembershipPage() {
                   {plan.highlights.map((item) => (
                     <li key={item} className="flex items-start gap-2.5 text-sm">
                       <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary/10">
-                        <Check className="h-3 w-3 text-primary" aria-hidden="true" />
+                        <Check className="h-3 w-3 text-primary-accent" aria-hidden="true" />
                       </span>
                       {item}
                     </li>
@@ -110,7 +110,7 @@ export default function MembershipPage() {
         <h2 id="membership-compare-title" className="text-2xl font-bold">
           Perbandingan paket
         </h2>
-        <div className="relative overflow-x-auto rounded-2xl border border-border bg-card">
+        <div role="group" tabIndex={0} aria-label="Tabel perbandingan paket" className="relative overflow-x-auto rounded-2xl border border-border bg-card">
           <table className="w-full min-w-[560px] text-sm">
             <caption className="sr-only">Perbandingan benefit Basic, Pro, dan Premium</caption>
             <thead className="border-b border-border bg-muted/40 text-xs text-muted-foreground">

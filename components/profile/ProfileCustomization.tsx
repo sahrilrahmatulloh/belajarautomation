@@ -45,7 +45,7 @@ function unlockNote(item: CatAvatar | BannerTheme) {
 function StatusBadge({ isActive, isOwned }: { isActive: boolean; isOwned: boolean }) {
   if (isActive) {
     return (
-      <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
+      <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary-accent">
         <Check className="h-3 w-3" aria-hidden="true" />
         Digunakan
       </span>
@@ -95,7 +95,6 @@ function CollectionCard({
       onClick={onSelect}
       disabled={!isOwned}
       aria-pressed={isSelected}
-      aria-label={`${name}${isOwned ? "" : `, terkunci. ${lockNote}`}`}
       className={`relative flex flex-col overflow-hidden rounded-2xl border bg-card text-left transition-shadow disabled:cursor-not-allowed ${
         isSelected
           ? "border-primary ring-2 ring-primary/30"
@@ -156,10 +155,10 @@ export default function ProfileCustomization() {
   return (
     <div className="grid gap-6 lg:grid-cols-[18rem_minmax(0,1fr)]">
       {/* Pratinjau dan pilihan aktif: di bawah koleksi pada mobile, dua kolom di tablet */}
-      <aside className="order-last grid gap-4 sm:order-none sm:grid-cols-2 lg:sticky lg:top-24 lg:grid-cols-1 lg:self-start">
+      <aside aria-label="Pratinjau dan pilihan aktif" className="order-last grid gap-4 sm:order-none sm:grid-cols-2 lg:sticky lg:top-24 lg:grid-cols-1 lg:self-start">
         <section aria-labelledby="pratinjau-profil" className="overflow-hidden rounded-2xl border border-border bg-card">
           <h2 id="pratinjau-profil" className="flex items-center gap-2 px-4 pb-3 pt-4 font-semibold">
-            <Eye className="h-4 w-4 text-primary" aria-hidden="true" />
+            <Eye className="h-4 w-4 text-primary-accent" aria-hidden="true" />
             Pratinjau Profil
           </h2>
           <div className="relative mx-4 h-24 overflow-hidden rounded-xl">

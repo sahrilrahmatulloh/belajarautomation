@@ -9,7 +9,7 @@ export default function ProjectsHeader() {
 
       <div>
         <h1 className="text-3xl font-bold tracking-tight">
-          Projects
+          Project
         </h1>
 
         <p className="mt-1 text-muted-foreground">
