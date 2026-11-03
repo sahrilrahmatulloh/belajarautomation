@@ -23,6 +23,12 @@ export interface ArticleSource {
   url: string;
 }
 
+// Judul bagian untuk daftar isi. id sama dengan id heading di halaman.
+export interface ArticleHeading {
+  id: string;
+  title: string;
+}
+
 // Metadata artikel, dari frontmatter file content/blog/<slug>.mdx.
 export interface Article {
   slug: string;

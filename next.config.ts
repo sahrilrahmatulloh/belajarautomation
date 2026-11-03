@@ -1,6 +1,11 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Slug yang tidak dikenal dirender saat diminta untuk menampilkan halaman 404 blog,
+  // jadi file artikel harus ikut tersedia di server.
+  outputFileTracingIncludes: {
+    "/blog/[slug]": ["./content/blog/**"],
+  },
   async redirects() {
     return [
       { source: "/books", destination: "/ebooks", permanent: true },

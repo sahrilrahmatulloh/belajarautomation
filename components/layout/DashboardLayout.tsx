@@ -56,7 +56,9 @@ export default function DashboardLayout({
         <div className="flex min-w-0 flex-1 flex-col">
           <Navbar onToggleSidebar={toggleSidebar} />
 
-          <main className="min-w-0 flex-1 overflow-y-auto bg-background p-4 sm:p-5 lg:p-6">
+          {/* relative: elemen absolute di dalam isi (mis. teks sr-only) tidak memperpanjang
+              dokumen, yang membuat seluruh layout bergeser saat lompat ke heading. */}
+          <main className="relative min-w-0 flex-1 overflow-y-auto bg-background p-4 sm:p-5 lg:p-6">
             {children}
           </main>
         </div>

@@ -1,6 +1,7 @@
 import { isValidElement } from "react";
 import * as jsxRuntime from "react/jsx-runtime";
 import { evaluate } from "@mdx-js/mdx";
+import rehypeSlug from "rehype-slug";
 import remarkGfm from "remark-gfm";
 
 import AuthLink from "@/components/auth/AuthLink";
@@ -34,6 +35,8 @@ function Anchor({ href = "", children }: Props<"a">) {
   );
 }
 
+// Paragraf dan daftar dibatasi sekitar 70 karakter per baris agar nyaman dibaca, sedangkan
+// kode, tabel, dan gambar memakai lebar penuh.
 const MDX_COMPONENTS = {
   Ajakan,
   Gambar,
@@ -41,13 +44,13 @@ const MDX_COMPONENTS = {
   Tips,
   a: Anchor,
   pre: Pre,
-  h2: (props: Props<"h2">) => <h2 className="mt-10 scroll-mt-20 text-2xl font-bold tracking-tight" {...props} />,
-  h3: (props: Props<"h3">) => <h3 className="mt-8 scroll-mt-20 text-xl font-semibold tracking-tight" {...props} />,
-  p: (props: Props<"p">) => <p className="my-4 leading-8" {...props} />,
-  ul: (props: Props<"ul">) => <ul className="my-4 list-disc space-y-2 pl-6 leading-8" {...props} />,
-  ol: (props: Props<"ol">) => <ol className="my-4 list-decimal space-y-2 pl-6 leading-8" {...props} />,
+  h2: (props: Props<"h2">) => <h2 className="mt-10 scroll-mt-4 text-2xl font-bold tracking-tight first:mt-0" {...props} />,
+  h3: (props: Props<"h3">) => <h3 className="mt-8 scroll-mt-4 text-xl font-semibold tracking-tight" {...props} />,
+  p: (props: Props<"p">) => <p className="my-4 max-w-[37rem] leading-8" {...props} />,
+  ul: (props: Props<"ul">) => <ul className="my-4 max-w-[37rem] list-disc space-y-2 pl-6 leading-8" {...props} />,
+  ol: (props: Props<"ol">) => <ol className="my-4 max-w-[37rem] list-decimal space-y-2 pl-6 leading-8" {...props} />,
   blockquote: (props: Props<"blockquote">) => (
-    <blockquote className="my-6 border-l-4 border-border pl-4 text-muted-foreground" {...props} />
+    <blockquote className="my-6 max-w-[37rem] border-l-4 border-border pl-4 text-muted-foreground" {...props} />
   ),
   code: (props: Props<"code">) => (
     <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-[0.9em]" {...props} />
@@ -62,7 +65,7 @@ const MDX_COMPONENTS = {
 };
 
 export default async function ArticleContent({ content }: { content: string }) {
-  const { default: Content } = await evaluate(content, { ...jsxRuntime, remarkPlugins: [remarkGfm] });
+  const { default: Content } = await evaluate(content, { ...jsxRuntime, remarkPlugins: [remarkGfm], rehypePlugins: [rehypeSlug] });
 
   return <Content components={MDX_COMPONENTS} />;
 }

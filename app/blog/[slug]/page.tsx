@@ -2,16 +2,13 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import ArticleDetailPage from "@/components/blog/ArticleDetailPage";
-import { getArticleBySlug, getArticles } from "@/lib/blog";
+import { getArticleBySlug, getArticleHeadings, getArticles, getRelatedArticles } from "@/lib/blog";
 
 interface ArticlePageProps {
   params: Promise<{
     slug: string;
   }>;
 }
-
-// Isi artikel dibaca dari file saat build; slug lain langsung 404.
-export const dynamicParams = false;
 
 export function generateStaticParams() {
   return getArticles().map(({ slug }) => ({ slug }));
@@ -51,5 +48,12 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
     notFound();
   }
 
-  return <ArticleDetailPage article={entry.article} content={entry.content} />;
+  return (
+    <ArticleDetailPage
+      article={entry.article}
+      content={entry.content}
+      headings={getArticleHeadings(entry.content)}
+      related={getRelatedArticles(entry.article)}
+    />
+  );
 }
