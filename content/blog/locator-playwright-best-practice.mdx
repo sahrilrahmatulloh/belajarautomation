@@ -1,0 +1,150 @@
+---
+title: "Best Practice Locator di Playwright"
+slug: locator-playwright-best-practice
+excerpt: "Panduan memilih locator Playwright agar test stabil, mudah dibaca, dan tidak mudah gagal saat tampilan berubah."
+category: Automation Testing
+publishedAt: "2026-10-28"
+cover: /covers/courses/playwright.webp
+status: draft
+featured: false
+cta:
+  - type: course
+    slug: playwright
+  - type: practice
+    slug: playwright-locator
+sources:
+  - title: "Playwright Docs: Locators"
+    url: https://playwright.dev/docs/locators
+  - title: "Playwright Docs: Best Practices"
+    url: https://playwright.dev/docs/best-practices
+---
+
+## Pendahuluan
+
+Locator adalah cara Playwright menemukan elemen di halaman, seperti tombol, kolom isian, atau pesan error. Hampir setiap langkah test bergantung pada locator, jadi pilihan locator sangat menentukan apakah test kamu stabil atau sering gagal tanpa alasan yang jelas.
+
+Artikel ini membahas jenis locator yang tersedia, urutan pemilihan yang disarankan, dan kesalahan yang paling sering terjadi.
+
+<Tips>
+Pilih locator seperti cara pengguna mengenali elemen: dari peran dan namanya, misalnya "tombol Masuk". Mulailah dari `getByRole`, baru pindah ke cara lain bila perlu.
+</Tips>
+
+## Mengapa Locator Penting?
+
+Test yang gagal padahal fiturnya baik-baik saja membuat tim berhenti memercayai hasil test. Salah satu penyebab tersering adalah locator yang terikat pada struktur halaman, karena struktur HTML mudah berubah saat tampilan dirapikan.
+
+Locator yang baik memberi tiga keuntungan:
+
+- **Stabil:** test tetap lulus saat struktur HTML atau class CSS berubah.
+- **Mudah dirawat:** saat elemen benar-benar berubah, perbaikannya cukup di satu tempat yang jelas.
+- **Mudah dibaca:** orang lain langsung paham elemen apa yang sedang diuji.
+
+Ada bonus lain: locator berbasis peran hanya menemukan elemen yang bisa dikenali teknologi bantu seperti pembaca layar. Jadi test ikut mendorong halaman yang lebih aksesibel.
+
+## Jenis-Jenis Locator
+
+Playwright menyediakan locator bawaan berikut, dan dokumentasi resminya menyarankan untuk memprioritaskan locator yang berorientasi pada pengguna.
+
+| Locator | Mencari berdasarkan | Cocok untuk |
+|---|---|---|
+| `getByRole` | Peran dan nama aksesibel | Tombol, tautan, heading, checkbox |
+| `getByLabel` | Teks label | Kolom isian form |
+| `getByPlaceholder` | Teks placeholder | Kolom isian tanpa label |
+| `getByText` | Isi teks | Teks yang tidak interaktif |
+| `getByAltText` | Teks alternatif | Gambar |
+| `getByTitle` | Atribut `title` | Elemen dengan atribut `title` |
+| `getByTestId` | Atribut `data-testid` | Elemen yang sulit dijangkau dengan cara lain |
+
+Selain itu ada `page.locator()` yang menerima selector CSS atau XPath. Gunakan ini sebagai pilihan terakhir.
+
+## Best Practice Locator
+
+### Utamakan peran dan label
+
+Locator ini paling dekat dengan cara pengguna melihat halaman, dan tetap berfungsi walaupun struktur HTML di sekitarnya berubah.
+
+```ts
+await page.getByLabel("Email").fill("qa@contoh.com");
+await page.getByRole("button", { name: "Masuk" }).click();
+```
+
+### Pakai test id bila memang perlu
+
+Jika elemen tidak punya peran atau teks yang jelas, tambahkan atribut `data-testid`. Atribut ini tidak ikut berubah saat teks atau tampilan diubah, tapi perlu disepakati dengan developer karena harus ditambahkan di kode aplikasi.
+
+```ts
+await page.getByTestId("grafik-penjualan").click();
+```
+
+### Persempit dengan filter dan rangkaian locator
+
+Saat ada banyak elemen serupa, persempit lewat bagian yang membedakannya, bukan lewat urutannya.
+
+```ts
+const produk = page.getByRole("listitem").filter({ hasText: "Buku Playwright" });
+
+await produk.getByRole("button", { name: "Tambah ke Keranjang" }).click();
+```
+
+### Pakai assertion yang menunggu otomatis
+
+Assertion seperti `toBeVisible` dan `toHaveText` mencoba ulang sampai kondisinya terpenuhi atau waktunya habis, jadi kamu tidak perlu menambahkan jeda manual.
+
+```ts
+await expect(page.getByRole("alert")).toHaveText("Email atau password salah");
+```
+
+## Contoh Implementasi
+
+Berikut satu test login lengkap. Test ini mencakup kasus gagal, jadi selain memastikan alurnya berjalan, kita juga memeriksa pesan yang dilihat pengguna.
+
+```ts
+import { test, expect } from "@playwright/test";
+
+test("menampilkan pesan saat password salah", async ({ page }) => {
+  await page.goto("/login");
+
+  await page.getByLabel("Email").fill("qa@contoh.com");
+  await page.getByLabel("Password").fill("password-salah");
+  await page.getByRole("button", { name: "Masuk" }).click();
+
+  await expect(page.getByRole("alert")).toHaveText("Email atau password salah");
+  await expect(page).toHaveURL(/\/login/);
+});
+```
+
+<Peringatan>
+Hindari selector yang mengikuti struktur halaman, seperti `div:nth-child(2) > button` atau XPath yang panjang. Selector seperti ini mudah rusak saat tampilan dirapikan, walaupun fiturnya tidak berubah.
+</Peringatan>
+
+## Kesalahan Umum
+
+**Mengikat test pada struktur halaman.** Bandingkan dua locator berikut, yang menuju tombol yang sama:
+
+```ts
+// Rapuh: rusak saat susunan elemen berubah.
+await page.locator("#app > div > form > div:nth-child(3) > button").click();
+
+// Lebih stabil: mengikuti apa yang dilihat pengguna.
+await page.getByRole("button", { name: "Masuk" }).click();
+```
+
+**Locator yang cocok dengan banyak elemen.** Locator Playwright bersifat strict: aksi seperti `click()` akan gagal bila locator menemukan lebih dari satu elemen. Jangan langsung menambahkan `.first()` untuk menghilangkan error itu, karena test bisa diam-diam mengeklik elemen yang salah. Persempit locator-nya, misalnya dengan `name` atau `filter`.
+
+**Mengambil status elemen lalu langsung membandingkannya.** `isVisible()` mengembalikan kondisi saat itu juga tanpa menunggu, sehingga hasilnya bisa berubah-ubah bila halaman masih memuat.
+
+```ts
+// Tidak menunggu, jadi hasilnya bisa tidak konsisten.
+expect(await page.getByRole("alert").isVisible()).toBe(true);
+
+// Menunggu sampai elemen tampil.
+await expect(page.getByRole("alert")).toBeVisible();
+```
+
+**Memakai teks yang terlalu umum.** `getByText("Simpan")` bisa cocok dengan tombol sekaligus paragraf yang memuat kata itu. Untuk elemen interaktif, `getByRole` dengan `name` lebih tepat.
+
+## Kesimpulan
+
+Urutan yang mudah diingat: mulai dari `getByRole` dan `getByLabel`, lanjut ke `getByText` atau `getByPlaceholder`, pakai `getByTestId` bila memang tidak ada pilihan lain, dan simpan CSS atau XPath sebagai pilihan terakhir.
+
+Kalau bingung memilih, jalankan `npx playwright codegen` untuk melihat locator yang disarankan Playwright, lalu baca ulang hasilnya sebelum dipakai. Setelah itu, cara terbaik untuk terbiasa adalah langsung mencobanya sendiri.

@@ -1,11 +1,14 @@
 "use client";
 
+import Link from "next/link";
 import { Menu, SunMoon } from "lucide-react";
 import { useTheme } from "next-themes";
 
 import CartButton from "@/components/cart/CartButton";
 import NotificationBell from "@/components/notifications/NotificationBell";
 import ProfileDropdown from "@/components/profile/ProfileDropdown";
+import { useSession } from "@/lib/session";
+import { useHydrated } from "@/lib/useHydrated";
 
 interface NavbarProps {
   onToggleSidebar: () => void;
@@ -15,6 +18,8 @@ export default function Navbar({
   onToggleSidebar,
 }: NavbarProps) {
   const { resolvedTheme, setTheme } = useTheme();
+  const session = useSession();
+  const isHydrated = useHydrated();
 
   const toggleTheme = () => {
     setTheme(
@@ -50,14 +55,37 @@ export default function Navbar({
           <SunMoon size={20} aria-hidden="true" />
         </button>
 
-        {/* Cart */}
-        <CartButton />
+        {session ? (
+          <>
+            {/* Cart */}
+            <CartButton />
 
-        {/* Notifications */}
-        <NotificationBell />
+            {/* Notifications */}
+            <NotificationBell />
 
-        {/* User Profile Dropdown */}
-        <ProfileDropdown />
+            {/* User Profile Dropdown */}
+            <ProfileDropdown />
+          </>
+        ) : (
+          // Sesi baru terbaca di browser; ditunda agar pengguna yang sudah login tidak
+          // sekilas melihat tombol ini saat halaman dimuat.
+          isHydrated && (
+            <>
+              <Link
+                href="/login"
+                className="inline-flex min-h-10 items-center rounded-xl px-3 text-sm font-semibold transition-colors hover:bg-accent"
+              >
+                Masuk
+              </Link>
+              <Link
+                href="/register"
+                className="inline-flex min-h-10 items-center rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
+              >
+                Daftar
+              </Link>
+            </>
+          )
+        )}
       </div>
     </header>
   );

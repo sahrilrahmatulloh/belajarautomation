@@ -4,6 +4,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+import AuthLink from "@/components/auth/AuthLink";
+import { useSession } from "@/lib/session";
+
 import {
   getRoleFromPath,
   NAVIGATION,
@@ -21,6 +24,7 @@ export default function Sidebar({
 }: SidebarProps) {
   const pathname = usePathname();
   const role = getRoleFromPath(pathname);
+  const session = useSession();
   const home = ROLE_HOME[role];
   const menuItems = NAVIGATION[role];
 
@@ -33,7 +37,8 @@ export default function Sidebar({
       {/* Brand */}
       <div className={collapsed ? "flex justify-center px-2 py-6" : "px-4 py-6"}>
         <Link
-          href={home}
+          // Halaman utama butuh login, jadi tamu kembali ke halaman publik.
+          href={session ? home : "/blog"}
           className="flex items-center gap-2.5"
           aria-label={collapsed ? "belajarautomation.com" : undefined}
         >
@@ -48,9 +53,9 @@ export default function Sidebar({
 
           {!collapsed && (
             <div className="min-w-0">
-              <h1 className="whitespace-nowrap text-base font-bold tracking-tight">
+              <p className="whitespace-nowrap text-base font-bold tracking-tight">
                 belajarautomation.com
-              </h1>
+              </p>
 
               <p className="mt-0.5 text-xs text-muted-foreground">
                 {role === "user"
@@ -99,7 +104,7 @@ export default function Sidebar({
               : pathname.startsWith(item.href);
 
           return (
-            <Link
+            <AuthLink
               key={item.label}
               href={item.href}
               aria-current={isActive ? "page" : undefined}
@@ -115,7 +120,7 @@ export default function Sidebar({
               <span className={collapsed ? "sr-only" : "font-medium"}>
                 {item.label}
               </span>
-            </Link>
+            </AuthLink>
           );
         })}
       </nav>

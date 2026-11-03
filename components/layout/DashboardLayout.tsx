@@ -9,10 +9,14 @@ import Navbar from "./Navbar";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
+  // Halaman yang bisa dibuka tanpa login. Isinya dirender di server agar bisa dibaca
+  // mesin pencari, tidak menunggu sesi terbaca seperti halaman lain.
+  publicAccess?: boolean;
 }
 
 export default function DashboardLayout({
   children,
+  publicAccess = false,
 }: DashboardLayoutProps) {
   const [isDesktopSidebarOpen, setIsDesktopSidebarOpen] = useState(true);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
@@ -25,8 +29,7 @@ export default function DashboardLayout({
     }
   };
 
-  return (
-    <RequireAuth>
+  const layout = (
       <div className="flex h-dvh w-full overflow-hidden bg-background text-foreground">
         {/* Desktop Sidebar: saat disembunyikan menjadi rel ikon */}
         <div className="hidden shrink-0 lg:block">
@@ -53,11 +56,14 @@ export default function DashboardLayout({
         <div className="flex min-w-0 flex-1 flex-col">
           <Navbar onToggleSidebar={toggleSidebar} />
 
-          <main className="min-w-0 flex-1 overflow-y-auto bg-background p-4 sm:p-5 lg:p-6">
+          {/* relative: elemen absolute di dalam isi (mis. teks sr-only) tidak memperpanjang
+              dokumen, yang membuat seluruh layout bergeser saat lompat ke heading. */}
+          <main className="relative min-w-0 flex-1 overflow-y-auto bg-background p-4 sm:p-5 lg:p-6">
             {children}
           </main>
         </div>
       </div>
-    </RequireAuth>
   );
+
+  return publicAccess ? layout : <RequireAuth>{layout}</RequireAuth>;
 }

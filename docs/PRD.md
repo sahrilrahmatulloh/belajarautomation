@@ -1,9 +1,13 @@
 # BELAJARAUTOMATION.COM
 ## Product Requirements Document (PRD)
-**Versi:** 2.7  
+**Versi:** 2.8  
 **Status:** Draft — Acuan Pengembangan Produk  
 **Platform:** Web Application  
 **Target Pengguna:** Pemula hingga praktisi QA, Software Testing, dan Programming
+
+### Perubahan di Versi 2.8
+- Menetapkan Blog: dapat dibaca tanpa login, format halaman daftar dan artikel, format konten, status draf, serta SEO (FR-07).
+- Daftar 10 artikel rilis awal ditetapkan di `docs/CURRICULUM.md` Bagian 6.
 
 ### Perubahan di Versi 2.7
 - Menambahkan acuan tampilan notifikasi: ikon dan warna per kelompok, format waktu, dan teks notifikasi membership (Bagian 4.4).
@@ -641,30 +645,65 @@ Ketentuan:
 ## FR-07 — Blog
 
 ### Tujuan
-Menyediakan artikel edukasi dan informasi seputar QA, testing, automation, dan programming.
+Menyediakan artikel edukasi seputar QA, testing, automation, dan programming, sekaligus menjadi pintu masuk pengguna baru dari mesin pencari menuju course, roadmap, dan latihan.
 
-### Fitur
-- Daftar artikel.
-- Pencarian artikel jika diperlukan.
-- Filter kategori.
-- Halaman detail artikel.
-- Informasi penulis.
-- Tanggal publikasi.
-- Artikel terkait.
+### Akses
+- Blog (halaman daftar dan halaman artikel) **dapat dibaca tanpa login**, agar artikel dapat diindeks mesin pencari dan dibagikan.
+- Pengunjung yang belum login melihat header dengan tombol "Masuk" dan "Daftar".
+- Kotak ajakan di artikel tetap ditampilkan; jika tujuannya membutuhkan login, pengunjung diarahkan ke halaman login lalu kembali ke tujuan setelah berhasil masuk.
 
-### Kategori awal
-- QA Fundamentals.
-- Manual Testing.
-- Automation Testing.
-- API Testing.
-- Programming.
-- Career.
-- Tools dan teknologi.
+### Halaman daftar artikel (`/blog`)
+- Judul "Blog" dan deskripsi singkat.
+- Pencarian artikel (judul dan ringkasan).
+- Chip kategori; kategori tanpa artikel terbit disembunyikan otomatis.
+- Satu artikel unggulan dengan sampul besar dan tombol "Baca Artikel".
+- Daftar "Artikel Terbaru" dalam grid kartu: sampul, kategori, judul, ringkasan maksimal 2 baris, tanggal, dan waktu baca. Pengurutan bawaan: terbaru.
+- Pencarian dan filter tersimpan di URL.
+- Empty state jika tidak ada hasil.
+
+### Halaman artikel (`/blog/[slug]`)
+**Bagian atas**
+- Breadcrumb: Blog › Kategori.
+- Badge kategori, judul, dan ringkasan satu kalimat.
+- Penulis, tanggal terbit, tanggal diperbarui (jika ada), dan waktu baca.
+- Tombol "Bagikan".
+- Sampul artikel.
+
+**Isi**
+- Daftar isi dari heading artikel: menempel di samping saat scroll di desktop, dapat dilipat di mobile, dan menandai bagian yang sedang dibaca.
+- Format konten: heading, paragraf, daftar, blok kode dengan penanda bahasa, nomor baris, dan tombol "Salin" (font JetBrains Mono), kotak Tips, kotak Peringatan, gambar dengan keterangan, dan tabel.
+- Kotak ajakan menuju course atau latihan, dapat ditempatkan di tengah dan di akhir artikel.
+
+**Bagian bawah**
+- Sumber, untuk artikel yang memakai data atau rujukan.
+- Bagikan: salin tautan, WhatsApp, dan LinkedIn. Di mobile, tombol "Bagikan" membuka panel dari bawah layar.
+- Tiga artikel terkait, diutamakan dari kategori yang sama.
+
+### Penulis
+- Nama penulis bawaan: "Tim BelajarAutomation".
+- Setelah peran Creator aktif, artikel dapat menampilkan nama Creator yang menulisnya.
+
+### Format konten
+- Setiap artikel disimpan sebagai satu file konten (mis. MDX) dengan metadata: slug, judul, ringkasan, kategori, penulis, tanggal terbit, tanggal diperbarui, sampul, status, artikel unggulan, ajakan (course atau latihan tujuan), dan sumber.
+- Waktu baca dihitung otomatis dari isi artikel.
+- Status artikel: `draft` atau `published`. Artikel `draft` hanya tampil di lingkungan DEV dengan badge "Draf"; UAT dan Production hanya menampilkan artikel `published`.
+- Ajakan hanya boleh menuju course atau latihan yang tersedia; pengecekan otomatis menggagalkan build jika tujuan tidak valid.
+- Menambah artikel baru cukup dengan menambah file konten, tanpa mengubah kode aplikasi.
+
+### SEO
+- Setiap artikel memiliki judul halaman, deskripsi, dan gambar pratinjau (Open Graph) dari metadata.
+- Tersedia sitemap untuk artikel yang terbit.
+- Lingkungan DEV dan UAT tidak boleh diindeks mesin pencari (`noindex`); hanya Production yang dapat diindeks.
+
+### Kategori
+QA Fundamentals, Manual Testing, Automation Testing, API Testing, Programming, Career, dan Tools dan teknologi.
 
 ### Aturan
-- Artikel yang ditetapkan sebagai publik dapat dibaca secara gratis.
-- Konten harus dapat dikelola tanpa mengubah struktur aplikasi setiap kali artikel baru diterbitkan.
-- Fitur komentar bukan prioritas awal.
+- Artikel yang terbit dapat dibaca gratis oleh siapa pun.
+- Tidak ada kolom komentar.
+- Tidak ada fitur menyimpan artikel (bookmark) pada tahap ini; dapat dipertimbangkan di fase berikutnya.
+- Konten mengikuti prinsip kualitas di Bagian 16; data seperti gaji wajib mencantumkan sumber dan tahun data.
+- Daftar artikel rilis awal ditetapkan di `docs/CURRICULUM.md` Bagian 6.
 
 ---
 

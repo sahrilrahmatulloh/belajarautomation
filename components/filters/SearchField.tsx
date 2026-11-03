@@ -7,11 +7,13 @@ import { Input } from "@/components/ui/input";
 interface SearchFieldProps {
   value: string;
   placeholder: string;
+  // Label untuk pembaca layar; bawaannya mengikuti placeholder.
+  label?: string;
   onChange: (value: string) => void;
   inputClassName?: string;
 }
 
-export default function SearchField({ value, placeholder, onChange, inputClassName = "" }: SearchFieldProps) {
+export default function SearchField({ value, placeholder, label, onChange, inputClassName = "" }: SearchFieldProps) {
   return (
     <div className="relative">
       <Search
@@ -20,7 +22,7 @@ export default function SearchField({ value, placeholder, onChange, inputClassNa
       />
 
       <Input
-        aria-label={placeholder.replace(/\.+$/, "")}
+        aria-label={label ?? placeholder.replace(/\.+$/, "")}
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}

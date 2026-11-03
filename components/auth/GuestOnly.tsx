@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 import { ROLE_HOME } from "@/data/navigation";
+import { getNextTarget } from "@/lib/authRedirect";
 import { useSession } from "@/lib/session";
 import { useHydrated } from "@/lib/useHydrated";
 
@@ -18,7 +19,7 @@ export default function GuestOnly({
   const router = useRouter();
   const session = useSession();
   const isHydrated = useHydrated();
-  const redirectTo = isHydrated && session ? ROLE_HOME[session.role] : null;
+  const redirectTo = isHydrated && session ? (getNextTarget() ?? ROLE_HOME[session.role]) : null;
 
   useEffect(() => {
     if (redirectTo) {

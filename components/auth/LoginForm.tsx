@@ -7,6 +7,7 @@ import { AlertCircle, LogIn } from "lucide-react";
 
 import { DUMMY_ACCOUNTS, DUMMY_PASSWORD } from "@/data/dummy/accounts";
 import { ROLE_HOME, ROLE_LABELS } from "@/data/navigation";
+import { getNextTarget, withNextParam } from "@/lib/authRedirect";
 import { sessionActions } from "@/lib/session";
 import { useHydrated } from "@/lib/useHydrated";
 import { isValidEmail } from "@/lib/validation";
@@ -58,7 +59,7 @@ export default function LoginForm() {
         email: account.email,
         role: account.role,
       });
-      router.replace(ROLE_HOME[account.role]);
+      router.replace(getNextTarget() ?? ROLE_HOME[account.role]);
     }, 600);
   };
 
@@ -120,7 +121,7 @@ export default function LoginForm() {
 
         <p className="text-center text-sm text-muted-foreground">
           Belum punya akun?{" "}
-          <Link href="/register" className="font-semibold text-primary hover:underline">
+          <Link href={isHydrated ? withNextParam("/register") : "/register"} className="font-semibold text-primary hover:underline">
             Daftar sekarang
           </Link>
         </p>

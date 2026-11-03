@@ -43,7 +43,12 @@ Pengaturan lingkungan:
 - Salin `.env.example` menjadi `.env.local`. Jika `NEXT_PUBLIC_APP_ENV` kosong, aplikasi memakai `dev`.
 - Fitur bantu pengembangan (mis. badge "Draf" pada course) hanya aktif di `dev`; cek lewat `isDev` dari `lib/env.ts`, bukan `NODE_ENV`.
 - Label lingkungan tampil di pojok kiri bawah: "DEV" (oranye) dan "UAT" (ungu). Tidak tampil di `production`.
+- `NEXT_PUBLIC_SITE_URL` berisi alamat situs untuk Open Graph dan sitemap. Isi di Production saat domain sudah pasti; jika kosong, memakai alamat dari Vercel.
 - Di Vercel, isi `NEXT_PUBLIC_APP_ENV` per lingkungan (mis. per branch `develop` dan `uat`). Nilainya disisipkan saat build, jadi perubahan baru berlaku setelah deploy ulang.
+
+## Blog
+
+Artikel disimpan sebagai file MDX di `content/blog/`, dan menambah artikel tidak perlu mengubah kode aplikasi. Panduannya ada di [`content/blog/README.md`](content/blog/README.md).
 
 ## Testing
 

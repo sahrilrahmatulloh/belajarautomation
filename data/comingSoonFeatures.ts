@@ -1,4 +1,4 @@
-import { Briefcase, FolderKanban, Library, LucideIcon, Newspaper } from "lucide-react";
+import { Briefcase, FolderKanban, Library, LucideIcon } from "lucide-react";
 
 // Fitur yang sementara ditutup untuk pengguna dan tampil sebagai "Segera hadir".
 // Kode fiturnya tetap ada. Untuk membukanya kembali: hapus entri di sini,
@@ -10,11 +10,6 @@ export interface ComingSoonFeature {
 }
 
 export const COMING_SOON_FEATURES = {
-  blog: {
-    title: "Blog",
-    description: "Artikel seputar QA, testing, automation, dan karier sedang disiapkan.",
-    icon: Newspaper,
-  },
   ebooks: {
     title: "eBook",
     description: "Koleksi eBook QA dan automation sedang disiapkan.",
