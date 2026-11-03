@@ -68,8 +68,10 @@ export const ROLE_PAGES: { role: Exclude<Role, "user">; name: string; path: stri
   { role: "creator", name: "Profil Creator", path: "/profile" },
   { role: "creator", name: "Ajakan Mode Belajar", path: "/membership" },
   { role: "reviewer", name: "Dashboard Reviewer", path: "/reviewer" },
+  { role: "reviewer", name: "Antrean Review", path: "/reviewer/antrean" },
   { role: "reviewer", name: "Profil Reviewer", path: "/profile" },
   { role: "admin", name: "Dashboard Admin", path: "/admin" },
+  { role: "admin", name: "Konten Admin", path: "/admin/konten" },
   { role: "admin", name: "Profil Admin", path: "/profile" },
 ];
 

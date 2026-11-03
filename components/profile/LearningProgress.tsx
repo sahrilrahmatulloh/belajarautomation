@@ -14,7 +14,7 @@ export default function LearningProgress() {
         {courses.map(({ course, completedLessons, totalLessons, percent }) => (
           <li key={course.slug}>
             <div className="flex items-baseline justify-between gap-3">
-              <Link href={`/learn/${course.slug}`} className="min-w-0 truncate text-sm font-semibold hover:text-primary">
+              <Link href={`/learn/${course.slug}`} className="min-w-0 truncate text-sm font-semibold hover:text-primary-accent">
                 {course.title}
               </Link>
               <span className="shrink-0 text-xs tabular-nums text-muted-foreground">

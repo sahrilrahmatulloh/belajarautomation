@@ -40,7 +40,7 @@ export default function RoadmapBranch({
       </div>
 
       <div className="min-w-0">
-        <p className="text-xs font-semibold uppercase tracking-wider text-primary">
+        <p className="text-xs font-semibold uppercase tracking-wider text-primary-accent">
           Langkah {step}
         </p>
         <h3 className="mt-1 text-base font-semibold sm:text-lg">

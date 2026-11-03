@@ -141,7 +141,7 @@ export default function RegisterForm() {
       <button
         type="submit"
         disabled={isSubmitting}
-        className="flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90 disabled:cursor-wait disabled:opacity-70"
+        className="flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary-hover disabled:cursor-wait disabled:opacity-70"
       >
         <UserPlus className="h-4 w-4" aria-hidden="true" />
         {isSubmitting ? "Memproses..." : "Buat Akun"}
@@ -149,7 +149,7 @@ export default function RegisterForm() {
 
       <p className="text-center text-sm text-muted-foreground">
         Sudah punya akun?{" "}
-        <Link href={isHydrated ? withNextParam("/login") : "/login"} className="font-semibold text-primary hover:underline">
+        <Link href={isHydrated ? withNextParam("/login") : "/login"} className="font-semibold text-primary-accent hover:underline">
           Masuk
         </Link>
       </p>

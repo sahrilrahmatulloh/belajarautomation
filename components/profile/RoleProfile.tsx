@@ -93,7 +93,7 @@ function AdminProfile() {
       <ul className="mt-3 space-y-2.5">
         {ADMIN_TASKS.map((task) => (
           <li key={task} className="flex items-start gap-2.5 text-sm">
-            <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
+            <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-primary-accent" aria-hidden="true" />
             {task}
           </li>
         ))}

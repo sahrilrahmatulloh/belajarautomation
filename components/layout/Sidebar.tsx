@@ -48,7 +48,7 @@ export default function Sidebar({
         >
           <Image
             src="/logo.webp"
-            alt="belajarautomation.com logo"
+            alt="Logo belajarautomation.com"
             width={36}
             height={36}
             className="h-9 w-9 shrink-0 object-contain"

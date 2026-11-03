@@ -17,7 +17,7 @@ export default function RoleGreeting({
 }: RoleGreetingProps) {
   return (
     <section className="flex flex-col gap-5 rounded-xl border border-border bg-card p-5 shadow-sm sm:flex-row sm:items-center sm:p-6">
-      <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+      <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-primary-accent">
         <Icon className="h-7 w-7" aria-hidden="true" />
       </div>
 
@@ -31,7 +31,7 @@ export default function RoleGreeting({
         </p>
 
         {meta && (
-          <p className="mt-2 text-xs font-medium text-primary">
+          <p className="mt-2 text-xs font-medium text-primary-accent">
             {meta}
           </p>
         )}

@@ -23,7 +23,7 @@ export default function ProjectCard({
 
         <span className="flex items-center gap-1.5 rounded-full bg-muted px-3 py-1.5 text-xs font-medium text-muted-foreground">
           <Lock className="h-3.5 w-3.5" />
-          Locked
+          Terkunci
         </span>
       </div>
 
@@ -59,7 +59,7 @@ export default function ProjectCard({
 
         <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
           <Wrench className="h-3.5 w-3.5" />
-          Project Lab
+          Lab Project
         </span>
       </div>
 

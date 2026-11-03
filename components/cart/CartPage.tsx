@@ -99,7 +99,7 @@ export default function CartPage() {
 
             <Link
               href="/checkout"
-              className="mt-5 flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
+              className="mt-5 flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary-hover"
             >
               Lanjut ke Pembayaran
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
@@ -107,7 +107,7 @@ export default function CartPage() {
 
             <Link
               href="/ebooks"
-              className="mt-2 flex min-h-10 w-full items-center justify-center text-sm font-medium text-primary hover:underline"
+              className="mt-2 flex min-h-10 w-full items-center justify-center text-sm font-medium text-primary-accent hover:underline"
             >
               Lanjut belanja
             </Link>

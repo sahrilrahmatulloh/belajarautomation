@@ -25,7 +25,7 @@ const LEVEL_STYLES: Record<ChallengeDifficulty, string> = {
   Advanced: "bg-red-500/10 text-red-700 dark:text-red-300",
 };
 
-const primaryAction = "bg-primary text-primary-foreground hover:bg-primary/90";
+const primaryAction = "bg-primary text-primary-foreground hover:bg-primary-hover";
 
 const STATUS = {
   "not-started": {
@@ -42,7 +42,7 @@ const STATUS = {
     badge: "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300",
     action: "Ulangi",
     actionIcon: RotateCcw,
-    actionStyle: "border border-primary/40 text-primary hover:bg-primary/10",
+    actionStyle: "border border-primary/40 text-primary-accent hover:bg-primary/10",
   },
   failed: {
     label: "Belum lulus",
@@ -84,7 +84,7 @@ export default function ChallengeCard({ challenge }: ChallengeCardProps) {
         </div>
 
         <div className="min-w-0">
-          <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-[11px] font-medium text-primary">
+          <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-[11px] font-medium text-primary-accent">
             <TypeIcon className="h-3 w-3" aria-hidden="true" />
             {type.label}
           </span>
@@ -101,7 +101,7 @@ export default function ChallengeCard({ challenge }: ChallengeCardProps) {
                 href={`/learn/${course.slug}`}
                 aria-label={`Course: ${course.title}`}
                 title={course.title}
-                className="inline-flex min-w-0 max-w-full items-center gap-1 rounded-full border border-border px-2 py-0.5 transition-colors hover:border-primary/40 hover:text-primary"
+                className="inline-flex min-w-0 max-w-full items-center gap-1 rounded-full border border-border px-2 py-0.5 transition-colors hover:border-primary/40 hover:text-primary-accent"
               >
                 <GraduationCap className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
                 <span className="truncate">{course.title}</span>

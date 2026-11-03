@@ -7,11 +7,11 @@ export default function CareerResources() {
     <section className="space-y-6">
       <div>
         <h2 className="text-2xl font-bold">
-          Career Resources
+          Sumber Karier
         </h2>
 
         <p className="mt-1 text-muted-foreground">
-          Resource praktis untuk membantu kamu mempersiapkan karier di bidang QA Automation.
+          Sumber praktis untuk membantu kamu mempersiapkan karier di bidang QA Automation.
         </p>
       </div>
 

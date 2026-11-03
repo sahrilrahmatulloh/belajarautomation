@@ -8,7 +8,7 @@ export default function Page() {
     <DashboardLayout>
       <CreatorGuidePage
         title="Buat Konten"
-        description="Mulai dari artikel blog dengan menulis file MDX di branch milikmu."
+        description="Tulis artikel baru di Google Docs memakai template resmi."
         icon={FilePlus2}
       />
     </DashboardLayout>

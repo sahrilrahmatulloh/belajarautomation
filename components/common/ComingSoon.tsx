@@ -11,7 +11,7 @@ interface ComingSoonProps {
 export default function ComingSoon({ title, description, icon: Icon }: ComingSoonProps) {
   return (
     <section className="mx-auto flex max-w-xl flex-col items-center rounded-3xl border border-dashed border-border bg-card px-6 py-14 text-center">
-      <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+      <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10 text-primary-accent">
         <Icon className="h-7 w-7" aria-hidden="true" />
       </span>
       <span className="mt-5 rounded-full bg-amber-400/15 px-3 py-1 text-xs font-semibold text-amber-700 dark:text-amber-300">

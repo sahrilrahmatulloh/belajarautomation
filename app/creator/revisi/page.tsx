@@ -8,7 +8,7 @@ export default function Page() {
     <DashboardLayout>
       <CreatorGuidePage
         title="Catatan Revisi"
-        description="Catatan dari Reviewer tersedia di halaman review pull request kontenmu."
+        description="Catatan dari Reviewer ada di komentar pada dokumen Google Docs milikmu."
         icon={MessageSquareText}
       />
     </DashboardLayout>

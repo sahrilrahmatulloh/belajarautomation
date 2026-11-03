@@ -8,7 +8,7 @@ export default function Page() {
     <DashboardLayout>
       <CreatorGuidePage
         title="Konten Saya"
-        description="Daftar lengkap dan statusnya bisa kamu pantau di pull request milikmu."
+        description="Simpan dan pantau tulisanmu di dokumen Google Docs milikmu."
         icon={FileText}
       />
     </DashboardLayout>

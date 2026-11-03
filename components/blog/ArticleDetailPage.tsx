@@ -122,7 +122,7 @@ export default function ArticleDetailPage({ article, content, headings, related 
                         href={source.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 text-sm font-medium text-primary underline underline-offset-2"
+                        className="inline-flex items-center gap-2 text-sm font-medium text-primary-accent underline underline-offset-2"
                       >
                         <ExternalLink className="h-4 w-4 shrink-0" aria-hidden="true" />
                         {source.title}

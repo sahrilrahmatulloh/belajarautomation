@@ -18,7 +18,7 @@ export default function CreatorContentsTable() {
   }, [highlightedId]);
 
   return (
-    <div className="relative -mx-4 overflow-x-auto sm:-mx-5">
+    <div role="group" tabIndex={0} aria-label="Tabel konten" className="relative -mx-4 overflow-x-auto sm:-mx-5">
       <table className="w-full min-w-[560px] text-left text-sm">
         <caption className="sr-only">Daftar konten milik creator beserta status penerbitannya</caption>
         <thead className="border-y border-border bg-muted/40 text-xs text-muted-foreground">

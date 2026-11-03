@@ -215,10 +215,24 @@ export const ROLE_MODE = {
     revision: { title: "Konten perlu revisi", contentId: 3, contentTitle: "Soal: Validasi Status Code API" },
     approved: { title: "Konten disetujui", contentId: 5, contentTitle: "Modul Page Object Model" },
   },
+  googleDocsStages: ["Draf", "Menunggu Review", "Perlu Revisi", "Disetujui", "Terbit"],
+  writingStepCount: 7,
+  templateDisabledLabel: "Template sedang disiapkan. Hubungi Admin.",
   creatorPages: [
     { menu: "Konten Saya", path: "/creator/konten", title: "Konten Saya" },
     { menu: "Buat Konten", path: "/creator/buat", title: "Buat Konten" },
     { menu: "Catatan Revisi", path: "/creator/revisi", title: "Catatan Revisi" },
+  ],
+  guidePages: [
+    { role: "reviewer", menuName: "Menu Reviewer", menu: "Antrean Review", path: "/reviewer/antrean", heading: "Sementara, review dilakukan di Google Docs" },
+    { role: "reviewer", menuName: "Menu Reviewer", menu: "Riwayat Review", path: "/reviewer/riwayat", heading: "Sementara, review dilakukan di Google Docs" },
+    { role: "reviewer", menuName: "Menu Reviewer", menu: "Panduan Review", path: "/reviewer/panduan", heading: "Sementara, review dilakukan di Google Docs" },
+    { role: "admin", menuName: "Menu Admin", menu: "Pengguna & Role", path: "/admin/pengguna", heading: "Sementara, Admin menerbitkan lewat pull request" },
+    { role: "admin", menuName: "Menu Admin", menu: "Konten", path: "/admin/konten", heading: "Sementara, Admin menerbitkan lewat pull request" },
+    { role: "admin", menuName: "Menu Admin", menu: "Paket Membership", path: "/admin/paket", heading: "Sementara, Admin menerbitkan lewat pull request" },
+    { role: "admin", menuName: "Menu Admin", menu: "Avatar & Tema", path: "/admin/avatar-tema", heading: "Sementara, Admin menerbitkan lewat pull request" },
+    { role: "admin", menuName: "Menu Admin", menu: "Transaksi", path: "/admin/transaksi", heading: "Sementara, Admin menerbitkan lewat pull request" },
+    { role: "admin", menuName: "Menu Admin", menu: "Pengaturan", path: "/admin/pengaturan", heading: "Sementara, Admin menerbitkan lewat pull request" },
   ],
 } as const;
 
@@ -228,3 +242,26 @@ export const VIDEO_REFERENSI = {
   english: { id: "dummyVideo2", judul: "Video Contoh Berbahasa Inggris" },
   linkOnly: { id: "dummyVideo3", judul: "Video Contoh Tanpa Embed", channel: "Channel Tanpa Embed" },
 } as const;
+// Warna tombol utama berteks putih (PRD 15.2).
+export const COLORS = {
+  primaryButton: "rgb(37, 99, 235)",
+  white: "rgb(255, 255, 255)",
+};
+
+// Halaman yang diperiksa axe di luar MAIN_PAGES.
+export const GUEST_PAGES = [
+  { name: "Login", path: "/login" },
+  { name: "Daftar", path: "/register" },
+  { name: "Blog tamu", path: "/blog" },
+  { name: "Artikel tamu", path: "/blog/locator-playwright-best-practice" },
+  { name: "Artikel tidak ditemukan", path: "/blog/tidak-ada" },
+];
+
+export const LEARNER_PAGES = [
+  { name: "Detail Course", path: "/learn/playwright" },
+  { name: "Detail Roadmap", path: "/roadmap/qa-automation-web" },
+  { name: "Membership", path: "/membership" },
+  { name: "Keranjang", path: "/cart" },
+  { name: "Pembayaran", path: "/checkout" },
+  { name: "Profil kustomisasi", path: "/profile?tab=kustomisasi" },
+];

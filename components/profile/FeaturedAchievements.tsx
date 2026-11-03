@@ -19,7 +19,7 @@ export default function FeaturedAchievements({
     <section aria-labelledby="achievement-unggulan" className="rounded-2xl border border-border bg-card p-5 sm:p-6">
       <div className="flex items-baseline justify-between gap-3">
         <h2 id="achievement-unggulan" className="font-semibold">Achievement Unggulan</h2>
-        <Link href={allHref} className="shrink-0 text-sm font-medium text-primary hover:underline">
+        <Link href={allHref} className="shrink-0 text-sm font-medium text-primary-accent hover:underline">
           Lihat semua
         </Link>
       </div>

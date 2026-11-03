@@ -13,7 +13,7 @@ export default function ArticleNotFound() {
       </p>
       <Link
         href="/blog"
-        className="mt-5 inline-flex min-h-10 items-center gap-2 rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
+        className="mt-5 inline-flex min-h-10 items-center gap-2 rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary-hover"
       >
         <ArrowLeft className="h-4 w-4" aria-hidden="true" />
         Kembali ke Blog

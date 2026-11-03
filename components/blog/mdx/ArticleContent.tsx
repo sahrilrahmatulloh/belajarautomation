@@ -24,13 +24,13 @@ function Pre({ children }: Props<"pre">) {
 function Anchor({ href = "", children }: Props<"a">) {
   if (href.startsWith("/")) {
     return (
-      <AuthLink href={href} className="font-medium text-primary underline underline-offset-2">
+      <AuthLink href={href} className="font-medium text-primary-accent underline underline-offset-2">
         {children}
       </AuthLink>
     );
   }
   return (
-    <a href={href} target="_blank" rel="noreferrer" className="font-medium text-primary underline underline-offset-2">
+    <a href={href} target="_blank" rel="noreferrer" className="font-medium text-primary-accent underline underline-offset-2">
       {children}
     </a>
   );

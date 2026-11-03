@@ -28,7 +28,7 @@ export default function AddToCartButtons({
       <button
         type="button"
         onClick={buyNow}
-        className="flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
+        className="flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary-hover"
       >
         <Zap className="h-4 w-4" aria-hidden="true" />
         {buyLabel}
@@ -39,7 +39,7 @@ export default function AddToCartButtons({
           href="/cart"
           className="flex min-h-11 w-full items-center justify-center gap-2 rounded-xl border border-border px-4 text-sm font-medium transition-colors hover:bg-accent"
         >
-          <Check className="h-4 w-4 text-primary" aria-hidden="true" />
+          <Check className="h-4 w-4 text-primary-accent" aria-hidden="true" />
           Sudah di keranjang · Lihat keranjang
         </Link>
       ) : (

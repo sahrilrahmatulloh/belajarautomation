@@ -1,28 +1,29 @@
-# Panduan Kontribusi Konten
+# Panduan Admin: Menerbitkan Artikel
 
-Panduan ini untuk Creator, Reviewer, dan Admin yang mengelola artikel blog. Selama backend belum tersedia, konten dikelola di repository ini lewat file MDX dan pull request (PRD FR-15).
+Creator menulis di Google Docs memakai template artikel resmi, dan tidak memerlukan akun GitHub (PRD FR-15). Dokumen ini adalah panduan **Admin** untuk mengubah dokumen yang sudah **Disetujui** menjadi artikel di website.
+
+Panduan untuk Creator ada di halaman informasi Mode Creator di aplikasi.
 
 Tahap saat ini baru **artikel blog**. Isi lesson dan soal latihan menyusul sesuai FR-15.
 
-Sebelum mulai menulis, pastikan sudah ada kesepakatan tertulis mengenai hak penggunaan konten oleh platform dan pencantuman nama penulis (FR-15).
+## Sebelum mulai
 
-## Alur kerja
+- [ ] Reviewer sudah menyatakan setuju di dokumen.
+- [ ] Sudah ada kesepakatan tertulis dengan Creator mengenai hak penggunaan konten dan pencantuman nama penulis. Ini wajib sebelum artikel pertamanya terbit (FR-15).
 
-| Tahap | Yang dilakukan di GitHub | Oleh |
+## Alur
+
+| Tahap | Di mana | Oleh |
 |---|---|---|
-| Draf | Buat branch dari `develop`, lalu tulis file MDX | Creator |
-| Menunggu Review | Buat pull request ke `develop` memakai template konten | Creator |
-| Perlu Revisi | Reviewer meminta perubahan, Creator memperbaiki di branch yang sama | Reviewer, Creator |
-| Disetujui | Reviewer menyetujui dan CI lulus | Reviewer |
-| Terbit | Ubah `status` menjadi `published`, lalu merge | Admin |
+| Draf | Google Docs, memakai template | Creator |
+| Menunggu Review | Dokumen dibagikan ke Reviewer dengan akses "Pemberi komentar" | Creator |
+| Perlu Revisi | Komentar di dokumen, ditandai selesai oleh Creator setelah diperbaiki | Reviewer, Creator |
+| Disetujui | Reviewer menyatakan setuju di dokumen | Reviewer |
+| Terbit | Konversi ke MDX, pull request ke `develop`, lalu merge | Admin |
 
-Aturan peran:
+Mengubah artikel yang sudah terbit kembali melewati alur yang sama. Versi yang terbit tetap tayang sampai revisinya disetujui dan diterbitkan.
 
-- Creator tidak dapat menerbitkan sendiri, tidak dapat me-review kontennya sendiri, dan tidak melakukan merge sendiri.
-- Reviewer tidak me-review konten yang ditulisnya sendiri.
-- Mengubah artikel yang sudah terbit dilakukan lewat pull request baru. Versi yang terbit tetap tayang sampai revisinya disetujui dan diterbitkan.
-
-## Membuat artikel
+## Mengubah dokumen menjadi artikel
 
 ```bash
 git switch develop
@@ -30,10 +31,14 @@ git pull
 git switch -c konten/judul-artikel
 ```
 
-1. Buat file `content/blog/<slug>.mdx`. Nama file harus sama dengan `slug`.
-2. Isi frontmatter dan tulis isinya.
-3. Jalankan `npm run check:blog` dan `npm run dev`, lalu periksa artikel di `/blog/<slug>`.
-4. Buat pull request ke `develop`. Pilih template konten dengan menambahkan `?template=konten.md` pada alamat pembuatan pull request.
+1. **Buat file** `content/blog/<slug>.mdx`. Nama file harus sama dengan `slug`.
+2. **Salin metadata** dari bagian Info Artikel ke frontmatter. `author` diisi nama Creator.
+3. **Salin isi** ke MDX: heading, kode, Tips, Peringatan, dan tabel. Lihat [Komponen di dalam artikel](#komponen-di-dalam-artikel).
+4. **Unduh gambar** dari dokumen, simpan PNG-nya di `public/covers/blog/`, lalu optimalkan dengan `npm run optimize:images`. Pakai teks alternatif dan keterangan dari dokumen.
+5. **Pasang referensi video** bila ada di bagian Referensi Video. Lihat bagian Video di panduan ini.
+6. **Periksa** dengan `npm run check:blog` dan `npm run dev`, lalu buka `/blog/<slug>`.
+7. **Buat pull request** ke `develop` memakai template konten, dengan menambahkan `?template=konten.md` pada alamat pembuatan pull request.
+8. Setelah CI lulus, ubah `status` menjadi `published` dan isi `publishedAt` dengan tanggal terbit, lalu merge.
 
 ## Format frontmatter
 
@@ -66,11 +71,11 @@ sources:
 | `slug` | Ya | Sama dengan nama file, huruf kecil dan tanda hubung |
 | `excerpt` | Ya | Ringkasan satu kalimat, dipakai di kartu dan pratinjau tautan |
 | `category` | Ya | QA Fundamentals, Manual Testing, Automation Testing, API Testing, Programming, Career, atau Tools dan teknologi |
-| `author` | Tidak | Nama penulis. Jika dikosongkan, memakai "Tim BelajarAutomation" |
+| `author` | Tidak | Nama Creator. Jika dikosongkan, memakai "Tim BelajarAutomation", yang hanya untuk tulisan pemilik produk atau tulisan bersama |
 | `publishedAt` | Ya | Tanggal terbit, format `YYYY-MM-DD` |
 | `updatedAt` | Tidak | Tanggal diperbarui, format `YYYY-MM-DD` |
 | `cover` | Ya | Sampul di `public/`, simpan sampul khusus di `public/covers/blog/` |
-| `status` | Ya | `draft`, atau `published` yang hanya diubah oleh Admin |
+| `status` | Ya | `draft` atau `published` |
 | `featured` | Ya | `true` hanya untuk satu artikel unggulan |
 | `cta` | Ya | Minimal satu tujuan: `course` yang tersedia, `practice`, atau `roadmap`. `roadmap` tanpa `slug` menuju halaman daftar roadmap |
 | `sources` | Tidak | Daftar sumber `{ title, url }` |
@@ -101,27 +106,15 @@ await page.getByRole("button", { name: "Masuk" }).click();
 - Kotak ajakan di akhir artikel dibuat otomatis dari `cta`, jadi `<Ajakan>` hanya untuk ajakan di tengah artikel.
 - Tabel memakai format Markdown.
 
-## Aturan penulisan
-
-- **Bahasa Indonesia** yang jelas dan mudah dipahami pemula. Istilah teknis yang umum boleh tetap dalam bahasa Inggris.
-- **Contoh kode wajib diuji** dan dapat dijalankan (PRD Bagian 16).
-- **Data wajib bersumber.** Gaji, statistik, dan angka lain wajib mencantumkan sumber dan tahun data. Selama belum ada, tulis `[isi data beserta sumber dan tahun]` dan biarkan artikel berstatus `draft`.
-- **Klaim harus realistis.** Jangan menjanjikan hasil karier yang tidak dapat dijamin.
-- **Ajakan hanya menuju konten yang tersedia,** bukan course berstatus Segera hadir.
-- **Boleh dibantu AI,** tetapi materi teknis wajib diperiksa sebelum diterbitkan.
-
-## Checklist review
+## Pemeriksaan sebelum terbit
 
 Sesuai PRD Bagian 16. Checklist ini juga ada di template pull request konten.
 
-- [ ] Materi akurat dan sesuai praktik terkini.
-- [ ] Bahasa jelas dan mudah dipahami pemula.
-- [ ] Contoh kode sudah diuji dan dapat dijalankan.
+- [ ] Hasil konversi sama dengan dokumen yang disetujui.
+- [ ] Contoh kode dapat dijalankan.
 - [ ] Data seperti gaji mencantumkan sumber dan tahun, dan tidak ada lagi placeholder.
-- [ ] Klaim realistis dan tidak menjanjikan hasil karier.
-- [ ] Sumber dicantumkan untuk artikel yang memakai data atau rujukan.
 - [ ] Ajakan menuju course, latihan, atau roadmap yang sesuai dengan isi artikel.
-- [ ] Tidak ada konten yang melanggar hak cipta.
+- [ ] Gambar sudah dioptimalkan dan punya teks alternatif.
 - [ ] Tampilan sudah diperiksa di mode terang dan gelap, serta di layar mobile.
 - [ ] Penulis bukan orang yang sama dengan Reviewer.
 
