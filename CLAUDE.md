@@ -3,6 +3,7 @@
 ## Acuan
 - Selalu baca `docs/PRD.md` dan `docs/CURRICULUM.md` sebelum mengerjakan fitur. Jika bertentangan dengan prompt, tanyakan dulu.
 - Mockup desain bukan requirement (PRD Bagian 13.2). Jika mockup bertentangan dengan PRD, PRD yang berlaku.
+- Acuan visual ada di `docs/desain/`, dan PRD tetap yang berlaku.
 - Next.js 16: cek `node_modules/next/dist/docs/` bila ragu.
 
 ## Alur branch

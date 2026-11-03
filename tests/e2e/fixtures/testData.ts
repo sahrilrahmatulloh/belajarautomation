@@ -215,6 +215,9 @@ export const ROLE_MODE = {
     revision: { title: "Konten perlu revisi", contentId: 3, contentTitle: "Soal: Validasi Status Code API" },
     approved: { title: "Konten disetujui", contentId: 5, contentTitle: "Modul Page Object Model" },
   },
+  googleDocsStages: ["Draf", "Menunggu Review", "Perlu Revisi", "Disetujui", "Terbit"],
+  writingStepCount: 7,
+  templateDisabledLabel: "Template sedang disiapkan. Hubungi Admin.",
   creatorPages: [
     { menu: "Konten Saya", path: "/creator/konten", title: "Konten Saya" },
     { menu: "Buat Konten", path: "/creator/buat", title: "Buat Konten" },

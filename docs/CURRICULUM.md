@@ -1,7 +1,7 @@
 # Kurikulum BelajarAutomation
 
-**Versi:** 2.2
-**Acuan:** `docs/PRD.md` v2.7 — FR-02 (Learning Center), FR-03 (Roadmap), FR-05 (XP dan Rank), FR-07 (Blog), FR-10 (Membership)
+**Versi:** 2.3
+**Acuan:** `docs/PRD.md` v2.13 — FR-02 (Learning Center), FR-03 (Roadmap), FR-05 (XP dan Rank), FR-07 (Blog), FR-10 (Membership)
 
 Dokumen ini adalah sumber acuan konten Learning Center dan Roadmap. Data di `data/` wajib mengikuti dokumen ini. Jika kurikulum berubah, perbarui dokumen ini lebih dulu, lalu sesuaikan data. Jika dokumen ini bertentangan dengan PRD, PRD yang berlaku.
 
@@ -57,6 +57,12 @@ Beginner, Intermediate, atau Advanced, sesuai kesiapan yang dibutuhkan untuk mem
 - Kolom "Target lesson" adalah rencana jumlah lesson. Jumlah lesson aktual di data boleh berbeda selama pengembangan.
 - Total target sekitar 206 lesson. Angka ini menjadi dasar perhitungan batas XP rank di PRD FR-05 (10 XP per lesson, 50 XP bonus course tuntas, ditambah XP kuis dan challenge).
 - Jika total lesson aktual berubah signifikan, batas XP rank wajib ditinjau ulang agar rank Master tetap dapat dicapai.
+
+### Format lesson
+- Teks adalah format utama; Creator hanya menulis teks (PRD FR-02 bagian F).
+- Isi lesson: teks dengan heading, blok kode, gambar/screenshot/GIF, kotak Tips dan Peringatan, tabel, dan kuis singkat opsional.
+- Referensi video YouTube opsional, maksimal 3 per lesson, mengikuti aturan PRD FR-02 bagian G. Lesson wajib lengkap tanpa video.
+- Prioritaskan referensi video untuk lesson yang butuh demo visual: instalasi tool, demo antarmuka (misalnya Katalon), dan debugging.
 
 ### Sampul
 - Course: `public/covers/courses/<slug>.webp`

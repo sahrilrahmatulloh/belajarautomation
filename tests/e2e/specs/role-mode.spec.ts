@@ -1,3 +1,4 @@
+import AxeBuilder from "@axe-core/playwright";
 import { Page } from "@playwright/test";
 
 import { expect, test } from "../fixtures/auth";
@@ -329,11 +330,37 @@ test.describe("Halaman informasi Creator", () => {
 
       await expect(page).toHaveURL(path);
       await expect(page.getByRole("heading", { level: 1, name: title })).toBeVisible();
-      await expect(page.getByRole("heading", { name: /lewat GitHub/ })).toBeVisible();
-      await expect(page.getByRole("link", { name: "Buka Panduan Kontribusi" })).toHaveAttribute(
-        "href",
-        /\/docs\/CONTENT_GUIDE\.md$/
+      await expect(page.getByRole("heading", { name: "Sementara, konten ditulis di Google Docs" })).toBeVisible();
+    });
+
+    test(`halaman ${title} menjelaskan alur Google Docs tanpa istilah Git`, async ({ page }) => {
+      await page.goto(path);
+      const main = page.getByRole("main");
+      await expect(main.getByRole("heading", { level: 1, name: title })).toBeVisible();
+
+      const flow = main.getByRole("table");
+      await expect(flow.getByRole("columnheader")).toHaveText(["Tahap", "Yang kamu lakukan"]);
+      await expect(flow.getByRole("rowheader")).toHaveText([...ROLE_MODE.googleDocsStages]);
+      await expect(page.getByRole("region", { name: "Panduan singkat menulis" }).getByRole("listitem")).toHaveCount(
+        ROLE_MODE.writingStepCount
       );
+      await expect(main).not.toContainText(/github|\bgit\b|branch|pull request|\bPR\b|\bMDX\b/i);
+    });
+
+    test(`tombol template di ${title} nonaktif selama link belum diisi`, async ({ page }) => {
+      await page.goto(path);
+
+      await expect(page.getByRole("button", { name: ROLE_MODE.templateDisabledLabel })).toBeDisabled();
+      await expect(page.getByRole("link", { name: "Buka Template Artikel" })).toHaveCount(0);
+    });
+
+    test(`halaman ${title} tanpa pelanggaran axe`, async ({ page }) => {
+      await page.goto(path);
+      await expect(page.getByRole("main").getByRole("heading", { level: 1, name: title })).toBeVisible();
+
+      const { violations } = await new AxeBuilder({ page }).analyze();
+
+      expect(violations.map((violation) => violation.id)).toEqual([]);
     });
   }
 

@@ -1,9 +1,28 @@
 # BELAJARAUTOMATION.COM
 ## Product Requirements Document (PRD)
-**Versi:** 2.10  
+**Versi:** 2.14  
 **Status:** Draft — Acuan Pengembangan Produk  
 **Platform:** Web Application  
 **Target Pengguna:** Pemula hingga praktisi QA, Software Testing, dan Programming
+
+### Perubahan di Versi 2.14
+- Menetapkan aturan penyimpanan mockup yang disetujui di `docs/desain/` (Bagian 13.2).
+- Mockup Mode Creator (Konten Saya, Buat Konten, Catatan Revisi) dan kartu video referensi disetujui sebagai acuan visual (FR-15).
+- Menegaskan bahwa "Sudah diperbaiki" adalah tanda dari Creator; catatan dinyatakan selesai setelah dikonfirmasi Reviewer (FR-15).
+
+### Perubahan di Versi 2.13
+- Menetapkan format isi lesson: teks sebagai format utama; Creator hanya menulis teks (FR-02).
+- Lesson dan artikel boleh menyertakan referensi video YouTube sebagai pelengkap, dengan aturan embed, kredit, dan pengecekan Reviewer (FR-02, FR-07, FR-15).
+- Video buatan sendiri tidak termasuk rilis awal (Bagian 12).
+
+### Perubahan di Versi 2.12
+- Tahap sebelum backend diubah: Creator menulis di Google Docs, bukan lewat GitHub, karena tidak semua Creator memahami GitHub (FR-15).
+- Menetapkan rancangan fitur Konten Saya, Buat Konten, dan Catatan Revisi untuk tahap setelah backend, termasuk upload gambar (FR-15).
+- Backend diprioritaskan agar Creator dapat menulis langsung di aplikasi.
+
+### Perubahan di Versi 2.11
+- Merinci perilaku mode peran: halaman yang menampilkan ajakan beralih mode, mode bawaan saat login, dan pengaturan di mode peran (FR-15).
+- Menetapkan standar kontras minimal 4,5:1 dan warna tombol utama di mode gelap (Bagian 8.6, 15.2).
 
 ### Perubahan di Versi 2.10
 - Tampilan mengikuti mode: Mode Creator, Reviewer, dan Admin tanpa keranjang, membership, serta data pelajar; profil per mode; notifikasi per mode (FR-15, Bagian 4.4).
@@ -343,6 +362,35 @@ Halaman detail dapat menampilkan:
 - Pengguna dapat berpindah antarbagian.
 - Status penyelesaian modul disimpan.
 - Progress diperbarui berdasarkan aktivitas yang valid.
+
+**F. Format isi lesson**
+Teks adalah format utama lesson. Creator hanya menulis teks; platform tidak memproduksi video sendiri pada rilis awal.
+
+Isi lesson dapat memuat:
+- Teks dengan heading.
+- Blok kode yang dapat disalin.
+- Gambar, screenshot, atau GIF dengan teks alternatif dan keterangan.
+- Kotak Tips dan Peringatan.
+- Tabel.
+- Kuis singkat di akhir lesson (opsional).
+- Referensi video YouTube (opsional).
+
+**G. Referensi video YouTube**
+Video dari YouTube boleh disertakan sebagai bahan pelengkap, terutama untuk materi yang butuh demo visual (instalasi tool, demo antarmuka, debugging).
+
+Aturan:
+- Lesson wajib dapat dipelajari lengkap tanpa video. Jika video dihapus atau dijadikan privat, lesson tetap utuh.
+- Video hanya ditampilkan melalui embed resmi YouTube atau tautan. Video orang lain tidak boleh diunduh lalu diunggah ulang.
+- Video yang pemiliknya menonaktifkan embed hanya ditampilkan sebagai tautan.
+- Setiap video mencantumkan judul asli dan nama channel sebagai kredit.
+- Maksimal 3 video per lesson, ditempatkan di bagian "Referensi Video" atau tepat di bawah bagian yang dijelaskan.
+- Video berbahasa Indonesia diutamakan; video berbahasa lain diberi label bahasa.
+- Kartu video menampilkan judul, nama channel, durasi, dan bahasa.
+
+Ketentuan teknis:
+- Mode klik untuk memutar: awalnya hanya thumbnail yang tampil, dan player YouTube baru dimuat saat diklik.
+- Embed memakai domain `youtube-nocookie.com`.
+- Pengecekan link berkala mendeteksi video yang dihapus, dijadikan privat, atau tidak dapat di-embed, lalu melaporkannya ke Admin untuk diganti atau dihapus.
 
 ### Aturan akses
 Setiap course memiliki tingkat akses:
@@ -698,6 +746,7 @@ Menyediakan artikel edukasi seputar QA, testing, automation, dan programming, se
 - Status artikel: `draft` atau `published`. Artikel `draft` hanya tampil di lingkungan DEV dengan badge "Draf"; UAT dan Production hanya menampilkan artikel `published`.
 - Ajakan hanya boleh menuju course atau latihan yang tersedia; pengecekan otomatis menggagalkan build jika tujuan tidak valid.
 - Menambah artikel baru cukup dengan menambah file konten, tanpa mengubah kode aplikasi.
+- Artikel boleh menyertakan referensi video YouTube dengan aturan yang sama seperti lesson (FR-02 bagian G).
 
 ### SEO
 - Setiap artikel memiliki judul halaman, deskripsi, dan gambar pratinjau (Open Graph) dari metadata.
@@ -1131,7 +1180,13 @@ Memungkinkan konten ditulis oleh lebih dari satu orang dengan kualitas yang teta
 | XP, rank, achievement, leaderboard | Ya | Tidak ditampilkan |
 | Notifikasi | Progres belajar, Konten baru, Transaksi, Akun dan sistem | Khusus role, Akun dan sistem |
 
-Jika pengguna dalam mode peran membuka halaman khusus pelajar (mis. keranjang, membership, leaderboard), tampilkan ajakan untuk beralih ke Mode Belajar.
+Perilaku mode peran:
+- Halaman yang memuat XP, progres, atau pembelian menampilkan ajakan "Beralih ke Mode Belajar" saat dibuka di mode peran: Belajar, Roadmap, Playground, Leaderboard, eBook, Project, Karier, Membership, Keranjang, dan Checkout. Setelah beralih, halaman yang dituju langsung terbuka.
+- Blog dapat dibuka di semua mode.
+- Saat login, akun dengan peran tambahan mulai di mode perannya.
+- Membuka halaman peran (mis. `/creator`) dari Mode Belajar otomatis mengembalikan ke mode peran tersebut.
+- Di mode peran, pengaturan Privasi (leaderboard dan profil publik) disembunyikan.
+- Di Mode Belajar, label akun menunjukkan peran dan mode, mis. "Creator · Mode Belajar".
 
 ### Profil per mode
 - **Mode Belajar:** profil pelajar sesuai FR-13.
@@ -1155,26 +1210,71 @@ Jika pengguna dalam mode peran membuka halaman khusus pelajar (mis. keranjang, m
 
 - Konten yang sudah terbit lalu diubah dibuat sebagai revisi baru yang kembali melewati review. Versi yang terbit tetap tayang sampai revisinya disetujui dan diterbitkan.
 - Setiap konten mencatat penulis, reviewer, dan tanggal setiap perubahan status.
+- Reviewer ikut memeriksa setiap referensi video: relevan, tidak bertentangan dengan isi konten, versi tool masih sesuai, dan bebas konten yang tidak pantas.
 
-### Tahap sebelum backend: penerbitan lewat GitHub
-Selama backend belum tersedia, konten dikelola di repository:
+### Tahap sebelum backend: menulis di Google Docs
+Karena tidak semua Creator memahami GitHub, selama backend belum tersedia:
 
-| Tahap alur | Bentuk di GitHub |
+| Tahap alur | Bentuk |
 |---|---|
-| Draf | Branch dan file MDX milik Creator |
-| Menunggu Review | Pull request ke `develop` |
-| Perlu Revisi | Review dengan permintaan perubahan |
-| Disetujui | Review disetujui oleh Reviewer dan CI lulus |
-| Terbit | Admin melakukan merge dan mengubah status artikel menjadi `published` |
+| Draf | Creator menulis di Google Docs memakai template artikel resmi |
+| Menunggu Review | Creator membagikan dokumen ke Reviewer dengan akses komentar |
+| Perlu Revisi | Reviewer memberi komentar di dokumen; Creator memperbaiki dan menandai komentar selesai |
+| Disetujui | Reviewer menyatakan setuju di dokumen |
+| Terbit | Admin mengubah dokumen menjadi file MDX melalui pull request ke `develop`; setelah CI lulus dan di-merge, status artikel diubah menjadi `published` |
 
 Ketentuan:
-- Tersedia panduan kontribusi konten di repository: cara membuat file, format frontmatter, aturan penulisan, dan checklist review.
-- Tersedia template pull request khusus konten.
-- Perubahan pada folder konten wajib disetujui Reviewer (melalui pengaturan pemilik kode), dan Creator tidak dapat melakukan merge sendiri.
-- Dashboard Creator di aplikasi tetap berupa tampilan dummy dan menautkan ke panduan kontribusi.
+- Template Google Docs berisi kolom metadata (judul, ringkasan, kategori, sampul, ajakan, sumber) dan contoh format isi (heading, blok kode, Tips, Peringatan, gambar dengan keterangan, tabel).
+- Template juga berisi kolom opsional "Referensi Video": link YouTube, nama channel, posisi di dalam konten, dan alasan memilih video tersebut.
+- Panduan untuk Creator ditulis dalam bahasa sederhana tanpa istilah Git, dan dapat diakses dari halaman informasi di Mode Creator.
+- Panduan teknis konversi dan pull request (`docs/CONTENT_GUIDE.md`) ditujukan untuk Admin.
+- Gambar dari dokumen dioptimalkan dan disimpan di repository saat konversi.
+- Creator tidak memerlukan akun atau akses GitHub.
+- Halaman Konten Saya, Buat Konten, dan Catatan Revisi di aplikasi tetap berupa halaman informasi yang menautkan ke template dan panduan.
 
-### Tahap setelah backend
-Creator menulis melalui editor di aplikasi: daftar Konten Saya dengan filter status, editor per jenis konten dengan pratinjau dan simpan draf, catatan revisi per konten yang dapat ditandai selesai, serta antrean review dan penerbitan di dalam aplikasi.
+### Tahap setelah backend: menulis di aplikasi
+Backend diprioritaskan agar Creator dapat menulis langsung di aplikasi tanpa alat tambahan.
+
+**Konten Saya**
+- Tab status dengan jumlah: Semua, Draf, Menunggu Review, Perlu Revisi, Disetujui, Terbit.
+- Kolom: judul, jenis konten, kategori atau course terkait, status, terakhir diubah, dan reviewer.
+- Pencarian dan filter jenis konten.
+- Aksi mengikuti status:
+
+| Status | Aksi |
+|---|---|
+| Draf | Edit, Kirim untuk Review, Hapus |
+| Menunggu Review | Lihat, Tarik kembali (kembali menjadi Draf) |
+| Perlu Revisi | Lihat catatan, Edit |
+| Disetujui | Lihat (menunggu diterbitkan Admin) |
+| Terbit | Lihat di website, Buat revisi |
+
+- Empty state untuk Creator baru dengan ajakan menulis konten pertama.
+
+**Buat Konten**
+- Langkah 1, pilih jenis konten: Artikel blog (aktif); Isi lesson dan Soal latihan ditampilkan terkunci sampai tahapnya tiba.
+- Langkah 2, editor:
+  - Panel info: judul, ringkasan, kategori, sampul, ajakan ke course atau latihan, dan sumber.
+  - Editor isi dengan toolbar: heading, tebal, daftar, blok kode, kotak Tips, kotak Peringatan, gambar, dan tabel.
+  - **Upload gambar** langsung dari editor, dengan teks alternatif dan keterangan; gambar dioptimalkan otomatis dan dibatasi ukuran serta formatnya.
+  - Sisipkan referensi video YouTube dengan menempelkan link; judul dan nama channel diisi otomatis bila tersedia, dan Creator menambahkan alasan memilih video.
+  - Pratinjau yang menampilkan konten persis seperti di halaman publik.
+  - Simpan otomatis sebagai draf, jumlah kata, dan perkiraan waktu baca.
+  - Checklist sebelum kirim sesuai Bagian 16: contoh kode diuji, data bersumber, bahasa diperiksa.
+  - Tombol "Simpan Draf" dan "Kirim untuk Review"; kirim hanya aktif jika kolom wajib terisi dan seluruh checklist dicentang.
+
+**Catatan Revisi**
+- Dikelompokkan per konten, dengan nama reviewer dan tanggal.
+- Dua jenis catatan: **catatan umum** untuk keseluruhan konten, dan **catatan per bagian** yang terhubung ke heading tertentu.
+- Creator dapat membalas singkat dan menandai catatan "Sudah diperbaiki".
+- Filter: Perlu ditangani dan Selesai.
+- Tombol "Kirim ulang untuk Review" nonaktif selama masih ada catatan yang belum ditandai, dengan teks bantuan jumlah catatan yang sudah selesai (mis. "2 dari 3 selesai").
+- "Sudah diperbaiki" adalah tanda dari Creator, bukan persetujuan. Catatan dinyatakan selesai setelah Reviewer mengonfirmasinya saat review berikutnya; Reviewer dapat membuka kembali catatan yang belum tuntas.
+- Acuan visual: `docs/desain/` (Bagian 13.2).
+
+**Fase berikutnya**
+- Riwayat versi dan perbandingan antarversi.
+- Catatan per paragraf bebas.
 
 ### Penulis dan kepemilikan
 - Artikel menampilkan nama Creator yang menulisnya; "Tim BelajarAutomation" dipakai untuk tulisan pemilik produk atau tulisan bersama.
@@ -1393,7 +1493,7 @@ Menyimpan identitas dan informasi dasar pengguna.
 Menyimpan preferensi tampilan dan pengaturan pengguna.
 
 ## 7.3 LearningContent
-Menyimpan informasi materi pembelajaran.
+Menyimpan informasi materi pembelajaran, termasuk isi teks lesson dan daftar referensi video (ID video YouTube, judul, nama channel, durasi, bahasa, posisi di dalam lesson, dan status ketersediaan terakhir).
 
 ## 7.4 LearningProgress
 Mencatat status dan progress materi pengguna.
@@ -1470,6 +1570,7 @@ Aplikasi harus dapat digunakan pada desktop, tablet, dan perangkat mobile.
 - Halaman tidak boleh memuat data yang tidak diperlukan.
 - Daftar konten harus dapat dikembangkan tanpa membuat halaman semakin berat secara tidak terkendali.
 - Gambar produk dan materi perlu dioptimalkan.
+- Embed video pihak ketiga dimuat hanya saat pengguna mengklik putar.
 - Proses yang berat harus dipertimbangkan untuk dijalankan secara asinkron jika diperlukan.
 
 ## 8.3 Security
@@ -1496,7 +1597,7 @@ Aplikasi harus dapat digunakan pada desktop, tablet, dan perangkat mobile.
 - Dokumentasi implementasi harus diperbarui saat arsitektur berubah.
 
 ## 8.6 Accessibility dan Usability
-- Kontras teks harus memadai.
+- Kontras teks minimal 4,5:1 untuk teks normal dan 3:1 untuk teks besar, di mode terang maupun gelap (setara WCAG 2.1 AA).
 - Kontrol interaktif harus jelas.
 - Navigasi keyboard perlu diperhatikan.
 - Status error, loading, empty state, dan success harus informatif.
@@ -1644,6 +1745,8 @@ Pengembangan harus dilakukan secara bertahap agar perubahan tidak merusak fitur 
 - Filter dapat digunakan.
 - Materi dapat dibuka.
 - Progress tersimpan dan dapat dipulihkan.
+- Lesson dapat dipelajari lengkap tanpa memutar video referensi.
+- Video referensi baru memuat player YouTube setelah diklik dan menampilkan judul serta nama channel.
 
 ## Roadmap
 - Pengguna dapat melihat jalur belajar.
@@ -1716,7 +1819,9 @@ Hal berikut harus diputuskan sebelum implementasi fitur terkait mencapai tahap p
 ## Produk dan Konten
 - Struktur final materi dan modul.
 - Imbalan untuk Creator dan bentuk kesepakatan kepemilikan konten.
-- Waktu peralihan dari penerbitan lewat GitHub ke editor di aplikasi.
+- Waktu peralihan dari menulis di Google Docs ke editor di aplikasi.
+- Penyimpanan file gambar untuk upload di editor (bagian dari strategi penyimpanan file).
+- Produksi video sendiri (misalnya untuk materi premium) beserta layanan hosting-nya; tidak termasuk rilis awal.
 
 ## Gamification
 - Penyesuaian nilai XP dan batas rank setelah konten bertambah.
@@ -1776,6 +1881,12 @@ Hal berikut harus diputuskan sebelum implementasi fitur terkait mencapai tahap p
 - Mockup dan konsep desain adalah bahan eksplorasi, **bukan kebutuhan produk**.
 - Elemen di mockup hanya diimplementasikan setelah dimasukkan ke PRD atau disebutkan secara eksplisit dalam tugas pengembangan.
 - Jika mockup bertentangan dengan PRD, PRD yang berlaku.
+
+Penyimpanan mockup:
+- Hanya mockup yang sudah disetujui yang disimpan di repository, di folder `docs/desain/`. Mockup eksplorasi atau yang sudah digantikan revisi tidak disimpan.
+- Nama file per fitur (mis. `creator-mode.webp`, `playground.webp`) dalam format WebP terkompresi.
+- `docs/desain/README.md` mencatat setiap mockup: nama file, fitur, bagian PRD terkait, tanggal disetujui, dan perbedaan yang sudah diketahui terhadap PRD.
+- Jika desain berubah, mockup lama diganti atau dihapus agar tidak ada acuan usang.
 
 ## 13.3 Lingkungan dan alur rilis
 
@@ -1859,6 +1970,8 @@ Profesional, ramah, praktis, menyenangkan, dan berorientasi pada perkembangan ke
 
 Warna identitas rank (FR-05) terpisah dari palet brand dan tidak berubah.
 
+Tombol utama dengan teks putih memakai Primary Blue `#2563EB` di mode terang maupun gelap agar memenuhi kontras minimal 4,5:1. Accent Blue `#60A5FA` dipakai untuk teks, ikon, atau aksen di atas latar gelap, bukan sebagai latar tombol berteks putih.
+
 ## 15.3 Tipografi
 - **Inter:** heading dan teks utama.
 - **JetBrains Mono:** kode pemrograman.
@@ -1889,6 +2002,7 @@ BelajarAutomation adalah brand independen yang tetap memiliki hubungan visual de
 5. Koreksi dan perbaikan pada produk yang sama dikelola dan diberikan tanpa biaya tambahan.
 6. Klaim pemasaran harus realistis dan tidak menjanjikan hasil karier yang tidak dapat dijamin.
 7. Course hanya boleh berstatus `available` saat rilis jika status kontennya `ready` (FR-02).
+8. Video referensi adalah pelengkap; isi teks harus lengkap tanpa video, dan setiap video mencantumkan kredit pembuatnya.
 
 ---
 

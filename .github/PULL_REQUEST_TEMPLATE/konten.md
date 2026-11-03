@@ -1,31 +1,38 @@
 ## Konten
 
+Dipakai Admin saat menerbitkan artikel yang sudah disetujui di Google Docs.
+
 - **Judul:**
 - **Kategori:**
-- **Jenis perubahan:** artikel baru / revisi artikel terbit / perbaikan draf
+- **Jenis perubahan:** artikel baru / revisi artikel terbit
+- **Dokumen Google Docs:**
+- **Creator:**
+- **Reviewer:**
 
 Panduan: [docs/CONTENT_GUIDE.md](https://github.com/sahrilrahmatulloh/belajarautomation/blob/develop/docs/CONTENT_GUIDE.md)
 
-## Checklist Creator
+## Checklist Admin
 
+- [ ] Reviewer sudah menyatakan setuju di dokumen.
+- [ ] Sudah ada kesepakatan tertulis dengan Creator.
+- [ ] `author` berisi nama Creator.
+- [ ] Hasil konversi sama dengan dokumen yang disetujui.
 - [ ] `npm run check:blog` lulus.
 - [ ] Artikel sudah diperiksa di `npm run dev`, di mode terang dan gelap, serta di layar mobile.
-- [ ] Contoh kode sudah diuji dan dapat dijalankan.
-- [ ] `status` tetap `draft`. Hanya Admin yang mengubahnya menjadi `published`.
-
-## Checklist Reviewer
-
-- [ ] Materi akurat dan sesuai praktik terkini.
-- [ ] Bahasa jelas dan mudah dipahami pemula.
-- [ ] Contoh kode sudah diuji dan dapat dijalankan.
+- [ ] Gambar sudah dioptimalkan dan punya teks alternatif.
 - [ ] Data seperti gaji mencantumkan sumber dan tahun, dan tidak ada lagi placeholder.
-- [ ] Klaim realistis dan tidak menjanjikan hasil karier.
-- [ ] Sumber dicantumkan untuk artikel yang memakai data atau rujukan.
-- [ ] Ajakan menuju course, latihan, atau roadmap yang sesuai dengan isi artikel.
-- [ ] Tidak ada konten yang melanggar hak cipta.
-- [ ] Penulis bukan orang yang sama dengan Reviewer.
 
-## Checklist Admin (saat menerbitkan)
+## Checklist video
 
-- [ ] Review sudah disetujui dan CI lulus.
+Lewati bila artikel tidak memakai video.
+
+- [ ] Maksimal 3 video.
+- [ ] Reviewer sudah memeriksa: relevan, tidak bertentangan dengan isi, versi tool masih sesuai, dan pantas.
+- [ ] Hanya embed resmi atau tautan, tanpa mengunggah ulang video orang lain.
+- [ ] Judul asli dan nama channel tercantum.
+- [ ] Artikel tetap bisa dipahami tanpa video.
+
+## Saat menerbitkan
+
+- [ ] CI lulus.
 - [ ] `status` diubah menjadi `published`, dan `publishedAt` berisi tanggal terbit.
