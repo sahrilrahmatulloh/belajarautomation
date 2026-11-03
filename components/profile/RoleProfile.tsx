@@ -3,13 +3,13 @@
 import { CheckCircle2, ClipboardCheck, RotateCcw, ShieldCheck } from "lucide-react";
 
 import { getCreatorStats } from "@/components/creator/creatorStats";
+import { useCreatorData } from "@/components/creator/studio/useCreatorData";
 import RoleStatCard from "@/components/roles/RoleStatCard";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ROLE_LABELS } from "@/data/navigation";
 import { ACTIVE_AVATAR } from "@/data/dummy/appearance";
 import { DUMMY_REVIEWER_STATS } from "@/data/dummy/reviewer";
-import { useCreatorStudio } from "@/lib/creatorStudio";
-import { formatDate } from "@/lib/format";
+import { formatContentDate, KIND_LABELS } from "@/lib/content/document";
 import { useSession } from "@/lib/session";
 import { useViewMode } from "@/lib/viewMode";
 
@@ -55,8 +55,9 @@ function StatsSection({ title, stats }: { title: string; stats: typeof REVIEWER_
 }
 
 function CreatorProfile() {
-  const { contents } = useCreatorStudio();
-  const published = contents.filter((content) => content.status === "published");
+  const { data } = useCreatorData();
+  const contents = data?.contents ?? [];
+  const published = contents.filter((content) => content.status === "terbit");
 
   return (
     <>
@@ -71,10 +72,10 @@ function CreatorProfile() {
             {published.map((content) => (
               <li key={content.id} className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 py-3 first:pt-0 last:pb-0">
                 <div className="min-w-0">
-                  <p className="font-medium">{content.title}</p>
-                  <p className="text-sm text-muted-foreground">{content.type}</p>
+                  <p className="font-medium">{content.judul}</p>
+                  <p className="text-sm text-muted-foreground">{KIND_LABELS[content.type]}</p>
                 </div>
-                <span className="text-sm text-muted-foreground">{formatDate(content.updatedAt)}</span>
+                <span className="text-sm text-muted-foreground">{formatContentDate(content.updatedAt)}</span>
               </li>
             ))}
           </ul>

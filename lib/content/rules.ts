@@ -1,4 +1,4 @@
-import { ContentItem, ContentNode } from "@/types/ContentWorkflow";
+import { ContentItem, ContentNode, ReviewNote } from "@/types/ContentWorkflow";
 
 // Checklist Creator sebelum mengirim konten (PRD Bagian 16).
 export const CREATOR_CHECKLIST = [
@@ -18,6 +18,26 @@ export const REVIEWER_CHECKLIST = [
 ];
 
 export const MAX_VIDEOS = 3;
+
+export function isYoutubeId(value: string) {
+  return /^[A-Za-z0-9_-]{11}$/.test(value);
+}
+
+export function parseYoutubeId(link: string) {
+  return link.trim().match(/(?:youtube\.com\/watch\?(?:.*&)?v=|youtu\.be\/)([A-Za-z0-9_-]{11})(?:[&?#].*)?$/)?.[1] ?? null;
+}
+
+// Catatan pada kiriman terakhir yang sudah sampai ke Creator.
+export function latestRoundNotes(notes: ReviewNote[]) {
+  const released = notes.filter((note) => note.released);
+  const latest = Math.max(0, ...released.map((note) => note.round));
+  return released.filter((note) => note.round === latest);
+}
+
+// Catatan belum selesai dan konten sedang di tangan Creator.
+export function needsCreatorAction(content: Pick<ContentItem, "status">, notes: ReviewNote[]) {
+  return ["perlu-revisi", "draf"].includes(content.status) && notes.some((note) => !note.resolved);
+}
 
 export function nodeText(node: ContentNode): string {
   if (node.type === "text") return node.text ?? "";

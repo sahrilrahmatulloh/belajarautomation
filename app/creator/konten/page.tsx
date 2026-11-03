@@ -5,7 +5,7 @@ import ContentsPage from "@/components/creator/studio/ContentsPage";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import { isDev } from "@/lib/env";
 
-// Prototipe dengan data dummy hanya di DEV. Di luar DEV tetap halaman informasi (PRD FR-15).
+// Antarmuka dengan data dummy hanya di DEV. Di luar DEV tetap halaman informasi (PRD FR-15).
 export default function Page() {
   return (
     <DashboardLayout>

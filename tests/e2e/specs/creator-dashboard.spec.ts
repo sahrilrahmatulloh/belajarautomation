@@ -32,7 +32,7 @@ test.describe("Dashboard Creator", () => {
   });
 
   test("catatan revisi hanya untuk konten berstatus Perlu Revisi", async () => {
-    await expect(dashboard.revisionNotes).toHaveCount(1);
+    await expect(dashboard.revisionNotes).toHaveCount(CREATOR_DASHBOARD.openRevisionCount);
     await expect(dashboard.revisionNotes.first()).toContainText(CREATOR_DASHBOARD.needsRevisionTitle);
     await expect(dashboard.contentRow(CREATOR_DASHBOARD.needsRevisionTitle)).toContainText("Perlu Revisi");
   });
