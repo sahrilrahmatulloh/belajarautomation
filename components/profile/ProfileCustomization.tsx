@@ -9,6 +9,7 @@ import FilterChips from "@/components/filters/FilterChips";
 import FilterEmptyState from "@/components/filters/FilterEmptyState";
 import { AVATARS, getAvatar } from "@/data/avatars";
 import { DUMMY_ACCOUNT } from "@/data/dummy/account";
+import { useSession } from "@/lib/session";
 import { ACTIVE_AVATAR, ACTIVE_THEME } from "@/data/dummy/appearance";
 import { getMembershipPlan } from "@/data/membership";
 import { getRank } from "@/data/ranks";
@@ -130,6 +131,7 @@ function UpcomingCard({ label }: { label: string }) {
 }
 
 export default function ProfileCustomization() {
+  const session = useSession();
   const [section, setSection] = useState<Section>("avatar");
   const [ownership, setOwnership] = useState<Ownership>("");
   const [avatarId, setAvatarId] = useState(ACTIVE_AVATAR.id);
@@ -167,7 +169,7 @@ export default function ProfileCustomization() {
             <div className="relative rounded-2xl bg-white p-1 shadow-md">
               <Image src={avatar.image} alt="" width={72} height={72} className="h-[72px] w-[72px]" />
             </div>
-            <p className="mt-2 font-semibold">{DUMMY_ACCOUNT.name}</p>
+            <p className="mt-2 font-semibold">{session?.name ?? DUMMY_ACCOUNT.name}</p>
             <div className="mt-2 flex flex-wrap justify-center gap-2 text-xs">
               <span className="inline-flex items-center gap-1.5 rounded-full border border-border px-2.5 py-1">
                 <RankEmblem rank={rank} variant="compact" size={18} />

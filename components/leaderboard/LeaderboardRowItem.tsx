@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 
 import RankEmblem from "@/components/common/RankEmblem";
@@ -5,6 +7,7 @@ import { getAvatar } from "@/data/avatars";
 import { DEFAULT_AVATAR } from "@/data/profile";
 import { formatNumber } from "@/lib/format";
 import { LeaderboardRow } from "@/lib/leaderboard";
+import { useSession } from "@/lib/session";
 
 // Penekanan visual untuk tiga posisi teratas.
 const podiumStyles = [
@@ -14,6 +17,7 @@ const podiumStyles = [
 ];
 
 export default function LeaderboardRowItem({ row }: { row: LeaderboardRow }) {
+  const session = useSession();
   return (
     <li
       className={`flex items-center gap-3 px-3 py-3 sm:gap-4 sm:px-5 ${
@@ -39,7 +43,7 @@ export default function LeaderboardRowItem({ row }: { row: LeaderboardRow }) {
 
       <div className="min-w-0 flex-1">
         <p className="flex min-w-0 items-center gap-2 text-sm font-semibold">
-          <span className="truncate">{row.displayName}</span>
+          <span className="truncate">{row.isCurrentUser && session ? session.name : row.displayName}</span>
           {row.isCurrentUser && (
             <span className="shrink-0 rounded-full bg-primary px-2 py-0.5 text-[10px] font-semibold text-primary-foreground">
               Kamu

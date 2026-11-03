@@ -9,6 +9,7 @@ import NotificationBell from "@/components/notifications/NotificationBell";
 import ProfileDropdown from "@/components/profile/ProfileDropdown";
 import { useSession } from "@/lib/session";
 import { useHydrated } from "@/lib/useHydrated";
+import { useViewMode } from "@/lib/viewMode";
 
 interface NavbarProps {
   onToggleSidebar: () => void;
@@ -20,6 +21,7 @@ export default function Navbar({
   const { resolvedTheme, setTheme } = useTheme();
   const session = useSession();
   const isHydrated = useHydrated();
+  const { isRoleMode } = useViewMode();
 
   const toggleTheme = () => {
     setTheme(
@@ -57,8 +59,8 @@ export default function Navbar({
 
         {session ? (
           <>
-            {/* Cart */}
-            <CartButton />
+            {/* Cart, hanya di Mode Belajar (PRD FR-15) */}
+            {!isRoleMode && <CartButton />}
 
             {/* Notifications */}
             <NotificationBell />

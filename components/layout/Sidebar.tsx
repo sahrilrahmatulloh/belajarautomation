@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 
 import AuthLink from "@/components/auth/AuthLink";
 import { useSession } from "@/lib/session";
+import { useViewMode } from "@/lib/viewMode";
 
 import {
   getRoleFromPath,
@@ -23,8 +24,11 @@ export default function Sidebar({
   collapsed = false,
 }: SidebarProps) {
   const pathname = usePathname();
-  const role = getRoleFromPath(pathname);
   const session = useSession();
+  const { activeRole } = useViewMode();
+  // Halaman peran selalu memakai menu perannya; halaman lain mengikuti mode aktif.
+  const pathRole = getRoleFromPath(pathname);
+  const role = pathRole === "user" ? activeRole : pathRole;
   const home = ROLE_HOME[role];
   const menuItems = NAVIGATION[role];
 

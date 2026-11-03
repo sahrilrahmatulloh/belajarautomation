@@ -12,7 +12,7 @@ import { UNAVAILABLE_PARAM, UNAVAILABLE_VALUE } from "@/lib/notificationTarget";
 import { useNotificationPreferences } from "@/lib/notificationPreferences";
 import { formatNotificationDay } from "@/lib/notificationTime";
 import { notificationActions, useNotifications } from "@/lib/notifications";
-import { useSession } from "@/lib/session";
+import { getVisibleNotificationGroups, useViewMode } from "@/lib/viewMode";
 import { useUrlFilters } from "@/lib/useUrlFilters";
 import { Notification, NotificationGroup } from "@/types/Notification";
 
@@ -34,7 +34,7 @@ const GROUP_OPTIONS = (Object.keys(NOTIFICATION_GROUPS) as NotificationGroup[]).
 
 export default function NotificationsPage() {
   const router = useRouter();
-  const session = useSession();
+  const { isRoleMode } = useViewMode();
   const notifications = useNotifications();
   const { mutedGroups } = useNotificationPreferences();
   const { values, setFilters } = useUrlFilters(FILTER_KEYS);
@@ -47,10 +47,10 @@ export default function NotificationsPage() {
     if (showUnavailable) unavailableRef.current?.scrollIntoView({ block: "center" });
   }, [showUnavailable]);
 
-  // Kelompok "Khusus role" hanya untuk pengguna dengan role tersebut, dan kelompok
-  // yang dimatikan di pengaturan tidak bisa dipilih.
+  // Kelompok mengikuti mode aktif (PRD FR-15), dan kelompok yang dimatikan di pengaturan
+  // tidak bisa dipilih.
   const groupOptions = GROUP_OPTIONS.filter(
-    ({ group }) => (group !== "role" || session?.role !== "user") && !mutedGroups.includes(group)
+    ({ group }) => getVisibleNotificationGroups(isRoleMode).includes(group) && !mutedGroups.includes(group)
   );
 
   const tab = validFilterValue(values.tab, TAB_OPTIONS);

@@ -48,7 +48,7 @@ Pengaturan lingkungan:
 
 ## Blog
 
-Artikel disimpan sebagai file MDX di `content/blog/`, dan menambah artikel tidak perlu mengubah kode aplikasi. Panduannya ada di [`content/blog/README.md`](content/blog/README.md).
+Artikel disimpan sebagai file MDX di `content/blog/`, dan menambah artikel tidak perlu mengubah kode aplikasi. Panduannya ada di [`docs/CONTENT_GUIDE.md`](docs/CONTENT_GUIDE.md).
 
 ## Testing
 
@@ -59,6 +59,7 @@ Menjalankan di lokal:
 ```bash
 npx playwright install chromium   # sekali saja, setelah npm install
 npm run test:e2e                  # semua test
+npm run test:e2e:non-dev          # perilaku di luar DEV, dengan build UAT sendiri
 npm run test:e2e:ui               # mode UI untuk men-debug test
 npm run test:e2e:report           # membuka laporan HTML test terakhir
 ```
@@ -66,6 +67,7 @@ npm run test:e2e:report           # membuka laporan HTML test terakhir
 - `npm run test:e2e` menjalankan `npm run build && npm run start` di port 3000, kecuali sudah ada server di port itu.
 - Bila server dev sedang berjalan, test akan memakai server dev tersebut. Untuk menguji hasil build, pakai port lain: `PORT=3100 npm run test:e2e` (Git Bash) atau `$env:PORT=3100; npm run test:e2e` (PowerShell).
 - Test label "DEV" mengharapkan `NEXT_PUBLIC_APP_ENV` bernilai `dev`.
+- Perilaku yang berbeda di luar DEV, mis. akun demo dan artikel draf, ditulis di `tests/e2e/non-dev/`.
 
 Struktur folder:
 

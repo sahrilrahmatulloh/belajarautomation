@@ -1,0 +1,132 @@
+"use client";
+
+import { CheckCircle2, ClipboardCheck, RotateCcw, ShieldCheck } from "lucide-react";
+
+import { CREATOR_STATS } from "@/components/creator/creatorStats";
+import RoleStatCard from "@/components/roles/RoleStatCard";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { ROLE_LABELS } from "@/data/navigation";
+import { ACTIVE_AVATAR } from "@/data/dummy/appearance";
+import { DUMMY_CREATOR_CONTENTS } from "@/data/dummy/creator";
+import { DUMMY_REVIEWER_STATS } from "@/data/dummy/reviewer";
+import { formatDate } from "@/lib/format";
+import { useSession } from "@/lib/session";
+
+const ADMIN_TASKS = ["Menerbitkan konten yang sudah disetujui", "Mengelola peran pengguna"];
+
+const REVIEWER_STATS = [
+  {
+    label: "Direview",
+    value: String(DUMMY_REVIEWER_STATS.approvedThisMonth + DUMMY_REVIEWER_STATS.returnedThisMonth),
+    detail: "Konten yang selesai direview bulan ini",
+    icon: ClipboardCheck,
+    iconStyle: "bg-sky-500/10 text-sky-700 dark:text-sky-300",
+  },
+  {
+    label: "Disetujui",
+    value: String(DUMMY_REVIEWER_STATS.approvedThisMonth),
+    detail: "Lolos review bulan ini",
+    icon: CheckCircle2,
+    iconStyle: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-300",
+  },
+  {
+    label: "Diminta Revisi",
+    value: String(DUMMY_REVIEWER_STATS.returnedThisMonth),
+    detail: "Dikembalikan ke creator bulan ini",
+    icon: RotateCcw,
+    iconStyle: "bg-rose-500/10 text-rose-600 dark:text-rose-300",
+  },
+];
+
+function StatsSection({ title, stats }: { title: string; stats: typeof REVIEWER_STATS }) {
+  return (
+    <section aria-labelledby="statistik-peran">
+      <h2 id="statistik-peran" className="text-lg font-bold">
+        {title}
+      </h2>
+      <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3 [&>*:last-child:nth-child(odd)]:col-span-2 sm:[&>*:last-child:nth-child(odd)]:col-span-1">
+        {stats.map((stat) => (
+          <RoleStatCard key={stat.label} {...stat} />
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function CreatorProfile() {
+  const published = DUMMY_CREATOR_CONTENTS.filter((content) => content.status === "published");
+
+  return (
+    <>
+      <StatsSection title="Konten per Status" stats={CREATOR_STATS} />
+
+      <section aria-labelledby="konten-terbit" className="rounded-2xl border border-border bg-card p-5">
+        <h2 id="konten-terbit" className="text-lg font-bold">
+          Konten Terbit
+        </h2>
+        {published.length > 0 ? (
+          <ul className="mt-3 divide-y divide-border">
+            {published.map((content) => (
+              <li key={content.id} className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 py-3 first:pt-0 last:pb-0">
+                <div className="min-w-0">
+                  <p className="font-medium">{content.title}</p>
+                  <p className="text-sm text-muted-foreground">{content.type}</p>
+                </div>
+                <span className="text-sm text-muted-foreground">{formatDate(content.updatedAt)}</span>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="mt-2 text-sm text-muted-foreground">Belum ada konten yang terbit.</p>
+        )}
+      </section>
+    </>
+  );
+}
+
+function AdminProfile() {
+  return (
+    <section aria-labelledby="tugas-admin" className="rounded-2xl border border-border bg-card p-5">
+      <h2 id="tugas-admin" className="text-lg font-bold">
+        Peran dan Tugas
+      </h2>
+      <ul className="mt-3 space-y-2.5">
+        {ADMIN_TASKS.map((task) => (
+          <li key={task} className="flex items-start gap-2.5 text-sm">
+            <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
+            {task}
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
+// Profil saat mode peran (PRD FR-15): identitas yang sama dengan Mode Belajar, tanpa XP,
+// rank, achievement, dan membership.
+export default function RoleProfile() {
+  const session = useSession();
+  if (!session) return null;
+
+  return (
+    <div className="mx-auto w-full max-w-4xl space-y-5">
+      <header className="flex items-center gap-4 rounded-2xl border border-border bg-card p-5">
+        <Avatar className="h-16 w-16 shrink-0 sm:h-20 sm:w-20">
+          <AvatarImage src={ACTIVE_AVATAR.image} alt="" />
+          <AvatarFallback>BA</AvatarFallback>
+        </Avatar>
+        <div className="min-w-0">
+          <h1 className="truncate text-2xl font-bold tracking-tight">{session.name}</h1>
+          <p className="truncate text-sm text-muted-foreground">{session.email}</p>
+          <span className="mt-2 inline-flex rounded-full bg-blue-500/10 px-2.5 py-0.5 text-xs font-semibold text-blue-700 dark:text-blue-300">
+            {ROLE_LABELS[session.role]}
+          </span>
+        </div>
+      </header>
+
+      {session.role === "creator" && <CreatorProfile />}
+      {session.role === "reviewer" && <StatsSection title="Aktivitas Review" stats={REVIEWER_STATS} />}
+      {session.role === "admin" && <AdminProfile />}
+    </div>
+  );
+}

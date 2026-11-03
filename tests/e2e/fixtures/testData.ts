@@ -142,9 +142,9 @@ export const NOTIFICATIONS = {
   ],
   dayHeadings: ["Hari ini", "Kemarin", /13 November 2026/, /10 November 2026/, /9 November 2026/, /19 Oktober 2026/],
   roles: [
-    { role: "creator", title: "Konten perlu revisi", href: "/creator" },
-    { role: "reviewer", title: "Konten baru di antrean", href: "/reviewer" },
-    { role: "admin", title: "Transaksi tertunda", href: "/admin" },
+    { role: "creator", title: "Konten perlu revisi", href: "/creator?konten=3", count: 2 },
+    { role: "reviewer", title: "Konten baru di antrean", href: "/reviewer", count: 1 },
+    { role: "admin", title: "Transaksi tertunda", href: "/admin", count: 1 },
   ],
 } as const;
 
@@ -191,4 +191,33 @@ export const CREATOR_DASHBOARD = {
   statLabels: ["Draf", "Menunggu Review", "Perlu Revisi", "Disetujui", "Terbit"],
   needsRevisionTitle: "Soal: Validasi Status Code API",
   draftTitle: "Soal: Boundary Value Analysis",
+} as const;
+
+// Pengalih mode dan tampilan per mode (PRD FR-15).
+export const ROLE_MODE = {
+  modes: [
+    { role: "creator", modeLabel: "Mode Creator" },
+    { role: "reviewer", modeLabel: "Mode Reviewer" },
+    { role: "admin", modeLabel: "Mode Admin" },
+  ],
+  learnerPaths: ["/cart", "/membership", "/leaderboard", "/learn", "/playground", "/roadmap"],
+  promptTitle: "Halaman ini untuk Mode Belajar",
+  creatorStatLabels: ["Draf", "Menunggu Review", "Perlu Revisi", "Disetujui", "Terbit"],
+  publishedTitle: "Locator Strategy di Playwright",
+  reviewerStats: [
+    { label: "Direview", value: "18" },
+    { label: "Disetujui", value: "14" },
+    { label: "Diminta Revisi", value: "4" },
+  ],
+  adminTasks: ["Menerbitkan konten yang sudah disetujui", "Mengelola peran pengguna"],
+  publicUsername: "sobatqa",
+  notifications: {
+    revision: { title: "Konten perlu revisi", contentId: 3, contentTitle: "Soal: Validasi Status Code API" },
+    approved: { title: "Konten disetujui", contentId: 5, contentTitle: "Modul Page Object Model" },
+  },
+  creatorPages: [
+    { menu: "Konten Saya", path: "/creator/konten", title: "Konten Saya" },
+    { menu: "Buat Konten", path: "/creator/buat", title: "Buat Konten" },
+    { menu: "Catatan Revisi", path: "/creator/revisi", title: "Catatan Revisi" },
+  ],
 } as const;

@@ -10,15 +10,15 @@ import {
 
 import { Input } from "@/components/ui/input";
 import { ACTIVE_AVATAR } from "@/data/dummy/appearance";
+import { useSession } from "@/lib/session";
 
 export default function ProfileSettings() {
-  const [name, setName] = useState("Aril");
+  const session = useSession();
+  const [name, setName] = useState(session?.name ?? "");
   const [role, setRole] = useState(
     "QA Automation Engineer"
   );
-  const [email, setEmail] = useState(
-    "aril@example.com"
-  );
+  const [email, setEmail] = useState(session?.email ?? "");
 
   return (
     <section className="rounded-3xl border border-border bg-card p-6">

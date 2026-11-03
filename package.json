@@ -9,6 +9,7 @@
     "start": "next start",
     "lint": "eslint",
     "test:e2e": "playwright test",
+    "test:e2e:non-dev": "playwright test --config playwright.non-dev.config.ts",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:report": "playwright show-report",
     "check:covers": "node scripts/check-covers.mjs",

@@ -5,6 +5,7 @@ import { Globe2, LucideIcon, Trophy } from "lucide-react";
 
 import { DUMMY_ACCOUNT } from "@/data/dummy/account";
 import { DUMMY_PROFILE } from "@/data/dummy/profile";
+import { useViewMode } from "@/lib/viewMode";
 
 function PrivacyToggle({
   id,
@@ -59,6 +60,10 @@ export default function PrivacySettings() {
   // Nilai awal dari data dummy; perubahan hanya di state halaman ini.
   const [isVisible, setIsVisible] = useState(DUMMY_ACCOUNT.showOnLeaderboard);
   const [isProfilePublic, setIsProfilePublic] = useState(DUMMY_PROFILE.isProfilePublic);
+  const { isRoleMode } = useViewMode();
+
+  // Leaderboard dan profil publik adalah data pelajar (PRD FR-15).
+  if (isRoleMode) return null;
 
   return (
     <section id="privasi" className="scroll-mt-20 rounded-3xl border border-border bg-card p-6">
