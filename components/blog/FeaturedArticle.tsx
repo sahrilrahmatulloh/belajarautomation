@@ -54,7 +54,7 @@ export default function FeaturedArticle({ article }: { article: Article }) {
           <Link
             href={`/blog/${article.slug}`}
             aria-label={`Baca Artikel: ${article.title}`}
-            className="inline-flex min-h-10 w-full items-center justify-center gap-1.5 rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground transition-colors after:absolute after:inset-0 hover:bg-primary/90 sm:w-fit"
+            className="inline-flex min-h-10 w-full items-center justify-center gap-1.5 rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground transition-colors after:absolute after:inset-0 hover:bg-primary-hover sm:w-fit"
           >
             Baca Artikel
             <ArrowRight className="h-4 w-4" aria-hidden="true" />

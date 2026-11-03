@@ -53,7 +53,7 @@ export default function WelcomeBanner() {
         </p>
 
         <h1 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">
-          Halo, <span className="text-primary">{session?.name}!</span>
+          Halo, <span className="text-primary-accent">{session?.name}!</span>
         </h1>
 
         <p className="mt-2 text-sm leading-5 text-muted-foreground sm:text-base sm:leading-6">

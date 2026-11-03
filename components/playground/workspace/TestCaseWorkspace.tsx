@@ -20,7 +20,7 @@ Langkah:
 Hasil yang diharapkan: ...`;
 
 const primaryButton =
-  "min-h-11 w-full rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground transition-colors enabled:hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50";
+  "min-h-11 w-full rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground transition-colors enabled:hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50";
 
 export default function TestCaseWorkspace({ slug, data }: { slug: string; data: TestCaseData }) {
   const [answer, setAnswer] = useState("");
@@ -146,7 +146,7 @@ export default function TestCaseWorkspace({ slug, data }: { slug: string; data: 
               Tulis test case kamu
             </label>
             <p className="mt-1 text-xs text-muted-foreground">Contoh format:</p>
-            <pre className="mt-1 overflow-x-auto rounded-xl bg-muted/60 p-3 text-xs leading-5 text-muted-foreground">
+            <pre tabIndex={0} className="mt-1 overflow-x-auto rounded-xl bg-muted/60 p-3 text-xs leading-5 text-muted-foreground">
               {FORMAT_EXAMPLE}
             </pre>
           </div>

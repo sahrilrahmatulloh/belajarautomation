@@ -113,7 +113,7 @@ export default function BookDetailPage({
                 </p>
 
                 <p className="mt-1 text-sm text-muted-foreground">
-                  Download file PDF melalui tombol di bawah.
+                  Unduh file PDF melalui tombol di bawah.
                 </p>
 
                 <button
@@ -122,7 +122,7 @@ export default function BookDetailPage({
                   className="mt-5 flex w-full cursor-not-allowed items-center justify-center gap-2 rounded-xl bg-primary py-3 text-sm font-medium text-primary-foreground opacity-50"
                 >
                   <Download className="h-4 w-4" />
-                  Download belum tersedia
+                  Unduhan belum tersedia
                 </button>
               </>
             ) : (

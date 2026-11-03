@@ -47,11 +47,11 @@ export default function ContentCover({
         aria-label={`${title}, sampul belum tersedia`}
         className="absolute inset-0 flex flex-col justify-between overflow-hidden bg-primary/[0.06] p-5 text-foreground"
       >
-        <span className="w-fit rounded-full border border-primary/15 bg-background/80 px-3 py-1 text-xs font-medium text-primary">
+        <span className="w-fit rounded-full border border-primary/15 bg-background/80 px-3 py-1 text-xs font-medium text-primary-accent">
           {category}
         </span>
         <div>
-          <Icon className="mb-3 h-7 w-7 text-primary" aria-hidden="true" />
+          <Icon className="mb-3 h-7 w-7 text-primary-accent" aria-hidden="true" />
           <p className="line-clamp-3 font-semibold leading-snug">{title}</p>
         </div>
       </div>

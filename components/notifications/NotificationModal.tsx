@@ -41,7 +41,7 @@ export default function NotificationModal({ notification, onClose }: Notificatio
             {notification.body}
           </Dialog.Description>
 
-          <Dialog.Close className="mt-5 min-h-10 w-full rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90">
+          <Dialog.Close className="mt-5 min-h-10 w-full rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary-hover">
             Mengerti
           </Dialog.Close>
         </Dialog.Popup>

@@ -186,7 +186,7 @@ export default function ShareProfileDialog({
               <a
                 href={card.url}
                 download={card.file.name}
-                className="inline-flex min-h-11 flex-1 items-center justify-center gap-2 rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
+                className="inline-flex min-h-11 flex-1 items-center justify-center gap-2 rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary-hover"
               >
                 <Download className="h-4 w-4" aria-hidden="true" />
                 Unduh PNG

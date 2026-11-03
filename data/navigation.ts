@@ -62,18 +62,18 @@ export const NAVIGATION: Record<UserRole, NavItem[]> = {
   ],
   reviewer: [
     { label: "Dashboard", href: "/reviewer", icon: LayoutDashboard },
-    { label: "Antrean Review", icon: Inbox, comingSoon: true },
-    { label: "Riwayat Review", icon: History, comingSoon: true },
-    { label: "Panduan Review", icon: BookOpenCheck, comingSoon: true },
+    { label: "Antrean Review", href: "/reviewer/antrean", icon: Inbox },
+    { label: "Riwayat Review", href: "/reviewer/riwayat", icon: History },
+    { label: "Panduan Review", href: "/reviewer/panduan", icon: BookOpenCheck },
   ],
   admin: [
     { label: "Dashboard", href: "/admin", icon: LayoutDashboard },
-    { label: "Pengguna & Role", icon: Users, comingSoon: true },
-    { label: "Konten", icon: Files, comingSoon: true },
-    { label: "Paket Membership", icon: Crown, comingSoon: true },
-    { label: "Avatar & Tema", icon: Palette, comingSoon: true },
-    { label: "Transaksi", icon: Receipt, comingSoon: true },
-    { label: "Pengaturan", icon: Settings, comingSoon: true },
+    { label: "Pengguna & Role", href: "/admin/pengguna", icon: Users },
+    { label: "Konten", href: "/admin/konten", icon: Files },
+    { label: "Paket Membership", href: "/admin/paket", icon: Crown },
+    { label: "Avatar & Tema", href: "/admin/avatar-tema", icon: Palette },
+    { label: "Transaksi", href: "/admin/transaksi", icon: Receipt },
+    { label: "Pengaturan", href: "/admin/pengaturan", icon: Settings },
   ],
 };
 

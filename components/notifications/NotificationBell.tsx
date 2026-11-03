@@ -28,7 +28,7 @@ function BellIcon({ unreadCount }: { unreadCount: number }) {
       {unreadCount > 0 && (
         <span
           aria-hidden="true"
-          className="absolute right-0.5 top-0.5 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-sidebar-primary px-1 text-[10px] font-bold text-sidebar-primary-foreground ring-2 ring-background"
+          className="absolute right-0.5 top-0.5 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold text-primary-foreground ring-2 ring-background"
         >
           {formatUnreadCount(unreadCount)}
         </span>
@@ -146,7 +146,7 @@ export default function NotificationBell() {
                 type="button"
                 disabled={unread.length === 0}
                 onClick={() => notificationActions.markRead(unread.map((item) => item.id))}
-                className="inline-flex items-center gap-1 rounded text-xs font-medium text-primary enabled:hover:underline disabled:cursor-not-allowed disabled:text-muted-foreground"
+                className="inline-flex items-center gap-1 rounded text-xs font-medium text-primary-accent enabled:hover:underline disabled:cursor-not-allowed disabled:text-muted-foreground"
               >
                 <Check className="h-3.5 w-3.5" aria-hidden="true" />
                 Tandai semua dibaca
@@ -175,7 +175,7 @@ export default function NotificationBell() {
               <Link
                 href="/notifications"
                 onClick={() => setOpen(false)}
-                className="flex items-center justify-center gap-1.5 rounded-lg py-2 text-sm font-medium text-primary transition-colors hover:bg-accent"
+                className="flex items-center justify-center gap-1.5 rounded-lg py-2 text-sm font-medium text-primary-accent transition-colors hover:bg-accent"
               >
                 Lihat semua notifikasi
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />

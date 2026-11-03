@@ -16,7 +16,7 @@ export default function Ajakan(props: ArticleCta) {
         {cta.image ? (
           <Image src={cta.image} alt="" fill sizes="(max-width: 640px) 100vw, 128px" className="object-cover" />
         ) : (
-          <Map className="h-7 w-7 text-primary" aria-hidden="true" />
+          <Map className="h-7 w-7 text-primary-accent" aria-hidden="true" />
         )}
       </div>
 
@@ -27,7 +27,7 @@ export default function Ajakan(props: ArticleCta) {
 
       <AuthLink
         href={cta.href}
-        className="inline-flex min-h-10 shrink-0 items-center justify-center gap-1.5 rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground no-underline transition-colors hover:bg-primary/90"
+        className="inline-flex min-h-10 shrink-0 items-center justify-center gap-1.5 rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground no-underline transition-colors hover:bg-primary-hover"
       >
         {cta.action}
         <ArrowRight className="h-4 w-4" aria-hidden="true" />

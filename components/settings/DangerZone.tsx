@@ -4,7 +4,7 @@ export default function DangerZone() {
   return (
     <section className="rounded-3xl border border-destructive/30 bg-card p-6">
       <h2 className="text-xl font-bold">
-        Danger Zone
+        Zona Berbahaya
       </h2>
 
       <p className="mt-1 text-sm text-muted-foreground">

@@ -143,7 +143,7 @@ export default function CheckoutPage() {
               type="button"
               onClick={handlePay}
               disabled={!methodId}
-              className="mt-5 flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+              className="mt-5 flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50"
             >
               <Lock className="h-4 w-4" aria-hidden="true" />
               Bayar {formatRupiah(total)} (simulasi)
