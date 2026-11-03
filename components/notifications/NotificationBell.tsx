@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { ArrowRight, Bell, Check, Clock3 } from "lucide-react";
 
@@ -19,6 +19,8 @@ const POPOVER_LIMIT = 5;
 const bellClassName =
   "relative inline-flex h-11 w-11 items-center justify-center rounded-lg transition-colors duration-150 hover:bg-accent active:scale-95";
 
+const formatUnreadCount = (count: number) => (count > 9 ? "9+" : String(count));
+
 function BellIcon({ unreadCount }: { unreadCount: number }) {
   return (
     <>
@@ -26,9 +28,9 @@ function BellIcon({ unreadCount }: { unreadCount: number }) {
       {unreadCount > 0 && (
         <span
           aria-hidden="true"
-          className="absolute right-0.5 top-0.5 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold text-primary-foreground ring-2 ring-background"
+          className="absolute right-0.5 top-0.5 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-sidebar-primary px-1 text-[10px] font-bold text-sidebar-primary-foreground ring-2 ring-background"
         >
-          {unreadCount > 9 ? "9+" : unreadCount}
+          {formatUnreadCount(unreadCount)}
         </span>
       )}
     </>
@@ -116,11 +118,9 @@ export default function NotificationBell() {
   const [announcement, setAnnouncement] = useState<Notification | null>(null);
 
   const unread = notifications.filter((notification) => !notification.read);
-  const entries = useMemo(
-    () => toNotificationEntries(notifications).slice(0, POPOVER_LIMIT),
-    [notifications]
-  );
-  const label = unread.length > 0 ? `Notifikasi, ${unread.length} belum dibaca` : "Notifikasi";
+  const entries = toNotificationEntries(notifications).slice(0, POPOVER_LIMIT);
+  // Memuat angka yang terlihat di lencana, agar pengguna perintah suara bisa menyebutnya.
+  const label = unread.length > 0 ? `Notifikasi, ${formatUnreadCount(unread.length)} belum dibaca` : "Notifikasi";
 
   return (
     <>

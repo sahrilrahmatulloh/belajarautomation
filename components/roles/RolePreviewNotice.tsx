@@ -1,6 +1,10 @@
 import { ShieldAlert } from "lucide-react";
 
+import { isDev } from "@/lib/env";
+
 export default function RolePreviewNotice() {
+  if (!isDev) return null;
+
   return (
     <p
       role="note"

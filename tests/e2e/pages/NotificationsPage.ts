@@ -2,7 +2,7 @@ import { Locator, Page } from "@playwright/test";
 
 import { BasePage } from "./BasePage";
 
-const BELL_NAME = /^Notifikasi(, \d+ belum dibaca)?$/;
+const BELL_NAME = /^Notifikasi(, \d\+? belum dibaca)?$/;
 
 // Halaman notifikasi, beserta lonceng dan popover yang tampil di semua halaman dashboard.
 export class NotificationsPage extends BasePage {

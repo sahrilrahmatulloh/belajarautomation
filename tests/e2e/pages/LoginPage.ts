@@ -7,6 +7,7 @@ export class LoginPage extends BasePage {
   readonly passwordInput: Locator;
   readonly submitButton: Locator;
   readonly formError: Locator;
+  readonly demoAccounts: Locator;
 
   constructor(page: Page) {
     super(page, "/login");
@@ -14,6 +15,7 @@ export class LoginPage extends BasePage {
     this.passwordInput = page.getByRole("textbox", { name: "Password" });
     this.submitButton = page.getByRole("button", { name: "Masuk" });
     this.formError = page.getByRole("alert").filter({ hasText: "Email atau password salah." });
+    this.demoAccounts = page.getByRole("region", { name: "Akun demo" });
   }
 
   // Membuka halaman dengan JavaScript tertahan, seperti di koneksi lambat: form sudah

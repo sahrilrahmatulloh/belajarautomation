@@ -40,6 +40,14 @@ test.describe("Login sebagai tamu", () => {
     await expect(page).toHaveURL(ACCOUNTS.user.home);
   });
 
+  test("akun demo tampil di DEV", async ({ page }) => {
+    const loginPage = new LoginPage(page);
+    await loginPage.goto();
+
+    await expect(loginPage.demoAccounts).toBeVisible();
+    await expect(loginPage.demoAccounts).toContainText(DEMO_PASSWORD);
+  });
+
   test("membuka /profile tanpa login diarahkan ke halaman login", async ({ page }) => {
     await new ProfilePage(page).goto();
 

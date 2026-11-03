@@ -2,7 +2,7 @@ import { ContentStatus } from "@/types/Content";
 
 const statusMeta: Record<ContentStatus, { label: string; className: string }> = {
   draft: {
-    label: "Draft",
+    label: "Draf",
     className: "bg-muted text-muted-foreground",
   },
   "in-review": {
@@ -15,7 +15,7 @@ const statusMeta: Record<ContentStatus, { label: string; className: string }> = 
   },
   approved: {
     label: "Disetujui",
-    className: "bg-brand-sky/10 text-brand-sky",
+    className: "bg-sky-500/10 text-sky-700 dark:text-sky-300",
   },
   published: {
     label: "Terbit",

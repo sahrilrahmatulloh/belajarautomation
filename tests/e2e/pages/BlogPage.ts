@@ -49,6 +49,6 @@ export class BlogPage extends BasePage {
 
   // Filter baru aktif setelah halaman siap, sedangkan isi dari server sudah tampil lebih dulu.
   async expectReady() {
-    await expect(this.loginLink.or(this.page.getByRole("button", { name: "Buka menu profil" }))).toBeVisible();
+    await expect(this.loginLink.or(this.profileMenuButton)).toBeVisible();
   }
 }

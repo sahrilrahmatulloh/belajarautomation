@@ -58,7 +58,7 @@ export class ArticlePage extends BasePage {
 
   // Teks kode dibaca dari tombol sampai notifikasi, jadi halaman harus sudah siap.
   async expectReady() {
-    await expect(this.loginLink.or(this.page.getByRole("button", { name: "Buka menu profil" }))).toBeVisible();
+    await expect(this.loginLink.or(this.profileMenuButton)).toBeVisible();
   }
 
   async openToc() {

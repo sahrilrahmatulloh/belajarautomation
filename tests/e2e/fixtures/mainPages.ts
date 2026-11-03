@@ -13,8 +13,9 @@ import { PlaygroundPage } from "../pages/PlaygroundPage";
 import { ProfilePage } from "../pages/ProfilePage";
 import { PublicProfilePage } from "../pages/PublicProfilePage";
 import { RoadmapPage } from "../pages/RoadmapPage";
+import { RoleDashboardPage } from "../pages/RoleDashboardPage";
 import { SettingsPage } from "../pages/SettingsPage";
-import { BLOG, OWN_USERNAME } from "./testData";
+import { BLOG, OWN_USERNAME, Role } from "./testData";
 
 // Halaman memuat isinya di browser setelah sesi terbaca, jadi pemeriksaan
 // seluruh halaman (layout, aksesibilitas) harus menunggu isinya tampil dulu.
@@ -57,3 +58,14 @@ export const MAIN_PAGES: { name: string; open: (page: Page) => Promise<BasePage>
   { name: "Notifikasi", open: (page) => open(new NotificationsPage(page), (p) => p.list) },
   { name: "Pengaturan", open: (page) => open(new SettingsPage(page), (p) => p.notificationSection) },
 ];
+
+// Dashboard yang hanya bisa dibuka dengan role tertentu.
+export const ROLE_PAGES: { role: Exclude<Role, "user">; name: string }[] = [
+  { role: "creator", name: "Dashboard Creator" },
+  { role: "reviewer", name: "Dashboard Reviewer" },
+  { role: "admin", name: "Dashboard Admin" },
+];
+
+export function openRoleDashboard(page: Page, role: Exclude<Role, "user">) {
+  return open(new RoleDashboardPage(page, role), (p) => p.greeting);
+}
