@@ -106,7 +106,7 @@ export default function PracticeRegistration() {
         <button
           type="submit"
           data-practice-id="registrasi-submit"
-          className="min-h-10 flex-1 rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
+          className="min-h-10 flex-1 rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary-hover"
         >
           Daftar
         </button>

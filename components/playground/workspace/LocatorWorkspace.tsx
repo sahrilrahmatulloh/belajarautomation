@@ -174,7 +174,7 @@ export default function LocatorWorkspace({ slug, data }: { slug: string; data: L
                   type="button"
                   disabled={!selector.trim() || isPending}
                   onClick={submit}
-                  className="min-h-11 flex-1 rounded-xl bg-primary px-3 text-sm font-semibold text-primary-foreground transition-colors enabled:hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="min-h-11 flex-1 rounded-xl bg-primary px-3 text-sm font-semibold text-primary-foreground transition-colors enabled:hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   {isPending ? "Mengirim..." : "Kirim"}
                 </button>

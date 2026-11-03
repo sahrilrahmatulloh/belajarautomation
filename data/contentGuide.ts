@@ -25,3 +25,42 @@ export const WRITING_STEPS = [
   "Cek checklist: contoh kode sudah diuji, data punya sumber, bahasa sudah diperiksa, dan konten bisa dipahami tanpa video.",
   'Bagikan dokumen ke Reviewer dengan akses "Pemberi komentar".',
 ];
+
+// Tugas Reviewer dan Admin sebelum backend tersedia (PRD FR-15).
+export const ROLE_GUIDES = {
+  reviewer: {
+    flowTitle: "Sementara, review dilakukan di Google Docs",
+    intro: "Antrean di aplikasi tersedia setelah backend siap. Untuk saat ini, review berlangsung di dokumen yang dibagikan Creator kepadamu:",
+    flow: [
+      { stage: "Menunggu Review", action: 'Buka dokumen yang dibagikan Creator dengan akses "Pemberi komentar"' },
+      { stage: "Perlu Revisi", action: "Beri komentar di dokumen. Creator memperbaiki lalu menandai komentarnya selesai" },
+      { stage: "Disetujui", action: "Nyatakan setuju di dokumen, lalu Admin menerbitkannya" },
+    ],
+    checklistTitle: "Yang perlu diperiksa",
+    checklist: [
+      "Materi akurat, jelas, dan mudah dipahami pemula.",
+      "Contoh kode sudah diuji dan dapat dijalankan.",
+      "Data seperti gaji mencantumkan sumber dan tahun.",
+      "Referensi video relevan dengan isinya.",
+      "Referensi video tidak bertentangan dengan isi konten.",
+      "Versi tool pada referensi video masih sesuai.",
+      "Referensi video pantas ditampilkan.",
+      "Konten tetap bisa dipahami tanpa video.",
+    ],
+  },
+  admin: {
+    flowTitle: "Sementara, Admin menerbitkan lewat pull request",
+    intro: "Fitur di aplikasi tersedia setelah backend siap. Untuk saat ini, Creator dan Reviewer bekerja di Google Docs, lalu Admin menerbitkan dokumen yang sudah disetujui:",
+    flow: [
+      { stage: "Konversi", action: "Ubah dokumen yang sudah Disetujui menjadi artikel MDX, termasuk gambar dan referensi video" },
+      { stage: "Pull request", action: "Buat pull request ke develop memakai template konten, lalu tunggu CI lulus" },
+      { stage: "Terbit", action: "Ubah status artikel menjadi published, lalu lakukan merge" },
+    ],
+    checklistTitle: "Sebelum menerbitkan",
+    checklist: [
+      "Reviewer sudah menyatakan setuju di dokumen.",
+      "Sudah ada kesepakatan tertulis dengan Creator untuk artikel pertamanya.",
+      "Nama penulis di artikel adalah nama Creator.",
+    ],
+  },
+};

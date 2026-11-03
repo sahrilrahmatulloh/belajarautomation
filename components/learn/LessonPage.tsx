@@ -53,7 +53,7 @@ export default function LessonPage({
 
       <section className="rounded-3xl border border-dashed border-border bg-card p-6">
         <h2 className="flex items-center gap-2 font-semibold">
-          <PenLine className="h-5 w-5 text-primary" aria-hidden="true" />
+          <PenLine className="h-5 w-5 text-primary-accent" aria-hidden="true" />
           Materi sedang ditulis
         </h2>
         <p className="mt-3 text-sm leading-6 text-muted-foreground">

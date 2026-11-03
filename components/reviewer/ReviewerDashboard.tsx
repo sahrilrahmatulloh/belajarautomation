@@ -81,6 +81,7 @@ export default function ReviewerDashboard() {
       />
 
       <section aria-label="Statistik review" className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+        <h2 className="sr-only">Statistik review</h2>
         {stats.map((stat) => (
           <RoleStatCard
             key={stat.label}
@@ -96,7 +97,7 @@ export default function ReviewerDashboard() {
         description="Diurutkan dari yang paling lama menunggu."
       >
         {queue.length > 0 ? (
-          <div className="relative -mx-4 overflow-x-auto sm:-mx-5">
+          <div role="group" tabIndex={0} aria-label="Tabel antrean review" className="relative -mx-4 overflow-x-auto sm:-mx-5">
             <table className="w-full min-w-[760px] text-left text-sm">
               <caption className="sr-only">
                 Antrean konten yang menunggu review, diurutkan dari yang paling lama menunggu
@@ -164,7 +165,7 @@ export default function ReviewerDashboard() {
             <ul className="space-y-3">
               {REVIEW_GUIDELINES.map((guideline) => (
                 <li key={guideline} className="flex items-start gap-3 text-sm">
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary-accent" aria-hidden="true" />
                   {guideline}
                 </li>
               ))}

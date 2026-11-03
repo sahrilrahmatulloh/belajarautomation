@@ -115,7 +115,7 @@ export default function LeaderboardBoard() {
             <p className="flex w-full items-center gap-2 rounded-xl bg-muted/60 px-3 py-2 text-sm">
               {nextRank ? (
                 <>
-                  <TrendingUp className="h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
+                  <TrendingUp className="h-4 w-4 shrink-0 text-primary-accent" aria-hidden="true" />
                   Butuh {formatNumber(xpToNext)} XP lagi untuk naik ke {nextRank.name}
                 </>
               ) : (
@@ -132,7 +132,7 @@ export default function LeaderboardBoard() {
               <EyeOff className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden="true" />
               <span>
                 Kamu tidak ditampilkan di leaderboard publik.{" "}
-                <Link href="/settings#privasi" className="font-medium text-primary hover:underline">
+                <Link href="/settings#privasi" className="font-medium text-primary-accent hover:underline">
                   Ubah di Pengaturan
                 </Link>
               </span>

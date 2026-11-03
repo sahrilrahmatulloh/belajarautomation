@@ -88,7 +88,7 @@ export default function RoadmapDetailPage({
         <div className="mt-8 grid gap-6 border-t border-border pt-6 md:grid-cols-3">
           <div>
             <h2 className="flex items-center gap-2 font-semibold">
-              <Target className="h-5 w-5 text-primary" />
+              <Target className="h-5 w-5 text-primary-accent" />
               Tujuan
             </h2>
 
@@ -98,7 +98,7 @@ export default function RoadmapDetailPage({
                   key={goal}
                   className="flex items-start gap-2 text-sm leading-6 text-muted-foreground"
                 >
-                  <CheckCircle2 className="mt-1 h-4 w-4 shrink-0 text-primary" />
+                  <CheckCircle2 className="mt-1 h-4 w-4 shrink-0 text-primary-accent" />
                   {goal}
                 </li>
               ))}
@@ -107,7 +107,7 @@ export default function RoadmapDetailPage({
 
           <div>
             <h2 className="flex items-center gap-2 font-semibold">
-              <Wrench className="h-5 w-5 text-primary" />
+              <Wrench className="h-5 w-5 text-primary-accent" />
               Skill
             </h2>
 
@@ -125,7 +125,7 @@ export default function RoadmapDetailPage({
 
           <div>
             <h2 className="flex items-center gap-2 font-semibold">
-              <ListChecks className="h-5 w-5 text-primary" />
+              <ListChecks className="h-5 w-5 text-primary-accent" />
               Prasyarat
             </h2>
 

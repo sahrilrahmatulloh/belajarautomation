@@ -61,7 +61,7 @@ export default function PracticeLogin() {
             href="#lupa-password"
             data-practice-id="login-forgot"
             onClick={(event) => event.preventDefault()}
-            className="text-xs font-medium text-primary hover:underline"
+            className="text-xs font-medium text-primary-accent hover:underline"
           >
             Lupa password?
           </a>
@@ -96,7 +96,7 @@ export default function PracticeLogin() {
       <button
         type="submit"
         data-practice-id="login-submit"
-        className="min-h-10 w-full rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
+        className="min-h-10 w-full rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary-hover"
       >
         Masuk
       </button>
@@ -115,7 +115,7 @@ export default function PracticeLogin() {
           href="#daftar"
           data-practice-id="login-register"
           onClick={(event) => event.preventDefault()}
-          className="font-medium text-primary hover:underline"
+          className="font-medium text-primary-accent hover:underline"
         >
           Daftar
         </a>

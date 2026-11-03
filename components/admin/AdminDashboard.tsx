@@ -67,7 +67,7 @@ const stats = [
     iconStyle: "bg-brand-indigo/10 text-brand-indigo",
   },
   {
-    label: "Transaksi Pending",
+    label: "Transaksi Tertunda",
     value: DUMMY_ADMIN_STATS.pendingTransactions,
     detail: "Menunggu konfirmasi",
     icon: Clock3,
@@ -108,6 +108,7 @@ export default function AdminDashboard() {
       />
 
       <section aria-label="Statistik platform" className="grid grid-cols-2 gap-3 md:grid-cols-3 2xl:grid-cols-6">
+        <h2 className="sr-only">Statistik platform</h2>
         {stats.map((stat) => (
           <RoleStatCard
             key={stat.label}
@@ -191,7 +192,7 @@ export default function AdminDashboard() {
           title="Pengguna Terbaru"
         >
           {DUMMY_RECENT_USERS.length > 0 ? (
-            <div className="relative -mx-4 overflow-x-auto sm:-mx-5">
+            <div role="group" tabIndex={0} aria-label="Tabel pengguna" className="relative -mx-4 overflow-x-auto sm:-mx-5">
               <table className="w-full min-w-[560px] text-left text-sm">
                 <caption className="sr-only">
                   Pengguna yang baru bergabung beserta role dan tingkat membership

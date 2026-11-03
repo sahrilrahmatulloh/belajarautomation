@@ -13,7 +13,7 @@ export default function SwitchToLearningPrompt() {
 
   return (
     <div className="mx-auto flex max-w-md flex-col items-center py-16 text-center">
-      <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+      <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10 text-primary-accent">
         <GraduationCap className="h-7 w-7" aria-hidden="true" />
       </span>
       <h1 className="mt-4 text-2xl font-bold tracking-tight">Halaman ini untuk Mode Belajar</h1>
@@ -25,7 +25,7 @@ export default function SwitchToLearningPrompt() {
         <button
           type="button"
           onClick={() => session && viewModeActions.switchToLearning(session.email)}
-          className="inline-flex min-h-10 items-center rounded-xl bg-sidebar-primary px-4 text-sm font-semibold text-sidebar-primary-foreground transition-opacity hover:opacity-90"
+          className="inline-flex min-h-10 items-center rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary-hover"
         >
           Beralih ke Mode Belajar
         </button>

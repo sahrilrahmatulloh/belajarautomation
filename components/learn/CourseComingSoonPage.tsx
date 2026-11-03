@@ -68,7 +68,7 @@ export default function CourseComingSoonPage({
       <div className="grid gap-4 md:grid-cols-2">
         <section className="rounded-3xl border border-dashed border-border bg-card p-6">
           <h2 className="flex items-center gap-2 font-semibold">
-            <Clock3 className="h-5 w-5 text-primary" />
+            <Clock3 className="h-5 w-5 text-primary-accent" />
             Materi sedang disiapkan
           </h2>
           <p className="mt-3 text-sm leading-6 text-muted-foreground">
@@ -77,7 +77,7 @@ export default function CourseComingSoonPage({
           </p>
           <Link
             href="/learn"
-            className="mt-4 inline-flex min-h-10 items-center gap-1.5 text-sm font-semibold text-primary hover:underline"
+            className="mt-4 inline-flex min-h-10 items-center gap-1.5 text-sm font-semibold text-primary-accent hover:underline"
           >
             Lihat course yang tersedia
             <ArrowRight className="h-4 w-4" />
@@ -86,7 +86,7 @@ export default function CourseComingSoonPage({
 
         <section className="rounded-3xl border border-border bg-card p-6">
           <h2 className="flex items-center gap-2 font-semibold">
-            <Map className="h-5 w-5 text-primary" />
+            <Map className="h-5 w-5 text-primary-accent" />
             Ada di roadmap
           </h2>
 
