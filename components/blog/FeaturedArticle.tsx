@@ -6,7 +6,10 @@ import {
   Clock3,
 } from "lucide-react";
 
+import { formatArticleDate } from "@/lib/articleFormat";
 import { Article } from "@/types/Article";
+
+import ArticleDraftBadge from "./ArticleDraftBadge";
 
 interface FeaturedArticleProps {
   article: Article;
@@ -31,9 +34,12 @@ export default function FeaturedArticle({
       </div>
 
       <div className="flex flex-col justify-center p-6 sm:p-8">
-        <span className="w-fit rounded-full bg-primary px-3 py-1 text-xs font-medium text-primary-foreground">
-          Featured
-        </span>
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="w-fit rounded-full bg-primary px-3 py-1 text-xs font-medium text-primary-foreground">
+            Unggulan
+          </span>
+          {article.status === "draft" && <ArticleDraftBadge />}
+        </div>
 
         <p className="mt-5 text-sm font-medium text-muted-foreground">
           {article.category}
@@ -48,11 +54,11 @@ export default function FeaturedArticle({
         </p>
 
         <div className="mt-6 flex items-center gap-4 text-sm text-muted-foreground">
-          <span>{article.publishedAt}</span>
+          <span>{formatArticleDate(article.publishedAt)}</span>
 
           <span className="flex items-center gap-1.5">
             <Clock3 className="h-4 w-4" />
-            {article.readTime}
+            {article.readingMinutes} menit baca
           </span>
         </div>
 

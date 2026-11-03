@@ -6,7 +6,10 @@ import {
   Clock3,
 } from "lucide-react";
 
+import { formatArticleDate } from "@/lib/articleFormat";
 import { Article } from "@/types/Article";
+
+import ArticleDraftBadge from "./ArticleDraftBadge";
 
 interface ArticleCardProps {
   article: Article;
@@ -28,9 +31,12 @@ export default function ArticleCard({
       </div>
 
       <div className="flex flex-1 flex-col p-5">
-        <span className="text-xs font-medium text-muted-foreground">
-          {article.category}
-        </span>
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-xs font-medium text-muted-foreground">
+            {article.category}
+          </span>
+          {article.status === "draft" && <ArticleDraftBadge />}
+        </div>
 
         <h2 className="mt-2 text-lg font-semibold">
           {article.title}
@@ -42,11 +48,11 @@ export default function ArticleCard({
 
         <div className="mt-auto pt-6">
           <div className="flex items-center gap-4 text-xs text-muted-foreground">
-            <span>{article.publishedAt}</span>
+            <span>{formatArticleDate(article.publishedAt)}</span>
 
             <span className="flex items-center gap-1">
               <Clock3 className="h-3.5 w-3.5" />
-              {article.readTime}
+              {article.readingMinutes} menit baca
             </span>
           </div>
 

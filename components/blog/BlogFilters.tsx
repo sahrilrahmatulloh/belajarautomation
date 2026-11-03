@@ -3,10 +3,10 @@
 import { Search } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
-import { ArticleCategory } from "@/types/Article";
+import { ARTICLE_CATEGORIES, ArticleCategory } from "@/types/Article";
 
 export type BlogCategory =
-  | "All"
+  | "Semua"
   | ArticleCategory;
 
 interface BlogFiltersProps {
@@ -18,15 +18,7 @@ interface BlogFiltersProps {
   ) => void;
 }
 
-const categories: BlogCategory[] = [
-  "All",
-  "Automation",
-  "Playwright",
-  "Mobile",
-  "API Testing",
-  "Career",
-  "AI",
-];
+const categories: BlogCategory[] = ["Semua", ...ARTICLE_CATEGORIES];
 
 export default function BlogFilters({
   search,

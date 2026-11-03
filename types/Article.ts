@@ -1,26 +1,43 @@
-export type ArticleCategory =
-  | "Automation"
-  | "Playwright"
-  | "Mobile"
-  | "API Testing"
-  | "Career"
-  | "AI";
+// Kategori blog (PRD FR-07).
+export const ARTICLE_CATEGORIES = [
+  "QA Fundamentals",
+  "Manual Testing",
+  "Automation Testing",
+  "API Testing",
+  "Programming",
+  "Career",
+  "Tools dan teknologi",
+] as const;
 
-export interface ArticleSection {
-  heading: string;
-  paragraphs: string[];
+export type ArticleCategory = (typeof ARTICLE_CATEGORIES)[number];
+
+export type ArticleStatus = "draft" | "published";
+
+// Tujuan ajakan di artikel. Roadmap tanpa slug menuju halaman daftar roadmap.
+export type ArticleCta =
+  | { type: "course" | "practice"; slug: string }
+  | { type: "roadmap"; slug?: string };
+
+export interface ArticleSource {
+  title: string;
+  url: string;
 }
 
+// Metadata artikel, dari frontmatter file content/blog/<slug>.mdx.
 export interface Article {
-  id: number;
   slug: string;
   title: string;
   excerpt: string;
   category: ArticleCategory;
   author: string;
+  // Format YYYY-MM-DD.
   publishedAt: string;
-  readTime: string;
+  updatedAt?: string;
   cover: string;
+  status: ArticleStatus;
   featured: boolean;
-  content: ArticleSection[];
+  cta: ArticleCta[];
+  sources: ArticleSource[];
+  // Dihitung otomatis dari isi artikel.
+  readingMinutes: number;
 }

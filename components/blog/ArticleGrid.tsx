@@ -26,7 +26,7 @@ export default function ArticleGrid({
     <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
       {articles.map((article) => (
         <ArticleCard
-          key={article.id}
+          key={article.slug}
           article={article}
         />
       ))}

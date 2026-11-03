@@ -7,14 +7,20 @@ import {
   CalendarDays,
 } from "lucide-react";
 
+import { formatArticleDate } from "@/lib/articleFormat";
 import { Article } from "@/types/Article";
+
+import ArticleDraftBadge from "./ArticleDraftBadge";
+import ArticleContent from "./mdx/ArticleContent";
 
 interface ArticleDetailPageProps {
   article: Article;
+  content: string;
 }
 
 export default function ArticleDetailPage({
   article,
+  content,
 }: ArticleDetailPageProps) {
   return (
     <article className="mx-auto max-w-4xl">
@@ -29,9 +35,12 @@ export default function ArticleDetailPage({
 
       {/* Header */}
       <header className="mt-8">
-        <span className="inline-flex rounded-full bg-muted px-3 py-1.5 text-sm font-medium">
-          {article.category}
-        </span>
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="inline-flex rounded-full bg-muted px-3 py-1.5 text-sm font-medium">
+            {article.category}
+          </span>
+          {article.status === "draft" && <ArticleDraftBadge />}
+        </div>
 
         <h1 className="mt-5 text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">
           {article.title}
@@ -48,12 +57,12 @@ export default function ArticleDetailPage({
 
           <span className="flex items-center gap-1.5">
             <CalendarDays className="h-4 w-4" />
-            {article.publishedAt}
+            {formatArticleDate(article.publishedAt)}
           </span>
 
           <span className="flex items-center gap-1.5">
             <Clock3 className="h-4 w-4" />
-            {article.readTime}
+            {article.readingMinutes} menit baca
           </span>
         </div>
       </header>
@@ -70,27 +79,8 @@ export default function ArticleDetailPage({
       </div>
 
       {/* Content */}
-      <div className="mt-12 space-y-10">
-        {article.content.map((section) => (
-          <section key={section.heading}>
-            <h2 className="text-2xl font-bold tracking-tight">
-              {section.heading}
-            </h2>
-
-            <div className="mt-4 space-y-5">
-              {section.paragraphs.map(
-                (paragraph, index) => (
-                  <p
-                    key={index}
-                    className="text-base leading-8 text-muted-foreground"
-                  >
-                    {paragraph}
-                  </p>
-                )
-              )}
-            </div>
-          </section>
-        ))}
+      <div className="mt-12 min-w-0">
+        <ArticleContent content={content} />
       </div>
 
       {/* Footer */}

@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 
-import { ARTICLES } from "@/data/articles";
+import { Article } from "@/types/Article";
 
 import BlogHeader from "./BlogHeader";
 import FeaturedArticle from "./FeaturedArticle";
@@ -11,17 +11,17 @@ import BlogFilters, {
 } from "./BlogFilters";
 import ArticleGrid from "./ArticleGrid";
 
-export default function BlogPage() {
+export default function BlogPage({ articles }: { articles: Article[] }) {
   const [search, setSearch] = useState("");
   const [activeCategory, setActiveCategory] =
-    useState<BlogCategory>("All");
+    useState<BlogCategory>("Semua");
 
-  const featuredArticle = ARTICLES.find(
+  const featuredArticle = articles.find(
     (article) => article.featured
   );
 
   const filteredArticles = useMemo(() => {
-    return ARTICLES.filter((article) => {
+    return articles.filter((article) => {
       if (article.featured) {
         return false;
       }
@@ -35,12 +35,12 @@ export default function BlogPage() {
           .includes(search.toLowerCase());
 
       const matchesCategory =
-        activeCategory === "All" ||
+        activeCategory === "Semua" ||
         article.category === activeCategory;
 
       return matchesSearch && matchesCategory;
     });
-  }, [search, activeCategory]);
+  }, [articles, search, activeCategory]);
 
   return (
     <div className="space-y-10">
