@@ -4,12 +4,50 @@ import { UserRole } from "./Role";
 
 // Tanggal disimpan sebagai string ISO (YYYY-MM-DD).
 
+export interface DraftVideo {
+  id: string;
+  title: string;
+  channel: string;
+  duration: string;
+  language: string;
+  // Hanya terlihat oleh Reviewer.
+  reason: string;
+}
+
+export interface DraftImage {
+  fileName: string;
+  alt: string;
+  caption: string;
+}
+
+export interface ArticleDraft {
+  excerpt: string;
+  cover: string;
+  cta: string;
+  sources: string;
+  body: string;
+  videos: DraftVideo[];
+}
+
 export interface CreatorContent {
   id: number;
   title: string;
   type: ContentType;
   status: ContentStatus;
   updatedAt: string;
+  category: string;
+  reviewerName?: string;
+  // Alamat di website untuk konten yang sudah terbit.
+  publicHref?: string;
+  article?: ArticleDraft;
+}
+
+// Catatan revisi per konten: catatan umum atau catatan yang terhubung ke bagian tertentu (PRD FR-15).
+export interface RevisionThread {
+  contentId: number;
+  reviewerName: string;
+  date: string;
+  notes: { id: string; section: string; message: string }[];
 }
 
 export interface RevisionNote {

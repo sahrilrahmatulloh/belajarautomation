@@ -1,3 +1,5 @@
+"use client";
+
 import { Suspense } from "react";
 import Link from "next/link";
 import { FilePlus2, MessageSquareText, PenLine } from "lucide-react";
@@ -7,24 +9,20 @@ import DashboardPanel from "@/components/roles/DashboardPanel";
 import RoleGreeting from "@/components/roles/RoleGreeting";
 import RolePreviewNotice from "@/components/roles/RolePreviewNotice";
 import RoleStatCard from "@/components/roles/RoleStatCard";
-import {
-  DUMMY_CREATOR_CONTENTS,
-  DUMMY_CREATOR_NAME,
-  DUMMY_REVISION_NOTES,
-} from "@/data/dummy/creator";
+import { DUMMY_CREATOR_NAME, DUMMY_REVISION_NOTES } from "@/data/dummy/creator";
+import { useCreatorStudio } from "@/lib/creatorStudio";
 import { formatDate } from "@/lib/format";
 
 import CreatorContentsTable from "./CreatorContentsTable";
-import { CREATOR_STATS } from "./creatorStats";
-
-// Hanya catatan yang masih perlu dikerjakan.
-const openRevisionNotes = DUMMY_REVISION_NOTES.filter((note) =>
-  DUMMY_CREATOR_CONTENTS.some(
-    (content) => content.title === note.contentTitle && content.status === "needs-revision"
-  )
-);
+import { getCreatorStats } from "./creatorStats";
 
 export default function CreatorDashboard() {
+  const { contents } = useCreatorStudio();
+  // Hanya catatan yang masih perlu dikerjakan.
+  const openRevisionNotes = DUMMY_REVISION_NOTES.filter((note) =>
+    contents.some((content) => content.title === note.contentTitle && content.status === "needs-revision")
+  );
+
   return (
     <div className="mx-auto w-full max-w-[1600px] min-w-0 space-y-5 lg:space-y-6">
       <RolePreviewNotice />
@@ -50,7 +48,7 @@ export default function CreatorDashboard() {
           Statistik konten
         </h2>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-5 [&>*:last-child]:col-span-2 sm:[&>*:last-child]:col-span-1">
-          {CREATOR_STATS.map((stat) => (
+          {getCreatorStats(contents).map((stat) => (
             <RoleStatCard key={stat.label} {...stat} />
           ))}
         </div>
@@ -62,7 +60,7 @@ export default function CreatorDashboard() {
           title="Konten Saya"
           description="Status terbaru setiap konten yang kamu buat."
         >
-          {DUMMY_CREATOR_CONTENTS.length > 0 ? (
+          {contents.length > 0 ? (
             <Suspense fallback={<p className="text-sm text-muted-foreground">Memuat konten...</p>}>
               <CreatorContentsTable />
             </Suspense>

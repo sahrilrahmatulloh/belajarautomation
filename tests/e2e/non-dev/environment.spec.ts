@@ -1,5 +1,5 @@
 import { expect, test } from "../fixtures/auth";
-import { BLOG } from "../fixtures/testData";
+import { BLOG, ROLE_MODE } from "../fixtures/testData";
 import { BlogPage } from "../pages/BlogPage";
 import { LoginPage } from "../pages/LoginPage";
 import { RoleDashboardPage } from "../pages/RoleDashboardPage";
@@ -25,6 +25,32 @@ test.describe("Dashboard peran di luar DEV", () => {
 
     await expect(dashboard.previewNotice).toBeHidden();
   });
+});
+
+test.describe("Halaman Creator di luar DEV", () => {
+  test.use({ role: "creator" });
+
+  for (const { path, title } of ROLE_MODE.creatorPages) {
+    test(`${title} tetap halaman informasi Google Docs tanpa istilah Git`, async ({ page }) => {
+      await page.goto(path);
+      const main = page.getByRole("main");
+      await expect(main.getByRole("heading", { level: 1, name: title })).toBeVisible();
+
+      await expect(main.getByRole("heading", { name: "Sementara, konten ditulis di Google Docs" })).toBeVisible();
+      await expect(main.getByRole("table").getByRole("rowheader")).toHaveText([...ROLE_MODE.googleDocsStages]);
+      await expect(page.getByRole("region", { name: "Panduan singkat menulis" }).getByRole("listitem")).toHaveCount(ROLE_MODE.writingStepCount);
+      await expect(page.getByRole("button", { name: ROLE_MODE.templateDisabledLabel })).toBeDisabled();
+      await expect(main).not.toContainText(/github|\bgit\b|branch|pull request|\bPR\b|\bMDX\b/i);
+    });
+  }
+
+  for (const path of ["/creator/buat/artikel", "/creator/konten/1", "/creator/revisi/3"]) {
+    test(`prototipe ${path} tidak tersedia`, async ({ page }) => {
+      const response = await page.goto(path);
+
+      expect(response?.status()).toBe(404);
+    });
+  }
 });
 
 test.describe("Lingkungan UAT", () => {

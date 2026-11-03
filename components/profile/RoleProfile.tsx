@@ -2,13 +2,13 @@
 
 import { CheckCircle2, ClipboardCheck, RotateCcw, ShieldCheck } from "lucide-react";
 
-import { CREATOR_STATS } from "@/components/creator/creatorStats";
+import { getCreatorStats } from "@/components/creator/creatorStats";
 import RoleStatCard from "@/components/roles/RoleStatCard";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ROLE_LABELS } from "@/data/navigation";
 import { ACTIVE_AVATAR } from "@/data/dummy/appearance";
-import { DUMMY_CREATOR_CONTENTS } from "@/data/dummy/creator";
 import { DUMMY_REVIEWER_STATS } from "@/data/dummy/reviewer";
+import { useCreatorStudio } from "@/lib/creatorStudio";
 import { formatDate } from "@/lib/format";
 import { useSession } from "@/lib/session";
 
@@ -54,11 +54,12 @@ function StatsSection({ title, stats }: { title: string; stats: typeof REVIEWER_
 }
 
 function CreatorProfile() {
-  const published = DUMMY_CREATOR_CONTENTS.filter((content) => content.status === "published");
+  const { contents } = useCreatorStudio();
+  const published = contents.filter((content) => content.status === "published");
 
   return (
     <>
-      <StatsSection title="Konten per Status" stats={CREATOR_STATS} />
+      <StatsSection title="Konten per Status" stats={getCreatorStats(contents)} />
 
       <section aria-labelledby="konten-terbit" className="rounded-2xl border border-border bg-card p-5">
         <h2 id="konten-terbit" className="text-lg font-bold">

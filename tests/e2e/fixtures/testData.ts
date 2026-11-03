@@ -259,3 +259,26 @@ export const LEARNER_PAGES = [
   { name: "Pembayaran", path: "/checkout" },
   { name: "Profil kustomisasi", path: "/profile?tab=kustomisasi" },
 ];
+
+// Prototipe Mode Creator (data/dummy/creator.ts).
+export const CREATOR_STUDIO = {
+  contentCount: 6,
+  columns: ["Judul", "Jenis", "Kategori", "Status", "Terakhir diubah", "Reviewer", "Aksi"],
+  draftTitle: "Soal: Boundary Value Analysis",
+  reviewTitle: "Panduan Menulis Bug Report",
+  revisionTitle: "Soal: Validasi Status Code API",
+  revisionId: 3,
+  noteCount: 3,
+  approvedTitle: "Modul Page Object Model",
+  publishedTitle: "Locator Strategy di Playwright",
+  actionsByStatus: [
+    { title: "Soal: Boundary Value Analysis", actions: ["Edit", "Kirim untuk Review", "Hapus"] },
+    { title: "Panduan Menulis Bug Report", actions: ["Lihat", "Tarik kembali"] },
+    { title: "Soal: Validasi Status Code API", actions: ["Lihat catatan", "Edit"] },
+    { title: "Modul Page Object Model", actions: ["Lihat"] },
+    { title: "Locator Strategy di Playwright", actions: ["Lihat di website", "Buat revisi"] },
+  ],
+  newArticle: { title: "Artikel Uji Prototipe", excerpt: "Ringkasan uji.", category: "Career", cover: "sampul.webp" },
+  videoIds: ["dummyVideo1", "dummyVideo2", "dummyVideo3"],
+  axePaths: ["/creator/konten", "/creator/buat", "/creator/buat/artikel", "/creator/revisi", "/creator/revisi/3", "/creator/konten/5"],
+} as const;
