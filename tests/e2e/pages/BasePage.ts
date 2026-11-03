@@ -10,7 +10,7 @@ export abstract class BasePage {
     protected readonly path: string
   ) {
     this.environmentBadge = page.getByRole("status", { name: /^Lingkungan / });
-    this.profileMenuButton = page.getByRole("button", { name: "Buka menu profil" });
+    this.profileMenuButton = page.getByRole("button", { name: /^Buka menu profil/ });
   }
 
   async goto() {

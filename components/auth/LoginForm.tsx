@@ -8,6 +8,7 @@ import { AlertCircle, LogIn } from "lucide-react";
 import { DUMMY_ACCOUNTS, DUMMY_PASSWORD } from "@/data/dummy/accounts";
 import { ROLE_HOME, ROLE_LABELS } from "@/data/navigation";
 import { getNextTarget, withNextParam } from "@/lib/authRedirect";
+import { isDev } from "@/lib/env";
 import { sessionActions } from "@/lib/session";
 import { useHydrated } from "@/lib/useHydrated";
 import { isValidEmail } from "@/lib/validation";
@@ -127,40 +128,42 @@ export default function LoginForm() {
         </p>
       </form>
 
-      {/* Akun demo per role */}
-      <section
-        aria-labelledby="demo-accounts"
-        className="rounded-2xl border border-dashed border-border bg-muted/30 p-4"
-      >
-        <h2 id="demo-accounts" className="text-sm font-semibold">
-          Akun demo
-        </h2>
-        <p className="mt-1 text-xs text-muted-foreground">
-          Pilih role untuk mengisi form otomatis. Password semua akun:{" "}
-          <span className="font-mono font-semibold text-foreground">{DUMMY_PASSWORD}</span>
-        </p>
+      {/* Akun demo per role, hanya untuk pengembangan. */}
+      {isDev && (
+        <section
+          aria-labelledby="demo-accounts"
+          className="rounded-2xl border border-dashed border-border bg-muted/30 p-4"
+        >
+          <h2 id="demo-accounts" className="text-sm font-semibold">
+            Akun demo
+          </h2>
+          <p className="mt-1 text-xs text-muted-foreground">
+            Pilih role untuk mengisi form otomatis. Password semua akun:{" "}
+            <span className="font-mono font-semibold text-foreground">{DUMMY_PASSWORD}</span>
+          </p>
 
-        <div className="mt-3 grid grid-cols-2 gap-2">
-          {DUMMY_ACCOUNTS.map((account) => (
-            <button
-              key={account.role}
-              type="button"
-              onClick={() => fillDemoAccount(account.email)}
-              aria-pressed={email === account.email}
-              className={`rounded-lg border px-3 py-2 text-left text-sm transition-colors ${
-                email === account.email
-                  ? "border-primary bg-primary/5"
-                  : "border-border bg-card hover:bg-accent"
-              }`}
-            >
-              <span className="block font-semibold">{ROLE_LABELS[account.role]}</span>
-              <span className="block truncate text-xs text-muted-foreground">
-                {account.name}
-              </span>
-            </button>
-          ))}
-        </div>
-      </section>
+          <div className="mt-3 grid grid-cols-2 gap-2">
+            {DUMMY_ACCOUNTS.map((account) => (
+              <button
+                key={account.role}
+                type="button"
+                onClick={() => fillDemoAccount(account.email)}
+                aria-pressed={email === account.email}
+                className={`rounded-lg border px-3 py-2 text-left text-sm transition-colors ${
+                  email === account.email
+                    ? "border-primary bg-primary/5"
+                    : "border-border bg-card hover:bg-accent"
+                }`}
+              >
+                <span className="block font-semibold">{ROLE_LABELS[account.role]}</span>
+                <span className="block truncate text-xs text-muted-foreground">
+                  {account.name}
+                </span>
+              </button>
+            ))}
+          </div>
+        </section>
+      )}
     </div>
   );
 }

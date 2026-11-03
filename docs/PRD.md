@@ -1,9 +1,14 @@
 # BELAJARAUTOMATION.COM
 ## Product Requirements Document (PRD)
-**Versi:** 2.8  
+**Versi:** 2.9  
 **Status:** Draft — Acuan Pengembangan Produk  
 **Platform:** Web Application  
 **Target Pengguna:** Pemula hingga praktisi QA, Software Testing, dan Programming
+
+### Perubahan di Versi 2.9
+- Menambahkan peran Creator, Reviewer, dan Admin beserta alur penerbitan konten (FR-15).
+- Sebelum backend tersedia, konten dikelola lewat GitHub (file MDX dan pull request).
+- Satu akun dapat memiliki beberapa peran, dengan pengalih mode Belajar dan Creator.
 
 ### Perubahan di Versi 2.8
 - Menetapkan Blog: dapat dibaca tanpa login, format halaman daftar dan artikel, format konten, status draf, serta SEO (FR-07).
@@ -1096,6 +1101,60 @@ Daftar final achievement ditetapkan kemudian (Bagian 12).
 
 ---
 
+## FR-15 — Peran Konten dan Alur Penerbitan
+
+### Tujuan
+Memungkinkan konten ditulis oleh lebih dari satu orang dengan kualitas yang tetap terjaga melalui proses review.
+
+### Peran
+| Peran | Tugas | Batasan |
+|---|---|---|
+| **Creator** | Menulis dan merevisi konten | Tidak dapat menerbitkan sendiri dan tidak dapat me-review kontennya sendiri |
+| **Reviewer** | Memeriksa akurasi, kejelasan, contoh kode, dan kunci jawaban; menyetujui atau meminta revisi | Tidak me-review konten yang ditulisnya sendiri |
+| **Admin** | Menerbitkan konten yang sudah disetujui, mengelola peran pengguna | — |
+
+- Satu akun dapat memiliki beberapa peran. Selama tim masih kecil, pemilik produk dapat merangkap Reviewer dan Admin.
+- Creator dan Reviewer tetap merupakan pelajar: XP, rank, profil, dan membership tetap berlaku.
+- Pengguna dengan peran tambahan memiliki pengalih **"Mode Belajar"** dan **"Mode Creator"** (atau Reviewer/Admin) di menu profil. Sidebar, dashboard, dan menu mengikuti mode yang aktif. Identitas (nama dan avatar) sama di semua mode.
+
+### Jenis konten yang dapat dibuat Creator (bertahap)
+1. **Artikel blog** — tahap pertama.
+2. **Isi lesson** — setelah sistem konten lesson tersedia.
+3. **Soal latihan** — terakhir, karena memuat kunci jawaban; kunci jawaban wajib diverifikasi Reviewer.
+
+### Alur penerbitan
+`Draf` → `Menunggu Review` → `Perlu Revisi` atau `Disetujui` → `Terbit`
+
+- Konten yang sudah terbit lalu diubah dibuat sebagai revisi baru yang kembali melewati review. Versi yang terbit tetap tayang sampai revisinya disetujui dan diterbitkan.
+- Setiap konten mencatat penulis, reviewer, dan tanggal setiap perubahan status.
+
+### Tahap sebelum backend: penerbitan lewat GitHub
+Selama backend belum tersedia, konten dikelola di repository:
+
+| Tahap alur | Bentuk di GitHub |
+|---|---|
+| Draf | Branch dan file MDX milik Creator |
+| Menunggu Review | Pull request ke `develop` |
+| Perlu Revisi | Review dengan permintaan perubahan |
+| Disetujui | Review disetujui oleh Reviewer dan CI lulus |
+| Terbit | Admin melakukan merge dan mengubah status artikel menjadi `published` |
+
+Ketentuan:
+- Tersedia panduan kontribusi konten di repository: cara membuat file, format frontmatter, aturan penulisan, dan checklist review.
+- Tersedia template pull request khusus konten.
+- Perubahan pada folder konten wajib disetujui Reviewer (melalui pengaturan pemilik kode), dan Creator tidak dapat melakukan merge sendiri.
+- Dashboard Creator di aplikasi tetap berupa tampilan dummy dan menautkan ke panduan kontribusi.
+
+### Tahap setelah backend
+Creator menulis melalui editor di aplikasi: daftar Konten Saya dengan filter status, editor per jenis konten dengan pratinjau dan simpan draf, catatan revisi per konten yang dapat ditandai selesai, serta antrean review dan penerbitan di dalam aplikasi.
+
+### Penulis dan kepemilikan
+- Artikel menampilkan nama Creator yang menulisnya; "Tim BelajarAutomation" dipakai untuk tulisan pemilik produk atau tulisan bersama.
+- Sebelum Creator mulai menulis, wajib ada kesepakatan tertulis sederhana mengenai hak penggunaan konten oleh platform dan pencantuman nama penulis.
+- Apakah Creator mendapat imbalan masih belum ditentukan (Bagian 12).
+
+---
+
 # 4. Profil, Preferensi, dan Pengaturan
 
 ## 4.1 Profil
@@ -1626,8 +1685,8 @@ Hal berikut harus diputuskan sebelum implementasi fitur terkait mencapai tahap p
 
 ## Produk dan Konten
 - Struktur final materi dan modul.
-- Pengelolaan konten dan peran Creator, Reviewer, serta Admin.
-- Mekanisme penerbitan dan peninjauan konten.
+- Imbalan untuk Creator dan bentuk kesepakatan kepemilikan konten.
+- Waktu peralihan dari penerbitan lewat GitHub ke editor di aplikasi.
 
 ## Gamification
 - Penyesuaian nilai XP dan batas rank setelah konten bertambah.

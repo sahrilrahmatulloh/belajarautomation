@@ -1,4 +1,5 @@
 import {
+  BadgeCheck,
   CheckCircle2,
   Clock3,
   FilePen,
@@ -31,7 +32,7 @@ function countByStatus(status: ContentStatus) {
 
 const stats = [
   {
-    label: "Draft",
+    label: "Draf",
     value: countByStatus("draft"),
     detail: "Belum dikirim ke reviewer",
     icon: FilePen,
@@ -52,6 +53,13 @@ const stats = [
     iconStyle: "bg-rose-500/10 text-rose-600 dark:text-rose-300",
   },
   {
+    label: "Disetujui",
+    value: countByStatus("approved"),
+    detail: "Menunggu diterbitkan Admin",
+    icon: BadgeCheck,
+    iconStyle: "bg-sky-500/10 text-sky-700 dark:text-sky-300",
+  },
+  {
     label: "Terbit",
     value: countByStatus("published"),
     detail: "Sudah bisa dipelajari pengguna",
@@ -59,6 +67,13 @@ const stats = [
     iconStyle: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-300",
   },
 ];
+
+// Hanya catatan yang masih perlu dikerjakan.
+const openRevisionNotes = DUMMY_REVISION_NOTES.filter((note) =>
+  DUMMY_CREATOR_CONTENTS.some(
+    (content) => content.title === note.contentTitle && content.status === "needs-revision"
+  )
+);
 
 export default function CreatorDashboard() {
   return (
@@ -78,14 +93,19 @@ export default function CreatorDashboard() {
         }
       />
 
-      <section aria-label="Statistik konten" className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-        {stats.map((stat) => (
-          <RoleStatCard
-            key={stat.label}
-            {...stat}
-            value={String(stat.value)}
-          />
-        ))}
+      <section aria-labelledby="creator-stats">
+        <h2 id="creator-stats" className="sr-only">
+          Statistik konten
+        </h2>
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-5 [&>*:last-child]:col-span-2 sm:[&>*:last-child]:col-span-1">
+          {stats.map((stat) => (
+            <RoleStatCard
+              key={stat.label}
+              {...stat}
+              value={String(stat.value)}
+            />
+          ))}
+        </div>
       </section>
 
       <div className="grid min-w-0 gap-5 lg:gap-6 xl:grid-cols-[minmax(0,1.8fr)_minmax(0,1fr)]">
@@ -139,9 +159,9 @@ export default function CreatorDashboard() {
           title="Catatan Revisi Terbaru"
           description="Masukan dari reviewer untuk kontenmu."
         >
-          {DUMMY_REVISION_NOTES.length > 0 ? (
+          {openRevisionNotes.length > 0 ? (
             <ul className="space-y-3">
-              {DUMMY_REVISION_NOTES.map((note) => (
+              {openRevisionNotes.map((note) => (
                 <li
                   key={note.id}
                   className="rounded-lg border border-border p-3"
@@ -161,8 +181,8 @@ export default function CreatorDashboard() {
           ) : (
             <EmptyState
               icon={MessageSquareText}
-              title="Belum ada catatan revisi"
-              description="Catatan dari reviewer akan muncul setelah kontenmu direview."
+              title="Tidak ada revisi yang perlu dikerjakan"
+              description="Catatan dari reviewer akan muncul saat kontenmu perlu direvisi."
             />
           )}
         </DashboardPanel>

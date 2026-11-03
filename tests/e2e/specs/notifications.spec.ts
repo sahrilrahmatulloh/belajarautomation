@@ -24,7 +24,7 @@ test.describe("Lonceng notifikasi", () => {
   test("menampilkan jumlah belum dibaca, maksimal 9+", async ({ page }) => {
     const notifications = await openNotifications(page);
 
-    await expect(notifications.bell).toHaveAccessibleName(`Notifikasi, ${NOTIFICATIONS.unreadCount} belum dibaca`);
+    await expect(notifications.bell).toHaveAccessibleName(`Notifikasi, ${NOTIFICATIONS.unreadLabel} belum dibaca`);
     await expect(notifications.bellBadge).toHaveText("9+");
   });
 
@@ -263,7 +263,7 @@ test.describe("Halaman notifikasi", () => {
 
     await expect(merged).toHaveAttribute("aria-expanded", "true");
     // Membuka gabungan belum berarti membaca isinya.
-    await expect(notifications.bell).toHaveAccessibleName(`Notifikasi, ${NOTIFICATIONS.unreadCount} belum dibaca`);
+    await expect(notifications.bell).toHaveAccessibleName(`Notifikasi, ${NOTIFICATIONS.unreadLabel} belum dibaca`);
 
     await notifications.list.getByRole("link", { name: item }).click();
     await expect(page).toHaveURL(href);
@@ -421,7 +421,7 @@ test.describe("Preferensi notifikasi", () => {
       await settings.goto();
       await expect(toggle).toHaveAttribute("aria-checked", "false");
       await toggle.click();
-      await expect(notifications.bell).toHaveAccessibleName(`Notifikasi, ${NOTIFICATIONS.unreadCount} belum dibaca`);
+      await expect(notifications.bell).toHaveAccessibleName(`Notifikasi, ${NOTIFICATIONS.unreadLabel} belum dibaca`);
     });
 
     test("filter URL untuk kelompok yang dimatikan diabaikan", async ({ page }) => {
@@ -443,7 +443,7 @@ test.describe("Preferensi notifikasi", () => {
       await toggle.click();
 
       await expect(toggle).toHaveAttribute("aria-checked", "true");
-      await expect(notifications.bell).toHaveAccessibleName(`Notifikasi, ${NOTIFICATIONS.unreadCount} belum dibaca`);
+      await expect(notifications.bell).toHaveAccessibleName(`Notifikasi, ${NOTIFICATIONS.unreadLabel} belum dibaca`);
     });
 
     test("kelompok wajib tetap tampil walau tersimpan sebagai dimatikan", async ({ page }) => {
@@ -455,7 +455,7 @@ test.describe("Preferensi notifikasi", () => {
 
       await settings.goto();
 
-      await expect(notifications.bell).toHaveAccessibleName(`Notifikasi, ${NOTIFICATIONS.unreadCount} belum dibaca`);
+      await expect(notifications.bell).toHaveAccessibleName(`Notifikasi, ${NOTIFICATIONS.unreadLabel} belum dibaca`);
     });
 
     test("kelompok yang dimatikan hilang dari popover", async ({ page, isMobile }) => {

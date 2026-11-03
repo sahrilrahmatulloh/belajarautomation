@@ -41,10 +41,12 @@ export default function ProfileDropdown() {
     <DropdownMenu>
       <DropdownMenuTrigger
         className="flex min-h-11 min-w-11 items-center gap-3 rounded-xl p-1 transition-colors hover:bg-accent"
-        aria-label="Buka menu profil"
       >
-        <Avatar className="h-8 w-8 sm:h-10 sm:w-10">
-          <AvatarImage src={ACTIVE_AVATAR.image} alt="Foto profil" />
+        {/* Nama tombol memuat teks yang terlihat, agar pengguna perintah suara bisa menyebutnya. */}
+        <span className="sr-only">Buka menu profil</span>
+
+        <Avatar aria-hidden="true" className="h-8 w-8 sm:h-10 sm:w-10">
+          <AvatarImage src={ACTIVE_AVATAR.image} alt="" />
           <AvatarFallback>
             BA
           </AvatarFallback>

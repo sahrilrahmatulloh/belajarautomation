@@ -44,7 +44,7 @@ test.describe("Blog tanpa login", () => {
     await expect(blog.heading).toBeVisible();
     await expect(blog.loginLink).toBeVisible();
     await expect(blog.registerLink).toBeVisible();
-    await expect(page.getByRole("button", { name: "Buka menu profil" })).toBeHidden();
+    await expect(blog.profileMenuButton).toBeHidden();
     await expect(page.getByRole("button", { name: /^Notifikasi/ })).toBeHidden();
     await expect(page.getByRole("link", { name: /^Notifikasi/ })).toBeHidden();
   });

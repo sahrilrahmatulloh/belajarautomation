@@ -1,9 +1,8 @@
 import CreatorDashboard from "@/components/creator/CreatorDashboard";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 
-// PENTING: route ini WAJIB dilindungi otorisasi role "creator" di backend
-// sebelum rilis (PRD 8.3). Saat ini sengaja tanpa proteksi karena belum ada
-// autentikasi; jangan menambahkan proteksi palsu di frontend.
+// PENTING: DashboardLayout hanya mengarahkan tampilan berdasarkan sesi dummy di browser,
+// bukan proteksi keamanan. Otorisasi role "creator" WAJIB ada di backend sebelum rilis (PRD 8.3).
 export default function Page() {
   return (
     <DashboardLayout>

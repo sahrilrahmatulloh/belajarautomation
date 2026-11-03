@@ -110,7 +110,7 @@ export const NOTIFICATIONS = {
   now: "2026-11-16T05:00:00Z",
   timezone: "Asia/Jakarta",
   preferencesKey: "belajarautomation-notification-preferences",
-  unreadCount: 10,
+  unreadLabel: "9+",
   unreadWithoutContent: 5,
   entryCount: 11,
   transactionCount: 3,
@@ -184,4 +184,11 @@ export const BLOG = {
     sourceCount: 2,
     relatedFirst: "Playwright vs Selenium di 2026: Pilih yang Mana?",
   },
+} as const;
+
+// Konten dummy akun Creator (data/dummy/creator.ts).
+export const CREATOR_DASHBOARD = {
+  statLabels: ["Draf", "Menunggu Review", "Perlu Revisi", "Disetujui", "Terbit"],
+  needsRevisionTitle: "Soal: Validasi Status Code API",
+  draftTitle: "Soal: Boundary Value Analysis",
 } as const;

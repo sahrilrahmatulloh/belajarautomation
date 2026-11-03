@@ -1,5 +1,5 @@
 import { expect, test } from "../fixtures/auth";
-import { MAIN_PAGES } from "../fixtures/mainPages";
+import { MAIN_PAGES, openRoleDashboard, ROLE_PAGES } from "../fixtures/mainPages";
 import { DashboardPage } from "../pages/DashboardPage";
 
 test.use({ role: "user" });
@@ -20,6 +20,18 @@ test.describe("Layout", () => {
         const pageObject = await open(page);
 
         await pageObject.expectNoHorizontalScroll();
+      });
+    }
+
+    for (const { role, name } of ROLE_PAGES) {
+      test.describe(name, () => {
+        test.use({ role });
+
+        test(`halaman ${name}`, async ({ page }) => {
+          const pageObject = await openRoleDashboard(page, role);
+
+          await pageObject.expectNoHorizontalScroll();
+        });
       });
     }
   });
