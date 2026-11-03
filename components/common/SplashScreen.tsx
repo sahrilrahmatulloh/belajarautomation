@@ -1,13 +1,18 @@
 "use client";
 
-import { useEffect } from "react";
+import { useLayoutEffect } from "react";
 import Image from "next/image";
 
 import { SPLASH_STORAGE_KEY } from "@/lib/splash";
 
 export default function SplashScreen() {
-  useEffect(() => {
+  // Halaman 404 dirender di browser, jadi skrip di <head> (SPLASH_INIT_SCRIPT) tidak berjalan.
+  // Diperiksa lagi sebelum tampil agar splash tidak muncul ulang bagi yang sudah melihatnya.
+  useLayoutEffect(() => {
     try {
+      if (window.sessionStorage.getItem(SPLASH_STORAGE_KEY)) {
+        document.documentElement.dataset.splash = "seen";
+      }
       window.sessionStorage.setItem(SPLASH_STORAGE_KEY, "1");
     } catch {
       // sessionStorage tidak tersedia; splash akan tampil lagi saat dimuat ulang.

@@ -413,6 +413,8 @@ test.describe("Halaman artikel", () => {
 
     expect(response?.status()).toBe(404);
     await expect(page.getByRole("heading", { level: 1, name: "Artikel tidak ditemukan" })).toBeVisible();
+    // Halaman ini dirender di browser; splash tidak boleh muncul ulang.
+    await expect(page.locator(".splash-screen")).toBeHidden();
 
     await page.getByRole("link", { name: "Kembali ke Blog" }).click();
     await expect(page).toHaveURL("/blog");
