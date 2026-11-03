@@ -124,3 +124,30 @@ Sesuai PRD Bagian 16. Checklist ini juga ada di template pull request konten.
 - [ ] Tidak ada konten yang melanggar hak cipta.
 - [ ] Tampilan sudah diperiksa di mode terang dan gelap, serta di layar mobile.
 - [ ] Penulis bukan orang yang sama dengan Reviewer.
+
+## Video
+
+Artikel boleh menyertakan referensi video YouTube sebagai pelengkap (PRD FR-02 bagian G, FR-07).
+
+```mdx
+<VideoYouTube id="ID_VIDEO" judul="Judul asli video" channel="Nama channel" durasi="12:34" bahasa="Inggris" />
+```
+
+| Prop | Wajib | Keterangan |
+|---|---|---|
+| `id` | Ya | ID video, 11 karakter. Mis. dari `youtube.com/watch?v=ID_VIDEO` |
+| `judul` | Ya | Judul asli video |
+| `channel` | Ya | Nama channel, sebagai kredit |
+| `durasi` | Ya | Format `m:ss` atau `h:mm:ss` |
+| `bahasa` | Tidak | Bawaannya `Indonesia`. Bahasa lain tampil sebagai label |
+| `embed` | Tidak | Tulis `embed={false}` bila pemilik video menonaktifkan embed; video tampil sebagai tautan "Tonton di YouTube" |
+
+Aturan:
+
+- Maksimal 3 video per artikel. `npm run check:blog` menggagalkan build bila dilanggar, atau bila `id`, `judul`, `channel`, atau `durasi` tidak valid.
+- Judul asli dan nama channel wajib dicantumkan sebagai kredit.
+- Hanya embed resmi atau tautan. Video orang lain tidak boleh diunduh lalu diunggah ulang.
+- Artikel wajib tetap bisa dipahami tanpa video.
+- Video berbahasa Indonesia diutamakan.
+
+Menjalankan `npm run check:youtube` memeriksa semua video di `content/blog`: yang dihapus atau dijadikan privat, serta yang embed-nya dimatikan. Pemeriksaan ini butuh jaringan, jadi tidak ikut build. Workflow `Cek Video YouTube` menjalankannya seminggu sekali, dan bisa juga dijalankan manual dari tab Actions.
