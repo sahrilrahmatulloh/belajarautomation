@@ -4,6 +4,9 @@
 //            PNG tanpa alpha dipotong mengikuti bingkai lingkarannya.
 // - themes:  tema banner (public/banner), lebar maks 2400px, < 250 KB, ditambah
 //            thumbnail <nama>-thumb.webp selebar 480px untuk koleksi tema.
+// - mockups: mockup yang disetujui (docs/desain), lebar maks 2400px, < 500 KB, agar teksnya tetap
+//            terbaca. Nama file mengikuti fitur (PRD 13.2).
+// - blog:    gambar artikel (public/covers/blog), lebar maks 1600px, < 200 KB.
 // Jalankan: npm run optimize:images (semua) atau npm run optimize:images -- avatars
 import { readdir, stat, unlink, writeFile } from "node:fs/promises";
 import path from "node:path";
@@ -14,6 +17,8 @@ const GROUPS = {
   ranks: { dir: "public/ranks", maxWidth: 320, limitKb: 60, transparent: true, trim: true },
   avatars: { dir: "public/profile", maxWidth: 512, limitKb: 60, transparent: true },
   themes: { dir: "public/banner", maxWidth: 2400, limitKb: 250, thumbnailWidth: 480 },
+  mockups: { dir: "docs/desain", maxWidth: 2400, limitKb: 500 },
+  blog: { dir: "public/covers/blog", maxWidth: 1600, limitKb: 200 },
 };
 
 const START_QUALITY = 90;

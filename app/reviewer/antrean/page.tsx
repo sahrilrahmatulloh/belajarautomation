@@ -7,10 +7,10 @@ export default function Page() {
   return (
     <DashboardLayout>
       <RoleGuidePage
+        role="reviewer"
         title="Antrean Review"
-        description="Konten yang menunggu review adalah pull request ke develop yang memakai template konten."
+        description="Konten yang menunggu review adalah dokumen Google Docs yang dibagikan Creator kepadamu."
         icon={Inbox}
-        flowTitle="Sementara review dilakukan lewat pull request di GitHub"
       />
     </DashboardLayout>
   );

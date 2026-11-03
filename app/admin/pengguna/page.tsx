@@ -7,10 +7,10 @@ export default function Page() {
   return (
     <DashboardLayout>
       <RoleGuidePage
+        role="admin"
         title="Pengguna & Role"
         description="Pengelolaan pengguna dan peran tersedia setelah backend siap."
         icon={Users}
-        flowTitle="Sementara penerbitan dilakukan lewat pull request di GitHub"
       />
     </DashboardLayout>
   );

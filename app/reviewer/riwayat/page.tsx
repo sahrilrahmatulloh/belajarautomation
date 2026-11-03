@@ -7,10 +7,10 @@ export default function Page() {
   return (
     <DashboardLayout>
       <RoleGuidePage
+        role="reviewer"
         title="Riwayat Review"
-        description="Riwayatnya tersedia di daftar pull request yang sudah kamu review."
+        description="Riwayat review tersimpan di komentar pada setiap dokumen."
         icon={History}
-        flowTitle="Sementara review dilakukan lewat pull request di GitHub"
       />
     </DashboardLayout>
   );

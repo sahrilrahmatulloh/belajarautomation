@@ -1,16 +1,15 @@
 import { MessageSquareText } from "lucide-react";
 
+import CreatorGuidePage from "@/components/creator/CreatorGuidePage";
 import DashboardLayout from "@/components/layout/DashboardLayout";
-import RoleGuidePage from "@/components/roles/RoleGuidePage";
 
 export default function Page() {
   return (
     <DashboardLayout>
-      <RoleGuidePage
+      <CreatorGuidePage
         title="Catatan Revisi"
-        description="Catatan dari Reviewer tersedia di halaman review pull request kontenmu."
+        description="Catatan dari Reviewer ada di komentar pada dokumen Google Docs milikmu."
         icon={MessageSquareText}
-        flowTitle="Sementara penulisan dilakukan lewat GitHub"
       />
     </DashboardLayout>
   );

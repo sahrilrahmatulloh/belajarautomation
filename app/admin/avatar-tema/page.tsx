@@ -7,10 +7,10 @@ export default function Page() {
   return (
     <DashboardLayout>
       <RoleGuidePage
+        role="admin"
         title="Avatar & Tema"
         description="Pengelolaan avatar dan tema tersedia setelah backend siap."
         icon={Palette}
-        flowTitle="Sementara penerbitan dilakukan lewat pull request di GitHub"
       />
     </DashboardLayout>
   );

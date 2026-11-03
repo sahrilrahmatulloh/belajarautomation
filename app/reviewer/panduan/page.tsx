@@ -7,10 +7,10 @@ export default function Page() {
   return (
     <DashboardLayout>
       <RoleGuidePage
+        role="reviewer"
         title="Panduan Review"
-        description="Checklist review ada di panduan kontribusi dan template pull request konten."
+        description="Periksa isi, contoh kode, dan referensi video sebelum menyatakan setuju."
         icon={BookOpenCheck}
-        flowTitle="Sementara review dilakukan lewat pull request di GitHub"
       />
     </DashboardLayout>
   );

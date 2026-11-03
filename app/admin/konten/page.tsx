@@ -7,10 +7,10 @@ export default function Page() {
   return (
     <DashboardLayout>
       <RoleGuidePage
+        role="admin"
         title="Konten"
-        description="Terbitkan konten yang sudah disetujui dengan melakukan merge pull request."
+        description="Terbitkan konten yang sudah disetujui Reviewer."
         icon={Files}
-        flowTitle="Sementara penerbitan dilakukan lewat pull request di GitHub"
       />
     </DashboardLayout>
   );
