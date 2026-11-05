@@ -186,11 +186,12 @@ export const BLOG = {
   },
 } as const;
 
-// Konten dummy akun Creator (data/dummy/creator.ts).
+// Konten dummy akun Creator (data/dummy/contents.ts).
 export const CREATOR_DASHBOARD = {
   statLabels: ["Draf", "Menunggu Review", "Perlu Revisi", "Disetujui", "Terbit"],
-  needsRevisionTitle: "Soal: Validasi Status Code API",
-  draftTitle: "Soal: Boundary Value Analysis",
+  needsRevisionTitle: "Cara Menulis Bug Report",
+  draftTitle: "Apa Itu Quality Assurance?",
+  openRevisionCount: 2,
 } as const;
 
 // Pengalih mode dan tampilan per mode (PRD FR-15).
@@ -203,7 +204,7 @@ export const ROLE_MODE = {
   learnerPaths: ["/cart", "/membership", "/leaderboard", "/learn", "/playground", "/roadmap"],
   promptTitle: "Halaman ini untuk Mode Belajar",
   creatorStatLabels: ["Draf", "Menunggu Review", "Perlu Revisi", "Disetujui", "Terbit"],
-  publishedTitle: "Locator Strategy di Playwright",
+  publishedTitle: "Best Practice Locator di Playwright",
   reviewerStats: [
     { label: "Direview", value: "18" },
     { label: "Disetujui", value: "14" },
@@ -267,25 +268,30 @@ export const LEARNER_PAGES = [
   { name: "Profil kustomisasi", path: "/profile?tab=kustomisasi" },
 ];
 
-// Prototipe Mode Creator (data/dummy/creator.ts).
+// Ruang kerja Creator (data/dummy/contents.ts, akun creator@).
 export const CREATOR_STUDIO = {
-  contentCount: 6,
+  contentCount: 7,
+  pageSize: 5,
   columns: ["Judul", "Jenis", "Kategori", "Status", "Terakhir diubah", "Reviewer", "Aksi"],
-  draftTitle: "Soal: Boundary Value Analysis",
-  reviewTitle: "Panduan Menulis Bug Report",
-  revisionTitle: "Soal: Validasi Status Code API",
-  revisionId: 3,
+  draftTitle: "Apa Itu Quality Assurance?",
+  reviewTitle: "Mengenal Playwright untuk Pemula",
+  revisionTitle: "Cara Menulis Bug Report",
+  revisionId: "konten-bug-report",
   noteCount: 3,
-  approvedTitle: "Modul Page Object Model",
-  publishedTitle: "Locator Strategy di Playwright",
+  noteAnchorLabel: "Bagian: Pembahasan",
+  noteAnchorHeading: "Pembahasan",
+  approvedTitle: "Contoh Test Case Login yang Lengkap",
+  publishedTitle: "Best Practice Locator di Playwright",
   actionsByStatus: [
-    { title: "Soal: Boundary Value Analysis", actions: ["Edit", "Kirim untuk Review", "Hapus"] },
-    { title: "Panduan Menulis Bug Report", actions: ["Lihat", "Tarik kembali"] },
-    { title: "Soal: Validasi Status Code API", actions: ["Lihat catatan", "Edit"] },
-    { title: "Modul Page Object Model", actions: ["Lihat"] },
-    { title: "Locator Strategy di Playwright", actions: ["Lihat di website", "Buat revisi"] },
+    { title: "Apa Itu Quality Assurance?", actions: ["Edit", "Kirim untuk Review", "Hapus"] },
+    { title: "Mengenal Playwright untuk Pemula", actions: ["Lihat", "Tarik kembali"] },
+    { title: "Cara Menulis Bug Report", actions: ["Lihat catatan", "Edit"] },
+    { title: "Contoh Test Case Login yang Lengkap", actions: ["Lihat"] },
+    { title: "Best Practice Locator di Playwright", actions: ["Lihat di website", "Buat revisi"] },
   ],
-  newArticle: { title: "Artikel Uji Prototipe", excerpt: "Ringkasan uji.", category: "Career", cover: "sampul.webp" },
-  videoIds: ["dummyVideo1", "dummyVideo2", "dummyVideo3"],
-  axePaths: ["/creator/konten", "/creator/buat", "/creator/buat/artikel", "/creator/revisi", "/creator/revisi/3", "/creator/konten/5"],
+  newArticle: { title: "Artikel Uji Ruang Kerja", excerpt: "Ringkasan uji.", category: "Career" },
+  // Gambar PNG 1x1 yang valid.
+  pngBase64: "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==",
+  videoIds: ["abcdefghij1", "abcdefghij2", "abcdefghij3"],
+  axePaths: ["/creator/konten", "/creator/buat", "/creator/buat/artikel", "/creator/buat/artikel?konten=konten-qa", "/creator/revisi", "/creator/revisi/konten-bug-report", "/creator/konten/konten-pemula"],
 } as const;

@@ -1,98 +1,196 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Dialog } from "@base-ui/react/dialog";
-import { Bold, Code, Eye, Heading2, Heading3, ImagePlus, Lightbulb, List, Table, TriangleAlert, Video, X } from "lucide-react";
+import { Eye, Plus, Trash2, X } from "lucide-react";
 
-import { creatorStudioActions, useCreatorStudio } from "@/lib/creatorStudio";
+import ContentArticleView from "@/components/content/ContentArticleView";
+import { CHALLENGES } from "@/data/challenges";
+import { COURSES } from "@/data/courses";
+import { getContentRepository, runContentAction } from "@/lib/content";
+import { collectVideos, countWords, readingMinutes } from "@/lib/content/document";
+import { prepareImage, validateImage } from "@/lib/content/imageUpload";
+import { CREATOR_CHECKLIST, missingRequiredFields } from "@/lib/content/rules";
+import { useSession } from "@/lib/session";
 import { ARTICLE_CATEGORIES } from "@/types/Article";
-import { DraftImage, DraftVideo } from "@/types/RoleDashboard";
+import { ContentCta, ContentItem, ContentNode, ContentSource } from "@/types/ContentWorkflow";
 
-import ArticlePreview from "./ArticlePreview";
-import { ImageDialog, VideoDialog } from "./EditorDialogs";
 import PrototypeNotice from "./PrototypeNotice";
+import RichTextEditor from "./RichTextEditor";
 
-const MAX_VIDEOS = 3;
-const WORDS_PER_MINUTE = 200;
-const CHECKLIST = [
-  "Contoh kode sudah diuji dan berjalan dengan benar.",
-  "Data dan informasi memiliki sumber yang jelas.",
-  "Bahasa dan penulisan sudah diperiksa.",
-  "Konten tetap bisa dipahami tanpa video.",
-];
-
+const AUTOSAVE_DELAY = 1500;
 const fieldClass = "mt-1.5 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm dark:bg-card";
+const EMPTY_BODY: ContentNode = { type: "doc", content: [{ type: "paragraph" }] };
 
-const TOOLBAR = [
-  { label: "Heading 2", icon: Heading2, before: "\n\n## ", after: "\n\n", fallback: "Judul bagian" },
-  { label: "Heading 3", icon: Heading3, before: "\n\n### ", after: "\n\n", fallback: "Sub judul" },
-  { label: "Tebal", icon: Bold, before: "**", after: "**", fallback: "teks tebal" },
-  { label: "Daftar", icon: List, before: "\n\n- ", after: "\n\n", fallback: "Isi daftar" },
-  { label: "Blok kode", icon: Code, before: "\n\n```ts\n", after: "\n```\n\n", fallback: "// tulis kode" },
-  { label: "Kotak Tips", icon: Lightbulb, before: "\n\n<Tips>", after: "</Tips>\n\n", fallback: "Isi tips" },
-  { label: "Kotak Peringatan", icon: TriangleAlert, before: "\n\n<Peringatan>", after: "</Peringatan>\n\n", fallback: "Isi peringatan" },
-  { label: "Tabel", icon: Table, before: "\n\n| Kolom 1 | Kolom 2 |\n|---|---|\n| ", after: " | Isi |\n\n", fallback: "Isi" },
-];
+const CTA_OPTIONS = {
+  course: COURSES.filter((course) => course.availability === "available").map((course) => ({ slug: course.slug, title: course.title })),
+  practice: CHALLENGES.map((challenge) => ({ slug: challenge.slug, title: challenge.title })),
+};
 
-// Editor artikel (PRD FR-15, tahap setelah backend), sebagai prototipe.
-export default function ArticleEditor() {
+function SavedStatus({ savedAt, error }: { savedAt: number | null; error: string }) {
+  const [now, setNow] = useState(() => Date.now());
+
+  useEffect(() => {
+    const timer = window.setInterval(() => setNow(Date.now()), 1000);
+    return () => window.clearInterval(timer);
+  }, []);
+
+  if (error) return <span role="alert" className="font-medium text-destructive">{error}</span>;
+  if (savedAt === null) return <span>Belum disimpan</span>;
+  const seconds = Math.max(0, Math.floor((now - savedAt) / 1000));
+  const label = seconds < 5 ? "baru saja" : seconds < 60 ? `${seconds} detik lalu` : `${Math.floor(seconds / 60)} menit lalu`;
+  return <span>Tersimpan {label}</span>;
+}
+
+function CoverField({ value, onChange }: { value: string; onChange: (value: string) => void }) {
+  const [error, setError] = useState("");
+
+  const pickFile = async (file: File | undefined) => {
+    if (!file) return;
+    const problem = validateImage(file);
+    setError(problem ?? "");
+    if (problem) return;
+    try {
+      onChange(await prepareImage(file));
+    } catch (reason) {
+      setError((reason as Error).message);
+    }
+  };
+
+  return (
+    <div>
+      <label htmlFor="article-cover" className="text-sm font-medium">Sampul</label>
+      {value && (
+        <div className="mt-1.5 flex items-center gap-2">
+          {/* Bisa berupa data URL hasil simulasi upload. */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={value} alt="Pratinjau sampul" className="aspect-video w-28 rounded-lg border border-border object-cover" />
+          <button type="button" aria-label="Hapus sampul" onClick={() => onChange("")} className="inline-flex h-9 w-9 items-center justify-center rounded-lg transition-colors hover:bg-accent">
+            <Trash2 className="h-4 w-4" aria-hidden="true" />
+          </button>
+        </div>
+      )}
+      <input
+        id="article-cover"
+        type="file"
+        accept="image/jpeg,image/png,image/webp"
+        onChange={(event) => void pickFile(event.target.files?.[0])}
+        className="mt-1.5 block w-full text-sm file:mr-3 file:min-h-9 file:rounded-lg file:border file:border-border file:bg-transparent file:px-3 file:font-medium"
+      />
+      <p className="mt-1 text-xs text-muted-foreground">Simulasi. JPG, PNG, WebP, maksimal 2 MB.</p>
+      {error && <p role="alert" className="mt-1 text-xs font-medium text-destructive">{error}</p>}
+    </div>
+  );
+}
+
+function SourcesField({ value, onChange }: { value: ContentSource[]; onChange: (value: ContentSource[]) => void }) {
+  const update = (index: number, field: keyof ContentSource, text: string) =>
+    onChange(value.map((source, position) => (position === index ? { ...source, [field]: text } : source)));
+
+  return (
+    <fieldset>
+      <legend className="text-sm font-medium">Sumber (opsional)</legend>
+      <div className="mt-1.5 space-y-2">
+        {value.map((source, index) => (
+          <div key={index} className="space-y-1.5 rounded-lg border border-border p-2">
+            <input aria-label={`Judul sumber ${index + 1}`} value={source.title} onChange={(event) => update(index, "title", event.target.value)} placeholder="Judul sumber" className={fieldClass} />
+            <input aria-label={`Tautan sumber ${index + 1}`} type="url" value={source.url} onChange={(event) => update(index, "url", event.target.value)} placeholder="https://..." className={fieldClass} />
+            <button type="button" onClick={() => onChange(value.filter((_, position) => position !== index))} className="text-xs font-medium text-destructive hover:underline">
+              Hapus sumber {index + 1}
+            </button>
+          </div>
+        ))}
+      </div>
+      <button type="button" onClick={() => onChange([...value, { title: "", url: "" }])} className="mt-2 inline-flex min-h-9 items-center gap-1.5 rounded-lg border border-border px-3 text-sm font-medium transition-colors hover:bg-accent">
+        <Plus className="h-4 w-4" aria-hidden="true" />
+        Tambah sumber
+      </button>
+    </fieldset>
+  );
+}
+
+function EditorForm({ existing, userId, userName, focusAnchor }: { existing: ContentItem | null; userId: string; userName: string; focusAnchor: string | null }) {
   const router = useRouter();
-  const contentId = Number(useSearchParams().get("konten")) || null;
-  const { contents } = useCreatorStudio();
-  const existing = contents.find((content) => content.id === contentId);
-
-  const [id, setId] = useState(existing?.id ?? null);
-  const [title, setTitle] = useState(existing?.title ?? "");
-  const [excerpt, setExcerpt] = useState(existing?.article?.excerpt ?? "");
-  const [category, setCategory] = useState(existing?.category ?? "");
-  const [cover, setCover] = useState(existing?.article?.cover ?? "");
-  const [cta, setCta] = useState(existing?.article?.cta ?? "");
-  const [sources, setSources] = useState(existing?.article?.sources ?? "");
-  const [body, setBody] = useState(existing?.article?.body ?? "");
-  const [videos, setVideos] = useState<DraftVideo[]>(existing?.article?.videos ?? []);
+  const [judul, setJudul] = useState(existing?.judul ?? "");
+  const [ringkasan, setRingkasan] = useState(existing?.ringkasan ?? "");
+  const [kategori, setKategori] = useState(existing?.kategori ?? "");
+  const [sampul, setSampul] = useState(existing?.sampul ?? "");
+  const [ajakan, setAjakan] = useState<ContentCta | null>(existing?.ajakan ?? null);
+  const [sumber, setSumber] = useState<ContentSource[]>(existing?.sumber ?? []);
+  const [body, setBody] = useState<ContentNode>(existing?.body ?? EMPTY_BODY);
   const [checked, setChecked] = useState<string[]>([]);
-  const [savedAt, setSavedAt] = useState("");
-  const [tab, setTab] = useState<"info" | "isi">("info");
-  const [videoDialog, setVideoDialog] = useState<{ index: number | null } | null>(null);
-  const [imageOpen, setImageOpen] = useState(false);
-  const [previewOpen, setPreviewOpen] = useState(false);
-  const bodyRef = useRef<HTMLTextAreaElement>(null);
+  const [savedAt, setSavedAt] = useState<number | null>(existing ? Date.parse(existing.updatedAt) : null);
+  const [saveError, setSaveError] = useState("");
+  const [submitError, setSubmitError] = useState("");
+  const [tab, setTab] = useState<"info" | "isi">(focusAnchor ? "isi" : "info");
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  // Tetap terisi setelah ditutup, karena dialog masih tampil selama animasi keluar.
+  const [previewAt, setPreviewAt] = useState("");
 
-  const wordCount = body.trim() ? body.trim().split(/\s+/).length : 0;
-  const readingMinutes = Math.max(1, Math.ceil(wordCount / WORDS_PER_MINUTE));
-  const isComplete = Boolean(title.trim() && excerpt.trim() && category && cover.trim() && body.trim());
-  const canSubmit = isComplete && checked.length === CHECKLIST.length;
+  // Simpan otomatis berjalan berurutan agar draf baru tidak terbuat dua kali.
+  const contentId = useRef(existing?.id ?? null);
+  const saveQueue = useRef<Promise<unknown>>(Promise.resolve());
+  const savedSnapshot = useRef<string | null>(null);
+  const isRevision = existing?.status === "perlu-revisi";
+
+  const input = { judul, ringkasan, kategori, sampul, ajakan, sumber, body, videos: collectVideos(body) };
 
   const save = () => {
-    const savedId = creatorStudioActions.saveDraft(id, {
-      title: title.trim() || "Tanpa judul",
-      category,
-      article: { excerpt, cover, cta, sources, body, videos },
+    savedSnapshot.current = JSON.stringify(input);
+    const task = saveQueue.current.then(async () => {
+      const id = contentId.current;
+      const result = await runContentAction((repository) => (id ? repository.updateDraft(userId, id, input) : repository.createDraft(userId, input)));
+      if (!result.ok) {
+        setSaveError(result.message);
+        return false;
+      }
+      setSaveError("");
+      setSavedAt(Date.now());
+      if (!id) {
+        contentId.current = result.data.id;
+        window.history.replaceState(null, "", `/creator/buat/artikel?konten=${result.data.id}`);
+      }
+      return true;
     });
-    setId(savedId);
-    setSavedAt(new Date().toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" }));
-    return savedId;
+    saveQueue.current = task;
+    return task;
   };
 
-  const insert = (before: string, after: string, fallback: string) => {
-    const element = bodyRef.current;
-    const start = element?.selectionStart ?? body.length;
-    const end = element?.selectionEnd ?? body.length;
-    const selected = body.slice(start, end) || fallback;
-    setBody(`${body.slice(0, start)}${before}${selected}${after}${body.slice(end)}`.replace(/^\n+/, ""));
-    element?.focus();
+  // Hanya menyimpan bila isian berubah, agar membuka editor tidak membuat draf kosong.
+  const saveIfChanged = () => {
+    if (savedSnapshot.current !== null && savedSnapshot.current !== JSON.stringify(input)) void save();
   };
+  const latestSaveIfChanged = useRef(saveIfChanged);
+  useEffect(() => {
+    latestSaveIfChanged.current = saveIfChanged;
+    savedSnapshot.current ??= JSON.stringify(input);
+  });
 
-  const insertImage = ({ fileName, alt, caption }: DraftImage) => {
-    insert(`\n\n![${alt}${caption ? ` - ${caption}` : ""}](`, ")\n\n", fileName);
-    setImageOpen(false);
-  };
+  useEffect(() => {
+    const timer = window.setTimeout(() => latestSaveIfChanged.current(), AUTOSAVE_DELAY);
+    return () => window.clearTimeout(timer);
+  }, [judul, ringkasan, kategori, sampul, ajakan, sumber, body]);
 
-  const saveVideo = (video: DraftVideo) => {
-    const index = videoDialog?.index ?? null;
-    setVideos(index === null ? [...videos, video] : videos.map((item, position) => (position === index ? video : item)));
-    setVideoDialog(null);
+  // Perubahan terakhir tetap tersimpan saat Creator meninggalkan editor sebelum jeda selesai.
+  useEffect(() => () => latestSaveIfChanged.current(), []);
+
+  const words = countWords(body);
+  const missing = missingRequiredFields({ judul, ringkasan, kategori, sampul, body });
+  const isChecklistDone = checked.length === CREATOR_CHECKLIST.length;
+  const canSubmit = missing.length === 0 && isChecklistDone;
+
+  const submit = async () => {
+    if (!(await save())) return;
+    const id = contentId.current;
+    if (!id) return;
+    const result = await runContentAction((repository) => repository.submitForReview(userId, id, checked));
+    if (!result.ok) {
+      setSubmitError(result.message);
+      return;
+    }
+    router.push("/creator/konten");
   };
 
   return (
@@ -100,12 +198,20 @@ export default function ArticleEditor() {
       <PrototypeNotice />
 
       <header className="flex flex-wrap items-center justify-between gap-3">
-        <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">{existing ? "Edit Konten" : "Buat Artikel"}</h1>
+        <div className="min-w-0">
+          <p className="text-sm font-medium text-primary-accent">
+            <Link href="/creator/konten" className="hover:underline">Konten Saya</Link> › Artikel
+          </p>
+          <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">{existing ? "Edit Artikel" : "Buat Artikel"}</h1>
+        </div>
         <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-muted-foreground">
-          <span aria-live="polite">{savedAt ? `Tersimpan pukul ${savedAt}` : "Belum disimpan"}</span>
-          <span>{wordCount} kata</span>
-          <span>≈ {readingMinutes} menit baca</span>
-          <button type="button" onClick={() => setPreviewOpen(true)} className="inline-flex min-h-10 items-center gap-2 rounded-xl border border-border px-4 font-semibold text-foreground transition-colors hover:bg-accent">
+          <span aria-live="polite"><SavedStatus savedAt={savedAt} error={saveError} /></span>
+          <span>{words} kata</span>
+          <span>≈ {readingMinutes(words)} menit baca</span>
+          <button type="button" onClick={() => {
+              setPreviewAt(new Date().toISOString());
+              setIsPreviewOpen(true);
+            }} className="inline-flex min-h-10 items-center gap-2 rounded-xl border border-border px-4 font-semibold text-foreground transition-colors hover:bg-accent">
             <Eye className="h-4 w-4" aria-hidden="true" />
             Pratinjau
           </button>
@@ -128,146 +234,148 @@ export default function ArticleEditor() {
       </div>
 
       <div className="grid gap-5 lg:grid-cols-[20rem_minmax(0,1fr)]">
-        <section aria-labelledby="info-artikel" className={`space-y-3 rounded-2xl border border-border bg-card p-4 ${tab === "info" ? "" : "hidden lg:block"}`}>
+        <section aria-labelledby="info-artikel" className={`space-y-3 self-start rounded-2xl border border-border bg-card p-4 ${tab === "info" ? "" : "hidden lg:block"}`}>
           <h2 id="info-artikel" className="font-bold">Informasi Artikel</h2>
           <div>
             <label htmlFor="article-title" className="text-sm font-medium">Judul</label>
-            <input id="article-title" value={title} onChange={(event) => setTitle(event.target.value)} className={fieldClass} />
+            <input id="article-title" value={judul} onChange={(event) => setJudul(event.target.value)} className={fieldClass} />
           </div>
           <div>
             <label htmlFor="article-excerpt" className="text-sm font-medium">Ringkasan</label>
-            <textarea id="article-excerpt" rows={3} value={excerpt} onChange={(event) => setExcerpt(event.target.value)} className={fieldClass} />
+            <textarea id="article-excerpt" rows={3} value={ringkasan} onChange={(event) => setRingkasan(event.target.value)} className={fieldClass} />
           </div>
           <div>
             <label htmlFor="article-category" className="text-sm font-medium">Kategori</label>
-            <select id="article-category" value={category} onChange={(event) => setCategory(event.target.value)} className={fieldClass}>
+            <select id="article-category" value={kategori} onChange={(event) => setKategori(event.target.value)} className={fieldClass}>
               <option value="">Pilih kategori</option>
               {ARTICLE_CATEGORIES.map((item) => <option key={item} value={item}>{item}</option>)}
             </select>
           </div>
+          <CoverField value={sampul} onChange={setSampul} />
           <div>
-            <label htmlFor="article-cover" className="text-sm font-medium">Sampul</label>
-            <input id="article-cover" value={cover} onChange={(event) => setCover(event.target.value)} placeholder="Nama file sampul" className={fieldClass} />
+            <label htmlFor="article-cta-type" className="text-sm font-medium">Ajakan (opsional)</label>
+            <select
+              id="article-cta-type"
+              value={ajakan?.type ?? ""}
+              onChange={(event) => {
+                const type = event.target.value as ContentCta["type"] | "";
+                setAjakan(type ? { type, slug: CTA_OPTIONS[type][0]?.slug ?? "" } : null);
+              }}
+              className={fieldClass}
+            >
+              <option value="">Tanpa ajakan</option>
+              <option value="course">Arahkan ke Course</option>
+              <option value="practice">Arahkan ke Latihan</option>
+            </select>
+            {ajakan && (
+              <select aria-label="Tujuan ajakan" value={ajakan.slug} onChange={(event) => setAjakan({ ...ajakan, slug: event.target.value })} className={fieldClass}>
+                {CTA_OPTIONS[ajakan.type].map((option) => <option key={option.slug} value={option.slug}>{option.title}</option>)}
+              </select>
+            )}
           </div>
-          <div>
-            <label htmlFor="article-cta" className="text-sm font-medium">Ajakan (opsional)</label>
-            <input id="article-cta" value={cta} onChange={(event) => setCta(event.target.value)} placeholder="Course atau latihan tujuan" className={fieldClass} />
-          </div>
-          <div>
-            <label htmlFor="article-sources" className="text-sm font-medium">Sumber (opsional)</label>
-            <textarea id="article-sources" rows={2} value={sources} onChange={(event) => setSources(event.target.value)} className={fieldClass} />
-          </div>
+          <SourcesField value={sumber} onChange={setSumber} />
         </section>
 
         <div className={`min-w-0 space-y-5 ${tab === "isi" ? "" : "hidden lg:block"}`}>
           <section aria-labelledby="isi-artikel" className="rounded-2xl border border-border bg-card p-4">
             <h2 id="isi-artikel" className="font-bold">Isi Artikel</h2>
-            <div role="toolbar" aria-label="Format isi" className="mt-3 flex flex-wrap gap-1 border-b border-border pb-2">
-              {TOOLBAR.map(({ label, icon: Icon, before, after, fallback }) => (
-                <button key={label} type="button" aria-label={label} title={label} onClick={() => insert(before, after, fallback)} className="inline-flex h-9 w-9 items-center justify-center rounded-lg transition-colors hover:bg-accent">
-                  <Icon className="h-4 w-4" aria-hidden="true" />
-                </button>
-              ))}
-              <button type="button" aria-label="Upload gambar" title="Upload gambar" onClick={() => setImageOpen(true)} className="inline-flex h-9 w-9 items-center justify-center rounded-lg transition-colors hover:bg-accent">
-                <ImagePlus className="h-4 w-4" aria-hidden="true" />
-              </button>
-              <button
-                type="button"
-                aria-label="Sisipkan video"
-                title={videos.length >= MAX_VIDEOS ? "Maksimal 3 video" : "Sisipkan video"}
-                disabled={videos.length >= MAX_VIDEOS}
-                onClick={() => setVideoDialog({ index: null })}
-                className="inline-flex h-9 w-9 items-center justify-center rounded-lg transition-colors enabled:hover:bg-accent disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                <Video className="h-4 w-4" aria-hidden="true" />
-              </button>
-            </div>
-            <textarea
-              ref={bodyRef}
-              aria-label="Isi artikel"
-              rows={16}
-              value={body}
-              onChange={(event) => setBody(event.target.value)}
-              placeholder="Mulai menulis di sini..."
-              className="mt-3 w-full resize-y rounded-lg border border-input bg-background p-3 font-mono text-sm leading-6 dark:bg-card"
-            />
+            <RichTextEditor initial={existing?.body ?? EMPTY_BODY} focusAnchor={focusAnchor} onChange={setBody} />
+          </section>
 
-            {videos.length > 0 && (
-              <ul aria-label="Referensi video" className="mt-3 space-y-2">
-                {videos.map((video, index) => (
-                  <li key={video.id} className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-border p-3 text-sm">
-                    <span className="min-w-0">
-                      <span className="block font-semibold">{video.title}</span>
-                      <span className="block text-muted-foreground">{video.channel} · {video.duration} · Bahasa {video.language}</span>
-                    </span>
-                    <span className="flex gap-2">
-                      <button type="button" aria-label={`Edit video ${video.title}`} onClick={() => setVideoDialog({ index })} className="min-h-9 rounded-lg border border-border px-3 font-medium transition-colors hover:bg-accent">Edit</button>
-                      <button type="button" aria-label={`Hapus video ${video.title}`} onClick={() => setVideos(videos.filter((_, position) => position !== index))} className="min-h-9 rounded-lg border border-destructive/40 px-3 font-medium text-destructive transition-colors hover:bg-destructive/10">Hapus</button>
-                    </span>
-                  </li>
+          {isRevision ? (
+            <section aria-labelledby="aksi-revisi" className="rounded-2xl border border-border bg-card p-4">
+              <h2 id="aksi-revisi" className="font-bold">Perbaikan revisi</h2>
+              <p className="mt-1 text-sm text-muted-foreground">Setelah selesai, tandai catatan dan kirim ulang dari halaman Catatan Revisi.</p>
+              <div className="mt-4 grid gap-2 sm:grid-cols-2">
+                <button type="button" onClick={() => void save()} className="min-h-11 rounded-xl border border-border text-sm font-semibold transition-colors hover:bg-accent">Simpan Draf</button>
+                <Link href={`/creator/revisi/${existing?.id}`} className="inline-flex min-h-11 items-center justify-center rounded-xl bg-primary text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary-hover">
+                  Kembali ke Catatan Revisi
+                </Link>
+              </div>
+            </section>
+          ) : (
+            <section aria-labelledby="checklist-kirim" className="rounded-2xl border border-border bg-card p-4">
+              <h2 id="checklist-kirim" className="font-bold">Checklist sebelum kirim</h2>
+              <div className="mt-3 space-y-2">
+                {CREATOR_CHECKLIST.map((item) => (
+                  <label key={item.id} className="flex items-start gap-2.5 text-sm">
+                    <input
+                      type="checkbox"
+                      checked={checked.includes(item.id)}
+                      onChange={(event) => setChecked(event.target.checked ? [...checked, item.id] : checked.filter((value) => value !== item.id))}
+                      className="mt-1 h-4 w-4 accent-primary"
+                    />
+                    {item.label}
+                  </label>
                 ))}
-              </ul>
-            )}
-          </section>
-
-          <section aria-labelledby="checklist-kirim" className="rounded-2xl border border-border bg-card p-4">
-            <h2 id="checklist-kirim" className="font-bold">Checklist sebelum kirim</h2>
-            <div className="mt-3 space-y-2">
-              {CHECKLIST.map((item) => (
-                <label key={item} className="flex items-start gap-2.5 text-sm">
-                  <input
-                    type="checkbox"
-                    checked={checked.includes(item)}
-                    onChange={(event) => setChecked(event.target.checked ? [...checked, item] : checked.filter((value) => value !== item))}
-                    className="mt-1 h-4 w-4 accent-primary"
-                  />
-                  {item}
-                </label>
-              ))}
-            </div>
-            <div className="mt-4 grid gap-2 sm:grid-cols-2">
-              <button type="button" onClick={save} className="min-h-11 rounded-xl border border-border text-sm font-semibold transition-colors hover:bg-accent">Simpan Draf</button>
-              <button
-                type="button"
-                disabled={!canSubmit}
-                onClick={() => {
-                  creatorStudioActions.submit(save());
-                  router.push("/creator/konten");
-                }}
-                className="min-h-11 rounded-xl bg-primary text-sm font-semibold text-primary-foreground transition-colors enabled:hover:bg-primary-hover disabled:cursor-not-allowed disabled:bg-muted disabled:text-muted-foreground"
-              >
-                Kirim untuk Review
-              </button>
-            </div>
-            {!canSubmit && <p className="mt-2 text-xs text-muted-foreground">Lengkapi kolom judul, ringkasan, kategori, sampul, dan isi, lalu centang seluruh checklist.</p>}
-          </section>
+              </div>
+              <div className="mt-4 grid gap-2 sm:grid-cols-2">
+                <button type="button" onClick={() => void save()} className="min-h-11 rounded-xl border border-border text-sm font-semibold transition-colors hover:bg-accent">Simpan Draf</button>
+                <button
+                  type="button"
+                  disabled={!canSubmit}
+                  onClick={() => void submit()}
+                  className="min-h-11 rounded-xl bg-primary text-sm font-semibold text-primary-foreground transition-colors enabled:hover:bg-primary-hover disabled:cursor-not-allowed disabled:bg-muted disabled:text-muted-foreground"
+                >
+                  Kirim untuk Review
+                </button>
+              </div>
+              {!canSubmit && (
+                <p className="mt-2 text-xs text-muted-foreground">
+                  {missing.length > 0 ? `Lengkapi kolom wajib: ${missing.join(", ")}. ` : ""}
+                  {isChecklistDone ? "" : "Centang seluruh checklist untuk mengirim."}
+                </p>
+              )}
+              {submitError && <p role="alert" className="mt-2 text-sm font-medium text-destructive">{submitError}</p>}
+            </section>
+          )}
         </div>
       </div>
 
-      {videoDialog && (
-        <VideoDialog
-          initial={videoDialog.index === null ? null : videos[videoDialog.index]}
-          count={videos.length}
-          onSave={saveVideo}
-          onClose={() => setVideoDialog(null)}
-        />
-      )}
-      {imageOpen && <ImageDialog onSave={insertImage} onClose={() => setImageOpen(false)} />}
-
-      <Dialog.Root open={previewOpen} onOpenChange={setPreviewOpen}>
+      <Dialog.Root open={isPreviewOpen} onOpenChange={setIsPreviewOpen}>
         <Dialog.Portal>
           <Dialog.Backdrop className="fixed inset-0 z-50 bg-black/70" />
-          <Dialog.Popup className="fixed left-1/2 top-1/2 z-50 max-h-[calc(100dvh-2rem)] w-[calc(100vw-2rem)] max-w-2xl -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-2xl border border-border bg-card p-5 text-foreground shadow-xl">
+          <Dialog.Popup className="fixed left-1/2 top-1/2 z-50 max-h-[calc(100dvh-2rem)] w-[calc(100vw-2rem)] max-w-3xl -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-2xl border border-border bg-background p-5 text-foreground shadow-xl">
             <div className="mb-3 flex items-center justify-between gap-3">
               <Dialog.Title className="text-sm font-semibold text-muted-foreground">Pratinjau</Dialog.Title>
               <Dialog.Close aria-label="Tutup" className="inline-flex h-9 w-9 items-center justify-center rounded-lg transition-colors hover:bg-accent">
                 <X className="h-4 w-4" aria-hidden="true" />
               </Dialog.Close>
             </div>
-            <ArticlePreview title={title} body={body} videos={videos} />
+            {previewAt && <ContentArticleView content={{ judul, ringkasan, kategori, sampul, ajakan, sumber, body, updatedAt: previewAt }} authorName={userName} />}
           </Dialog.Popup>
         </Dialog.Portal>
       </Dialog.Root>
     </div>
   );
+}
+
+// Editor artikel (PRD FR-15). Id awal dibaca sekali, karena alamat berubah saat draf baru tersimpan.
+export default function ArticleEditor() {
+  const session = useSession();
+  const searchParams = useSearchParams();
+  const [contentId] = useState(searchParams.get("konten"));
+  const [focusAnchor] = useState(searchParams.get("bagian"));
+  // Data awal dibaca sekali: simpan otomatis tidak boleh menimpa yang sedang diketik.
+  const [result, setResult] = useState<{ content: ContentItem | null } | null>(null);
+
+  useEffect(() => {
+    void (contentId ? getContentRepository().getContent(contentId) : Promise.resolve(null)).then((content) => setResult({ content }));
+  }, [contentId]);
+
+  if (!result || !session?.userId) return <p className="py-10 text-center text-sm text-muted-foreground">Memuat editor...</p>;
+
+  const { content } = result;
+  const isMissing = Boolean(contentId) && (!content || content.authorId !== session.userId);
+  if (isMissing || (content && !["draf", "perlu-revisi"].includes(content.status))) {
+    return (
+      <div className="mx-auto max-w-md py-16 text-center">
+        <h1 className="text-2xl font-bold tracking-tight">{isMissing ? "Konten tidak ditemukan" : "Konten ini tidak bisa diubah"}</h1>
+        {!isMissing && <p className="mt-2 text-sm text-muted-foreground">Konten hanya dapat diubah saat berstatus Draf atau Perlu Revisi.</p>}
+        <Link href="/creator/konten" className="mt-4 inline-block font-semibold text-primary-accent hover:underline">Kembali ke Konten Saya</Link>
+      </div>
+    );
+  }
+
+  return <EditorForm existing={content} userId={session.userId} userName={session.name} focusAnchor={focusAnchor} />;
 }

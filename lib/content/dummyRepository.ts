@@ -9,7 +9,7 @@ import {
 } from "@/types/ContentWorkflow";
 
 import { ContentRepository, ContentRuleError } from "./repository";
-import { CREATOR_CHECKLIST, MAX_VIDEOS, missingRequiredFields, REVIEWER_CHECKLIST } from "./rules";
+import { CREATOR_CHECKLIST, latestRoundNotes, MAX_VIDEOS, missingRequiredFields, REVIEWER_CHECKLIST } from "./rules";
 
 const STORAGE_KEY = "belajarautomation-content-workflow";
 
@@ -47,12 +47,15 @@ export function createDummyRepository(storage: KeyValueStorage | null = browserS
   };
 
   const commit = () => {
+    let isFull = false;
     try {
       storage?.setItem(STORAGE_KEY, JSON.stringify(cache));
-    } catch {
-      // Penyimpanan penuh atau tidak tersedia; perubahan hanya bertahan di memori.
+    } catch (error) {
+      // Penyimpanan yang tidak tersedia cukup bertahan di memori; yang penuh perlu diketahui pengguna.
+      isFull = error instanceof DOMException && error.name === "QuotaExceededError";
     }
     listeners.forEach((listener) => listener());
+    if (isFull) throw new ContentRuleError("Penyimpanan browser penuh. Perubahan terakhir akan hilang saat halaman dimuat ulang. Reset data dummy atau hapus sebagian gambar.");
   };
 
   const newId = (prefix: string) => {
@@ -253,8 +256,7 @@ export function createDummyRepository(storage: KeyValueStorage | null = browserS
       requireAuthor(item, actorId, "mengirim ulang konten ini");
       requireStatus(item, ["perlu-revisi"], "Hanya konten berstatus Perlu Revisi yang dapat dikirim ulang.");
       requireComplete(item);
-      const latestRound = Math.max(0, ...state().notes.filter((entry) => entry.contentId === contentId && entry.released).map((entry) => entry.round));
-      const latest = state().notes.filter((entry) => entry.contentId === contentId && entry.released && entry.round === latestRound);
+      const latest = latestRoundNotes(state().notes.filter((entry) => entry.contentId === contentId));
       if (latest.some((entry) => !entry.markedFixed)) throw new ContentRuleError("Tandai semua catatan sebagai sudah diperbaiki sebelum mengirim ulang.");
       item.status = "menunggu-review";
       item.submissionCount += 1;

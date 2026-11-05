@@ -1,6 +1,5 @@
 "use client";
 
-import { Suspense } from "react";
 import Link from "next/link";
 import { FilePlus2, MessageSquareText, PenLine } from "lucide-react";
 
@@ -9,19 +8,26 @@ import DashboardPanel from "@/components/roles/DashboardPanel";
 import RoleGreeting from "@/components/roles/RoleGreeting";
 import RolePreviewNotice from "@/components/roles/RolePreviewNotice";
 import RoleStatCard from "@/components/roles/RoleStatCard";
-import { DUMMY_CREATOR_NAME, DUMMY_REVISION_NOTES } from "@/data/dummy/creator";
-import { useCreatorStudio } from "@/lib/creatorStudio";
-import { formatDate } from "@/lib/format";
+import { useCreatorData, userName } from "@/components/creator/studio/useCreatorData";
+import { formatContentDate } from "@/lib/content/document";
+import { latestRoundNotes } from "@/lib/content/rules";
+import { useSession } from "@/lib/session";
 
 import CreatorContentsTable from "./CreatorContentsTable";
 import { getCreatorStats } from "./creatorStats";
 
 export default function CreatorDashboard() {
-  const { contents } = useCreatorStudio();
-  // Hanya catatan yang masih perlu dikerjakan.
-  const openRevisionNotes = DUMMY_REVISION_NOTES.filter((note) =>
-    contents.some((content) => content.title === note.contentTitle && content.status === "needs-revision")
-  );
+  const session = useSession();
+  const { data } = useCreatorData();
+  const contents = data?.contents ?? [];
+  const users = data?.users ?? [];
+  // Hanya konten yang masih perlu dikerjakan, satu baris per konten.
+  const openRevisions = contents
+    .filter((content) => content.status === "perlu-revisi")
+    .flatMap((content) => {
+      const [note] = latestRoundNotes((data?.notes ?? []).filter((item) => item.contentId === content.id));
+      return note ? [{ content, note }] : [];
+    });
 
   return (
     <div className="mx-auto w-full max-w-[1600px] min-w-0 space-y-5 lg:space-y-6">
@@ -31,7 +37,7 @@ export default function CreatorDashboard() {
         title="Halo, Creator!"
         description="Tulis materi, modul, soal latihan, dan artikel, lalu pantau statusnya dari review hingga terbit."
         icon={PenLine}
-        meta={`Masuk sebagai ${DUMMY_CREATOR_NAME}`}
+        meta={`Masuk sebagai ${session?.name ?? ""}`}
         action={
           <Link
             href="/creator/buat"
@@ -61,9 +67,7 @@ export default function CreatorDashboard() {
           description="Status terbaru setiap konten yang kamu buat."
         >
           {contents.length > 0 ? (
-            <Suspense fallback={<p className="text-sm text-muted-foreground">Memuat konten...</p>}>
-              <CreatorContentsTable />
-            </Suspense>
+            <CreatorContentsTable contents={contents} />
           ) : (
             <EmptyState
               title="Belum ada konten"
@@ -77,21 +81,21 @@ export default function CreatorDashboard() {
           title="Catatan Revisi Terbaru"
           description="Masukan dari reviewer untuk kontenmu."
         >
-          {openRevisionNotes.length > 0 ? (
+          {openRevisions.length > 0 ? (
             <ul className="space-y-3">
-              {openRevisionNotes.map((note) => (
+              {openRevisions.map(({ content, note }) => (
                 <li
-                  key={note.id}
+                  key={content.id}
                   className="rounded-lg border border-border p-3"
                 >
                   <p className="text-sm font-semibold">
-                    {note.contentTitle}
+                    {content.judul}
                   </p>
                   <p className="mt-1 text-sm leading-6 text-muted-foreground">
-                    {note.summary}
+                    {note.isi}
                   </p>
                   <p className="mt-2 text-xs text-muted-foreground">
-                    {note.reviewerName} · {formatDate(note.date)}
+                    {userName(users, note.reviewerId)} · {formatContentDate(note.createdAt)}
                   </p>
                 </li>
               ))}

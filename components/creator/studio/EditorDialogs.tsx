@@ -1,27 +1,19 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
+import Image from "next/image";
 import { Dialog } from "@base-ui/react/dialog";
-import { CircleAlert, UploadCloud, X } from "lucide-react";
+import { CircleAlert, Clock3, LoaderCircle, TriangleAlert, UploadCloud, X } from "lucide-react";
 
-import { DraftImage, DraftVideo } from "@/types/RoleDashboard";
+import type { YoutubeLookup } from "@/app/api/youtube-oembed/route";
+import { prepareImage, validateImage } from "@/lib/content/imageUpload";
+import { MAX_VIDEOS, parseYoutubeId } from "@/lib/content/rules";
+import { ContentVideo } from "@/types/ContentWorkflow";
 
 const inputClass = "mt-1.5 h-10 w-full rounded-lg border border-input bg-background px-3 text-sm dark:bg-card";
-const IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
-const MAX_IMAGE_BYTES = 2 * 1024 * 1024;
+const DURATION = /^\d{1,2}:\d{2}(:\d{2})?$/;
 
-export function parseYoutubeId(link: string) {
-  return link.trim().match(/(?:youtube\.com\/watch\?(?:.*&)?v=|youtu\.be\/)([A-Za-z0-9_-]{11})(?:[&?#].*)?$/)?.[1] ?? null;
-}
-
-// Pesan error gambar, atau null bila valid (mockup Upload Gambar).
-export function validateImage(file: { type: string; size: number }) {
-  if (!IMAGE_TYPES.includes(file.type)) return "Format tidak didukung. Gunakan JPG, PNG, atau WEBP.";
-  if (file.size > MAX_IMAGE_BYTES) return "Ukuran file terlalu besar. Ukuran maksimal 2 MB.";
-  return null;
-}
-
-function EditorDialog({ title, onClose, children }: { title: string; onClose: () => void; children: React.ReactNode }) {
+export function EditorDialog({ title, onClose, children }: { title: string; onClose: () => void; children: React.ReactNode }) {
   return (
     <Dialog.Root open onOpenChange={(open) => !open && onClose()}>
       <Dialog.Portal>
@@ -49,60 +41,137 @@ function ErrorText({ children }: { children: React.ReactNode }) {
   );
 }
 
+function WarningText({ children }: { children: React.ReactNode }) {
+  return (
+    <p role="status" className="mt-3 flex items-start gap-2 rounded-lg border border-amber-500/30 bg-amber-500/10 p-3 text-sm text-amber-800 dark:text-amber-200">
+      <TriangleAlert className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
+      {children}
+    </p>
+  );
+}
+
 const footerClass = "mt-5 flex justify-end gap-2";
 const cancelClass = "min-h-10 rounded-xl border border-border px-4 text-sm font-semibold transition-colors hover:bg-accent";
 const submitClass = "min-h-10 rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground transition-colors enabled:hover:bg-primary-hover disabled:cursor-not-allowed disabled:bg-muted disabled:text-muted-foreground";
 
+type LookupState = YoutubeLookup | { status: "idle" | "memuat" };
+
 export function VideoDialog({
   initial,
-  count,
+  usedIds,
   onSave,
   onClose,
 }: {
-  initial: DraftVideo | null;
-  count: number;
-  onSave: (video: DraftVideo) => void;
+  initial: ContentVideo | null;
+  // Id video lain yang sudah ada di konten ini.
+  usedIds: string[];
+  onSave: (video: ContentVideo) => void;
   onClose: () => void;
 }) {
   const [link, setLink] = useState(initial ? `https://www.youtube.com/watch?v=${initial.id}` : "");
-  const [title, setTitle] = useState(initial?.title ?? "");
+  const [lookup, setLookup] = useState<LookupState>(
+    initial ? (initial.embed ? { status: "ok", judul: initial.judul, channel: initial.channel } : { status: "embed-mati" }) : { status: "idle" }
+  );
+  const [judul, setJudul] = useState(initial?.judul ?? "");
   const [channel, setChannel] = useState(initial?.channel ?? "");
-  const [duration, setDuration] = useState(initial?.duration ?? "");
-  const [language, setLanguage] = useState(initial?.language ?? "Indonesia");
-  const [reason, setReason] = useState(initial?.reason ?? "");
+  const [durasi, setDurasi] = useState(initial?.durasi ?? "");
+  const [bahasa, setBahasa] = useState(initial?.bahasa ?? "Indonesia");
+  const [alasan, setAlasan] = useState(initial?.alasan ?? "");
+  const latestRequest = useRef(0);
 
   const id = parseYoutubeId(link);
   const isLinkInvalid = link.trim() !== "" && !id;
-  const isComplete = Boolean(id && title.trim() && channel.trim() && duration.trim() && reason.trim());
+  const isDuplicate = Boolean(id && usedIds.includes(id));
+  const isManual = lookup.status === "embed-mati" || lookup.status === "tidak-tersedia";
+  const isComplete =
+    Boolean(id && judul.trim() && channel.trim() && DURATION.test(durasi.trim()) && alasan.trim()) &&
+    !isDuplicate &&
+    lookup.status !== "memuat" &&
+    lookup.status !== "tidak-ditemukan";
+
+  const changeLink = async (value: string) => {
+    setLink(value);
+    const nextId = parseYoutubeId(value);
+    const request = ++latestRequest.current;
+    setJudul("");
+    setChannel("");
+    if (!nextId) {
+      setLookup({ status: "idle" });
+      return;
+    }
+    setLookup({ status: "memuat" });
+    let result: YoutubeLookup = { status: "tidak-tersedia" };
+    try {
+      const response = await fetch(`/api/youtube-oembed?id=${nextId}`);
+      result = (await response.json()) as YoutubeLookup;
+    } catch {
+      // Tetap "tidak-tersedia": Creator mengisi judul dan channel sendiri.
+    }
+    if (request !== latestRequest.current) return;
+    setLookup(result);
+    if (result.status === "ok") {
+      setJudul(result.judul);
+      setChannel(result.channel);
+    }
+  };
 
   return (
     <EditorDialog title="Sisipkan Video YouTube" onClose={onClose}>
-      <p className="mt-1 text-sm text-muted-foreground">{initial ? count : count + 1} dari 3 video</p>
+      <p className="mt-1 text-sm text-muted-foreground">{usedIds.length + 1} dari {MAX_VIDEOS} video</p>
 
       <div className="mt-4">
         <label htmlFor="video-link" className="text-sm font-medium">Link YouTube</label>
-        <input id="video-link" value={link} onChange={(event) => setLink(event.target.value)} placeholder="https://www.youtube.com/watch?v=..." className={inputClass} />
+        <input id="video-link" value={link} onChange={(event) => void changeLink(event.target.value)} placeholder="https://www.youtube.com/watch?v=..." className={inputClass} />
       </div>
-      {isLinkInvalid && <ErrorText>Link tidak valid. Pastikan link YouTube sudah benar.</ErrorText>}
 
-      <div className="mt-3">
-        <label htmlFor="video-title" className="text-sm font-medium">Judul video</label>
-        <input id="video-title" value={title} onChange={(event) => setTitle(event.target.value)} className={inputClass} />
-      </div>
-      <div className="mt-3">
-        <label htmlFor="video-channel" className="text-sm font-medium">Nama channel</label>
-        <input id="video-channel" value={channel} onChange={(event) => setChannel(event.target.value)} className={inputClass} />
-      </div>
-      <p className="mt-1.5 text-xs text-muted-foreground">Judul dan channel terisi otomatis setelah backend tersedia.</p>
+      {isLinkInvalid && <ErrorText>Link tidak valid. Pastikan link YouTube sudah benar.</ErrorText>}
+      {isDuplicate && <ErrorText>Video ini sudah disisipkan di konten ini.</ErrorText>}
+      {lookup.status === "memuat" && (
+        <p role="status" className="mt-3 flex items-center gap-2 text-sm text-muted-foreground">
+          <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden="true" />
+          Mengambil judul dan channel...
+        </p>
+      )}
+      {lookup.status === "tidak-ditemukan" && <ErrorText>Video tidak ditemukan. Periksa kembali link-nya.</ErrorText>}
+      {lookup.status === "embed-mati" && <WarningText>Video tidak bisa di-embed karena pemiliknya mematikan embed. Video akan tampil sebagai tautan.</WarningText>}
+      {lookup.status === "tidak-tersedia" && <WarningText>Judul dan channel tidak bisa diambil otomatis. Isi secara manual.</WarningText>}
+
+      {lookup.status === "ok" && id && (
+        <div className="mt-3 flex items-center gap-3 rounded-xl border border-border p-3">
+          <div className="relative aspect-video w-28 shrink-0 overflow-hidden rounded-lg bg-muted">
+            <Image src={`https://i.ytimg.com/vi/${id}/hqdefault.jpg`} alt="" fill sizes="112px" className="object-cover" />
+          </div>
+          <p className="min-w-0 text-sm">
+            <span className="block font-semibold">{judul}</span>
+            <span className="block text-muted-foreground">{channel}</span>
+          </p>
+        </div>
+      )}
+
+      {isManual && (
+        <>
+          <div className="mt-3">
+            <label htmlFor="video-title" className="text-sm font-medium">Judul video</label>
+            <input id="video-title" value={judul} onChange={(event) => setJudul(event.target.value)} className={inputClass} />
+          </div>
+          <div className="mt-3">
+            <label htmlFor="video-channel" className="text-sm font-medium">Nama channel</label>
+            <input id="video-channel" value={channel} onChange={(event) => setChannel(event.target.value)} className={inputClass} />
+          </div>
+        </>
+      )}
 
       <div className="mt-3 grid grid-cols-2 gap-3">
         <div>
-          <label htmlFor="video-duration" className="text-sm font-medium">Durasi</label>
-          <input id="video-duration" value={duration} onChange={(event) => setDuration(event.target.value)} placeholder="12:34" className={inputClass} />
+          <label htmlFor="video-duration" className="flex items-center gap-1.5 text-sm font-medium">
+            <Clock3 className="h-3.5 w-3.5" aria-hidden="true" />
+            Durasi
+          </label>
+          <input id="video-duration" value={durasi} onChange={(event) => setDurasi(event.target.value)} placeholder="12:34" className={inputClass} />
         </div>
         <div>
           <label htmlFor="video-language" className="text-sm font-medium">Bahasa video</label>
-          <select id="video-language" value={language} onChange={(event) => setLanguage(event.target.value)} className={inputClass}>
+          <select id="video-language" value={bahasa} onChange={(event) => setBahasa(event.target.value)} className={inputClass}>
             <option value="Indonesia">Bahasa Indonesia</option>
             <option value="Inggris">Bahasa Inggris</option>
           </select>
@@ -111,7 +180,7 @@ export function VideoDialog({
 
       <div className="mt-3">
         <label htmlFor="video-reason" className="text-sm font-medium">Alasan memilih video ini</label>
-        <textarea id="video-reason" rows={3} value={reason} onChange={(event) => setReason(event.target.value)} className="mt-1.5 w-full rounded-lg border border-input bg-background p-3 text-sm dark:bg-card" />
+        <textarea id="video-reason" rows={3} value={alasan} onChange={(event) => setAlasan(event.target.value)} className="mt-1.5 w-full rounded-lg border border-input bg-background p-3 text-sm dark:bg-card" />
         <p className="mt-1 text-xs text-muted-foreground">Hanya terlihat oleh Reviewer.</p>
       </div>
 
@@ -120,42 +189,78 @@ export function VideoDialog({
         <button
           type="button"
           disabled={!isComplete}
-          onClick={() => id && onSave({ id, title: title.trim(), channel: channel.trim(), duration: duration.trim(), language, reason: reason.trim() })}
+          onClick={() =>
+            id && onSave({ id, judul: judul.trim(), channel: channel.trim(), durasi: durasi.trim(), bahasa, embed: lookup.status !== "embed-mati", alasan: alasan.trim() })
+          }
           className={submitClass}
         >
-          Sisipkan Video
+          {initial ? "Simpan Video" : "Sisipkan Video"}
         </button>
       </div>
     </EditorDialog>
   );
 }
 
-export function ImageDialog({ onSave, onClose }: { onSave: (image: DraftImage) => void; onClose: () => void }) {
+export function ImageDialog({ onSave, onClose }: { onSave: (image: { src: string; alt: string; keterangan: string }) => void; onClose: () => void }) {
+  const [src, setSrc] = useState("");
   const [fileName, setFileName] = useState("");
   const [error, setError] = useState("");
+  const [isUploading, setIsUploading] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
   const [alt, setAlt] = useState("");
-  const [caption, setCaption] = useState("");
+  const [keterangan, setKeterangan] = useState("");
+
+  const pickFile = async (file: File | undefined) => {
+    if (!file) return;
+    setSrc("");
+    setFileName("");
+    const problem = validateImage(file);
+    setError(problem ?? "");
+    if (problem) return;
+    setIsUploading(true);
+    try {
+      setSrc(await prepareImage(file));
+      setFileName(file.name);
+    } catch (reason) {
+      setError((reason as Error).message);
+    }
+    setIsUploading(false);
+  };
 
   return (
     <EditorDialog title="Upload Gambar" onClose={onClose}>
-      <label className="mt-4 flex cursor-pointer flex-col items-center rounded-xl border border-dashed border-primary/40 bg-primary/5 p-6 text-center text-sm focus-within:ring-2 focus-within:ring-ring">
+      <p className="mt-1 text-sm text-muted-foreground">Simulasi: gambar hanya tersimpan di browser ini sampai backend tersedia.</p>
+      <label
+        data-testid="area-upload"
+        onDragOver={(event) => {
+          event.preventDefault();
+          setIsDragging(true);
+        }}
+        onDragLeave={() => setIsDragging(false)}
+        onDrop={(event) => {
+          event.preventDefault();
+          setIsDragging(false);
+          void pickFile(event.dataTransfer.files[0]);
+        }}
+        className={`mt-4 flex cursor-pointer flex-col items-center rounded-xl border border-dashed p-6 text-center text-sm focus-within:ring-2 focus-within:ring-ring ${isDragging ? "border-primary bg-primary/10" : "border-primary/40 bg-primary/5"}`}
+      >
         <UploadCloud className="h-7 w-7 text-primary-accent" aria-hidden="true" />
-        <span className="mt-2 font-medium">Pilih file gambar</span>
-        <span className="mt-1 text-xs text-muted-foreground">Format JPG, PNG, WEBP. Ukuran maksimal 2 MB.</span>
+        <span className="mt-2 font-medium">Seret dan lepas gambar di sini, atau pilih file</span>
+        <span className="mt-1 text-xs text-muted-foreground">Format JPG, PNG, WebP. Ukuran maksimal 2 MB.</span>
         <input
           type="file"
           aria-label="Pilih file gambar"
           accept="image/jpeg,image/png,image/webp"
           className="sr-only"
-          onChange={(event) => {
-            const file = event.target.files?.[0];
-            if (!file) return;
-            const problem = validateImage(file);
-            setError(problem ?? "");
-            setFileName(problem ? "" : file.name);
-          }}
+          onChange={(event) => void pickFile(event.target.files?.[0])}
         />
       </label>
+      {isUploading && (
+        <p role="status" className="mt-3 flex items-center gap-2 text-sm text-muted-foreground">
+          <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden="true" />
+          Mengunggah gambar...
+        </p>
+      )}
       {error && <ErrorText>{error}</ErrorText>}
       {fileName && <p className="mt-2 text-sm font-medium">{fileName}</p>}
 
@@ -165,17 +270,12 @@ export function ImageDialog({ onSave, onClose }: { onSave: (image: DraftImage) =
       </div>
       <div className="mt-3">
         <label htmlFor="image-caption" className="text-sm font-medium">Keterangan (opsional)</label>
-        <input id="image-caption" value={caption} onChange={(event) => setCaption(event.target.value)} className={inputClass} />
+        <input id="image-caption" value={keterangan} onChange={(event) => setKeterangan(event.target.value)} className={inputClass} />
       </div>
 
       <div className={footerClass}>
         <button type="button" onClick={onClose} className={cancelClass}>Batal</button>
-        <button
-          type="button"
-          disabled={!fileName || !alt.trim()}
-          onClick={() => onSave({ fileName, alt: alt.trim(), caption: caption.trim() })}
-          className={submitClass}
-        >
+        <button type="button" disabled={!src || !alt.trim()} onClick={() => onSave({ src, alt: alt.trim(), keterangan: keterangan.trim() })} className={submitClass}>
           Upload
         </button>
       </div>

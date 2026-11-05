@@ -5,7 +5,7 @@ import ArticleEditor from "@/components/creator/studio/ArticleEditor";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import { isDev } from "@/lib/env";
 
-// Prototipe, hanya di DEV.
+// Hanya di DEV (PRD FR-15).
 export default function Page() {
   if (!isDev) notFound();
 

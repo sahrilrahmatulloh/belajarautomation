@@ -14,6 +14,8 @@ import {
   StatusEvent,
 } from "@/types/ContentWorkflow";
 
+import { VIDEO_NODE } from "@/lib/content/document";
+
 import { DUMMY_USERS } from "./users";
 
 export interface DummyContentState {
@@ -35,7 +37,7 @@ const paragraph = (value: string): ContentNode => ({ type: "paragraph", content:
 const code = (value: string): ContentNode => ({ type: "codeBlock", attrs: { language: "ts" }, content: [text(value)] });
 const callout = (type: "tips" | "peringatan", value: string): ContentNode => ({ type, content: [paragraph(value)] });
 
-const articleBody = (topic: string): ContentNode => ({
+const articleBody = (topic: string, videos: ContentVideo[]): ContentNode => ({
   type: "doc",
   content: [
     heading(2, "Pendahuluan"),
@@ -44,6 +46,7 @@ const articleBody = (topic: string): ContentNode => ({
     paragraph(`Contoh penerapan ${topic} dalam pekerjaan sehari-hari.`),
     code('await page.getByRole("button", { name: "Masuk" }).click();'),
     callout("tips", "Mulai dari contoh kecil, lalu kembangkan sesuai kebutuhan."),
+    ...videos.map((video): ContentNode => ({ type: VIDEO_NODE, attrs: { ...video } })),
     heading(2, "Kesimpulan"),
     paragraph(`Ringkasan hal terpenting tentang ${topic}.`),
   ],
@@ -103,7 +106,7 @@ function toContent(seed: ContentSeed): ContentItem {
     sampul: seed.sampul ?? "/covers/courses/playwright.webp",
     ajakan: { type: "course", slug: "playwright" },
     sumber: [{ title: "Playwright Docs", url: "https://playwright.dev/docs/intro" }],
-    body: articleBody(seed.judul),
+    body: articleBody(seed.judul, seed.videos ?? []),
     videos: seed.videos ?? [],
     authorId: seed.authorId,
     reviewerId: seed.reviewerId ?? null,

@@ -2,6 +2,8 @@
 
 import { useEffect, useEffectEvent, useState } from "react";
 
+import { isDev } from "@/lib/env";
+
 import { createDummyRepository } from "./dummyRepository";
 import { ContentRepository, ContentRuleError } from "./repository";
 
@@ -9,7 +11,11 @@ import { ContentRepository, ContentRuleError } from "./repository";
 let repository: ContentRepository | null = null;
 
 export function getContentRepository() {
-  repository ??= createDummyRepository();
+  if (!repository) {
+    repository = createDummyRepository();
+    // Pintu untuk test e2e menjalankan aksi peran lain tanpa berganti akun. Hanya di DEV.
+    if (isDev && typeof window !== "undefined") Object.assign(window, { __contentRepository: repository });
+  }
   return repository;
 }
 

@@ -1,23 +1,8 @@
-"use client";
-
-import { useEffect, useRef } from "react";
-import { useSearchParams } from "next/navigation";
-
 import ContentStatusBadge from "@/components/roles/ContentStatusBadge";
-import { useCreatorStudio } from "@/lib/creatorStudio";
-import { formatDate } from "@/lib/format";
+import { formatContentDate, KIND_LABELS } from "@/lib/content/document";
+import { ContentItem } from "@/types/ContentWorkflow";
 
-// Tabel konten. Notifikasi mengarah ke ?konten=<id> untuk menandai konten terkait,
-// karena halaman konten beserta catatannya baru sungguhan setelah backend tersedia (PRD FR-15).
-export default function CreatorContentsTable() {
-  const highlightedId = useSearchParams().get("konten");
-  const { contents } = useCreatorStudio();
-  const highlightedRow = useRef<HTMLTableRowElement>(null);
-
-  useEffect(() => {
-    highlightedRow.current?.scrollIntoView({ block: "center" });
-  }, [highlightedId]);
-
+export default function CreatorContentsTable({ contents }: { contents: ContentItem[] }) {
   return (
     <div role="group" tabIndex={0} aria-label="Tabel konten" className="relative -mx-4 overflow-x-auto sm:-mx-5">
       <table className="w-full min-w-[560px] text-left text-sm">
@@ -31,27 +16,18 @@ export default function CreatorContentsTable() {
           </tr>
         </thead>
         <tbody className="divide-y divide-border">
-          {contents.map((content) => {
-            const isHighlighted = String(content.id) === highlightedId;
-
-            return (
-              <tr
-                key={content.id}
-                ref={isHighlighted ? highlightedRow : undefined}
-                aria-current={isHighlighted ? "true" : undefined}
-                className={isHighlighted ? "bg-primary/10" : undefined}
-              >
-                <th scope="row" className="px-4 py-3 font-medium sm:px-5">{content.title}</th>
-                <td className="px-3 py-3 text-muted-foreground">{content.type}</td>
-                <td className="px-3 py-3">
-                  <ContentStatusBadge status={content.status} />
-                </td>
-                <td className="whitespace-nowrap px-4 py-3 text-muted-foreground sm:px-5">
-                  {formatDate(content.updatedAt)}
-                </td>
-              </tr>
-            );
-          })}
+          {contents.map((content) => (
+            <tr key={content.id}>
+              <th scope="row" className="px-4 py-3 font-medium sm:px-5">{content.judul || "Tanpa judul"}</th>
+              <td className="px-3 py-3 text-muted-foreground">{KIND_LABELS[content.type]}</td>
+              <td className="px-3 py-3">
+                <ContentStatusBadge status={content.status} />
+              </td>
+              <td className="whitespace-nowrap px-4 py-3 text-muted-foreground sm:px-5">
+                {formatContentDate(content.updatedAt)}
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>

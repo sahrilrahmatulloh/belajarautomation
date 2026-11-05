@@ -1,18 +1,14 @@
-import Image from "next/image";
 import Link from "next/link";
-import { CalendarDays, ChevronRight, Clock3, ExternalLink, RefreshCw } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 
-import ContentCover from "@/components/common/ContentCover";
-import { formatArticleDate } from "@/lib/articleFormat";
 import { toFilterSlug } from "@/lib/filters";
 import { Article, ArticleHeading } from "@/types/Article";
 
 import ArticleCard from "./ArticleCard";
-import ArticleCategoryBadge from "./ArticleCategoryBadge";
 import ArticleDraftBadge from "./ArticleDraftBadge";
+import { ArticleCoverImage, ArticleCtaSection, ArticleHeader, ArticleSources } from "./ArticleParts";
 import { ArticleShareButton, ArticleShareSection } from "./ArticleShare";
 import { ArticleTocPanel, ArticleTocSidebar } from "./ArticleToc";
-import Ajakan from "./mdx/Ajakan";
 import ArticleContent from "./mdx/ArticleContent";
 
 interface ArticleDetailPageProps {
@@ -47,54 +43,21 @@ export default function ArticleDetailPage({ article, content, headings, related 
           </ol>
         </nav>
 
-        <header className="mt-4">
-          <div className="flex flex-wrap items-center gap-2">
-            <ArticleCategoryBadge category={article.category} />
-            {article.status === "draft" && <ArticleDraftBadge />}
-          </div>
-
-          <h1 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">{article.title}</h1>
-
-          <p className="mt-3 max-w-3xl text-lg leading-8 text-muted-foreground">{article.excerpt}</p>
-
-          <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-3 text-sm text-muted-foreground">
-            <span className="flex items-center gap-1.5 font-medium text-foreground">
-              <Image src="/logo.webp" alt="" width={24} height={24} className="h-6 w-6 object-contain" />
-              {article.author}
-            </span>
-            <span className="flex items-center gap-1.5">
-              <CalendarDays className="h-4 w-4" aria-hidden="true" />
-              {formatArticleDate(article.publishedAt)}
-            </span>
-            {article.updatedAt && (
-              <span className="flex items-center gap-1.5">
-                <RefreshCw className="h-4 w-4" aria-hidden="true" />
-                Diperbarui: {formatArticleDate(article.updatedAt)}
-              </span>
-            )}
-            <span className="flex items-center gap-1.5">
-              <Clock3 className="h-4 w-4" aria-hidden="true" />
-              {article.readingMinutes} menit baca
-            </span>
-            <div className="w-full sm:ml-auto sm:w-auto">
-              <ArticleShareButton title={article.title} slug={article.slug} />
-            </div>
-          </div>
-        </header>
+        <ArticleHeader
+          category={article.category}
+          title={article.title}
+          excerpt={article.excerpt}
+          author={article.author}
+          publishedAt={article.publishedAt}
+          updatedAt={article.updatedAt}
+          readingMinutes={article.readingMinutes}
+          badge={article.status === "draft" ? <ArticleDraftBadge /> : undefined}
+          action={<ArticleShareButton title={article.title} slug={article.slug} />}
+        />
 
         <div className="mt-6 grid gap-8 xl:grid-cols-[minmax(0,1fr)_15rem]">
           <div className="min-w-0">
-            <div className="relative aspect-video overflow-hidden rounded-2xl border border-border bg-muted">
-              <ContentCover
-                src={article.cover}
-                title={article.title}
-                category={article.category}
-                kind="article"
-                priority
-                sizes="(max-width: 1280px) 100vw, 760px"
-                className="object-cover"
-              />
-            </div>
+            <ArticleCoverImage src={article.cover} title={article.title} category={article.category} />
 
             <ArticleTocPanel headings={headings} />
 
@@ -102,36 +65,9 @@ export default function ArticleDetailPage({ article, content, headings, related 
               <ArticleContent content={content} />
             </div>
 
-            {article.cta.length > 0 && (
-              <section aria-label="Ajakan" className="mt-10">
-                {article.cta.map((cta) => (
-                  <Ajakan key={`${cta.type}-${cta.slug ?? ""}`} {...cta} />
-                ))}
-              </section>
-            )}
+            <ArticleCtaSection cta={article.cta} />
 
-            {article.sources.length > 0 && (
-              <section aria-labelledby="sumber-artikel" className="mt-10">
-                <h2 id="sumber-artikel" className="text-lg font-bold">
-                  Sumber
-                </h2>
-                <ul className="mt-3 space-y-2">
-                  {article.sources.map((source) => (
-                    <li key={source.url}>
-                      <a
-                        href={source.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 text-sm font-medium text-primary-accent underline underline-offset-2"
-                      >
-                        <ExternalLink className="h-4 w-4 shrink-0" aria-hidden="true" />
-                        {source.title}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </section>
-            )}
+            <ArticleSources sources={article.sources} />
 
             <ArticleShareSection title={article.title} slug={article.slug} />
           </div>

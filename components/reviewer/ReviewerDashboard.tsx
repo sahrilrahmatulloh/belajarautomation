@@ -196,7 +196,7 @@ export default function ReviewerDashboard() {
                     </p>
                   </div>
                   {activity.result === "approved" ? (
-                    <ContentStatusBadge status="approved" />
+                    <ContentStatusBadge status="disetujui" />
                   ) : (
                     <span className="inline-flex whitespace-nowrap rounded-full bg-rose-500/10 px-2.5 py-1 text-xs font-medium text-rose-700 dark:text-rose-300">
                       Dikembalikan
