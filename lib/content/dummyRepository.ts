@@ -10,7 +10,9 @@ import {
   StatusAction,
 } from "@/types/ContentWorkflow";
 import { DUMMY_LEARNING_PROGRESS } from "@/data/dummy/learningProgress";
+import { isAvailableHref } from "@/lib/notificationTarget";
 import { ModerationActionKind } from "@/types/AdminPlatform";
+import { Announcement } from "@/types/Announcement";
 import { Entitlement, EntitlementKind, Product } from "@/types/Commerce";
 
 import { courseCatalogState, freeXpTotal, isRequiredFree, MASTER_XP } from "./catalogRules";
@@ -18,7 +20,7 @@ import { ContentRepository, ContentRuleError } from "./repository";
 import { CREATOR_CHECKLIST, latestRoundNotes, MAX_VIDEOS, missingRequiredFields, REVIEWER_CHECKLIST } from "./rules";
 
 // Versi di nama kunci: data lama dengan bentuk berbeda tidak ikut terbaca.
-const STORAGE_KEY = "belajarautomation-content-workflow-v4";
+const STORAGE_KEY = "belajarautomation-content-workflow-v5";
 
 export interface KeyValueStorage {
   getItem(key: string): string | null;
@@ -245,6 +247,9 @@ export function createDummyRepository(storage: KeyValueStorage | null = browserS
     },
     async listXpTransactions() {
       return structuredClone(state().xpTransactions);
+    },
+    async listAnnouncements() {
+      return structuredClone(state().announcements);
     },
 
     async createDraft(actorId, input) {
@@ -828,6 +833,79 @@ export function createDummyRepository(storage: KeyValueStorage | null = browserS
       recordModeration(userId, flagId, visible ? "tampilkan" : "sembunyikan", reason, actorId);
       commit();
       return structuredClone(target);
+    },
+
+    async saveAnnouncement(actorId, announcementId, input, mode) {
+      requireRole(actorId, "admin", "Admin");
+      const title = input.title.trim();
+      const body = input.body.trim();
+      const href = input.href.trim();
+      if (!title) throw new ContentRuleError("Judul pengumuman wajib diisi.");
+      if (mode !== "draf" && !body) throw new ContentRuleError("Isi pengumuman wajib diisi.");
+      if (href && (!href.startsWith("/") || href.startsWith("//") || !isAvailableHref(href))) throw new ContentRuleError("Tautan tujuan harus halaman internal yang tersedia, mis. /learn.");
+      let scheduledAt: string | null = null;
+      if (mode === "jadwal") {
+        const time = Date.parse(input.scheduledAt);
+        if (Number.isNaN(time)) throw new ContentRuleError("Waktu kirim wajib diisi.");
+        if (time <= Date.now()) throw new ContentRuleError("Waktu kirim harus di masa depan.");
+        scheduledAt = new Date(time).toISOString();
+      }
+
+      const existing = announcementId ? state().announcements.find((item) => item.id === announcementId) : undefined;
+      if (announcementId && !existing) throw new ContentRuleError("Pengumuman tidak ditemukan.");
+      if (existing && existing.status !== "draf") throw new ContentRuleError("Hanya draf yang dapat diubah.");
+
+      const at = now();
+      const status = mode === "kirim" ? "terkirim" : mode === "jadwal" ? "terjadwal" : "draf";
+      const entry: Announcement = {
+        id: existing?.id ?? newId("pengumuman"),
+        title,
+        body,
+        href,
+        group: input.group,
+        target: input.target,
+        status,
+        scheduledAt,
+        sentAt: mode === "kirim" ? at : null,
+        createdBy: existing?.createdBy ?? actorId,
+        createdAt: existing?.createdAt ?? at,
+      };
+      if (existing) Object.assign(existing, entry);
+      else state().announcements.push(entry);
+      audit({
+        adminId: actorId,
+        action: mode === "kirim" ? "kirim-pengumuman" : mode === "jadwal" ? "jadwalkan-pengumuman" : "simpan-pengumuman",
+        targetType: "pengumuman",
+        targetId: entry.id,
+        targetLabel: title,
+        alasan: null,
+        before: existing ? { status: "draf" } : null,
+        after: { status, target: input.target, jadwal: scheduledAt },
+      });
+      commit();
+      return structuredClone(entry);
+    },
+
+    async cancelAnnouncement(actorId, announcementId) {
+      requireRole(actorId, "admin", "Admin");
+      const entry = state().announcements.find((item) => item.id === announcementId);
+      if (!entry) throw new ContentRuleError("Pengumuman tidak ditemukan.");
+      if (entry.status !== "terjadwal") throw new ContentRuleError("Hanya pengumuman terjadwal yang dapat dibatalkan.");
+      entry.status = "dibatalkan";
+      audit({ adminId: actorId, action: "batalkan-pengumuman", targetType: "pengumuman", targetId: entry.id, targetLabel: entry.title, alasan: null, before: { status: "terjadwal" }, after: { status: "dibatalkan" } });
+      commit();
+      return structuredClone(entry);
+    },
+
+    async processScheduledAnnouncements() {
+      const due = state().announcements.filter((item) => item.status === "terjadwal");
+      const at = now();
+      due.forEach((item) => {
+        item.status = "terkirim";
+        item.sentAt = at;
+      });
+      commit();
+      return due.length;
     },
 
     async reset() {

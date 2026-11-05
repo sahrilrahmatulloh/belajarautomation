@@ -301,7 +301,7 @@ export const ADMIN_WORKSPACE = {
   // Peserta leaderboard pertama (data/dummy/leaderboard.ts).
   leaderboardUserId: "user-1",
   leaderboardUserName: "Rina Kartika",
-  axePaths: ["/admin", "/admin/konten", "/admin/pengguna", "/admin/pengguna/user-rahma", "/admin/log", "/admin/transaksi", "/admin/transaksi/trx-sobat-ebook", "/admin/transaksi/trx-sobat-pro", "/admin/produk", "/admin/katalog", "/admin/moderasi"],
+  axePaths: ["/admin", "/admin/konten", "/admin/pengguna", "/admin/pengguna/user-rahma", "/admin/log", "/admin/transaksi", "/admin/transaksi/trx-sobat-ebook", "/admin/transaksi/trx-sobat-pro", "/admin/produk", "/admin/katalog", "/admin/moderasi", "/admin/pengumuman", "/admin/laporan"],
 } as const;
 
 // Katalog dan Moderasi (data/catalogRules.json dan data/dummy/moderation.ts).

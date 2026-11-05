@@ -128,8 +128,8 @@ test.describe("Konten Saya", () => {
 
   test("Creator baru melihat ajakan menulis konten pertama", async ({ page }) => {
     await page.evaluate(() => {
-      const key = "belajarautomation-content-workflow-v4";
-      window.localStorage.setItem(key, JSON.stringify({ users: [], contents: [], notes: [], statusEvents: [], roleEvents: [], agreements: [], auditLog: [], transactions: [], entitlements: [], claims: [], products: [], overrides: { courses: {}, items: {} }, moderationFlags: [], moderationActions: [], xpTransactions: [], supersededIds: [], nextId: 1 }));
+      const key = "belajarautomation-content-workflow-v5";
+      window.localStorage.setItem(key, JSON.stringify({ users: [], contents: [], notes: [], statusEvents: [], roleEvents: [], agreements: [], auditLog: [], transactions: [], entitlements: [], claims: [], products: [], overrides: { courses: {}, items: {} }, moderationFlags: [], moderationActions: [], xpTransactions: [], announcements: [], supersededIds: [], nextId: 1 }));
     });
     await page.reload();
 

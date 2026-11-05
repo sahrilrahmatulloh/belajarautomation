@@ -18,7 +18,9 @@ import {
   Trophy,
   Package,
   Receipt,
+  BarChart3,
   LibraryBig,
+  Megaphone,
   ScrollText,
   ShieldAlert,
   Users,
@@ -77,6 +79,8 @@ export const NAVIGATION: Record<UserRole, NavItem[]> = {
     { label: "Transaksi", href: "/admin/transaksi", icon: Receipt, group: "Bisnis" },
     { label: "Produk Digital", href: "/admin/produk", icon: Package, group: "Bisnis" },
     { label: "Katalog Belajar", href: "/admin/katalog", icon: LibraryBig, group: "Platform" },
+    { label: "Pengumuman", href: "/admin/pengumuman", icon: Megaphone, group: "Platform" },
+    { label: "Laporan", href: "/admin/laporan", icon: BarChart3, group: "Laporan" },
     { label: "Log Aktivitas Admin", href: "/admin/log", icon: ScrollText, group: "Laporan" },
   ],
 };

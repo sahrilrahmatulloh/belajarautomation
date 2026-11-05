@@ -9,7 +9,7 @@ import { MembershipTier } from "@/types/Membership";
 
 const daysAgo = (days: number) => new Date(Date.now() - days * 86_400_000).toISOString();
 
-type Person = Pick<ContentUser, "id" | "name" | "username" | "email" | "roles"> & Partial<Pick<ContentUser, "membership" | "xp" | "coursesStudied">> & { joinedDaysAgo: number };
+type Person = Pick<ContentUser, "id" | "name" | "username" | "email" | "roles"> & Partial<Pick<ContentUser, "membership" | "xp" | "coursesStudied">> & { joinedDaysAgo: number; activeDaysAgo?: number };
 
 const PEOPLE: Person[] = [
   { id: "user-sobat", name: "Sobat QA", username: "sobatqa", email: "user@demo.belajarautomation.com", roles: ["user"], membership: DUMMY_ACCOUNT.membership, xp: DUMMY_ACCOUNT.xp, coursesStudied: DUMMY_LEARNING_PROGRESS.length, joinedDaysAgo: 40 },
@@ -25,8 +25,8 @@ const PEOPLE: Person[] = [
 
 const MEMBERSHIP_CYCLE: MembershipTier[] = ["basic", "basic", "basic", "pro", "basic", "premium"];
 
-function toUser({ joinedDaysAgo, ...person }: Person): ContentUser {
-  return { membership: "basic", xp: 0, coursesStudied: 0, ...person, status: "aktif", hiddenFromLeaderboard: false, joinedAt: daysAgo(joinedDaysAgo), lastActiveAt: daysAgo(Math.min(joinedDaysAgo, 2)) };
+function toUser({ joinedDaysAgo, activeDaysAgo, ...person }: Person): ContentUser {
+  return { membership: "basic", xp: 0, coursesStudied: 0, ...person, status: "aktif", hiddenFromLeaderboard: false, joinedAt: daysAgo(joinedDaysAgo), lastActiveAt: daysAgo(activeDaysAgo ?? Math.min(joinedDaysAgo, 2)) };
 }
 
 export const DUMMY_USERS: ContentUser[] = [
@@ -42,6 +42,7 @@ export const DUMMY_USERS: ContentUser[] = [
       xp: user.totalXp,
       coursesStudied: Math.min(5, Math.ceil(user.totalXp / 800)),
       joinedDaysAgo: 30 + index * 3,
+      activeDaysAgo: index % 45,
     })
   ),
 ];

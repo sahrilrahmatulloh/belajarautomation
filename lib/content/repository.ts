@@ -11,6 +11,7 @@ import {
   RoleChangeEvent,
   StatusEvent,
 } from "@/types/ContentWorkflow";
+import { Announcement, AnnouncementInput } from "@/types/Announcement";
 import { CreditClaim, Entitlement, EntitlementKind, GatewayResult, Product, ProductInput, Transaction } from "@/types/Commerce";
 import { CatalogItemKind, CatalogItemStatus, CourseCatalogState, ModerationAction, ModerationFlag, PlatformOverrides, XpTransaction } from "@/types/AdminPlatform";
 import { UserRole } from "@/types/Role";
@@ -47,6 +48,7 @@ export interface ContentRepository {
   listModerationFlags(): Promise<ModerationFlag[]>;
   listModerationActions(): Promise<ModerationAction[]>;
   listXpTransactions(): Promise<XpTransaction[]>;
+  listAnnouncements(): Promise<Announcement[]>;
   // Log hanya bisa dibaca: tidak ada operasi untuk mengubah atau menghapusnya (PRD FR-16 J).
   listAuditLog(): Promise<AdminAuditLog[]>;
 
@@ -97,6 +99,12 @@ export interface ContentRepository {
   ignoreFlag(actorId: string, flagId: string): Promise<ModerationFlag>;
   correctXp(actorId: string, userId: string, amount: number, alasan: string, flagId: string | null): Promise<ContentUser>;
   setLeaderboardVisibility(actorId: string, userId: string, visible: boolean, alasan: string, flagId: string | null): Promise<ContentUser>;
+
+  // Pengumuman (PRD FR-16 H).
+  saveAnnouncement(actorId: string, announcementId: string | null, input: AnnouncementInput, mode: "draf" | "kirim" | "jadwal"): Promise<Announcement>;
+  cancelAnnouncement(actorId: string, announcementId: string): Promise<Announcement>;
+  // Meniru penjadwal di server. Hanya untuk tahap dummy; mengirim semua yang terjadwal.
+  processScheduledAnnouncements(): Promise<number>;
 
   // Mengembalikan data ke kondisi awal. Hanya untuk tahap dummy.
   reset(): Promise<void>;

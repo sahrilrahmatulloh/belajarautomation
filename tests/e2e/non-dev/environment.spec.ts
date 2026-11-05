@@ -96,6 +96,8 @@ test.describe("Halaman Admin di luar DEV", () => {
     { path: "/admin/produk", title: "Produk Digital" },
     { path: "/admin/katalog", title: "Katalog Belajar" },
     { path: "/admin/moderasi", title: "Moderasi" },
+    { path: "/admin/pengumuman", title: "Pengumuman" },
+    { path: "/admin/laporan", title: "Laporan" },
   ]) {
     test(`${title} tetap halaman informasi dengan tautan panduan`, async ({ page }) => {
       await page.goto(path);

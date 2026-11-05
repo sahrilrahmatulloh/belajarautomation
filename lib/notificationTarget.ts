@@ -10,8 +10,10 @@ const UNAVAILABLE_HREF = `/notifications?${UNAVAILABLE_PARAM}=${UNAVAILABLE_VALU
 const STATIC_ROUTES = new Set([
   "/",
   "/admin",
+  "/blog",
   "/creator",
   "/ebooks",
+  "/leaderboard",
   "/learn",
   "/membership",
   "/notifications",
@@ -19,6 +21,7 @@ const STATIC_ROUTES = new Set([
   "/profile",
   "/projects",
   "/reviewer",
+  "/roadmap",
   "/settings",
 ]);
 
@@ -32,7 +35,7 @@ const DETAIL_ROUTES: Record<string, { slug: string }[]> = {
 // Halaman peran: keberadaan kontennya diperiksa oleh halaman itu sendiri.
 const ROLE_ROUTE = /^\/(creator|reviewer|admin)\//;
 
-function isAvailable(href: string) {
+export function isAvailableHref(href: string) {
   const path = href.split(/[?#]/)[0];
   if (STATIC_ROUTES.has(path) || ROLE_ROUTE.test(path)) return true;
 
@@ -44,5 +47,5 @@ function isAvailable(href: string) {
 // beserta pesan (PRD 4.4). Notifikasi tanpa href dibuka di modal, jadi tidak punya tujuan.
 export function resolveNotificationHref({ href }: Notification) {
   if (!href) return undefined;
-  return isAvailable(href) ? href : UNAVAILABLE_HREF;
+  return isAvailableHref(href) ? href : UNAVAILABLE_HREF;
 }
