@@ -1,8 +1,8 @@
 import { Page } from "@playwright/test";
 
 import { expect, test } from "../fixtures/auth";
-import { ACCOUNTS, DEMO_PASSWORD, ROLE_MODE } from "../fixtures/testData";
-import { LoginPage } from "../pages/LoginPage";
+import { ACCOUNTS, ROLE_MODE } from "../fixtures/testData";
+import { ManageRolesPageObject, switchAccount } from "../pages/AdminPages";
 import { DashboardPage } from "../pages/DashboardPage";
 import { NotificationsPage } from "../pages/NotificationsPage";
 import { RoleDashboardPage } from "../pages/RoleDashboardPage";
@@ -116,13 +116,18 @@ test.describe("Pengalih mode", () => {
 });
 
 test.describe("Akun dengan beberapa peran", () => {
-  test("menu profil memuat setiap mode yang dimiliki", async ({ page }) => {
-    const login = new LoginPage(page);
-    await login.goto();
-    await login.login(ROLE_MODE.multiRoleEmail, DEMO_PASSWORD);
+  test.use({ role: "admin" });
+
+  test("peran dari Kelola Peran muncul sebagai mode di menu profil", async ({ page }) => {
+    const roles = new ManageRolesPageObject(page);
+    await roles.goto();
+    await roles.roleAction(ACCOUNTS.reviewer.name, "Tambah Creator").click();
+    await roles.dialog.getByRole("button", { name: "Tambah peran" }).click();
+    await expect(roles.row(ACCOUNTS.reviewer.name)).toContainText("Creator");
+
+    await switchAccount(page, ACCOUNTS.reviewer.email);
     await expect(page).toHaveURL("/reviewer");
     const dashboard = new RoleDashboardPage(page, "reviewer");
-
     await dashboard.profileMenuButton.click();
 
     await expect(dashboard.modeOption("Mode Belajar")).toBeVisible();

@@ -158,7 +158,7 @@ export default function LoginForm() {
                     : "border-border bg-card hover:bg-accent"
                 }`}
               >
-                <span className="block font-semibold">{account.label ?? ROLE_LABELS[account.role]}</span>
+                <span className="block font-semibold">{ROLE_LABELS[account.role]}</span>
                 <span className="block truncate text-xs text-muted-foreground">
                   {account.name}
                 </span>
