@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 
 import DashboardLayout from "@/components/layout/DashboardLayout";
-import PublicProfilePage from "@/components/profile/PublicProfilePage";
+import PublicProfileGate from "@/components/profile/PublicProfileGate";
 import { DUMMY_PUBLIC_USERNAMES, getPublicProfile } from "@/data/dummy/publicProfiles";
 
 interface PublicProfileRouteProps {
@@ -24,7 +24,7 @@ export default async function Page({ params }: PublicProfileRouteProps) {
 
   return (
     <DashboardLayout>
-      <PublicProfilePage profile={profile} />
+      <PublicProfileGate profile={profile} />
     </DashboardLayout>
   );
 }

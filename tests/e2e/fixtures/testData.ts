@@ -270,26 +270,35 @@ export const LESSON_CONTENT = {
   totalLessons: 8,
 } as const;
 
-// Ruang kerja Admin (data/dummy/contents.ts, akun admin@).
+// Panel Admin (data/dummy/contents.ts dan users.ts, akun admin@).
 export const ADMIN_WORKSPACE = {
-  counts: { all: 12, approved: 1, byGalih: 4, byRahma: 5 },
+  counts: { all: 12, approved: 1, byGalih: 4, byRahma: 5, newUsers: 2, reviewers: 2, creatorsWithoutAgreement: 1 },
   summaryLinks: [
-    { label: "Draf", value: 3, query: "?status=draf", rows: 3 },
-    { label: "Menunggu Review", value: 4, query: "?status=menunggu-review", rows: 4 },
-    { label: "Perlu Revisi", value: 2, query: "?status=perlu-revisi", rows: 2 },
-    { label: "Disetujui", value: 1, query: "?status=disetujui", rows: 1 },
-    { label: "Terbit", value: 2, query: "?status=terbit", rows: 2 },
-    { label: "Belum Ditugaskan", value: 2, query: "?status=menunggu-review&reviewer=belum", rows: 2 },
-    { label: "Menunggu Lebih dari 3 Hari", value: 2, query: "?status=menunggu-review&lama=1", rows: 2 },
+    { label: "Draf", value: 3, url: "/admin/konten?status=draf", rows: 3 },
+    { label: "Menunggu Review", value: 4, url: "/admin/konten?status=menunggu-review", rows: 4 },
+    { label: "Perlu Revisi", value: 2, url: "/admin/konten?status=perlu-revisi", rows: 2 },
+    { label: "Disetujui", value: 1, url: "/admin/konten?status=disetujui", rows: 1 },
+    { label: "Terbit", value: 2, url: "/admin/konten?status=terbit", rows: 2 },
+    { label: "Belum Ditugaskan", value: 2, url: "/admin/konten?status=menunggu-review&reviewer=belum", rows: 2 },
+    { label: "Menunggu Lebih dari 3 Hari", value: 2, url: "/admin/konten?status=menunggu-review&lama=1", rows: 2 },
+    { label: "Pengguna Baru 7 Hari", value: 2, url: "/admin/pengguna?baru=1", rows: 2 },
   ],
+  placeholderCards: ["Ditandai Moderasi", "Transaksi Hari Ini", "Menunggu Pembayaran", "Permintaan Refund"],
   waitingTitle: "Pengenalan API Testing dengan Postman",
   authorMultiRoleTitle: "Strategi Regression Testing",
   approvedTitle: "Contoh Test Case Login yang Lengkap",
+  approvedAuthorId: "user-andi",
+  approvedAuthorName: "Andi Pratama",
   publishedId: "konten-locator",
   publishedTitle: "Best Practice Locator di Playwright",
+  adminId: "user-admin",
   adminName: "Admin Belajar",
+  learnerId: "user-sobat",
   learnerName: "Sobat QA",
-  axePaths: ["/admin", "/admin/konten", "/admin/pengguna"],
+  // Peserta leaderboard pertama (data/dummy/leaderboard.ts).
+  leaderboardUserId: "user-1",
+  leaderboardUserName: "Rina Kartika",
+  axePaths: ["/admin", "/admin/konten", "/admin/pengguna", "/admin/pengguna/user-andi", "/admin/log"],
 } as const;
 
 // Ruang kerja Reviewer (data/dummy/contents.ts, akun reviewer@).

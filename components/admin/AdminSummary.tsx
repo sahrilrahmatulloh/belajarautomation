@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { BadgeCheck, CheckCircle2, Clock3, FilePen, Hourglass, Inbox, RotateCcw, ShieldCheck, UserRoundX } from "lucide-react";
+import { BadgeCheck, CheckCircle2, Clock3, FilePen, Flag, Hourglass, Inbox, LucideIcon, RotateCcw, ShieldCheck, Undo2, UserPlus, UserRoundX, Wallet } from "lucide-react";
 
 import EmptyState from "@/components/common/EmptyState";
 import PrototypeNotice from "@/components/creator/studio/PrototypeNotice";
@@ -13,11 +13,16 @@ import { formatContentDate } from "@/lib/content/document";
 import { useSession } from "@/lib/session";
 import { ContentStatusId } from "@/types/ContentWorkflow";
 
-import { isLongWaiting, LONG_WAIT_DAYS, useAdminData } from "./useAdminData";
+import { isLongWaiting, isNewUser, LONG_WAIT_DAYS, NEW_USER_DAYS, useAdminData } from "./useAdminData";
 
 const RECENT_LIMIT = 5;
 
-// Ringkasan Admin (PRD FR-15). Setiap angka membuka Semua Konten yang sudah tersaring.
+// Angka yang datanya baru ada di phase berikutnya: belum bisa diklik.
+function PlaceholderCard({ label, note, icon }: { label: string; note: string; icon: LucideIcon }) {
+  return <RoleStatCard label={label} value="0" detail={note} icon={icon} iconStyle="bg-muted text-muted-foreground" />;
+}
+
+// Ringkasan Admin (PRD FR-16 A). Setiap angka membuka daftar yang sudah tersaring.
 export default function AdminSummary() {
   const session = useSession();
   const { data } = useAdminData();
@@ -85,6 +90,32 @@ export default function AdminSummary() {
               <RoleStatCard {...card} as="div" />
             </Link>
           ))}
+        </div>
+      </section>
+
+      <section aria-labelledby="ringkasan-pengguna">
+        <h2 id="ringkasan-pengguna" className="text-lg font-bold">Pengguna</h2>
+        <div className="mt-3 grid gap-3 sm:grid-cols-2">
+          <Link href="/admin/pengguna?baru=1" className="rounded-2xl transition-shadow hover:shadow-md">
+            <RoleStatCard
+              as="div"
+              label={`Pengguna Baru ${NEW_USER_DAYS} Hari`}
+              value={String((data?.users ?? []).filter((user) => isNewUser(user, data?.loadedAt ?? 0)).length)}
+              detail="Mendaftar dalam 7 hari terakhir"
+              icon={UserPlus}
+              iconStyle="bg-brand-blue/10 text-brand-blue"
+            />
+          </Link>
+          <PlaceholderCard label="Ditandai Moderasi" note="Tersedia di phase berikutnya" icon={Flag} />
+        </div>
+      </section>
+
+      <section aria-labelledby="ringkasan-transaksi">
+        <h2 id="ringkasan-transaksi" className="text-lg font-bold">Transaksi</h2>
+        <div className="mt-3 grid gap-3 sm:grid-cols-3">
+          <PlaceholderCard label="Transaksi Hari Ini" note="Tersedia di phase berikutnya" icon={Wallet} />
+          <PlaceholderCard label="Menunggu Pembayaran" note="Tersedia di phase berikutnya" icon={Clock3} />
+          <PlaceholderCard label="Permintaan Refund" note="Alur belum ditentukan" icon={Undo2} />
         </div>
       </section>
 

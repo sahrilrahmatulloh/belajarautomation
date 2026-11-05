@@ -1,9 +1,15 @@
 # BELAJARAUTOMATION.COM
 ## Product Requirements Document (PRD)
-**Versi:** 2.15  
+**Versi:** 2.16  
 **Status:** Draft — Acuan Pengembangan Produk  
 **Platform:** Web Application  
 **Target Pengguna:** Pemula hingga praktisi QA, Software Testing, dan Programming
+
+### Perubahan di Versi 2.16
+- Menambahkan FR-16 Panel Admin: Ringkasan, Konten, Pengguna dan Peran, Kesepakatan Creator, Transaksi dan Hak Akses, Produk Digital, Katalog Belajar, Moderasi, Pengumuman, Laporan, dan Log Aktivitas Admin.
+- Seluruh Panel Admin dibangun sekarang dengan data dummy dan hanya tampil di DEV, seperti mode Creator dan Reviewer.
+- Tombol Terbitkan terkunci untuk Creator yang belum memiliki kesepakatan tertulis tercatat (FR-15, FR-16).
+- Setiap aksi Admin wajib tercatat di Log Aktivitas Admin; akun Admin wajib memakai verifikasi dua langkah saat backend tersedia (8.3).
 
 ### Perubahan di Versi 2.15
 - Antarmuka lengkap Creator, Reviewer, dan Admin dibangun sekarang dengan data dummy, hanya tampil di DEV; UAT dan Production tetap menampilkan alur Google Docs sampai backend tersedia (FR-15).
@@ -1172,7 +1178,7 @@ Memungkinkan konten ditulis oleh lebih dari satu orang dengan kualitas yang teta
 |---|---|---|
 | **Creator** | Menulis dan merevisi konten | Tidak dapat menerbitkan sendiri dan tidak dapat me-review kontennya sendiri |
 | **Reviewer** | Memeriksa akurasi, kejelasan, contoh kode, referensi video, dan kunci jawaban; menyetujui atau meminta revisi | Tidak me-review konten yang ditulisnya sendiri dan tidak mengedit isi konten secara langsung |
-| **Admin** | Menugaskan reviewer, menerbitkan dan menarik konten, mengelola peran pengguna | Tidak dapat mencabut peran Admin dari dirinya sendiri jika ia satu-satunya Admin |
+| **Admin** | Menugaskan reviewer, menerbitkan dan menarik konten, mengelola peran pengguna, dan tugas lain di Panel Admin (FR-16) | Tidak dapat mencabut peran Admin dari dirinya sendiri jika ia satu-satunya Admin |
 
 - Satu akun dapat memiliki beberapa peran. Selama tim masih kecil, pemilik produk dapat merangkap Reviewer dan Admin.
 - Creator, Reviewer, dan Admin tetap dapat belajar: XP, rank, profil pelajar, dan membership tetap berlaku di **Mode Belajar**.
@@ -1304,21 +1310,8 @@ Backend diprioritaskan agar Creator dapat menulis langsung di aplikasi tanpa ala
 - Keputusan: **Minta Revisi** (wajib minimal satu catatan baru) atau **Setujui** (wajib seluruh checklist Reviewer dicentang).
 - Reviewer tidak mengedit isi konten secara langsung.
 
-**Ringkasan (Admin)**
-- Jumlah konten per status, konten Menunggu Review yang belum ditugaskan, review yang menunggu lebih dari 3 hari, dan konten terbit terbaru.
-
-**Semua Konten (Admin)**
-- Seluruh konten dari semua Creator dengan tab status, pencarian, filter jenis, Creator, dan Reviewer.
-- **Tugaskan Reviewer** untuk konten Menunggu Review; Reviewer yang dipilih tidak boleh penulis konten tersebut.
-- **Terbitkan** konten Disetujui.
-- **Tarik dari website** konten Terbit dengan alasan wajib; konten kembali menjadi Draf milik Creator dan alasannya tampil sebagai catatan umum.
-- Riwayat status setiap konten: siapa, kapan, dan perubahan apa.
-
-**Kelola Peran (Admin)**
-- Daftar pengguna dengan pencarian, beserta peran yang dimiliki.
-- Menambah atau mencabut peran Creator, Reviewer, dan Admin; satu pengguna dapat memiliki beberapa peran.
-- Admin tidak dapat mencabut peran Admin dari dirinya sendiri jika ia satu-satunya Admin.
-- Setiap perubahan peran tercatat (siapa, kapan, perubahan apa).
+**Tugas Admin**
+Ringkasan, Semua Konten (tugaskan reviewer, terbitkan, tarik), dan Kelola Peran diatur di FR-16.
 
 **Notifikasi peran (grup Khusus role, Bagian 4.4)**
 - Creator: konten diminta revisi, disetujui, diterbitkan, atau ditarik.
@@ -1332,7 +1325,97 @@ Backend diprioritaskan agar Creator dapat menulis langsung di aplikasi tanpa ala
 ### Penulis dan kepemilikan
 - Artikel menampilkan nama Creator yang menulisnya; "Tim BelajarAutomation" dipakai untuk tulisan pemilik produk atau tulisan bersama.
 - Sebelum Creator mulai menulis, wajib ada kesepakatan tertulis sederhana mengenai hak penggunaan konten oleh platform dan pencantuman nama penulis.
+- Kesepakatan dicatat Admin (FR-16). Konten dari Creator yang belum memiliki kesepakatan tercatat tidak dapat diterbitkan.
 - Apakah Creator mendapat imbalan masih belum ditentukan (Bagian 12).
+
+---
+
+## FR-16 — Panel Admin
+
+### Tujuan
+Menyediakan alat bagi Admin untuk mengelola konten, pengguna, transaksi, katalog, dan operasional platform secara aman dan tercatat.
+
+### Prinsip
+- Setiap aksi Admin tercatat di Log Aktivitas Admin: siapa, kapan, aksi, target, dan alasan.
+- Aksi yang mengubah hak akses, XP, status akun, atau uang wajib disertai alasan dan dialog konfirmasi.
+- Aturan ditegakkan di backend, bukan hanya dengan menyembunyikan tombol.
+- Admin tidak pernah melihat kata sandi pengguna dan tidak dapat mengubah status pembayaran yang berasal dari payment gateway.
+- Data historis (transaksi, XP, riwayat status) tidak dihapus; perubahan dilakukan dengan catatan koreksi.
+- Seluruh Panel Admin dibangun sekarang dengan data dummy dan hanya tampil di DEV (FR-15 "Tahap antarmuka dengan data dummy"). Aksi yang membutuhkan backend atau payment gateway diberi keterangan "Simulasi".
+
+### Navigasi
+| Kelompok | Menu |
+|---|---|
+| Konten | Ringkasan, Semua Konten |
+| Pengguna | Pengguna dan Peran, Moderasi |
+| Bisnis | Transaksi, Produk Digital |
+| Platform | Katalog Belajar, Pengumuman |
+| Laporan | Laporan, Log Aktivitas Admin |
+
+### A. Ringkasan
+- Konten: jumlah per status, Menunggu Review yang belum ditugaskan, review yang menunggu lebih dari 3 hari, dan konten Disetujui yang siap diterbitkan.
+- Pengguna: pengguna baru 7 hari terakhir dan akun yang ditandai Moderasi.
+- Transaksi: transaksi hari ini, transaksi menunggu pembayaran, dan permintaan refund.
+- Setiap angka dapat diklik menuju daftar yang sudah terfilter.
+
+### B. Semua Konten
+- Seluruh konten dari semua Creator dengan tab status, pencarian, dan filter jenis, Creator, serta Reviewer.
+- **Tugaskan Reviewer** untuk konten Menunggu Review; penulis konten tidak dapat dipilih.
+- **Terbitkan** konten Disetujui. Terkunci jika Creator belum memiliki kesepakatan tercatat, dengan keterangan penyebabnya.
+- **Tarik dari website** konten Terbit dengan alasan wajib; konten kembali menjadi Draf milik Creator dan alasannya tampil sebagai catatan umum.
+- Riwayat status setiap konten.
+
+### C. Pengguna dan Peran
+- Daftar pengguna dengan pencarian (nama, username, email) dan filter peran, membership, dan status akun.
+- Detail pengguna: nama, username, email, tanggal daftar, terakhir aktif, peran, membership dan hak akses, ringkasan belajar (XP, rank, course), riwayat transaksi, dan status akun.
+- **Kelola peran:** menambah atau mencabut peran Creator, Reviewer, dan Admin. Admin tidak dapat mencabut peran Admin dari dirinya sendiri jika ia satu-satunya Admin.
+- **Nonaktifkan akun** dengan alasan wajib: akun tidak dapat login, tidak tampil di leaderboard maupun profil publik, dan datanya tidak dihapus. Akun dapat diaktifkan kembali. Admin tidak dapat menonaktifkan akunnya sendiri.
+- **Kesepakatan Creator:** untuk pengguna berperan Creator, Admin mencatat tanggal kesepakatan dan tautan atau keterangan dokumennya. Daftar pengguna dapat difilter "Creator tanpa kesepakatan".
+
+### D. Moderasi
+- Daftar akun yang ditandai otomatis karena pola XP tidak wajar, misalnya lonjakan XP harian di atas batas atau penyelesaian lesson yang terlalu cepat. Batas ditetapkan di Bagian 12.
+- Tindakan: **Abaikan**, **Koreksi XP** (alasan wajib; dicatat sebagai transaksi XP koreksi, bukan mengubah riwayat), atau **Sembunyikan dari leaderboard**.
+- Riwayat tindakan moderasi per akun.
+
+### E. Transaksi dan Hak Akses
+- Daftar transaksi: ID, pengguna, paket atau produk, nominal, metode, tanggal, dan status (Menunggu Pembayaran, Berhasil, Gagal, Kedaluwarsa, Refund).
+- Pencarian, filter status, dan rentang tanggal.
+- Detail transaksi dengan timeline status. Status pembayaran hanya berubah dari payment gateway.
+- **Refund** dengan alasan wajib: transaksi berstatus Refund dan hak akses dari transaksi tersebut dicabut. Kebijakan refund ditetapkan di Bagian 12.
+- **Berikan hak akses manual** (membership, eBook, atau project) dengan alasan wajib, mis. kompensasi atau hadiah. Tercatat sebagai sumber "Pemberian manual" tanpa transaksi pembayaran.
+- **Cabut hak akses manual** dengan alasan wajib.
+- Riwayat klaim kredit eBook dan project per pengguna.
+
+### F. Produk Digital
+- Daftar eBook dan project dengan status Draf atau Terbit.
+- Tambah dan ubah: judul, deskripsi, sampul, harga, file produk, dan status.
+- Perubahan harga tidak memengaruhi transaksi yang sudah terjadi.
+- File produk hanya dapat diunduh pengguna yang memiliki hak akses (8.3).
+
+### G. Katalog Belajar
+- Daftar course dengan status katalog (`available` atau `coming-soon`), status konten (`ready` atau `draft`), dan tingkat akses (`free` atau `premium`).
+- Mengubah status dan tingkat akses dengan aturan:
+  - Course tidak dapat dijadikan `available` di UAT dan Production jika belum `ready`.
+  - Course `free` tidak dapat diubah menjadi `premium` setelah ada pengguna yang mempelajarinya.
+  - Perubahan yang membuat total XP dari materi gratis kurang dari batas rank Master ditolak.
+- Indikator total XP dari materi gratis dibandingkan batas rank Master.
+- Daftar roadmap dan latihan Playground beserta statusnya.
+- Selama belum ada backend, sumber kebenaran katalog tetap file data di repository dan `docs/CURRICULUM.md`; perubahan di Panel Admin DEV bersifat simulasi.
+
+### H. Pengumuman
+- Membuat notifikasi untuk pengguna: judul, isi, tautan tujuan, grup notifikasi (Konten baru atau Akun dan sistem), dan target (semua pengguna, pemilik membership tertentu, atau peran tertentu).
+- Kirim sekarang atau jadwalkan. Pengumuman terjadwal dapat dibatalkan sebelum terkirim.
+- Pratinjau sebelum dikirim dan riwayat pengumuman (Draf, Terjadwal, Terkirim, Dibatalkan).
+- Pengumuman tunduk pada preferensi notifikasi pengguna (Bagian 4.4).
+
+### I. Laporan
+- Pengguna baru, pengguna aktif 7 dan 30 hari, penjualan per paket dan produk, course yang paling banyak dimulai dan diselesaikan, serta konten terbit.
+- Filter rentang tanggal dan ekspor CSV.
+
+### J. Log Aktivitas Admin
+- Seluruh aksi Admin: waktu, Admin, aksi, target, dan alasan.
+- Pencarian dan filter Admin, jenis aksi, dan rentang tanggal.
+- Log tidak dapat diubah atau dihapus.
 
 ---
 
@@ -1607,6 +1690,18 @@ Menyimpan definisi achievement: ID, nama, deskripsi syarat, kategori, ikon, dan 
 ## 7.22 UserAchievement
 Mencatat achievement yang diperoleh pengguna, tanggal diperoleh, dan progres achievement bertahap.
 
+## 7.23 AdminAuditLog
+Mencatat setiap aksi Admin: waktu, Admin, aksi, target, alasan, dan data sebelum serta sesudah perubahan.
+
+## 7.24 CreatorAgreement
+Mencatat kesepakatan tertulis Creator: pengguna, tanggal, tautan atau keterangan dokumen, dan Admin yang mencatat.
+
+## 7.25 ModerationFlag
+Mencatat penandaan akun oleh sistem moderasi, alasan penandaan, dan tindakan Admin.
+
+## 7.26 Announcement
+Menyimpan pengumuman: isi, tautan, grup notifikasi, target, jadwal, status, dan pembuat.
+
 ### Prinsip penting
 - Riwayat transaksi tidak boleh bergantung pada status tampilan frontend.
 - Kuota klaim harus dapat diaudit.
@@ -1636,6 +1731,8 @@ Aplikasi harus dapat digunakan pada desktop, tablet, dan perangkat mobile.
 - Kunci rahasia tidak boleh disimpan dalam kode frontend.
 - Operasi penting harus aman terhadap duplikasi permintaan.
 - Akses terhadap file produk berbayar harus mengikuti entitlement.
+- Akun Admin wajib memakai verifikasi dua langkah saat backend tersedia.
+- Halaman dan aksi Admin hanya dapat diakses pengguna berperan Admin, diperiksa di backend.
 
 ## 8.4 Data Integrity
 - Progress belajar harus konsisten.
@@ -1685,6 +1782,9 @@ Aplikasi harus dapat digunakan pada desktop, tablet, dan perangkat mobile.
 22. Avatar dan tema tidak boleh memakai kombinasi warna identitas rank.
 23. Rank tidak memiliki level maupun sub-tingkat.
 24. Achievement hanya ditampilkan di profil dan tidak memberikan XP.
+25. Setiap aksi Admin tercatat dan tidak dapat dihapus.
+26. Konten dari Creator tanpa kesepakatan tertulis tercatat tidak dapat diterbitkan.
+27. Koreksi XP dan hak akses dilakukan dengan catatan baru, bukan mengubah riwayat.
 
 ---
 
@@ -1875,12 +1975,13 @@ Hal berikut harus diputuskan sebelum implementasi fitur terkait mencapai tahap p
 - Struktur final materi dan modul.
 - Imbalan untuk Creator dan bentuk kesepakatan kepemilikan konten.
 - Waktu peralihan dari menulis di Google Docs ke editor di aplikasi (setelah backend Supabase untuk alur konten siap).
+- Waktu pemindahan sumber kebenaran katalog dari file repository ke database (FR-16).
 - Produksi video sendiri (misalnya untuk materi premium) beserta layanan hosting-nya; tidak termasuk rilis awal.
 
 ## Gamification
 - Penyesuaian nilai XP dan batas rank setelah konten bertambah.
 - Apakah perlu periode leaderboard (mingguan atau bulanan) di masa depan.
-- Mekanisme penanganan kecurangan.
+- Mekanisme penanganan kecurangan, termasuk batas yang memicu penandaan Moderasi (FR-16).
 
 ## Membership
 - Harga final Pro dan Premium.
@@ -1908,7 +2009,7 @@ Hal berikut harus diputuskan sebelum implementasi fitur terkait mencapai tahap p
 ## Pembayaran dan Operasional
 - Payment gateway.
 - Penanganan transaksi pending dan gagal.
-- Mekanisme refund.
+- Kebijakan refund: syarat, batas waktu, dan perlakuan untuk paket Lifetime (FR-16).
 - Proses administrasi dan rekonsiliasi transaksi.
 
 ## Teknologi

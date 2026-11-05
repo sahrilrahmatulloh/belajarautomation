@@ -16,6 +16,7 @@ import {
   MessageSquareText,
   Newspaper,
   Trophy,
+  ScrollText,
   Users,
 } from "lucide-react";
 
@@ -64,9 +65,10 @@ export const NAVIGATION: Record<UserRole, NavItem[]> = {
     { label: "Panduan Review", href: "/reviewer/panduan", icon: BookOpenCheck },
   ],
   admin: [
-    { label: "Dashboard", href: "/admin", icon: LayoutDashboard },
-    { label: "Semua Konten", href: "/admin/konten", icon: Files },
-    { label: "Kelola Peran", href: "/admin/pengguna", icon: Users },
+    { label: "Ringkasan", href: "/admin", icon: LayoutDashboard, group: "Konten" },
+    { label: "Semua Konten", href: "/admin/konten", icon: Files, group: "Konten" },
+    { label: "Pengguna dan Peran", href: "/admin/pengguna", icon: Users, group: "Pengguna" },
+    { label: "Log Aktivitas Admin", href: "/admin/log", icon: ScrollText, group: "Laporan" },
   ],
 };
 

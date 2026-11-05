@@ -1,9 +1,11 @@
 import { createDummyContentState, DummyContentState } from "@/data/dummy/contents";
 import {
+  AdminAuditLog,
   ContentDraftInput,
   ContentItem,
   ContentStatusId,
   ContentUser,
+  CreatorAgreement,
   ReviewNote,
   StatusAction,
 } from "@/types/ContentWorkflow";
@@ -11,7 +13,8 @@ import {
 import { ContentRepository, ContentRuleError } from "./repository";
 import { CREATOR_CHECKLIST, latestRoundNotes, MAX_VIDEOS, missingRequiredFields, REVIEWER_CHECKLIST } from "./rules";
 
-const STORAGE_KEY = "belajarautomation-content-workflow";
+// Versi di nama kunci: data lama dengan bentuk berbeda tidak ikut terbaca.
+const STORAGE_KEY = "belajarautomation-content-workflow-v2";
 
 export interface KeyValueStorage {
   getItem(key: string): string | null;
@@ -117,6 +120,18 @@ export function createDummyRepository(storage: KeyValueStorage | null = browserS
     });
   };
 
+  // Setiap aksi Admin tercatat dan catatannya tidak bisa diubah (PRD FR-16).
+  const audit = (entry: Omit<AdminAuditLog, "id" | "at">) => {
+    state().auditLog.push({ ...entry, id: newId("log"), at: now() });
+  };
+
+  const requireReason = (alasan: string) => {
+    if (!alasan.trim()) throw new ContentRuleError("Alasan wajib diisi.");
+    return alasan.trim();
+  };
+
+  const hasAgreement = (userId: string) => state().agreements.some((item) => item.userId === userId);
+
   const validateVideos = (input: ContentDraftInput) => {
     if (input.videos && input.videos.length > MAX_VIDEOS) throw new ContentRuleError(`Maksimal ${MAX_VIDEOS} video per konten.`);
   };
@@ -168,6 +183,12 @@ export function createDummyRepository(storage: KeyValueStorage | null = browserS
     },
     async listRoleEvents() {
       return structuredClone(state().roleEvents);
+    },
+    async listAgreements() {
+      return structuredClone(state().agreements);
+    },
+    async listAuditLog() {
+      return structuredClone(state().auditLog);
     },
 
     async createDraft(actorId, input) {
@@ -393,6 +414,16 @@ export function createDummyRepository(storage: KeyValueStorage | null = browserS
       requireStatus(item, ["menunggu-review"], "Reviewer hanya dapat ditugaskan pada konten Menunggu Review.");
       if (!user(reviewerId).roles.includes("reviewer")) throw new ContentRuleError("Pengguna ini bukan Reviewer.");
       if (item.authorId === reviewerId) throw new ContentRuleError("Penulis tidak dapat me-review kontennya sendiri.");
+      audit({
+        adminId: actorId,
+        action: "tugaskan-reviewer",
+        targetType: "konten",
+        targetId: item.id,
+        targetLabel: item.judul,
+        alasan: null,
+        before: { reviewer: item.reviewerId ? user(item.reviewerId).name : null },
+        after: { reviewer: user(reviewerId).name },
+      });
       item.reviewerId = reviewerId;
       item.updatedAt = now();
       record(item, "tugaskan", "menunggu-review", actorId, { targetUserId: reviewerId });
@@ -404,6 +435,17 @@ export function createDummyRepository(storage: KeyValueStorage | null = browserS
       requireRole(actorId, "admin", "Admin");
       const item = content(contentId);
       requireStatus(item, ["disetujui"], "Hanya konten Disetujui yang dapat diterbitkan.");
+      if (!hasAgreement(item.authorId)) throw new ContentRuleError(`Konten belum bisa diterbitkan karena ${user(item.authorId).name} belum memiliki kesepakatan tertulis yang tercatat.`);
+      audit({
+        adminId: actorId,
+        action: "terbitkan",
+        targetType: "konten",
+        targetId: item.id,
+        targetLabel: item.judul,
+        alasan: null,
+        before: { status: "disetujui" },
+        after: { status: "terbit" },
+      });
       item.status = "terbit";
       item.updatedAt = now();
       // Revisi yang terbit menggantikan versi lama, yang tetap tayang sampai saat ini.
@@ -425,6 +467,16 @@ export function createDummyRepository(storage: KeyValueStorage | null = browserS
       const item = content(contentId);
       requireStatus(item, ["terbit"], "Hanya konten Terbit yang dapat ditarik dari website.");
       if (!alasan.trim()) throw new ContentRuleError("Alasan penarikan wajib diisi.");
+      audit({
+        adminId: actorId,
+        action: "tarik-website",
+        targetType: "konten",
+        targetId: item.id,
+        targetLabel: item.judul,
+        alasan: alasan.trim(),
+        before: { status: "terbit" },
+        after: { status: "draf" },
+      });
       item.status = "draf";
       item.publicPath = null;
       item.updatedAt = now();
@@ -448,10 +500,12 @@ export function createDummyRepository(storage: KeyValueStorage | null = browserS
       return structuredClone(item);
     },
 
-    async setRole(actorId, userId, role, action) {
+    async setRole(actorId, userId, role, action, alasan) {
       requireRole(actorId, "admin", "Admin");
+      const reason = requireReason(alasan);
       if (role === "user") throw new ContentRuleError("Peran pelajar dimiliki semua pengguna dan tidak dapat diubah.");
       const target = user(userId);
+      const rolesBefore = target.roles;
       if (action === "tambah") {
         if (target.roles.includes(role)) throw new ContentRuleError("Pengguna ini sudah memiliki peran tersebut.");
         target.roles = [...target.roles, role];
@@ -463,8 +517,62 @@ export function createDummyRepository(storage: KeyValueStorage | null = browserS
         target.roles = target.roles.filter((item) => item !== role);
       }
       state().roleEvents.push({ id: newId("peran"), userId, role, action, actorId, at: now() });
+      audit({
+        adminId: actorId,
+        action: action === "tambah" ? "tambah-peran" : "cabut-peran",
+        targetType: "pengguna",
+        targetId: userId,
+        targetLabel: target.name,
+        alasan: reason,
+        before: { peran: rolesBefore },
+        after: { peran: target.roles },
+      });
       commit();
       return structuredClone(target);
+    },
+
+    async setAccountStatus(actorId, userId, status, alasan) {
+      requireRole(actorId, "admin", "Admin");
+      const reason = requireReason(alasan);
+      if (status === "nonaktif" && userId === actorId) throw new ContentRuleError("Kamu tidak dapat menonaktifkan akunmu sendiri.");
+      const target = user(userId);
+      if (target.status === status) throw new ContentRuleError(status === "nonaktif" ? "Akun ini sudah nonaktif." : "Akun ini sudah aktif.");
+      audit({
+        adminId: actorId,
+        action: status === "nonaktif" ? "nonaktifkan-akun" : "aktifkan-akun",
+        targetType: "pengguna",
+        targetId: userId,
+        targetLabel: target.name,
+        alasan: reason,
+        before: { status: target.status },
+        after: { status },
+      });
+      target.status = status;
+      commit();
+      return structuredClone(target);
+    },
+
+    async recordAgreement(actorId, userId, { tanggal, dokumen }) {
+      requireRole(actorId, "admin", "Admin");
+      const target = user(userId);
+      if (!target.roles.includes("creator")) throw new ContentRuleError("Kesepakatan hanya untuk pengguna berperan Creator.");
+      if (!tanggal.trim()) throw new ContentRuleError("Tanggal kesepakatan wajib diisi.");
+      if (!dokumen.trim()) throw new ContentRuleError("Tautan atau keterangan dokumen wajib diisi.");
+      const previous = state().agreements.filter((item) => item.userId === userId).at(-1);
+      const entry: CreatorAgreement = { id: newId("kesepakatan"), userId, tanggal: tanggal.trim(), dokumen: dokumen.trim(), recordedBy: actorId, recordedAt: now() };
+      state().agreements.push(entry);
+      audit({
+        adminId: actorId,
+        action: "catat-kesepakatan",
+        targetType: "pengguna",
+        targetId: userId,
+        targetLabel: target.name,
+        alasan: null,
+        before: previous ? { tanggal: previous.tanggal, dokumen: previous.dokumen } : null,
+        after: { tanggal: entry.tanggal, dokumen: entry.dokumen },
+      });
+      commit();
+      return structuredClone(entry);
     },
 
     async reset() {

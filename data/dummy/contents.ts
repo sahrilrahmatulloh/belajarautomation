@@ -2,12 +2,14 @@
 // Konten, catatan, dan riwayat status untuk tahap antarmuka dengan data dummy. Waktu dihitung
 // dari saat ini agar lama menunggu review tetap masuk akal.
 import {
+  AdminAuditLog,
   ContentItem,
   ContentKind,
   ContentNode,
   ContentStatusId,
   ContentUser,
   ContentVideo,
+  CreatorAgreement,
   ReviewNote,
   RoleChangeEvent,
   StatusAction,
@@ -24,6 +26,8 @@ export interface DummyContentState {
   notes: ReviewNote[];
   statusEvents: StatusEvent[];
   roleEvents: RoleChangeEvent[];
+  agreements: CreatorAgreement[];
+  auditLog: AdminAuditLog[];
   // Konten terbit yang sudah digantikan revisinya.
   supersededIds: string[];
   nextId: number;
@@ -166,6 +170,12 @@ const EVENTS: StatusEvent[] = [
   event("event-27", "konten-manual", "tugaskan", "menunggu-review", "menunggu-review", "user-admin", 3, "user-rahma"),
 ];
 
+// Andi sengaja belum punya kesepakatan, agar kunci Terbitkan bisa dicoba (PRD FR-16 B).
+const AGREEMENTS: CreatorAgreement[] = [
+  { id: "kesepakatan-galih", userId: "user-galih", tanggal: "2026-10-01", dokumen: "Dokumen kesepakatan contoh Galih", recordedBy: "user-admin", recordedAt: daysAgo(30) },
+  { id: "kesepakatan-bima", userId: "user-bima", tanggal: "2026-10-05", dokumen: "Dokumen kesepakatan contoh Bima", recordedBy: "user-admin", recordedAt: daysAgo(28) },
+];
+
 // Selalu salinan baru, agar perubahan di state tidak mengubah data awal.
 export function createDummyContentState(): DummyContentState {
   return structuredClone({
@@ -174,6 +184,8 @@ export function createDummyContentState(): DummyContentState {
     notes: NOTES,
     statusEvents: EVENTS,
     roleEvents: [],
+    agreements: AGREEMENTS,
+    auditLog: [],
     supersededIds: [],
     nextId: 1000,
   });

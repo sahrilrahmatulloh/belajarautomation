@@ -88,8 +88,10 @@ test.describe("Halaman Admin di luar DEV", () => {
   test.use({ role: "admin" });
 
   for (const { path, title } of [
+    { path: "/admin", title: "Ringkasan" },
     { path: "/admin/konten", title: "Semua Konten" },
-    { path: "/admin/pengguna", title: "Kelola Peran" },
+    { path: "/admin/pengguna", title: "Pengguna dan Peran" },
+    { path: "/admin/log", title: "Log Aktivitas Admin" },
   ]) {
     test(`${title} tetap halaman informasi dengan tautan panduan`, async ({ page }) => {
       await page.goto(path);
@@ -104,11 +106,10 @@ test.describe("Halaman Admin di luar DEV", () => {
     });
   }
 
-  test("dashboard Admin tetap tampilan lama tanpa ringkasan data dummy alur konten", async ({ page }) => {
-    await page.goto("/admin");
+  test("detail pengguna tidak tersedia", async ({ page }) => {
+    const response = await page.goto("/admin/pengguna/user-sobat");
 
-    await expect(page.getByRole("heading", { level: 1, name: /^Halo, / })).toBeVisible();
-    await expect(page.getByRole("region", { name: "Terbit Terbaru" })).toHaveCount(0);
+    expect(response?.status()).toBe(404);
   });
 });
 
