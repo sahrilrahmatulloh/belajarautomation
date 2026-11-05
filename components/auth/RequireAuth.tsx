@@ -22,7 +22,7 @@ export default function RequireAuth({
   const pathname = usePathname();
   const session = useSession();
   const isHydrated = useHydrated();
-  const { isRoleMode, hasRole } = useViewMode();
+  const { activeRole, isRoleMode, hasRole } = useViewMode();
 
   const pageRole = getRoleFromPath(pathname);
   let redirectTo: string | null = null;
@@ -30,7 +30,7 @@ export default function RequireAuth({
   if (isHydrated) {
     if (!session) {
       redirectTo = "/login";
-    } else if (pageRole !== "user" && session.role !== pageRole) {
+    } else if (pageRole !== "user" && !session.roles.includes(pageRole)) {
       // Halaman Creator/Reviewer/Admin hanya untuk role tersebut.
       redirectTo = ROLE_HOME[session.role];
     } else if (pathname === "/" && isRoleMode) {
@@ -42,13 +42,13 @@ export default function RequireAuth({
   // Membuka halaman peran dari Mode Belajar, mis. lewat tautan, berarti kembali ke mode peran.
   // Hanya sekali per halaman: saat beralih ke Mode Belajar dari menu profil, halaman peran
   // masih terbuka sampai perpindahan selesai dan modenya tidak boleh dibalikkan.
-  const isOnOwnRolePage = pageRole !== "user" && session?.role === pageRole;
+  const isOnOwnRolePage = pageRole !== "user" && Boolean(session?.roles.includes(pageRole));
   const checkedPath = useRef<string | null>(null);
   useEffect(() => {
     if (!isHydrated || checkedPath.current === pathname) return;
     checkedPath.current = pathname;
-    if (isOnOwnRolePage && hasRole && !isRoleMode) viewModeActions.switchToRole();
-  }, [isHydrated, pathname, isOnOwnRolePage, hasRole, isRoleMode]);
+    if (session && isOnOwnRolePage && hasRole && activeRole !== pageRole) viewModeActions.switchToRole(session.email, pageRole);
+  }, [isHydrated, pathname, isOnOwnRolePage, hasRole, activeRole, pageRole, session]);
 
   useEffect(() => {
     if (redirectTo) {

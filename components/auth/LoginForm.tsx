@@ -9,6 +9,7 @@ import { DUMMY_ACCOUNTS, DUMMY_PASSWORD } from "@/data/dummy/accounts";
 import { ROLE_HOME, ROLE_LABELS } from "@/data/navigation";
 import { getNextTarget, withNextParam } from "@/lib/authRedirect";
 import { isDev } from "@/lib/env";
+import { getContentRepository } from "@/lib/content";
 import { sessionActions } from "@/lib/session";
 import { useHydrated } from "@/lib/useHydrated";
 import { isValidEmail } from "@/lib/validation";
@@ -44,7 +45,7 @@ export default function LoginForm() {
     setIsSubmitting(true);
 
     // Jeda singkat agar status memuat terlihat seperti permintaan ke server.
-    setTimeout(() => {
+    setTimeout(async () => {
       const account = DUMMY_ACCOUNTS.find(
         (item) => item.email === email.trim().toLowerCase()
       );
@@ -55,12 +56,12 @@ export default function LoginForm() {
         return;
       }
 
-      sessionActions.signIn({
-        name: account.name,
-        email: account.email,
-        role: account.role,
-      });
-      router.replace(getNextTarget() ?? ROLE_HOME[account.role]);
+      // Peran terkini, karena Admin bisa mengubahnya lewat Kelola Peran.
+      const users = await getContentRepository().listUsers();
+      const roles = users.find((item) => item.id === account.userId)?.roles ?? account.roles;
+      const role = roles.includes(account.role) ? account.role : (roles.find((item) => item !== "user") ?? "user");
+      sessionActions.signIn({ name: account.name, email: account.email, userId: account.userId, role, roles });
+      router.replace(getNextTarget() ?? ROLE_HOME[role]);
     }, 600);
   };
 
@@ -145,7 +146,7 @@ export default function LoginForm() {
           <div className="mt-3 grid grid-cols-2 gap-2">
             {DUMMY_ACCOUNTS.map((account) => (
               <button
-                key={account.role}
+                key={account.email}
                 type="button"
                 onClick={() => fillDemoAccount(account.email)}
                 aria-pressed={email === account.email}
@@ -155,7 +156,7 @@ export default function LoginForm() {
                     : "border-border bg-card hover:bg-accent"
                 }`}
               >
-                <span className="block font-semibold">{ROLE_LABELS[account.role]}</span>
+                <span className="block font-semibold">{account.label ?? ROLE_LABELS[account.role]}</span>
                 <span className="block truncate text-xs text-muted-foreground">
                   {account.name}
                 </span>

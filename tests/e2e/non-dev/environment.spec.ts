@@ -1,3 +1,5 @@
+import AxeBuilder from "@axe-core/playwright";
+
 import { expect, test } from "../fixtures/auth";
 import { BLOG, ROLE_MODE } from "../fixtures/testData";
 import { BlogPage } from "../pages/BlogPage";
@@ -41,6 +43,9 @@ test.describe("Halaman Creator di luar DEV", () => {
       await expect(page.getByRole("region", { name: "Panduan singkat menulis" }).getByRole("listitem")).toHaveCount(ROLE_MODE.writingStepCount);
       await expect(page.getByRole("button", { name: ROLE_MODE.templateDisabledLabel })).toBeDisabled();
       await expect(main).not.toContainText(/github|\bgit\b|branch|pull request|\bPR\b|\bMDX\b/i);
+
+      const { violations } = await new AxeBuilder({ page }).analyze();
+      expect(violations.filter((item) => ["critical", "serious"].includes(item.impact ?? "")).map((item) => item.id)).toEqual([]);
     });
   }
 

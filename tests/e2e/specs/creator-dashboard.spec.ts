@@ -43,6 +43,16 @@ test.describe("Dashboard Creator", () => {
   });
 });
 
+test("data dummy bisa direset dari Pengaturan", async ({ page }) => {
+  const settings = new SettingsPage(page);
+  await settings.goto();
+  const section = page.getByRole("region", { name: "Data Dummy" });
+
+  await section.getByRole("button", { name: "Reset data dummy" }).click();
+
+  await expect(section.getByRole("status")).toHaveText("Data dummy sudah direset.");
+});
+
 test("judul halaman pengaturan memakai Bahasa Indonesia", async ({ page }) => {
   const settings = new SettingsPage(page);
   await settings.goto();

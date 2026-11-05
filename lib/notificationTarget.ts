@@ -29,9 +29,12 @@ const DETAIL_ROUTES: Record<string, { slug: string }[]> = {
   ebooks: BOOKS,
 };
 
+// Halaman peran: keberadaan kontennya diperiksa oleh halaman itu sendiri.
+const ROLE_ROUTE = /^\/(creator|reviewer|admin)\//;
+
 function isAvailable(href: string) {
   const path = href.split(/[?#]/)[0];
-  if (STATIC_ROUTES.has(path)) return true;
+  if (STATIC_ROUTES.has(path) || ROLE_ROUTE.test(path)) return true;
 
   const [, section, slug, ...rest] = path.split("/");
   return rest.length === 0 && Boolean(DETAIL_ROUTES[section]?.some((item) => item.slug === slug));

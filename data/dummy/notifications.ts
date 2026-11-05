@@ -14,6 +14,7 @@ const daysAgoAt = (days: number, time: string) => {
   return date.toISOString();
 };
 
+// Notifikasi Khusus role dibuat dari riwayat status konten (lib/content/roleNotifications.ts).
 export const DUMMY_NOTIFICATIONS: Notification[] = [
   {
     id: "latihan-kuis-playwright",
@@ -130,45 +131,5 @@ export const DUMMY_NOTIFICATIONS: Notification[] = [
     href: "/learn",
     createdAt: daysAgoAt(28, "19:00"),
     read: true,
-  },
-  {
-    id: "creator-perlu-revisi",
-    group: "role",
-    role: "creator",
-    title: "Konten perlu revisi",
-    body: "Reviewer memberi catatan pada Soal: Validasi Status Code API.",
-    href: "/creator?konten=3",
-    createdAt: minutesAgo(30),
-    read: false,
-  },
-  {
-    id: "creator-disetujui",
-    group: "role",
-    role: "creator",
-    title: "Konten disetujui",
-    body: "Modul Page Object Model sudah disetujui dan menunggu diterbitkan Admin.",
-    href: "/creator?konten=5",
-    createdAt: minutesAgo(90),
-    read: false,
-  },
-  {
-    id: "reviewer-antrean",
-    group: "role",
-    role: "reviewer",
-    title: "Konten baru di antrean",
-    body: "Ada lesson baru pada course Dasar Web & API untuk QA yang menunggu review.",
-    href: "/reviewer",
-    createdAt: minutesAgo(30),
-    read: false,
-  },
-  {
-    id: "admin-transaksi-tertunda",
-    group: "role",
-    role: "admin",
-    title: "Transaksi tertunda",
-    body: "Ada transaksi yang menunggu pemeriksaan.",
-    href: "/admin",
-    createdAt: minutesAgo(30),
-    read: false,
   },
 ];

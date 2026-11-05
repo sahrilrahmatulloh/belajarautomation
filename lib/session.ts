@@ -2,6 +2,7 @@
 
 import { useSyncExternalStore } from "react";
 
+import { DUMMY_ACCOUNTS } from "@/data/dummy/accounts";
 import { Session } from "@/types/Auth";
 
 // SESI DUMMY: disimpan di localStorage karena belum ada autentikasi.
@@ -29,7 +30,14 @@ function readSession(): Session | null {
       typeof parsed.role === "string" &&
       ROLES.includes(parsed.role)
     ) {
-      return parsed as Session;
+      // Sesi lama belum menyimpan id pengguna dan daftar peran.
+      const session = parsed as Session;
+      const account = DUMMY_ACCOUNTS.find((item) => item.email === session.email);
+      return {
+        ...session,
+        userId: session.userId ?? account?.userId,
+        roles: Array.isArray(session.roles) ? session.roles : (account?.roles ?? ["user", session.role]),
+      };
     }
   } catch {
     // Data rusak atau penyimpanan tidak tersedia.

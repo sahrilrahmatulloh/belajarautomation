@@ -3,6 +3,9 @@
 import { useMemo, useSyncExternalStore } from "react";
 
 import { DUMMY_NOTIFICATIONS } from "@/data/dummy/notifications";
+import { useContentData } from "@/lib/content";
+import { buildRoleNotifications } from "@/lib/content/roleNotifications";
+import { isDev } from "@/lib/env";
 import { useNotificationPreferences } from "@/lib/notificationPreferences";
 import { useSession } from "@/lib/session";
 import { getVisibleNotificationGroups, useViewMode } from "@/lib/viewMode";
@@ -65,16 +68,21 @@ export function useNotifications() {
   const session = useSession();
   const readIdList = useSyncExternalStore(subscribe, getSnapshot, () => EMPTY);
   const { mutedGroups } = useNotificationPreferences();
-  const { isRoleMode } = useViewMode();
+  const { activeRole, isRoleMode } = useViewMode();
+  // Antarmuka peran dengan data dummy hanya ada di DEV (PRD FR-15).
+  const userId = isDev && isRoleMode ? session?.userId : undefined;
+  const roleNotifications = useContentData(`notifikasi-${activeRole}-${userId}`, async (repository) =>
+    userId ? buildRoleNotifications(activeRole, userId, await repository.listStatusEvents(), await repository.listContents()) : []
+  );
 
   return useMemo<Notification[]>(() => {
     const readSet = new Set(readIdList);
-    return DUMMY_NOTIFICATIONS.filter((item) => !item.role || item.role === session?.role)
+    return [...DUMMY_NOTIFICATIONS, ...(roleNotifications ?? [])]
       .filter((item) => getVisibleNotificationGroups(isRoleMode).includes(item.group))
       .filter((item) => !mutedGroups.includes(item.group))
       .map((item) => ({ ...item, read: item.read || readSet.has(item.id) }))
       .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
-  }, [readIdList, session?.role, mutedGroups, isRoleMode]);
+  }, [readIdList, roleNotifications, mutedGroups, isRoleMode]);
 }
 
 export const notificationActions = {

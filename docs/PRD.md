@@ -1,9 +1,17 @@
 # BELAJARAUTOMATION.COM
 ## Product Requirements Document (PRD)
-**Versi:** 2.14  
+**Versi:** 2.15  
 **Status:** Draft — Acuan Pengembangan Produk  
 **Platform:** Web Application  
 **Target Pengguna:** Pemula hingga praktisi QA, Software Testing, dan Programming
+
+### Perubahan di Versi 2.15
+- Antarmuka lengkap Creator, Reviewer, dan Admin dibangun sekarang dengan data dummy, hanya tampil di DEV; UAT dan Production tetap menampilkan alur Google Docs sampai backend tersedia (FR-15).
+- Menetapkan fitur Reviewer (Antrian Review dan Halaman Review) dan Admin (Ringkasan, Semua Konten, Tugaskan Reviewer, Terbitkan dan Tarik, Kelola Peran) (FR-15).
+- Reviewer tidak mengedit isi konten secara langsung; perbaikan selalu lewat catatan revisi (FR-15).
+- Catatan revisi dinyatakan selesai saat Reviewer menyetujui konten (FR-15).
+- Backend memakai Supabase (Auth, Postgres, Storage) (Bagian 6 dan 12).
+- Batas upload gambar editor: JPG, PNG, atau WebP, maksimal 2 MB (FR-15).
 
 ### Perubahan di Versi 2.14
 - Menetapkan aturan penyimpanan mockup yang disetujui di `docs/desain/` (Bagian 13.2).
@@ -1163,8 +1171,8 @@ Memungkinkan konten ditulis oleh lebih dari satu orang dengan kualitas yang teta
 | Peran | Tugas | Batasan |
 |---|---|---|
 | **Creator** | Menulis dan merevisi konten | Tidak dapat menerbitkan sendiri dan tidak dapat me-review kontennya sendiri |
-| **Reviewer** | Memeriksa akurasi, kejelasan, contoh kode, dan kunci jawaban; menyetujui atau meminta revisi | Tidak me-review konten yang ditulisnya sendiri |
-| **Admin** | Menerbitkan konten yang sudah disetujui, mengelola peran pengguna | — |
+| **Reviewer** | Memeriksa akurasi, kejelasan, contoh kode, referensi video, dan kunci jawaban; menyetujui atau meminta revisi | Tidak me-review konten yang ditulisnya sendiri dan tidak mengedit isi konten secara langsung |
+| **Admin** | Menugaskan reviewer, menerbitkan dan menarik konten, mengelola peran pengguna | Tidak dapat mencabut peran Admin dari dirinya sendiri jika ia satu-satunya Admin |
 
 - Satu akun dapat memiliki beberapa peran. Selama tim masih kecil, pemilik produk dapat merangkap Reviewer dan Admin.
 - Creator, Reviewer, dan Admin tetap dapat belajar: XP, rank, profil pelajar, dan membership tetap berlaku di **Mode Belajar**.
@@ -1232,6 +1240,15 @@ Ketentuan:
 - Creator tidak memerlukan akun atau akses GitHub.
 - Halaman Konten Saya, Buat Konten, dan Catatan Revisi di aplikasi tetap berupa halaman informasi yang menautkan ke template dan panduan.
 
+### Tahap antarmuka dengan data dummy
+Agar alur ketiga peran dapat dicoba dan diuji sebelum backend tersedia, seluruh antarmuka Creator, Reviewer, dan Admin dibangun sekarang dengan data dummy.
+
+- Antarmuka lengkap hanya tampil di lingkungan DEV. UAT dan Production tetap menampilkan halaman informasi alur Google Docs sampai backend tersedia.
+- Data dummy konten, catatan, dan riwayat status dipusatkan di `data/dummy/` dan dapat direset dari DEV.
+- Akses data melalui satu lapisan repository (antarmuka) agar implementasi dummy dapat diganti Supabase tanpa mengubah komponen halaman.
+- Aksi yang membutuhkan backend (menerbitkan ke blog publik, unggah gambar permanen) disimulasikan dan diberi keterangan "Simulasi" di DEV.
+- Aturan alur status dan batasan peran diterapkan di lapisan data, bukan hanya disembunyikan di tampilan.
+
 ### Tahap setelah backend: menulis di aplikasi
 Backend diprioritaskan agar Creator dapat menulis langsung di aplikasi tanpa alat tambahan.
 
@@ -1256,8 +1273,8 @@ Backend diprioritaskan agar Creator dapat menulis langsung di aplikasi tanpa ala
 - Langkah 2, editor:
   - Panel info: judul, ringkasan, kategori, sampul, ajakan ke course atau latihan, dan sumber.
   - Editor isi dengan toolbar: heading, tebal, daftar, blok kode, kotak Tips, kotak Peringatan, gambar, dan tabel.
-  - **Upload gambar** langsung dari editor, dengan teks alternatif dan keterangan; gambar dioptimalkan otomatis dan dibatasi ukuran serta formatnya.
-  - Sisipkan referensi video YouTube dengan menempelkan link; judul dan nama channel diisi otomatis bila tersedia, dan Creator menambahkan alasan memilih video.
+  - **Upload gambar** langsung dari editor, dengan teks alternatif (wajib) dan keterangan (opsional); format JPG, PNG, atau WebP, maksimal 2 MB; gambar dioptimalkan otomatis.
+  - Sisipkan referensi video YouTube dengan menempelkan link; judul dan nama channel diisi otomatis bila tersedia, sedangkan durasi, bahasa, dan alasan memilih video diisi Creator.
   - Pratinjau yang menampilkan konten persis seperti di halaman publik.
   - Simpan otomatis sebagai draf, jumlah kata, dan perkiraan waktu baca.
   - Checklist sebelum kirim sesuai Bagian 16: contoh kode diuji, data bersumber, bahasa diperiksa.
@@ -1269,8 +1286,44 @@ Backend diprioritaskan agar Creator dapat menulis langsung di aplikasi tanpa ala
 - Creator dapat membalas singkat dan menandai catatan "Sudah diperbaiki".
 - Filter: Perlu ditangani dan Selesai.
 - Tombol "Kirim ulang untuk Review" nonaktif selama masih ada catatan yang belum ditandai, dengan teks bantuan jumlah catatan yang sudah selesai (mis. "2 dari 3 selesai").
-- "Sudah diperbaiki" adalah tanda dari Creator, bukan persetujuan. Catatan dinyatakan selesai setelah Reviewer mengonfirmasinya saat review berikutnya; Reviewer dapat membuka kembali catatan yang belum tuntas.
+- "Sudah diperbaiki" adalah tanda dari Creator, bukan persetujuan. Seluruh catatan dinyatakan selesai saat Reviewer menyetujui konten. Jika perbaikan belum cukup, Reviewer meminta revisi lagi dengan catatan baru.
 - Acuan visual: `docs/desain/` (Bagian 13.2).
+
+**Antrian Review (Reviewer)**
+- Tab: Ditugaskan ke saya, Belum ditugaskan, dan Riwayat (konten yang pernah direview).
+- Kolom: judul, jenis konten, Creator, tanggal dikirim, kiriman ke berapa (pertama atau ulang), dan lama menunggu.
+- Konten "Belum ditugaskan" dapat diambil sendiri oleh Reviewer ("Ambil untuk review"), kecuali konten tulisannya sendiri.
+- Pencarian dan filter jenis konten.
+
+**Halaman Review (Reviewer)**
+- Pratinjau konten persis seperti halaman publik, beserta panel info (metadata, sumber, ajakan).
+- Panel catatan: tambah catatan umum, catatan per bagian (pilih heading), dan catatan per referensi video.
+- Untuk kiriman ulang: catatan sebelumnya tampil beserta balasan Creator dan tanda "Sudah diperbaiki".
+- Daftar referensi video beserta alasan Creator memilihnya.
+- Checklist Reviewer sesuai Bagian 16: akurasi, contoh kode, sumber data, bahasa, dan kelayakan referensi video.
+- Keputusan: **Minta Revisi** (wajib minimal satu catatan baru) atau **Setujui** (wajib seluruh checklist Reviewer dicentang).
+- Reviewer tidak mengedit isi konten secara langsung.
+
+**Ringkasan (Admin)**
+- Jumlah konten per status, konten Menunggu Review yang belum ditugaskan, review yang menunggu lebih dari 3 hari, dan konten terbit terbaru.
+
+**Semua Konten (Admin)**
+- Seluruh konten dari semua Creator dengan tab status, pencarian, filter jenis, Creator, dan Reviewer.
+- **Tugaskan Reviewer** untuk konten Menunggu Review; Reviewer yang dipilih tidak boleh penulis konten tersebut.
+- **Terbitkan** konten Disetujui.
+- **Tarik dari website** konten Terbit dengan alasan wajib; konten kembali menjadi Draf milik Creator dan alasannya tampil sebagai catatan umum.
+- Riwayat status setiap konten: siapa, kapan, dan perubahan apa.
+
+**Kelola Peran (Admin)**
+- Daftar pengguna dengan pencarian, beserta peran yang dimiliki.
+- Menambah atau mencabut peran Creator, Reviewer, dan Admin; satu pengguna dapat memiliki beberapa peran.
+- Admin tidak dapat mencabut peran Admin dari dirinya sendiri jika ia satu-satunya Admin.
+- Setiap perubahan peran tercatat (siapa, kapan, perubahan apa).
+
+**Notifikasi peran (grup Khusus role, Bagian 4.4)**
+- Creator: konten diminta revisi, disetujui, diterbitkan, atau ditarik.
+- Reviewer: konten baru ditugaskan kepadanya, dan kiriman ulang dari konten yang pernah ia review.
+- Admin: konten baru Disetujui dan siap diterbitkan.
 
 **Fase berikutnya**
 - Riwayat versi dan perbandingan antarversi.
@@ -1459,6 +1512,8 @@ Tanggung jawab:
 - Penyimpanan preferensi pengguna.
 
 ## 6.3 Database
+Backend memakai Supabase: Auth untuk autentikasi, Postgres untuk database dengan Row Level Security sebagai penegak hak akses, dan Storage untuk gambar konten serta file produk.
+
 Database menjadi sumber data persisten untuk:
 - Pengguna.
 - Konten.
@@ -1819,8 +1874,7 @@ Hal berikut harus diputuskan sebelum implementasi fitur terkait mencapai tahap p
 ## Produk dan Konten
 - Struktur final materi dan modul.
 - Imbalan untuk Creator dan bentuk kesepakatan kepemilikan konten.
-- Waktu peralihan dari menulis di Google Docs ke editor di aplikasi.
-- Penyimpanan file gambar untuk upload di editor (bagian dari strategi penyimpanan file).
+- Waktu peralihan dari menulis di Google Docs ke editor di aplikasi (setelah backend Supabase untuk alur konten siap).
 - Produksi video sendiri (misalnya untuk materi premium) beserta layanan hosting-nya; tidak termasuk rilis awal.
 
 ## Gamification
@@ -1858,8 +1912,9 @@ Hal berikut harus diputuskan sebelum implementasi fitur terkait mencapai tahap p
 - Proses administrasi dan rekonsiliasi transaksi.
 
 ## Teknologi
+- **Sudah diputuskan:** backend memakai Supabase (Auth untuk login, Postgres untuk database, Storage untuk gambar dan file).
 - Audit stack saat ini.
-- Strategi autentikasi.
+- Strategi autentikasi (detail implementasi di Supabase Auth).
 - Desain API.
 - Struktur database final.
 - Strategi penyimpanan dan pengamanan file.

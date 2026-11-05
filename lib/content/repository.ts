@@ -1,0 +1,67 @@
+import {
+  ContentDraftInput,
+  ContentItem,
+  ContentUser,
+  ReviewNote,
+  ReviewNoteKind,
+  RoleChangeAction,
+  RoleChangeEvent,
+  StatusEvent,
+} from "@/types/ContentWorkflow";
+import { UserRole } from "@/types/Role";
+
+// Pelanggaran aturan alur konten atau peran. Pesannya aman ditampilkan ke pengguna.
+export class ContentRuleError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "ContentRuleError";
+  }
+}
+
+// Satu pintu akses data konten (PRD FR-15). Halaman hanya memanggil antarmuka ini, jadi
+// implementasi dummy nantinya cukup diganti Supabase tanpa mengubah komponen. Aturan alur
+// status dan peran ditegakkan di sini, bukan hanya disembunyikan di tampilan. Semua operasi
+// async karena implementasi akhirnya memanggil jaringan.
+export interface ContentRepository {
+  // Dipanggil setiap kali data berubah. Mengembalikan fungsi untuk berhenti berlangganan.
+  subscribe(listener: () => void): () => void;
+
+  listUsers(): Promise<ContentUser[]>;
+  listContents(): Promise<ContentItem[]>;
+  getContent(contentId: string): Promise<ContentItem | null>;
+  listNotes(contentId: string): Promise<ReviewNote[]>;
+  listAllNotes(): Promise<ReviewNote[]>;
+  listStatusEvents(contentId?: string): Promise<StatusEvent[]>;
+  listRoleEvents(): Promise<RoleChangeEvent[]>;
+
+  // Creator
+  createDraft(actorId: string, input: ContentDraftInput): Promise<ContentItem>;
+  updateDraft(actorId: string, contentId: string, input: ContentDraftInput): Promise<ContentItem>;
+  deleteDraft(actorId: string, contentId: string): Promise<void>;
+  submitForReview(actorId: string, contentId: string, checklist: string[]): Promise<ContentItem>;
+  withdraw(actorId: string, contentId: string): Promise<ContentItem>;
+  resubmit(actorId: string, contentId: string): Promise<ContentItem>;
+  replyToNote(actorId: string, noteId: string, reply: string): Promise<ReviewNote>;
+  setNoteFixed(actorId: string, noteId: string, fixed: boolean): Promise<ReviewNote>;
+  createRevision(actorId: string, contentId: string): Promise<ContentItem>;
+
+  // Reviewer
+  claimReview(actorId: string, contentId: string): Promise<ContentItem>;
+  addNote(
+    actorId: string,
+    contentId: string,
+    note: { kind: ReviewNoteKind; anchor: string | null; isi: string }
+  ): Promise<ReviewNote>;
+  removeNote(actorId: string, noteId: string): Promise<void>;
+  requestRevision(actorId: string, contentId: string): Promise<ContentItem>;
+  approve(actorId: string, contentId: string, checklist: string[]): Promise<ContentItem>;
+
+  // Admin
+  assignReviewer(actorId: string, contentId: string, reviewerId: string): Promise<ContentItem>;
+  publish(actorId: string, contentId: string): Promise<ContentItem>;
+  takedown(actorId: string, contentId: string, alasan: string): Promise<ContentItem>;
+  setRole(actorId: string, userId: string, role: UserRole, action: RoleChangeAction): Promise<ContentUser>;
+
+  // Mengembalikan data ke kondisi awal. Hanya untuk tahap dummy.
+  reset(): Promise<void>;
+}

@@ -8,9 +8,10 @@ import { NotificationGroup } from "@/types/Notification";
 import { UserRole } from "@/types/Role";
 
 // Pengguna dengan peran tambahan punya Mode Belajar dan mode perannya (PRD FR-15). Yang
-// disimpan adalah email akun yang sedang di Mode Belajar, jadi mode bawaan setiap akun
-// adalah mode perannya dan pilihan satu akun tidak terbawa ke akun lain.
-const STORAGE_KEY = "belajarautomation-learning-mode-account";
+// disimpan adalah email akun beserta modenya, jadi mode bawaan setiap akun adalah peran
+// utamanya dan pilihan satu akun tidak terbawa ke akun lain.
+const STORAGE_KEY = "belajarautomation-view-mode";
+const LEARNING = "belajar";
 
 let cache: string | null | undefined;
 const listeners = new Set<() => void>();
@@ -44,36 +45,40 @@ function subscribe(listener: () => void) {
   };
 }
 
+function write(value: string | null) {
+  try {
+    if (value) window.localStorage.setItem(STORAGE_KEY, value);
+    else window.localStorage.removeItem(STORAGE_KEY);
+  } catch {
+    // Penyimpanan tidak tersedia; mode hanya bertahan di memori.
+  }
+  cache = value;
+  listeners.forEach((listener) => listener());
+}
+
 export const viewModeActions = {
   switchToLearning(email: string) {
-    try {
-      window.localStorage.setItem(STORAGE_KEY, email);
-    } catch {
-      // Penyimpanan tidak tersedia; mode hanya bertahan di memori.
-    }
-    cache = email;
-    listeners.forEach((listener) => listener());
+    write(`${email}|${LEARNING}`);
   },
-  switchToRole() {
-    try {
-      window.localStorage.removeItem(STORAGE_KEY);
-    } catch {
-      // Penyimpanan tidak tersedia; mode hanya bertahan di memori.
-    }
-    cache = null;
-    listeners.forEach((listener) => listener());
+  switchToRole(email: string, role: UserRole) {
+    write(`${email}|${role}`);
   },
 };
 
 export function useViewMode() {
   const session = useSession();
-  const learningEmail = useSyncExternalStore(subscribe, getSnapshot, () => null);
+  const stored = useSyncExternalStore(subscribe, getSnapshot, () => null);
 
-  const hasRole = Boolean(session && session.role !== "user");
-  const isRoleMode = hasRole && learningEmail !== session?.email;
-  const activeRole: UserRole = isRoleMode && session ? session.role : "user";
+  const extraRoles = (session?.roles ?? []).filter((role) => role !== "user");
+  const hasRole = extraRoles.length > 0;
+  const [storedEmail, storedMode] = stored?.split("|") ?? [];
+  const mode = storedEmail === session?.email ? storedMode : undefined;
+  const isLearning = !hasRole || mode === LEARNING;
+  const activeRole: UserRole = isLearning
+    ? "user"
+    : (extraRoles.find((role) => role === mode) ?? (session && session.role !== "user" ? session.role : extraRoles[0]));
 
-  return { hasRole, isRoleMode, activeRole, home: ROLE_HOME[activeRole] };
+  return { hasRole, extraRoles, isRoleMode: !isLearning, activeRole, home: ROLE_HOME[activeRole] };
 }
 
 // Kelompok notifikasi per mode (PRD FR-15).
