@@ -260,6 +260,17 @@ export const LEARNER_PAGES = [
   { name: "Profil kustomisasi", path: "/profile?tab=kustomisasi" },
 ];
 
+// Contoh lesson berisi (content/lessons/dasar-web-api/client-server.mdx), course tanpa progres dummy.
+export const LESSON_CONTENT = {
+  courseSlug: "dasar-web-api",
+  courseTitle: "Dasar Web & API untuk QA",
+  moduleTitle: "Cara Kerja Web",
+  lessonSlug: "client-server",
+  lessonTitle: "Client & Server",
+  nextLessonSlug: "apa-itu-http",
+  totalLessons: 8,
+} as const;
+
 // Ruang kerja Admin (data/dummy/contents.ts, akun admin@).
 export const ADMIN_WORKSPACE = {
   counts: { all: 12, approved: 1, byGalih: 4, byRahma: 5 },

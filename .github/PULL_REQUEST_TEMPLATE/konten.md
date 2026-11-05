@@ -17,7 +17,7 @@ Panduan: [docs/CONTENT_GUIDE.md](https://github.com/sahrilrahmatulloh/belajaraut
 - [ ] Sudah ada kesepakatan tertulis dengan Creator.
 - [ ] `author` berisi nama Creator.
 - [ ] Hasil konversi sama dengan dokumen yang disetujui.
-- [ ] `npm run check:blog` lulus.
+- [ ] `npm run check:blog` dan `npm run check:lessons` lulus.
 - [ ] Artikel sudah diperiksa di `npm run dev`, di mode terang dan gelap, serta di layar mobile.
 - [ ] Gambar sudah dioptimalkan dan punya teks alternatif.
 - [ ] Data seperti gaji mencantumkan sumber dan tahun, dan tidak ada lagi placeholder.

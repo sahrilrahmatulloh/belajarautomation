@@ -6,47 +6,16 @@
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 
-import { compile } from "@mdx-js/mdx";
 import matter from "gray-matter";
-import remarkGfm from "remark-gfm";
 
-import { findVideos } from "./blog-videos.mjs";
+import { checkContentBody, ctaProblem, sourcesProblem } from "./content-checks.mjs";
 
 const CONTENT_DIR = process.argv[2] ?? "content/blog";
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 const REQUIRED_TEXT = ["title", "slug", "excerpt", "category", "cover"];
-const VIDEO_ID_PATTERN = /^[A-Za-z0-9_-]{11}$/;
-const VIDEO_DURATION_PATTERN = /^(\d+:[0-5]\d|\d+:[0-5]\d:[0-5]\d)$/;
-const MAX_VIDEOS = 3;
-
 const categories = [...readFileSync("types/Article.ts", "utf8").match(/ARTICLE_CATEGORIES = \[([\s\S]*?)\]/)[1].matchAll(/"([^"]+)"/g)].map(
   (match) => match[1]
 );
-
-const availableCourses = new Set(
-  readFileSync("data/courses.ts", "utf8")
-    .split(/\r?\n  \{/)
-    .slice(1)
-    .filter((block) => /availability:\s*"available"/.test(block))
-    .map((block) => block.match(/slug:\s*"([^"]+)"/)?.[1])
-);
-const practices = new Set(
-  [...readFileSync("data/challenges.ts", "utf8").matchAll(/^ {4}slug:\s*"([^"]+)"/gm)].map((match) => match[1])
-);
-const roadmaps = new Set(
-  [...readFileSync("data/roadmap.ts", "utf8").matchAll(/^ {4}id:\s*"([^"]+)"/gm)].map((match) => match[1])
-);
-
-function ctaProblem({ type, slug } = {}) {
-  if (type === "roadmap") {
-    return slug === undefined || roadmaps.has(slug) ? null : `roadmap "${slug}" tidak ada`;
-  }
-  if (type === "course") {
-    return availableCourses.has(slug) ? null : `course "${slug}" tidak ada atau belum tersedia`;
-  }
-  if (type === "practice") return practices.has(slug) ? null : `latihan "${slug}" tidak ada`;
-  return `jenis ajakan "${type}" tidak dikenal`;
-}
 
 // Tanggal YAML tanpa tanda kutip terbaca sebagai Date.
 const isValidDate = (value) => value instanceof Date || DATE_PATTERN.test(String(value));
@@ -94,39 +63,10 @@ for (const file of files) {
     }
   }
 
-  if (data.sources !== undefined) {
-    const valid = Array.isArray(data.sources) && data.sources.every((source) => source?.title && /^https?:\/\//.test(source?.url ?? ""));
-    if (!valid) report(`"sources" harus berisi daftar { title, url } dengan url http(s)`);
-  }
+  const sourcesIssue = sourcesProblem(data.sources);
+  if (sourcesIssue) report(sourcesIssue);
 
-  // Kotak ajakan di dalam isi artikel, mis. <Ajakan type="course" slug="playwright" />.
-  for (const [tag] of content.matchAll(/<Ajakan\b[^>]*>/g)) {
-    const type = tag.match(/type="([^"]+)"/)?.[1];
-    const slug = tag.match(/slug="([^"]+)"/)?.[1];
-    const problem = ctaProblem({ type, slug });
-    if (problem) report(`<Ajakan>: ${problem}`);
-  }
-
-  for (const [, src] of content.matchAll(/<Gambar\b[^>]*\bsrc="([^"]+)"/g)) {
-    if (!existsSync(path.join("public", src))) report(`<Gambar>: file "${src}" tidak ada di public/`);
-  }
-
-  // Video referensi YouTube (PRD FR-02 bagian G).
-  const videos = findVideos(content);
-  if (videos.length > MAX_VIDEOS) report(`maksimal ${MAX_VIDEOS} video per artikel, ada ${videos.length}`);
-  for (const video of videos) {
-    const label = `<VideoYouTube id="${video.id ?? ""}">`;
-    if (!VIDEO_ID_PATTERN.test(video.id ?? "")) report(`${label}: "id" harus 11 karakter huruf, angka, - atau _`);
-    if (!video.judul?.trim()) report(`${label}: "judul" wajib diisi`);
-    if (!video.channel?.trim()) report(`${label}: "channel" wajib diisi`);
-    if (!VIDEO_DURATION_PATTERN.test(video.durasi ?? "")) report(`${label}: "durasi" wajib berformat m:ss atau h:mm:ss`);
-  }
-
-  try {
-    await compile(content, { remarkPlugins: [remarkGfm] });
-  } catch (error) {
-    report(`MDX tidak valid: ${error.message}`);
-  }
+  await checkContentBody(content, "artikel", report);
 }
 
 if (problems.length > 0) {

@@ -13,7 +13,7 @@ export interface CourseInProgress {
 
 // Semua course yang pernah dipelajari, yang terakhir dibuka lebih dulu.
 // Entri untuk course yang tidak ada atau belum tersedia diabaikan.
-function getStudiedCourses(): CourseInProgress[] {
+export function getStudiedCourses(): CourseInProgress[] {
   return DUMMY_LEARNING_PROGRESS.flatMap((entry) => {
     const course = COURSES.find((item) => item.slug === entry.courseSlug);
     if (!course || course.availability !== "available") return [];

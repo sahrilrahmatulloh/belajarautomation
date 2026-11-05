@@ -4,7 +4,7 @@ Creator menulis di Google Docs memakai template artikel resmi, dan tidak memerlu
 
 Panduan untuk Creator ada di halaman informasi Mode Creator di aplikasi.
 
-Tahap saat ini baru **artikel blog**. Isi lesson dan soal latihan menyusul sesuai FR-15.
+Dokumen ini mencakup **artikel blog**, [lesson](#mengubah-dokumen-menjadi-lesson), dan [kuis](#mengubah-dokumen-menjadi-kuis). Alur dan checklistnya sama. Isi template untuk Google Docs ada di [docs/templates/](templates/).
 
 ## Sebelum mulai
 
@@ -144,3 +144,27 @@ Aturan:
 - Video berbahasa Indonesia diutamakan.
 
 Menjalankan `npm run check:youtube` memeriksa semua video di `content/blog`: yang dihapus atau dijadikan privat, serta yang embed-nya dimatikan. Pemeriksaan ini butuh jaringan, jadi tidak ikut build. Workflow `Cek Video YouTube` menjalankannya seminggu sekali, dan bisa juga dijalankan manual dari tab Actions.
+
+## Mengubah dokumen menjadi lesson
+
+Judul, modul, urutan, dan durasi lesson ada di `data/courseDetails.ts`. Lesson baru atau perubahan judul perlu diubah di sana, dan slug yang sudah terbit jangan diubah.
+
+1. **Buat file** `content/lessons/<slug-course>/<slug-lesson>.mdx`. Slug harus cocok dengan `data/courseDetails.ts`, dan alamat lesson di aplikasi menunjukkan slug-nya.
+2. **Isi frontmatter:** `status: draft`, `author` berisi nama Creator, dan `sources` bila ada. Formatnya ada di [content/lessons/README.md](../content/lessons/README.md).
+3. **Salin isi** ke MDX. Komponennya sama dengan artikel: heading, kode, `Tips`, `Peringatan`, `Gambar`, tabel, dan `VideoYouTube`. Judul lesson tidak perlu ditulis lagi, karena sudah tampil di halaman.
+4. **Periksa** dengan `npm run check:lessons` dan `npm run dev`, lalu buka `/learn/<slug-course>/<slug-lesson>`.
+5. **Buat pull request** ke `develop` memakai template konten.
+6. Setelah CI lulus, ubah `status` menjadi `published`, lalu merge.
+
+Setelah seluruh lesson satu course terbit dan ditinjau, ubah `contentStatus` course itu menjadi `ready` di `data/courses.ts`. `npm run check:lessons` menggagalkan build bila course `ready` masih punya lesson yang belum terbit. Sebelum rilis, course `available` yang belum `ready` diubah menjadi `coming-soon` (PRD FR-02).
+
+## Mengubah dokumen menjadi kuis
+
+Kuis berisi kunci jawaban, jadi hanya disimpan di kode server.
+
+- [ ] Reviewer sudah memverifikasi seluruh kunci jawaban.
+
+1. **Tambah data kuis** di `data/challengeDetails.ts` dengan `type: "quiz"` dan `passingScore: 70`. Setiap soal berisi `question`, `options`, `correctIndex` (A = 0, B = 1, dan seterusnya), dan `explanation`.
+2. **Tambah kartu kuis** di `data/challenges.ts`, dengan `slug` yang sama.
+3. **Periksa** dengan `npm run check:challenges` dan `npm run dev`, lalu kerjakan kuisnya di `/playground/<slug>`.
+4. **Buat pull request** ke `develop` memakai template konten, lalu merge setelah CI lulus.

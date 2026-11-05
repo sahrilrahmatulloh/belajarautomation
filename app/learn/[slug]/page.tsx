@@ -50,7 +50,7 @@ export default async function CoursePage({
   return (
     <DashboardLayout>
       <CourseDetailPage
-        course={course}
+        courseSlug={course.slug}
         detail={detail}
       />
     </DashboardLayout>

@@ -6,6 +6,25 @@ export const CONTENT_GUIDE_URL =
 // tombol template di halaman Creator nonaktif.
 export const ARTICLE_TEMPLATE_URL: string = "";
 
+// Link template lesson dan kuis di Google Docs (isi template: docs/templates/).
+export const LESSON_TEMPLATE_URL: string = "";
+export const QUIZ_TEMPLATE_URL: string = "";
+
+// Panduan menulis lesson dan kuis untuk Creator, tanpa istilah Git (PRD FR-02, FR-04, dan FR-15).
+export const LESSON_WRITING_TIPS = [
+  "Tulis satu dokumen untuk setiap lesson, sesuai judul dan modul di daftar course.",
+  "Teks adalah isi utama. Lesson harus bisa dipahami lengkap tanpa video.",
+  "Video YouTube bersifat opsional, maksimal 3 per lesson, dan cantumkan judul serta nama channel.",
+  "Kirim ke Reviewer lewat alur yang sama dengan artikel.",
+];
+
+export const QUIZ_WRITING_TIPS = [
+  "Satu kuis mencakup satu course dan tampil di Playground.",
+  "Buat 5–10 soal pilihan ganda dengan satu jawaban benar dan penjelasannya. Peserta lulus bila skornya minimal 70%.",
+  "Dokumen kuis memuat kunci jawaban, jadi bagikan hanya ke Reviewer dan Admin.",
+  "Reviewer wajib memverifikasi seluruh kunci jawaban sebelum kuis terbit.",
+];
+
 // Alur konten sebelum backend tersedia, dari sisi Creator (PRD FR-15).
 export const GOOGLE_DOCS_FLOW = [
   { stage: "Draf", action: "Menulis di Google Docs dengan template artikel resmi" },

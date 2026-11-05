@@ -112,6 +112,33 @@ test.describe("Halaman Admin di luar DEV", () => {
   });
 });
 
+test.describe("Lesson draf di luar DEV", () => {
+  test.use({ role: "user" });
+
+  test("isi draf tidak tampil dan tidak ada tombol selesai", async ({ page }) => {
+    await page.goto("/learn/dasar-web-api/client-server");
+
+    await expect(page.getByRole("heading", { name: "Materi sedang ditulis" })).toBeVisible();
+    await expect(page.getByRole("button", { name: /^Tandai selesai/ })).toHaveCount(0);
+    await expect(page.getByRole("main")).not.toContainText("Contoh struktur lesson");
+  });
+});
+
+test.describe("Panduan menulis lesson dan kuis di luar DEV", () => {
+  test.use({ role: "creator" });
+
+  test("tampil tanpa istilah teknis, dan tombol template nonaktif selama link kosong", async ({ page }) => {
+    await page.goto("/creator/buat");
+    const main = page.getByRole("main");
+
+    await expect(main.getByRole("heading", { level: 2, name: "Menulis lesson" })).toBeVisible();
+    await expect(main.getByRole("heading", { level: 2, name: "Menulis kuis" })).toBeVisible();
+    await expect(main.getByRole("button", { name: "Template Lesson sedang disiapkan. Hubungi Admin." })).toBeDisabled();
+    await expect(main.getByRole("button", { name: "Template Kuis sedang disiapkan. Hubungi Admin." })).toBeDisabled();
+    await expect(main).not.toContainText(/github|\bgit\b|branch|pull request|\bPR\b|\bMDX\b/i);
+  });
+});
+
 test.describe("Lingkungan UAT", () => {
   test('label lingkungan bertuliskan "UAT"', async ({ page }) => {
     const loginPage = new LoginPage(page);

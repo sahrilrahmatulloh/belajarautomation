@@ -1,13 +1,15 @@
+"use client";
+
 import Link from "next/link";
 import { ArrowRight, Crown, Sparkles } from "lucide-react";
 
 import RankEmblem from "@/components/common/RankEmblem";
-import { DUMMY_ACCOUNT } from "@/data/dummy/account";
 import { getRankProgress } from "@/data/ranks";
 import { formatNumber } from "@/lib/format";
+import { useAccountXp } from "@/lib/lessonProgress";
 
 export default function LearningRankCard() {
-  const { xp } = DUMMY_ACCOUNT;
+  const xp = useAccountXp();
   const { rank, nextRank, xpToNext, percent } = getRankProgress(xp);
 
   return (

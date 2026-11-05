@@ -1,11 +1,55 @@
 import { ExternalLink, LucideIcon } from "lucide-react";
 
-import { ARTICLE_TEMPLATE_URL, GOOGLE_DOCS_FLOW, WRITING_STEPS } from "@/data/contentGuide";
+import {
+  ARTICLE_TEMPLATE_URL,
+  GOOGLE_DOCS_FLOW,
+  LESSON_TEMPLATE_URL,
+  LESSON_WRITING_TIPS,
+  QUIZ_TEMPLATE_URL,
+  QUIZ_WRITING_TIPS,
+  WRITING_STEPS,
+} from "@/data/contentGuide";
 
 interface CreatorGuidePageProps {
   title: string;
   description: string;
   icon: LucideIcon;
+}
+
+function TemplateSection({ id, title, tips, url, label }: { id: string; title: string; tips: string[]; url: string; label: string }) {
+  return (
+    <section aria-labelledby={id} className="rounded-2xl border border-border bg-card p-5">
+      <h2 id={id} className="text-lg font-bold">
+        {title}
+      </h2>
+      <ul className="mt-3 list-disc space-y-2.5 pl-5 text-sm leading-6">
+        {tips.map((tip) => (
+          <li key={tip}>{tip}</li>
+        ))}
+      </ul>
+      <div className="mt-4">
+        {url ? (
+          <a
+            href={url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex min-h-10 items-center gap-2 rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary-hover"
+          >
+            Buka Template {label}
+            <ExternalLink className="h-4 w-4" aria-hidden="true" />
+          </a>
+        ) : (
+          <button
+            type="button"
+            disabled
+            className="inline-flex min-h-10 cursor-not-allowed items-center rounded-xl bg-muted px-4 text-left text-sm font-semibold text-muted-foreground"
+          >
+            Template {label} sedang disiapkan. Hubungi Admin.
+          </button>
+        )}
+      </div>
+    </section>
+  );
 }
 
 // Halaman informasi menu Creator selama konten ditulis di Google Docs (PRD FR-15). Creator
@@ -84,6 +128,9 @@ export default function CreatorGuidePage({ title, description, icon: Icon }: Cre
           ))}
         </ol>
       </section>
+
+      <TemplateSection id="menulis-lesson" title="Menulis lesson" tips={LESSON_WRITING_TIPS} url={LESSON_TEMPLATE_URL} label="Lesson" />
+      <TemplateSection id="menulis-kuis" title="Menulis kuis" tips={QUIZ_WRITING_TIPS} url={QUIZ_TEMPLATE_URL} label="Kuis" />
     </div>
   );
 }

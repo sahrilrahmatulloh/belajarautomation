@@ -1,15 +1,24 @@
 import Link from "next/link";
 import { ArrowLeft, ArrowRight, Clock3, PenLine } from "lucide-react";
 
+import ArticleDraftBadge from "@/components/blog/ArticleDraftBadge";
+import { ArticleSources } from "@/components/blog/ArticleParts";
 import { getLessonPageData } from "@/lib/courseLessons";
+import { LessonContent } from "@/lib/lessons";
 
-type LessonPageProps = NonNullable<ReturnType<typeof getLessonPageData>>;
+import LessonCompleteButton from "./LessonCompleteButton";
+
+type LessonPageProps = NonNullable<ReturnType<typeof getLessonPageData>> & {
+  lessonContent: LessonContent | null;
+  // Isi MDX yang sudah dirender di server.
+  body: React.ReactNode;
+};
 
 const navLinkClassName =
   "flex min-w-0 flex-1 items-center gap-3 rounded-2xl border border-border bg-card p-4 transition-colors hover:bg-accent";
 
-// Halaman lesson sementara: isi materi belum ditulis, jadi belum ada tombol selesai
-// agar tidak mencatat progres atau XP dari materi yang belum dipelajari.
+// Lesson yang belum ditulis tidak punya tombol selesai, agar tidak mencatat progres atau XP
+// dari materi yang belum dipelajari.
 export default function LessonPage({
   course,
   lesson,
@@ -17,6 +26,8 @@ export default function LessonPage({
   total,
   previous,
   next,
+  lessonContent,
+  body,
 }: LessonPageProps) {
   const courseHref = `/learn/${course.slug}`;
 
@@ -48,19 +59,35 @@ export default function LessonPage({
             <Clock3 className="h-3.5 w-3.5" aria-hidden="true" />
             {lesson.duration}
           </span>
+
+          {lessonContent && (
+            <span className="rounded-full bg-muted px-3 py-1.5 text-xs font-medium">Oleh {lessonContent.author}</span>
+          )}
+
+          {lessonContent?.status === "draft" && <ArticleDraftBadge />}
         </div>
       </section>
 
-      <section className="rounded-3xl border border-dashed border-border bg-card p-6">
-        <h2 className="flex items-center gap-2 font-semibold">
-          <PenLine className="h-5 w-5 text-primary-accent" aria-hidden="true" />
-          Materi sedang ditulis
-        </h2>
-        <p className="mt-3 text-sm leading-6 text-muted-foreground">
-          Isi lesson ini belum tersedia. Kamu bisa melihat lesson lain di course ini
-          sambil menunggu materinya selesai.
-        </p>
-      </section>
+      {lessonContent ? (
+        <>
+          <section aria-label="Isi lesson" className="min-w-0 rounded-3xl border border-border bg-card p-6 sm:p-8">
+            {body}
+            <ArticleSources sources={lessonContent.sources} />
+          </section>
+          <LessonCompleteButton courseSlug={course.slug} lessonSlug={lesson.slug} />
+        </>
+      ) : (
+        <section className="rounded-3xl border border-dashed border-border bg-card p-6">
+          <h2 className="flex items-center gap-2 font-semibold">
+            <PenLine className="h-5 w-5 text-primary-accent" aria-hidden="true" />
+            Materi sedang ditulis
+          </h2>
+          <p className="mt-3 text-sm leading-6 text-muted-foreground">
+            Isi lesson ini belum tersedia. Kamu bisa melihat lesson lain di course ini
+            sambil menunggu materinya selesai.
+          </p>
+        </section>
+      )}
 
       <nav aria-label="Navigasi lesson" className="flex flex-col gap-3 sm:flex-row">
         {previous && (

@@ -1,9 +1,11 @@
+"use client";
+
 import Link from "next/link";
 
-import { getCoursesInProgress } from "@/lib/learningProgress";
+import { useCoursesInProgress } from "@/lib/lessonProgress";
 
 export default function LearningProgress() {
-  const courses = getCoursesInProgress();
+  const courses = useCoursesInProgress();
 
   return (
     <section className="rounded-3xl border border-border bg-card p-6">
