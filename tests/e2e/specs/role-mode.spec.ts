@@ -330,7 +330,7 @@ test.describe("Notifikasi per mode", () => {
   }
 });
 
-test.describe("Halaman informasi Reviewer dan Admin", () => {
+test.describe("Halaman informasi Reviewer", () => {
   for (const { role, menuName, menu, path, heading } of ROLE_MODE.guidePages) {
     test.describe(`${menu}`, () => {
       test.use({ role });
@@ -346,16 +346,9 @@ test.describe("Halaman informasi Reviewer dan Admin", () => {
         await expect(page).toHaveURL(path);
         await expect(page.getByRole("heading", { level: 1, name: menu })).toBeVisible();
         await expect(page.getByRole("heading", { level: 2, name: heading })).toBeVisible();
-        if (role === "admin") {
-          await expect(page.getByRole("link", { name: "Buka Panduan Admin" })).toHaveAttribute(
-            "href",
-            /\/docs\/CONTENT_GUIDE\.md$/
-          );
-        } else {
-          // Reviewer bekerja di Google Docs, jadi tidak perlu panduan teknis dan istilah Git.
-          await expect(page.getByRole("main")).not.toContainText(/github|\bgit\b|branch|pull request|\bMDX\b/i);
-          await expect(page.getByRole("region", { name: "Yang perlu diperiksa" })).toContainText("Referensi video");
-        }
+        // Reviewer bekerja di Google Docs, jadi tidak perlu panduan teknis dan istilah Git.
+        await expect(page.getByRole("main")).not.toContainText(/github|\bgit\b|branch|pull request|\bMDX\b/i);
+        await expect(page.getByRole("region", { name: "Yang perlu diperiksa" })).toContainText("Referensi video");
       });
     });
   }

@@ -84,6 +84,34 @@ test.describe("Halaman Reviewer di luar DEV", () => {
   });
 });
 
+test.describe("Halaman Admin di luar DEV", () => {
+  test.use({ role: "admin" });
+
+  for (const { path, title } of [
+    { path: "/admin/konten", title: "Semua Konten" },
+    { path: "/admin/pengguna", title: "Kelola Peran" },
+  ]) {
+    test(`${title} tetap halaman informasi dengan tautan panduan`, async ({ page }) => {
+      await page.goto(path);
+      const main = page.getByRole("main");
+
+      await expect(main.getByRole("heading", { level: 1, name: title })).toBeVisible();
+      await expect(main.getByRole("heading", { level: 2, name: "Sementara, Admin menerbitkan lewat pull request" })).toBeVisible();
+      await expect(page.getByRole("link", { name: "Buka Panduan Admin" })).toHaveAttribute("href", /\/docs\/CONTENT_GUIDE\.md$/);
+
+      const { violations } = await new AxeBuilder({ page }).analyze();
+      expect(violations.filter((item) => ["critical", "serious"].includes(item.impact ?? "")).map((item) => item.id)).toEqual([]);
+    });
+  }
+
+  test("dashboard Admin tetap tampilan lama tanpa ringkasan data dummy alur konten", async ({ page }) => {
+    await page.goto("/admin");
+
+    await expect(page.getByRole("heading", { level: 1, name: /^Halo, / })).toBeVisible();
+    await expect(page.getByRole("region", { name: "Terbit Terbaru" })).toHaveCount(0);
+  });
+});
+
 test.describe("Lingkungan UAT", () => {
   test('label lingkungan bertuliskan "UAT"', async ({ page }) => {
     const loginPage = new LoginPage(page);

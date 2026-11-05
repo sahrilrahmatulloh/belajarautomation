@@ -59,7 +59,9 @@ export default function LoginForm() {
       // Peran terkini, karena Admin bisa mengubahnya lewat Kelola Peran.
       const users = await getContentRepository().listUsers();
       const roles = users.find((item) => item.id === account.userId)?.roles ?? account.roles;
-      const role = roles.includes(account.role) ? account.role : (roles.find((item) => item !== "user") ?? "user");
+      // Akun dengan peran tambahan mulai di mode perannya (PRD FR-15).
+      const extraRoles = roles.filter((item) => item !== "user");
+      const role = extraRoles.find((item) => item === account.role) ?? extraRoles[0] ?? "user";
       sessionActions.signIn({ name: account.name, email: account.email, userId: account.userId, role, roles });
       router.replace(getNextTarget() ?? ROLE_HOME[role]);
     }, 600);
