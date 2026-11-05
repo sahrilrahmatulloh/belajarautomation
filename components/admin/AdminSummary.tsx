@@ -13,7 +13,7 @@ import { formatContentDate } from "@/lib/content/document";
 import { useSession } from "@/lib/session";
 import { ContentStatusId } from "@/types/ContentWorkflow";
 
-import { isLongWaiting, isNewUser, LONG_WAIT_DAYS, NEW_USER_DAYS, useAdminData } from "./useAdminData";
+import { isLongWaiting, isNewUser, isToday, LONG_WAIT_DAYS, NEW_USER_DAYS, useAdminData } from "./useAdminData";
 
 const RECENT_LIMIT = 5;
 
@@ -113,8 +113,26 @@ export default function AdminSummary() {
       <section aria-labelledby="ringkasan-transaksi">
         <h2 id="ringkasan-transaksi" className="text-lg font-bold">Transaksi</h2>
         <div className="mt-3 grid gap-3 sm:grid-cols-3">
-          <PlaceholderCard label="Transaksi Hari Ini" note="Tersedia di phase berikutnya" icon={Wallet} />
-          <PlaceholderCard label="Menunggu Pembayaran" note="Tersedia di phase berikutnya" icon={Clock3} />
+          <Link href="/admin/transaksi?hari=ini" className="rounded-2xl transition-shadow hover:shadow-md">
+            <RoleStatCard
+              as="div"
+              label="Transaksi Hari Ini"
+              value={String((data?.transactions ?? []).filter((item) => isToday(item.createdAt, data?.loadedAt ?? 0)).length)}
+              detail="Semua status"
+              icon={Wallet}
+              iconStyle="bg-brand-blue/10 text-brand-blue"
+            />
+          </Link>
+          <Link href="/admin/transaksi?status=menunggu" className="rounded-2xl transition-shadow hover:shadow-md">
+            <RoleStatCard
+              as="div"
+              label="Menunggu Pembayaran"
+              value={String((data?.transactions ?? []).filter((item) => item.status === "menunggu").length)}
+              detail="Belum ada kabar dari gateway"
+              icon={Clock3}
+              iconStyle="bg-amber-500/10 text-amber-600 dark:text-amber-300"
+            />
+          </Link>
           <PlaceholderCard label="Permintaan Refund" note="Alur belum ditentukan" icon={Undo2} />
         </div>
       </section>

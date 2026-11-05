@@ -15,6 +15,10 @@ export const MEMBERSHIP_LABELS: Record<MembershipTier, string> = { basic: "Basic
 
 const DAY_MS = 86_400_000;
 
+export function isToday(iso: string, now: number) {
+  return new Date(iso).toDateString() === new Date(now).toDateString();
+}
+
 export function isNewUser(user: ContentUser, now: number) {
   return now - Date.parse(user.joinedAt) < NEW_USER_DAYS * DAY_MS;
 }
@@ -24,15 +28,19 @@ export function useAdminData() {
   const userId = session?.userId ?? "";
 
   const data = useContentData("admin", async (repository) => {
-    const [contents, users, events, roleEvents, agreements, auditLog] = await Promise.all([
+    const [contents, users, events, roleEvents, agreements, auditLog, transactions, entitlements, claims, products] = await Promise.all([
       repository.listContents(),
       repository.listUsers(),
       repository.listStatusEvents(),
       repository.listRoleEvents(),
       repository.listAgreements(),
       repository.listAuditLog(),
+      repository.listTransactions(),
+      repository.listEntitlements(),
+      repository.listClaims(),
+      repository.listProducts(),
     ]);
-    return { contents, users, events, roleEvents, agreements, auditLog, loadedAt: Date.now() };
+    return { contents, users, events, roleEvents, agreements, auditLog, transactions, entitlements, claims, products, loadedAt: Date.now() };
   });
 
   return { userId, data };

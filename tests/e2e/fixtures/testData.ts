@@ -282,8 +282,10 @@ export const ADMIN_WORKSPACE = {
     { label: "Belum Ditugaskan", value: 2, url: "/admin/konten?status=menunggu-review&reviewer=belum", rows: 2 },
     { label: "Menunggu Lebih dari 3 Hari", value: 2, url: "/admin/konten?status=menunggu-review&lama=1", rows: 2 },
     { label: "Pengguna Baru 7 Hari", value: 2, url: "/admin/pengguna?baru=1", rows: 2 },
+    { label: "Transaksi Hari Ini", value: 2, url: "/admin/transaksi?hari=ini", rows: 2 },
+    { label: "Menunggu Pembayaran", value: 2, url: "/admin/transaksi?status=menunggu", rows: 2 },
   ],
-  placeholderCards: ["Ditandai Moderasi", "Transaksi Hari Ini", "Menunggu Pembayaran", "Permintaan Refund"],
+  placeholderCards: ["Ditandai Moderasi", "Permintaan Refund"],
   waitingTitle: "Pengenalan API Testing dengan Postman",
   authorMultiRoleTitle: "Strategi Regression Testing",
   approvedTitle: "Contoh Test Case Login yang Lengkap",
@@ -298,7 +300,22 @@ export const ADMIN_WORKSPACE = {
   // Peserta leaderboard pertama (data/dummy/leaderboard.ts).
   leaderboardUserId: "user-1",
   leaderboardUserName: "Rina Kartika",
-  axePaths: ["/admin", "/admin/konten", "/admin/pengguna", "/admin/pengguna/user-andi", "/admin/log"],
+  axePaths: ["/admin", "/admin/konten", "/admin/pengguna", "/admin/pengguna/user-rahma", "/admin/log", "/admin/transaksi", "/admin/transaksi/trx-sobat-ebook", "/admin/transaksi/trx-sobat-pro", "/admin/produk"],
+} as const;
+
+// Transaksi dan produk (data/dummy/commerce.ts).
+export const ADMIN_COMMERCE = {
+  ownedTransactionId: "trx-sobat-ebook",
+  ownedEbookTitle: "Playwright from Zero to Hero",
+  ownedEbookSlug: "playwright-from-zero-to-hero",
+  pendingTransactionId: "trx-sobat-pro",
+  pendingTitle: "Membership Pro",
+  failedTransactionId: "trx-dewi-gagal",
+  refundedTransactionId: "trx-bima-project",
+  draftProductTitle: "Panduan Menyiapkan Test Data",
+  draftProductSlug: "panduan-test-data",
+  learnerId: "user-sobat",
+  allStatuses: ["Menunggu Pembayaran", "Berhasil", "Gagal", "Kedaluwarsa", "Refund"],
 } as const;
 
 // Ruang kerja Reviewer (data/dummy/contents.ts, akun reviewer@).

@@ -3,7 +3,9 @@
 import { useEffect, useEffectEvent, useState } from "react";
 
 import { isDev } from "@/lib/env";
+import { ProductKind } from "@/types/Commerce";
 import { ContentUser } from "@/types/ContentWorkflow";
+import { MembershipTier } from "@/types/Membership";
 
 import { createDummyRepository } from "./dummyRepository";
 import { ContentRepository, ContentRuleError } from "./repository";
@@ -54,6 +56,23 @@ const NO_USERS: ContentUser[] = [];
 export function useInactiveUsers() {
   const users = useContentData("akun-nonaktif", async (current) => (await current.listUsers()).filter((user) => user.status === "nonaktif"));
   return users ?? NO_USERS;
+}
+
+// Katalog publik dan hak akses pengguna yang sedang masuk. Hanya produk Terbit yang tampil (PRD FR-16 F).
+export function useProductCatalog(kind: ProductKind, userId: string | undefined) {
+  return useContentData(`katalog-${kind}-${userId}`, async (current) => {
+    const [products, entitlements] = await Promise.all([current.listProducts(), current.listEntitlements()]);
+    return {
+      products: products.filter((product) => product.kind === kind && product.status === "terbit"),
+      ownedIds: new Set(entitlements.filter((item) => item.userId === userId && item.active).map((item) => item.itemId)),
+    };
+  });
+}
+
+// Membership pengguna yang sedang masuk, mengikuti hak aksesnya.
+export function useAccountMembership(userId: string | undefined, fallback: MembershipTier) {
+  const tier = useContentData(`membership-${userId}`, async (current) => (await current.listUsers()).find((user) => user.id === userId)?.membership);
+  return tier ?? fallback;
 }
 
 // Menjalankan aksi repository dan mengubah pelanggaran aturan menjadi pesan untuk pengguna.

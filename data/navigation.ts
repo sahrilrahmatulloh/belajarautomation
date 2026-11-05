@@ -16,10 +16,13 @@ import {
   MessageSquareText,
   Newspaper,
   Trophy,
+  Package,
+  Receipt,
   ScrollText,
   Users,
 } from "lucide-react";
 
+import { isDev } from "@/lib/env";
 import { NavItem } from "@/types/Navigation";
 import { UserRole } from "@/types/Role";
 
@@ -47,8 +50,8 @@ export const NAVIGATION: Record<UserRole, NavItem[]> = {
     { label: "Playground", href: "/playground", icon: FlaskConical },
     { label: "Leaderboard", href: "/leaderboard", icon: Trophy },
     { label: "Blog", href: "/blog", icon: Newspaper },
-    { label: "eBook", href: "/ebooks", icon: Library, comingSoon: true },
-    { label: "Project", href: "/projects", icon: FolderKanban, comingSoon: true },
+    { label: "eBook", href: "/ebooks", icon: Library, comingSoon: !isDev },
+    { label: "Project", href: "/projects", icon: FolderKanban, comingSoon: !isDev },
     { label: "Karier", href: "/career", icon: Briefcase, comingSoon: true },
     { label: "Membership", href: "/membership", icon: Crown },
   ],
@@ -68,6 +71,8 @@ export const NAVIGATION: Record<UserRole, NavItem[]> = {
     { label: "Ringkasan", href: "/admin", icon: LayoutDashboard, group: "Konten" },
     { label: "Semua Konten", href: "/admin/konten", icon: Files, group: "Konten" },
     { label: "Pengguna dan Peran", href: "/admin/pengguna", icon: Users, group: "Pengguna" },
+    { label: "Transaksi", href: "/admin/transaksi", icon: Receipt, group: "Bisnis" },
+    { label: "Produk Digital", href: "/admin/produk", icon: Package, group: "Bisnis" },
     { label: "Log Aktivitas Admin", href: "/admin/log", icon: ScrollText, group: "Laporan" },
   ],
 };

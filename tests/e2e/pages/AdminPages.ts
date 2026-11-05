@@ -135,8 +135,91 @@ export class AuditLogPageObject {
   }
 }
 
+export class TransactionsPageObject {
+  readonly heading: Locator;
+  readonly rows: Locator;
+  readonly search: Locator;
+  readonly statusFilter: Locator;
+
+  constructor(readonly page: Page) {
+    this.heading = page.getByRole("heading", { level: 1, name: "Transaksi" });
+    this.rows = page
+      .getByRole("table")
+      .getByRole("row")
+      .filter({ has: page.getByRole("rowheader") })
+      .or(page.getByRole("list", { name: "Daftar transaksi" }).getByRole("listitem"));
+    this.search = page.getByRole("textbox", { name: "Cari transaksi" });
+    this.statusFilter = page.getByRole("combobox", { name: "Filter status" });
+  }
+
+  goto(query = "") {
+    return this.page.goto(`/admin/transaksi${query}`);
+  }
+}
+
+export class TransactionDetailPageObject {
+  readonly timeline: Locator;
+  readonly refundButton: Locator;
+  readonly gateway: Locator;
+  readonly dialog: Locator;
+
+  constructor(readonly page: Page) {
+    this.timeline = page.getByRole("list", { name: "Timeline status" }).getByRole("listitem");
+    this.refundButton = page.getByRole("button", { name: "Refund transaksi" });
+    this.gateway = page.getByRole("region", { name: "Simulasi gateway (DEV)" });
+    this.dialog = page.getByRole("dialog");
+  }
+
+  goto(id: string) {
+    return this.page.goto(`/admin/transaksi/${id}`);
+  }
+
+  gatewayButton(status: string) {
+    return this.gateway.getByRole("button", { name: `Simulasi gateway: ${status}` });
+  }
+}
+
+export class ProductsPageObject {
+  readonly heading: Locator;
+  readonly rows: Locator;
+  readonly search: Locator;
+  readonly typeFilter: Locator;
+  readonly statusFilter: Locator;
+  readonly addButton: Locator;
+  readonly dialog: Locator;
+
+  constructor(readonly page: Page) {
+    this.heading = page.getByRole("heading", { level: 1, name: "Produk Digital" });
+    this.rows = page
+      .getByRole("table")
+      .getByRole("row")
+      .filter({ has: page.getByRole("rowheader") })
+      .or(page.getByRole("list", { name: "Daftar produk" }).getByRole("listitem"));
+    this.search = page.getByRole("textbox", { name: "Cari produk" });
+    this.typeFilter = page.getByRole("combobox", { name: "Filter jenis" });
+    this.statusFilter = page.getByRole("combobox", { name: "Filter status" });
+    this.addButton = page.getByRole("button", { name: "Tambah Produk" });
+    this.dialog = page.getByRole("dialog");
+  }
+
+  goto() {
+    return this.page.goto("/admin/produk");
+  }
+
+  row(title: string) {
+    return this.rows.filter({ hasText: title });
+  }
+
+  async openEdit(title: string) {
+    await this.search.fill(title);
+    await this.row(title).getByRole("button", { name: `Ubah ${title}` }).click();
+  }
+}
+
 // Berganti akun di browser yang sama, sehingga data dummy tetap sama.
 export async function switchAccount(page: Page, email: string) {
+  // localStorage belum bisa dibaca sebelum halaman membuka alamat situs.
+  if (page.url() === "about:blank") await page.goto("/login");
   await page.evaluate(() => window.localStorage.removeItem("belajarautomation-session"));
   const login = new LoginPage(page);
   await login.goto();

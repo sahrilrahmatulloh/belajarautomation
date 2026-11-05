@@ -16,7 +16,8 @@ import { UserRole } from "@/types/Role";
 
 import AccountStatusBadge from "./AccountStatusBadge";
 import ReasonDialog from "./ReasonDialog";
-import { formatDateTime, MEMBERSHIP_LABELS, useAdminData } from "./useAdminData";
+import UserAccessSections from "./UserAccessSections";
+import { formatDateTime, useAdminData } from "./useAdminData";
 
 const MANAGED_ROLES: UserRole[] = ["creator", "reviewer", "admin"];
 const panelClass = "rounded-2xl border border-border bg-card p-5";
@@ -33,7 +34,7 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 
 type Pending = { kind: "peran"; role: UserRole; action: RoleChangeAction } | { kind: "status"; status: AccountStatus } | null;
 
-// Detail pengguna (PRD FR-16 C). Isi transaksi dan hak akses menyusul di Phase 2.
+// Detail pengguna (PRD FR-16 C).
 export default function UserDetailPage({ userId }: { userId: string }) {
   const { userId: adminId, data } = useAdminData();
   const [pending, setPending] = useState<Pending>(null);
@@ -166,18 +167,14 @@ export default function UserDetailPage({ userId }: { userId: string }) {
           </button>
         </section>
 
-        <section aria-labelledby="membership-akses" className={`${panelClass} text-sm`}>
-          <h2 id="membership-akses" className="font-bold">Membership dan Hak Akses</h2>
-          <dl className="mt-3 space-y-2">
-            <Field label="Membership">{MEMBERSHIP_LABELS[user.membership]}</Field>
-          </dl>
-          <p className="mt-3 text-muted-foreground">Rincian hak akses tersedia di phase berikutnya.</p>
-        </section>
-
-        <section aria-labelledby="riwayat-transaksi" className={`${panelClass} text-sm`}>
-          <h2 id="riwayat-transaksi" className="font-bold">Riwayat Transaksi</h2>
-          <p className="mt-3 text-muted-foreground">Riwayat transaksi tersedia di phase berikutnya.</p>
-        </section>
+        <UserAccessSections
+          user={user}
+          adminId={adminId}
+          entitlements={data.entitlements.filter((item) => item.userId === userId)}
+          claims={data.claims.filter((item) => item.userId === userId)}
+          transactions={data.transactions.filter((item) => item.userId === userId)}
+          products={data.products}
+        />
 
         {user.roles.includes("creator") && (
           <section aria-labelledby="kesepakatan-creator" className={`${panelClass} lg:col-span-2`}>

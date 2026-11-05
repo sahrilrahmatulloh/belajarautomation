@@ -9,12 +9,13 @@ import {
   ReviewNote,
   StatusAction,
 } from "@/types/ContentWorkflow";
+import { Entitlement, EntitlementKind, Product } from "@/types/Commerce";
 
 import { ContentRepository, ContentRuleError } from "./repository";
 import { CREATOR_CHECKLIST, latestRoundNotes, MAX_VIDEOS, missingRequiredFields, REVIEWER_CHECKLIST } from "./rules";
 
 // Versi di nama kunci: data lama dengan bentuk berbeda tidak ikut terbaca.
-const STORAGE_KEY = "belajarautomation-content-workflow-v2";
+const STORAGE_KEY = "belajarautomation-content-workflow-v3";
 
 export interface KeyValueStorage {
   getItem(key: string): string | null;
@@ -132,6 +133,28 @@ export function createDummyRepository(storage: KeyValueStorage | null = browserS
 
   const hasAgreement = (userId: string) => state().agreements.some((item) => item.userId === userId);
 
+  // Membership mengikuti hak akses aktif tertinggi, jadi refund dan pencabutan langsung berdampak.
+  const syncMembership = (userId: string) => {
+    const tiers = state().entitlements.filter((item) => item.userId === userId && item.kind === "membership" && item.active).map((item) => item.itemId);
+    user(userId).membership = tiers.includes("premium") ? "premium" : tiers.includes("pro") ? "pro" : "basic";
+  };
+
+  const transaction = (transactionId: string) => {
+    const found = state().transactions.find((item) => item.id === transactionId);
+    if (!found) throw new ContentRuleError("Transaksi tidak ditemukan.");
+    return found;
+  };
+
+  const itemTitle = (kind: EntitlementKind, itemId: string) => {
+    if (kind === "membership") {
+      if (itemId !== "pro" && itemId !== "premium") throw new ContentRuleError("Paket membership tidak valid.");
+      return `Membership ${itemId === "pro" ? "Pro" : "Premium"}`;
+    }
+    const product = state().products.find((item) => item.id === itemId && item.kind === kind);
+    if (!product) throw new ContentRuleError("Produk tidak ditemukan.");
+    return product.title;
+  };
+
   const validateVideos = (input: ContentDraftInput) => {
     if (input.videos && input.videos.length > MAX_VIDEOS) throw new ContentRuleError(`Maksimal ${MAX_VIDEOS} video per konten.`);
   };
@@ -189,6 +212,18 @@ export function createDummyRepository(storage: KeyValueStorage | null = browserS
     },
     async listAuditLog() {
       return structuredClone(state().auditLog);
+    },
+    async listTransactions() {
+      return structuredClone(state().transactions);
+    },
+    async listEntitlements() {
+      return structuredClone(state().entitlements);
+    },
+    async listClaims() {
+      return structuredClone(state().claims);
+    },
+    async listProducts() {
+      return structuredClone(state().products);
     },
 
     async createDraft(actorId, input) {
@@ -573,6 +608,132 @@ export function createDummyRepository(storage: KeyValueStorage | null = browserS
       });
       commit();
       return structuredClone(entry);
+    },
+
+    async refundTransaction(actorId, transactionId, alasan) {
+      requireRole(actorId, "admin", "Admin");
+      const reason = requireReason(alasan);
+      const item = transaction(transactionId);
+      if (item.status !== "berhasil") throw new ContentRuleError("Refund hanya untuk transaksi berstatus Berhasil.");
+      const at = now();
+      audit({ adminId: actorId, action: "refund", targetType: "transaksi", targetId: item.id, targetLabel: item.itemTitle, alasan: reason, before: { status: item.status }, after: { status: "refund" } });
+      item.status = "refund";
+      item.history.push({ status: "refund", at, source: "admin", actorId, alasan: reason });
+      // Hak akses dicabut, bukan dihapus (PRD FR-16).
+      state().entitlements.forEach((entry) => {
+        if (entry.transactionId === item.id && entry.active) {
+          entry.active = false;
+          entry.revokedAt = at;
+          entry.revokedBy = actorId;
+          entry.revokeReason = reason;
+        }
+      });
+      syncMembership(item.userId);
+      commit();
+      return structuredClone(item);
+    },
+
+    async grantEntitlement(actorId, userId, { kind, itemId }, alasan) {
+      requireRole(actorId, "admin", "Admin");
+      const reason = requireReason(alasan);
+      const target = user(userId);
+      const title = itemTitle(kind, itemId);
+      if (state().entitlements.some((entry) => entry.userId === userId && entry.itemId === itemId && entry.active)) throw new ContentRuleError(`${target.name} sudah memiliki ${title}.`);
+      const entry: Entitlement = {
+        id: newId("akses"),
+        userId,
+        kind,
+        itemId,
+        itemTitle: title,
+        source: "pemberian-manual",
+        transactionId: null,
+        active: true,
+        grantedAt: now(),
+        grantedBy: actorId,
+        alasan: reason,
+        revokedAt: null,
+        revokedBy: null,
+        revokeReason: null,
+      };
+      state().entitlements.push(entry);
+      audit({ adminId: actorId, action: "berikan-akses", targetType: "pengguna", targetId: userId, targetLabel: target.name, alasan: reason, before: null, after: { hakAkses: title, sumber: "Pemberian manual" } });
+      syncMembership(userId);
+      commit();
+      return structuredClone(entry);
+    },
+
+    async revokeEntitlement(actorId, entitlementId, alasan) {
+      requireRole(actorId, "admin", "Admin");
+      const reason = requireReason(alasan);
+      const entry = state().entitlements.find((item) => item.id === entitlementId);
+      if (!entry) throw new ContentRuleError("Hak akses tidak ditemukan.");
+      if (entry.source !== "pemberian-manual") throw new ContentRuleError("Hanya hak akses pemberian manual yang dapat dicabut di sini.");
+      if (!entry.active) throw new ContentRuleError("Hak akses ini sudah dicabut.");
+      entry.active = false;
+      entry.revokedAt = now();
+      entry.revokedBy = actorId;
+      entry.revokeReason = reason;
+      audit({ adminId: actorId, action: "cabut-akses", targetType: "pengguna", targetId: entry.userId, targetLabel: user(entry.userId).name, alasan: reason, before: { hakAkses: entry.itemTitle, aktif: true }, after: { hakAkses: entry.itemTitle, aktif: false } });
+      syncMembership(entry.userId);
+      commit();
+      return structuredClone(entry);
+    },
+
+    async saveProduct(actorId, productId, input, alasan) {
+      requireRole(actorId, "admin", "Admin");
+      if (!input.title.trim()) throw new ContentRuleError("Judul produk wajib diisi.");
+      if (!input.description.trim()) throw new ContentRuleError("Deskripsi produk wajib diisi.");
+      if (!Number.isInteger(input.price) || input.price < 0) throw new ContentRuleError("Harga harus berupa angka bulat, minimal 0.");
+      const fields = { ...input, title: input.title.trim(), description: input.description.trim() };
+
+      if (productId) {
+        const product = state().products.find((item) => item.id === productId);
+        if (!product) throw new ContentRuleError("Produk tidak ditemukan.");
+        const isPriceChanged = product.price !== input.price;
+        // Perubahan harga termasuk aksi yang menyangkut uang (PRD FR-16).
+        if (isPriceChanged && !alasan.trim()) throw new ContentRuleError("Alasan perubahan harga wajib diisi.");
+        const before = { judul: product.title, harga: product.price, status: product.status };
+        Object.assign(product, fields, { kind: product.kind, updatedAt: now() });
+        audit({ adminId: actorId, action: "ubah-produk", targetType: "produk", targetId: product.id, targetLabel: product.title, alasan: isPriceChanged ? alasan.trim() : null, before, after: { judul: product.title, harga: product.price, status: product.status } });
+        commit();
+        return structuredClone(product);
+      }
+
+      const slug = `${fields.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "")}-${state().nextId + 1}`;
+      const product: Product = { ...fields, id: newId(fields.kind), slug, updatedAt: now() };
+      state().products.push(product);
+      audit({ adminId: actorId, action: "tambah-produk", targetType: "produk", targetId: product.id, targetLabel: product.title, alasan: null, before: null, after: { judul: product.title, harga: product.price, status: product.status } });
+      commit();
+      return structuredClone(product);
+    },
+
+    async simulateGateway(transactionId, status) {
+      const item = transaction(transactionId);
+      if (item.status !== "menunggu") throw new ContentRuleError("Hanya transaksi Menunggu Pembayaran yang bisa berubah dari gateway.");
+      const at = now();
+      item.status = status;
+      item.history.push({ status, at, source: "gateway", actorId: null, alasan: null });
+      if (status === "berhasil") {
+        state().entitlements.push({
+          id: newId("akses"),
+          userId: item.userId,
+          kind: item.kind,
+          itemId: item.itemId,
+          itemTitle: item.itemTitle,
+          source: "pembelian",
+          transactionId: item.id,
+          active: true,
+          grantedAt: at,
+          grantedBy: null,
+          alasan: null,
+          revokedAt: null,
+          revokedBy: null,
+          revokeReason: null,
+        });
+        syncMembership(item.userId);
+      }
+      commit();
+      return structuredClone(item);
     },
 
     async reset() {

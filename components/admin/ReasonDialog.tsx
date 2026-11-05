@@ -15,6 +15,7 @@ export default function ReasonDialog({
   reasonLabel = "Alasan",
   isDestructive = false,
   error,
+  children,
   onConfirm,
   onClose,
 }: {
@@ -24,6 +25,7 @@ export default function ReasonDialog({
   reasonLabel?: string;
   isDestructive?: boolean;
   error: string;
+  children?: React.ReactNode;
   onConfirm: (alasan: string) => void;
   onClose: () => void;
 }) {
@@ -40,6 +42,7 @@ export default function ReasonDialog({
       onConfirm={() => onConfirm(alasan)}
       onClose={onClose}
     >
+      {children}
       <label className="mt-3 block text-sm font-medium">
         {reasonLabel}
         <textarea rows={3} value={alasan} onChange={(event) => setAlasan(event.target.value)} className={fieldClass} />

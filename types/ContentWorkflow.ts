@@ -142,14 +142,19 @@ export type AdminAction =
   | "cabut-peran"
   | "nonaktifkan-akun"
   | "aktifkan-akun"
-  | "catat-kesepakatan";
+  | "catat-kesepakatan"
+  | "refund"
+  | "berikan-akses"
+  | "cabut-akses"
+  | "tambah-produk"
+  | "ubah-produk";
 
 export interface AdminAuditLog {
   id: string;
   at: string;
   adminId: string;
   action: AdminAction;
-  targetType: "konten" | "pengguna";
+  targetType: "konten" | "pengguna" | "transaksi" | "produk";
   targetId: string;
   targetLabel: string;
   alasan: string | null;

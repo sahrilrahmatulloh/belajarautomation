@@ -280,6 +280,106 @@ test.describe("Aturan Panel Admin", () => {
   });
 });
 
+test.describe("Aturan transaksi dan hak akses", () => {
+  const membershipOf = async (userId: string) => (await repo.listUsers()).find((user) => user.id === userId)?.membership;
+  const transaction = async (id: string) => (await repo.listTransactions()).find((item) => item.id === id);
+
+  test("data dummy memuat semua status transaksi", async () => {
+    expect(new Set((await repo.listTransactions()).map((item) => item.status))).toEqual(new Set(["menunggu", "berhasil", "gagal", "kedaluwarsa", "refund"]));
+  });
+
+  test("setiap membership berbayar punya transaksi dan hak akses aktif", async () => {
+    const [users, entitlements] = await Promise.all([repo.listUsers(), repo.listEntitlements()]);
+
+    for (const user of users.filter((item) => item.membership !== "basic")) {
+      expect(entitlements.some((entry) => entry.userId === user.id && entry.kind === "membership" && entry.itemId === user.membership && entry.active)).toBe(true);
+    }
+  });
+
+  test("refund: hanya Admin, wajib alasan, hanya dari Berhasil, dan mencabut akses tanpa menghapus", async () => {
+    await expectRule(repo.refundTransaction(RAHMA, "trx-sobat-ebook", REASON), /Admin/);
+    await expectRule(repo.refundTransaction(ADMIN, "trx-sobat-ebook", " "), /Alasan wajib/);
+    await expectRule(repo.refundTransaction(ADMIN, "trx-sobat-pro", REASON), /Berhasil/);
+
+    const refunded = await repo.refundTransaction(ADMIN, "trx-sobat-ebook", REASON);
+
+    expect(refunded.status).toBe("refund");
+    expect(refunded.history.at(-1)).toMatchObject({ status: "refund", source: "admin", actorId: ADMIN, alasan: REASON });
+    const entry = (await repo.listEntitlements()).find((item) => item.transactionId === "trx-sobat-ebook");
+    expect(entry).toMatchObject({ active: false, revokeReason: REASON });
+    await expectRule(repo.refundTransaction(ADMIN, "trx-sobat-ebook", REASON), /Berhasil/);
+  });
+
+  test("refund membership menurunkan tingkat membership", async () => {
+    const andi = (await repo.listTransactions()).find((item) => item.userId === ANDI && item.kind === "membership");
+    expect(await membershipOf(ANDI)).toBe("pro");
+
+    await repo.refundTransaction(ADMIN, andi?.id ?? "", REASON);
+
+    expect(await membershipOf(ANDI)).toBe("basic");
+  });
+
+  test("Admin tidak punya operasi untuk mengubah status pembayaran", async () => {
+    expect(Object.keys(repo).filter((name) => /status/i.test(name) && /transaction/i.test(name))).toEqual([]);
+    expect(Object.keys(repo)).not.toContain("setTransactionStatus");
+  });
+
+  test("simulasi gateway hanya dari Menunggu, memberi akses saat Berhasil, dan tidak masuk log", async () => {
+    await expectRule(repo.simulateGateway("trx-sobat-ebook", "gagal"), /Menunggu Pembayaran/);
+
+    const paid = await repo.simulateGateway("trx-sobat-pro", "berhasil");
+
+    expect(paid.history.at(-1)).toMatchObject({ status: "berhasil", source: "gateway", actorId: null });
+    expect(await membershipOf(SOBAT)).toBe("pro");
+    expect(await repo.listAuditLog()).toEqual([]);
+
+    await repo.simulateGateway("trx-galih-project", "kedaluwarsa");
+    expect((await repo.listEntitlements()).some((item) => item.transactionId === "trx-galih-project")).toBe(false);
+  });
+
+  test("pemberian manual: wajib alasan, tanpa transaksi, tidak dobel, dan bisa dicabut", async () => {
+    const before = (await repo.listTransactions()).length;
+    await expectRule(repo.grantEntitlement(RAHMA, SOBAT, { kind: "membership", itemId: "premium" }, REASON), /Admin/);
+    await expectRule(repo.grantEntitlement(ADMIN, SOBAT, { kind: "membership", itemId: "premium" }, " "), /Alasan wajib/);
+    await expectRule(repo.grantEntitlement(ADMIN, SOBAT, { kind: "membership", itemId: "basic" }, REASON), /tidak valid/);
+    await expectRule(repo.grantEntitlement(ADMIN, SOBAT, { kind: "ebook", itemId: "tidak-ada" }, REASON), /Produk tidak ditemukan/);
+
+    const entry = await repo.grantEntitlement(ADMIN, SOBAT, { kind: "membership", itemId: "premium" }, REASON);
+
+    expect(entry).toMatchObject({ source: "pemberian-manual", transactionId: null, grantedBy: ADMIN, alasan: REASON });
+    expect((await repo.listTransactions()).length).toBe(before);
+    expect(await membershipOf(SOBAT)).toBe("premium");
+    await expectRule(repo.grantEntitlement(ADMIN, SOBAT, { kind: "membership", itemId: "premium" }, REASON), /sudah memiliki/);
+
+    await expectRule(repo.revokeEntitlement(ADMIN, entry.id, " "), /Alasan wajib/);
+    await repo.revokeEntitlement(ADMIN, entry.id, REASON);
+    expect(await membershipOf(SOBAT)).toBe("basic");
+    await expectRule(repo.revokeEntitlement(ADMIN, entry.id, REASON), /sudah dicabut/);
+    expect((await repo.listAuditLog()).map((item) => item.action)).toEqual(["berikan-akses", "cabut-akses"]);
+  });
+
+  test("hak akses dari pembelian tidak bisa dicabut lewat aksi manual", async () => {
+    await expectRule(repo.revokeEntitlement(ADMIN, "akses-trx-sobat-ebook", REASON), /pemberian manual/);
+  });
+
+  test("ubah harga wajib alasan dan tidak mengubah transaksi lama", async () => {
+    const sold = await transaction("trx-sobat-ebook");
+    const product = (await repo.listProducts()).find((item) => item.title === sold?.itemTitle);
+    if (!product) throw new Error("Produk tidak ditemukan");
+    const amount = (await transaction("trx-sobat-ebook"))?.amount;
+    const input = { kind: product.kind, title: product.title, description: product.description, cover: product.cover, fileName: product.fileName, status: product.status };
+
+    await expectRule(repo.saveProduct(ADMIN, product.id, { ...input, price: amount! + 1000 }, ""), /Alasan perubahan harga/);
+    await expectRule(repo.saveProduct(RAHMA, product.id, { ...input, price: 1 }, REASON), /Admin/);
+    await expectRule(repo.saveProduct(ADMIN, product.id, { ...input, price: -1 }, REASON), /Harga/);
+
+    const saved = await repo.saveProduct(ADMIN, product.id, { ...input, price: amount! + 1000 }, REASON);
+
+    expect(saved.price).toBe(amount! + 1000);
+    expect((await transaction("trx-sobat-ebook"))?.amount).toBe(amount);
+  });
+});
+
 test.describe("Riwayat dan reset", () => {
   test("setiap transisi mencatat peristiwa status", async () => {
     await repo.withdraw(ANDI, "konten-pemula");
