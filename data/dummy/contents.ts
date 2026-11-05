@@ -17,9 +17,11 @@ import {
 } from "@/types/ContentWorkflow";
 
 import { VIDEO_NODE } from "@/lib/content/document";
+import { ModerationAction, ModerationFlag, PlatformOverrides, XpTransaction } from "@/types/AdminPlatform";
 import { CreditClaim, Entitlement, Product, Transaction } from "@/types/Commerce";
 
 import { DUMMY_COMMERCE } from "./commerce";
+import { DUMMY_MODERATION_FLAGS } from "./moderation";
 import { DUMMY_USERS } from "./users";
 
 export interface DummyContentState {
@@ -34,6 +36,10 @@ export interface DummyContentState {
   entitlements: Entitlement[];
   claims: CreditClaim[];
   products: Product[];
+  overrides: PlatformOverrides;
+  moderationFlags: ModerationFlag[];
+  moderationActions: ModerationAction[];
+  xpTransactions: XpTransaction[];
   // Konten terbit yang sudah digantikan revisinya.
   supersededIds: string[];
   nextId: number;
@@ -193,6 +199,10 @@ export function createDummyContentState(): DummyContentState {
     agreements: AGREEMENTS,
     auditLog: [],
     ...DUMMY_COMMERCE,
+    overrides: { courses: {}, items: {} },
+    moderationFlags: DUMMY_MODERATION_FLAGS,
+    moderationActions: [],
+    xpTransactions: [],
     supersededIds: [],
     nextId: 1000,
   });

@@ -106,7 +106,16 @@ export default function AdminSummary() {
               iconStyle="bg-brand-blue/10 text-brand-blue"
             />
           </Link>
-          <PlaceholderCard label="Ditandai Moderasi" note="Tersedia di phase berikutnya" icon={Flag} />
+          <Link href="/admin/moderasi?status=terbuka" className="rounded-2xl transition-shadow hover:shadow-md">
+            <RoleStatCard
+              as="div"
+              label="Ditandai Moderasi"
+              value={String((data?.flags ?? []).filter((flag) => flag.status === "terbuka").length)}
+              detail="Perlu ditinjau"
+              icon={Flag}
+              iconStyle="bg-rose-500/10 text-rose-600 dark:text-rose-300"
+            />
+          </Link>
         </div>
       </section>
 

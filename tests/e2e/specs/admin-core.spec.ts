@@ -3,7 +3,7 @@ import { Page } from "@playwright/test";
 
 import { expect, test } from "../fixtures/auth";
 import { ACCOUNTS, ADMIN_WORKSPACE, DEMO_PASSWORD, PUBLIC_USER } from "../fixtures/testData";
-import { AllContentsPageObject, AuditLogPageObject, switchAccount, TransactionsPageObject, UserDetailPageObject, UsersPageObject } from "../pages/AdminPages";
+import { AllContentsPageObject, AuditLogPageObject, ModerationPageObject, switchAccount, TransactionsPageObject, UserDetailPageObject, UsersPageObject } from "../pages/AdminPages";
 import { LeaderboardPage } from "../pages/LeaderboardPage";
 import { LoginPage } from "../pages/LoginPage";
 import { NotificationsPage } from "../pages/NotificationsPage";
@@ -39,7 +39,7 @@ test.describe("Ringkasan", () => {
       await page.getByRole("link", { name: `${label} ${value}` }).click();
 
       await expect(page).toHaveURL(url);
-      const list = url.includes("pengguna") ? new UsersPageObject(page) : url.includes("transaksi") ? new TransactionsPageObject(page) : new AllContentsPageObject(page);
+      const list = url.includes("pengguna") ? new UsersPageObject(page) : url.includes("transaksi") ? new TransactionsPageObject(page) : url.includes("moderasi") ? new ModerationPageObject(page) : new AllContentsPageObject(page);
       await expect(list.rows).toHaveCount(rows);
     });
   }
@@ -61,7 +61,7 @@ test.describe("Sidebar", () => {
     if (isMobile) await page.getByRole("button", { name: "Buka atau tutup sidebar" }).click();
     const nav = page.getByRole("navigation", { name: "Menu Admin" });
 
-    await expect(nav.getByRole("link")).toHaveText(["Ringkasan", "Semua Konten", "Pengguna dan Peran", "Transaksi", "Produk Digital", "Log Aktivitas Admin"]);
+    await expect(nav.getByRole("link")).toHaveText(["Ringkasan", "Semua Konten", "Pengguna dan Peran", "Moderasi", "Transaksi", "Produk Digital", "Katalog Belajar", "Log Aktivitas Admin"]);
     await expect(nav).toContainText("Konten");
     await expect(nav).toContainText("Pengguna");
     await expect(nav).toContainText("Laporan");

@@ -282,10 +282,11 @@ export const ADMIN_WORKSPACE = {
     { label: "Belum Ditugaskan", value: 2, url: "/admin/konten?status=menunggu-review&reviewer=belum", rows: 2 },
     { label: "Menunggu Lebih dari 3 Hari", value: 2, url: "/admin/konten?status=menunggu-review&lama=1", rows: 2 },
     { label: "Pengguna Baru 7 Hari", value: 2, url: "/admin/pengguna?baru=1", rows: 2 },
+    { label: "Ditandai Moderasi", value: 3, url: "/admin/moderasi?status=terbuka", rows: 3 },
     { label: "Transaksi Hari Ini", value: 2, url: "/admin/transaksi?hari=ini", rows: 2 },
     { label: "Menunggu Pembayaran", value: 2, url: "/admin/transaksi?status=menunggu", rows: 2 },
   ],
-  placeholderCards: ["Ditandai Moderasi", "Permintaan Refund"],
+  placeholderCards: ["Permintaan Refund"],
   waitingTitle: "Pengenalan API Testing dengan Postman",
   authorMultiRoleTitle: "Strategi Regression Testing",
   approvedTitle: "Contoh Test Case Login yang Lengkap",
@@ -300,7 +301,25 @@ export const ADMIN_WORKSPACE = {
   // Peserta leaderboard pertama (data/dummy/leaderboard.ts).
   leaderboardUserId: "user-1",
   leaderboardUserName: "Rina Kartika",
-  axePaths: ["/admin", "/admin/konten", "/admin/pengguna", "/admin/pengguna/user-rahma", "/admin/log", "/admin/transaksi", "/admin/transaksi/trx-sobat-ebook", "/admin/transaksi/trx-sobat-pro", "/admin/produk"],
+  axePaths: ["/admin", "/admin/konten", "/admin/pengguna", "/admin/pengguna/user-rahma", "/admin/log", "/admin/transaksi", "/admin/transaksi/trx-sobat-ebook", "/admin/transaksi/trx-sobat-pro", "/admin/produk", "/admin/katalog", "/admin/moderasi"],
+} as const;
+
+// Katalog dan Moderasi (data/catalogRules.json dan data/dummy/moderation.ts).
+export const ADMIN_PLATFORM = {
+  freeXp: "3.880",
+  masterXp: "5.500",
+  foundationCourse: "QA Fundamental",
+  studiedFreeCourse: "JavaScript",
+  unstudiedFreeCourse: "Cypress",
+  comingSoonDraftCourse: "Cypress",
+  readyTargetCourse: "Selenium",
+  flaggedUser: "Rina Kartika",
+  flaggedUserId: "user-1",
+  flaggedUserXp: "6.400",
+  correctedXp: "4.400",
+  rankBefore: "Master",
+  rankAfter: "Expert",
+  otherFlaggedUser: "Dimas Permana",
 } as const;
 
 // Transaksi dan produk (data/dummy/commerce.ts).

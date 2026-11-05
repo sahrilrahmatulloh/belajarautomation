@@ -9,13 +9,16 @@ import {
   ReviewNote,
   StatusAction,
 } from "@/types/ContentWorkflow";
+import { DUMMY_LEARNING_PROGRESS } from "@/data/dummy/learningProgress";
+import { ModerationActionKind } from "@/types/AdminPlatform";
 import { Entitlement, EntitlementKind, Product } from "@/types/Commerce";
 
+import { courseCatalogState, freeXpTotal, isRequiredFree, MASTER_XP } from "./catalogRules";
 import { ContentRepository, ContentRuleError } from "./repository";
 import { CREATOR_CHECKLIST, latestRoundNotes, MAX_VIDEOS, missingRequiredFields, REVIEWER_CHECKLIST } from "./rules";
 
 // Versi di nama kunci: data lama dengan bentuk berbeda tidak ikut terbaca.
-const STORAGE_KEY = "belajarautomation-content-workflow-v3";
+const STORAGE_KEY = "belajarautomation-content-workflow-v4";
 
 export interface KeyValueStorage {
   getItem(key: string): string | null;
@@ -155,6 +158,12 @@ export function createDummyRepository(storage: KeyValueStorage | null = browserS
     return product.title;
   };
 
+  const recordModeration = (userId: string, flagId: string | null, kind: ModerationActionKind, alasan: string | null, actorId: string) => {
+    state().moderationActions.push({ id: newId("moderasi"), userId, flagId, kind, alasan, actorId, at: now() });
+    const flag = state().moderationFlags.find((item) => item.id === flagId);
+    if (flag && flag.status === "terbuka") flag.status = kind === "abaikan" ? "diabaikan" : "ditangani";
+  };
+
   const validateVideos = (input: ContentDraftInput) => {
     if (input.videos && input.videos.length > MAX_VIDEOS) throw new ContentRuleError(`Maksimal ${MAX_VIDEOS} video per konten.`);
   };
@@ -224,6 +233,18 @@ export function createDummyRepository(storage: KeyValueStorage | null = browserS
     },
     async listProducts() {
       return structuredClone(state().products);
+    },
+    async getPlatformOverrides() {
+      return structuredClone(state().overrides);
+    },
+    async listModerationFlags() {
+      return structuredClone(state().moderationFlags);
+    },
+    async listModerationActions() {
+      return structuredClone(state().moderationActions);
+    },
+    async listXpTransactions() {
+      return structuredClone(state().xpTransactions);
     },
 
     async createDraft(actorId, input) {
@@ -734,6 +755,79 @@ export function createDummyRepository(storage: KeyValueStorage | null = browserS
       }
       commit();
       return structuredClone(item);
+    },
+
+    async updateCourseCatalog(actorId, courseSlug, change, alasan) {
+      requireRole(actorId, "admin", "Admin");
+      const reason = requireReason(alasan);
+      const current = courseCatalogState(courseSlug, state().overrides.courses);
+      if (!current) throw new ContentRuleError("Course tidak ditemukan.");
+
+      const isVisibilityChanged = current.availability !== change.availability || current.contentStatus !== change.contentStatus;
+      if (isVisibilityChanged && change.availability === "available" && change.contentStatus !== "ready") {
+        throw new ContentRuleError("Course tidak bisa dijadikan Tersedia selama kontennya belum Siap. Aturan ini berlaku untuk UAT dan Production.");
+      }
+      if (current.access === "free" && change.access === "premium") {
+        if (isRequiredFree(courseSlug)) throw new ContentRuleError("Course fondasi wajib gratis.");
+        if (DUMMY_LEARNING_PROGRESS.some((entry) => entry.courseSlug === courseSlug)) throw new ContentRuleError("Course gratis tidak bisa dijadikan premium karena sudah ada pengguna yang mempelajarinya.");
+      }
+      const afterChange = freeXpTotal({ ...state().overrides.courses, [courseSlug]: change });
+      if (change.access === "premium" && current.access === "free" && afterChange < MASTER_XP) {
+        throw new ContentRuleError(`Perubahan ditolak: XP dari materi gratis menjadi ${afterChange}, kurang dari batas rank Master (${MASTER_XP}).`);
+      }
+
+      state().overrides.courses[courseSlug] = change;
+      audit({ adminId: actorId, action: "ubah-katalog", targetType: "katalog", targetId: courseSlug, targetLabel: courseSlug, alasan: reason, before: { ...current }, after: { ...change } });
+      commit();
+      return structuredClone(change);
+    },
+
+    async setCatalogItemStatus(actorId, kind, itemId, status, alasan) {
+      requireRole(actorId, "admin", "Admin");
+      const reason = requireReason(alasan);
+      const key = `${kind}:${itemId}`;
+      const before = state().overrides.items[key] ?? null;
+      state().overrides.items[key] = status;
+      audit({ adminId: actorId, action: "ubah-katalog", targetType: "katalog", targetId: key, targetLabel: itemId, alasan: reason, before: { status: before }, after: { status } });
+      commit();
+    },
+
+    async ignoreFlag(actorId, flagId) {
+      requireRole(actorId, "admin", "Admin");
+      const flag = state().moderationFlags.find((item) => item.id === flagId);
+      if (!flag) throw new ContentRuleError("Penandaan tidak ditemukan.");
+      if (flag.status !== "terbuka") throw new ContentRuleError("Penandaan ini sudah ditindak.");
+      audit({ adminId: actorId, action: "abaikan-moderasi", targetType: "pengguna", targetId: flag.userId, targetLabel: user(flag.userId).name, alasan: null, before: { status: "terbuka" }, after: { status: "diabaikan" } });
+      recordModeration(flag.userId, flagId, "abaikan", null, actorId);
+      commit();
+      return structuredClone(flag);
+    },
+
+    async correctXp(actorId, userId, amount, alasan, flagId) {
+      requireRole(actorId, "admin", "Admin");
+      const reason = requireReason(alasan);
+      if (!Number.isInteger(amount) || amount === 0) throw new ContentRuleError("Jumlah koreksi harus angka bulat dan tidak boleh 0.");
+      const target = user(userId);
+      if (target.xp + amount < 0) throw new ContentRuleError("Koreksi tidak boleh membuat XP kurang dari 0.");
+      const before = target.xp;
+      target.xp += amount;
+      state().xpTransactions.push({ id: newId("xp"), userId, amount, kind: "koreksi", alasan: reason, actorId, at: now() });
+      audit({ adminId: actorId, action: "koreksi-xp", targetType: "pengguna", targetId: userId, targetLabel: target.name, alasan: reason, before: { xp: before }, after: { xp: target.xp } });
+      recordModeration(userId, flagId, "koreksi-xp", reason, actorId);
+      commit();
+      return structuredClone(target);
+    },
+
+    async setLeaderboardVisibility(actorId, userId, visible, alasan, flagId) {
+      requireRole(actorId, "admin", "Admin");
+      const reason = requireReason(alasan);
+      const target = user(userId);
+      if (target.hiddenFromLeaderboard === !visible) throw new ContentRuleError(visible ? "Akun ini sudah tampil di leaderboard." : "Akun ini sudah disembunyikan dari leaderboard.");
+      target.hiddenFromLeaderboard = !visible;
+      audit({ adminId: actorId, action: visible ? "tampilkan-leaderboard" : "sembunyikan-leaderboard", targetType: "pengguna", targetId: userId, targetLabel: target.name, alasan: reason, before: { tampil: !visible }, after: { tampil: visible } });
+      recordModeration(userId, flagId, visible ? "tampilkan" : "sembunyikan", reason, actorId);
+      commit();
+      return structuredClone(target);
     },
 
     async reset() {

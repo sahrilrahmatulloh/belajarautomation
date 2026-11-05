@@ -51,14 +51,18 @@ export function getLeaderboard(
     totalXp: DUMMY_ACCOUNT.xp,
   },
   showCurrentUser = DUMMY_ACCOUNT.showOnLeaderboard,
-  // Akun nonaktif tidak tampil dan tidak dihitung (PRD FR-16 C).
-  inactiveIds: readonly string[] = []
+  // Akun nonaktif atau disembunyikan Admin tidak tampil dan tidak dihitung (PRD FR-16 C dan D).
+  excludedIds: readonly string[] = [],
+  // XP setelah koreksi Admin, per id pengguna.
+  xpOverrides: Readonly<Record<string, number>> = {}
 ) {
   const currentRank = getRank(currentUser.totalXp);
   const inTab = (participant: Participant) =>
     tab === "global" || getRank(participant.totalXp).name === currentRank.name;
 
-  const others = DUMMY_LEADERBOARD_USERS.filter((user) => user.showOnLeaderboard && !inactiveIds.includes(user.id)).filter(inTab);
+  const others = DUMMY_LEADERBOARD_USERS.filter((user) => user.showOnLeaderboard && !excludedIds.includes(user.id))
+    .map((user) => ({ ...user, totalXp: xpOverrides[user.id] ?? user.totalXp }))
+    .filter(inTab);
 
   const rowsWithUser = toRows([...others, currentUser]);
   const currentUserRow = rowsWithUser.find((row) => row.isCurrentUser)!;

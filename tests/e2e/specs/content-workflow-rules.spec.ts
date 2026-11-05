@@ -1,5 +1,7 @@
 import { expect, test } from "@playwright/test";
 
+import { COURSES } from "@/data/courses";
+import { freeXpTotal } from "@/lib/content/catalogRules";
 import { createDummyRepository } from "@/lib/content/dummyRepository";
 import { ContentRepository, ContentRuleError } from "@/lib/content/repository";
 import { CREATOR_CHECKLIST, REVIEWER_CHECKLIST } from "@/lib/content/rules";
@@ -377,6 +379,76 @@ test.describe("Aturan transaksi dan hak akses", () => {
 
     expect(saved.price).toBe(amount! + 1000);
     expect((await transaction("trx-sobat-ebook"))?.amount).toBe(amount);
+  });
+});
+
+test.describe("Aturan Katalog Belajar", () => {
+  const FREE_READY = { availability: "coming-soon", contentStatus: "draft", access: "free" } as const;
+
+  test("Tersedia ditolak selama konten belum Siap", async () => {
+    await expectRule(repo.updateCourseCatalog(ADMIN, "cypress", { ...FREE_READY, availability: "available" }, REASON), /belum Siap/);
+
+    expect(await repo.updateCourseCatalog(ADMIN, "cypress", { ...FREE_READY, availability: "available", contentStatus: "ready" }, REASON)).toMatchObject({ availability: "available" });
+  });
+
+  test("gratis ke premium ditolak bila fondasi, sudah dipelajari, atau XP gratis kurang", async () => {
+    const premium = (availability: "available" | "coming-soon") => ({ availability, contentStatus: "draft", access: "premium" }) as const;
+
+    await expectRule(repo.updateCourseCatalog(ADMIN, "git-github", premium("available"), REASON), /fondasi/);
+    await expectRule(repo.updateCourseCatalog(ADMIN, "playwright", premium("available"), REASON), /sudah ada pengguna/);
+    await expectRule(repo.updateCourseCatalog(ADMIN, "cypress", premium("coming-soon"), REASON), /kurang dari batas rank Master/);
+  });
+
+  test("hanya Admin, wajib alasan, tercatat, dan tidak mengubah data katalog asli", async () => {
+    await expectRule(repo.updateCourseCatalog(RAHMA, "cypress", { ...FREE_READY }, REASON), /Admin/);
+    await expectRule(repo.updateCourseCatalog(ADMIN, "cypress", { ...FREE_READY }, " "), /Alasan wajib/);
+    await expectRule(repo.updateCourseCatalog(ADMIN, "tidak-ada", { ...FREE_READY }, REASON), /tidak ditemukan/);
+
+    await repo.updateCourseCatalog(ADMIN, "cypress", { ...FREE_READY, contentStatus: "ready" }, REASON);
+
+    expect((await repo.listAuditLog()).at(-1)).toMatchObject({ action: "ubah-katalog", before: { contentStatus: "draft" }, after: { contentStatus: "ready" } });
+    expect(COURSES.find((course) => course.slug === "cypress")?.contentStatus).toBe("draft");
+  });
+
+  test("XP gratis dihitung dari target lesson dan latihan", () => {
+    expect(freeXpTotal({})).toBe(3880);
+    expect(freeXpTotal({ cypress: { access: "premium" } })).toBe(3880 - 130);
+  });
+});
+
+test.describe("Aturan Moderasi", () => {
+  test("koreksi XP wajib alasan, menambah transaksi, tidak membuat XP negatif, dan menutup penandaan", async () => {
+    await expectRule(repo.correctXp(RAHMA, "user-1", -100, REASON, "flag-rina"), /Admin/);
+    await expectRule(repo.correctXp(ADMIN, "user-1", -100, " ", "flag-rina"), /Alasan wajib/);
+    await expectRule(repo.correctXp(ADMIN, "user-1", 0, REASON, "flag-rina"), /tidak boleh 0/);
+    await expectRule(repo.correctXp(ADMIN, "user-1", -999999, REASON, "flag-rina"), /kurang dari 0/);
+
+    const updated = await repo.correctXp(ADMIN, "user-1", -2000, REASON, "flag-rina");
+
+    expect(updated.xp).toBe(4400);
+    expect(await repo.listXpTransactions()).toMatchObject([{ userId: "user-1", amount: -2000, kind: "koreksi", alasan: REASON }]);
+    expect((await repo.listModerationFlags()).find((flag) => flag.id === "flag-rina")?.status).toBe("ditangani");
+
+    await repo.correctXp(ADMIN, "user-1", 100, REASON, null);
+    expect(await repo.listXpTransactions()).toHaveLength(2);
+    expect((await repo.listAuditLog()).filter((entry) => entry.action === "koreksi-xp")).toHaveLength(2);
+  });
+
+  test("abaikan hanya penandaan terbuka dan tetap tercatat", async () => {
+    await repo.ignoreFlag(ADMIN, "flag-dimas");
+
+    await expectRule(repo.ignoreFlag(ADMIN, "flag-dimas"), /sudah ditindak/);
+    expect((await repo.listModerationActions()).at(-1)).toMatchObject({ kind: "abaikan", userId: "user-2" });
+  });
+
+  test("sembunyikan dan tampilkan kembali wajib alasan, tanpa mengubah XP", async () => {
+    await expectRule(repo.setLeaderboardVisibility(ADMIN, "user-1", false, " ", null), /Alasan wajib/);
+
+    const hidden = await repo.setLeaderboardVisibility(ADMIN, "user-1", false, REASON, null);
+    expect(hidden).toMatchObject({ hiddenFromLeaderboard: true, xp: 6400 });
+    await expectRule(repo.setLeaderboardVisibility(ADMIN, "user-1", false, REASON, null), /sudah disembunyikan/);
+
+    expect((await repo.setLeaderboardVisibility(ADMIN, "user-1", true, REASON, null)).hiddenFromLeaderboard).toBe(false);
   });
 });
 
