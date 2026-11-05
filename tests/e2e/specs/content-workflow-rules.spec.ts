@@ -24,6 +24,9 @@ const COMPLETE = {
   body: { type: "doc", content: [{ type: "paragraph", content: [{ type: "text", text: "Isi" }] }] },
 };
 
+const REASON = "Alasan uji.";
+const AGREEMENT = { tanggal: "2026-11-01", dokumen: "Dokumen kesepakatan" };
+
 let repo: ContentRepository;
 
 const expectRule = async (action: Promise<unknown>, message: RegExp) => {
@@ -162,6 +165,7 @@ test.describe("Aturan Admin", () => {
   test("terbitkan hanya dari Disetujui dan hanya oleh Admin", async () => {
     await expectRule(repo.publish(RAHMA, "konten-login"), /Admin/);
     await expectRule(repo.publish(ADMIN, "konten-qa"), /Disetujui/);
+    await repo.recordAgreement(ADMIN, ANDI, AGREEMENT);
 
     expect((await repo.publish(ADMIN, "konten-login")).status).toBe("terbit");
   });
@@ -177,6 +181,7 @@ test.describe("Aturan Admin", () => {
   });
 
   test("revisi yang terbit menggantikan versi lama", async () => {
+    await repo.recordAgreement(ADMIN, ANDI, AGREEMENT);
     const revision = await repo.createRevision(ANDI, "konten-locator");
     await repo.updateDraft(ANDI, revision.id, COMPLETE);
     await repo.submitForReview(ANDI, revision.id, CREATOR_ALL);
@@ -190,17 +195,88 @@ test.describe("Aturan Admin", () => {
   });
 
   test("kelola peran: banyak peran, tercatat, dan Admin terakhir tidak bisa dicabut", async () => {
-    await expectRule(repo.setRole(RAHMA, SOBAT, "creator", "tambah"), /Admin/);
-    await expectRule(repo.setRole(ADMIN, ADMIN, "admin", "cabut"), /satu-satunya Admin/);
+    await expectRule(repo.setRole(RAHMA, SOBAT, "creator", "tambah", REASON), /Admin/);
+    await expectRule(repo.setRole(ADMIN, SOBAT, "creator", "tambah", " "), /Alasan wajib/);
+    await expectRule(repo.setRole(ADMIN, ADMIN, "admin", "cabut", REASON), /satu-satunya Admin/);
 
-    const updated = await repo.setRole(ADMIN, SOBAT, "creator", "tambah");
+    const updated = await repo.setRole(ADMIN, SOBAT, "creator", "tambah", REASON);
     expect(updated.roles).toEqual(["user", "creator"]);
-    await expectRule(repo.setRole(ADMIN, SOBAT, "creator", "tambah"), /sudah memiliki/);
+    await expectRule(repo.setRole(ADMIN, SOBAT, "creator", "tambah", REASON), /sudah memiliki/);
     expect((await repo.listRoleEvents()).at(-1)).toMatchObject({ userId: SOBAT, role: "creator", action: "tambah", actorId: ADMIN });
 
-    await repo.setRole(ADMIN, SOBAT, "admin", "tambah");
-    await repo.setRole(ADMIN, ADMIN, "admin", "cabut");
+    await repo.setRole(ADMIN, SOBAT, "admin", "tambah", REASON);
+    await repo.setRole(ADMIN, ADMIN, "admin", "cabut", REASON);
     expect((await repo.listUsers()).find((user) => user.id === ADMIN)?.roles).not.toContain("admin");
+  });
+});
+
+test.describe("Aturan Panel Admin", () => {
+  test("terbitkan ditolak selama Creator belum punya kesepakatan", async () => {
+    await expectRule(repo.publish(ADMIN, "konten-login"), /kesepakatan/);
+    expect(await statusOf("konten-login")).toBe("disetujui");
+
+    await repo.recordAgreement(ADMIN, ANDI, AGREEMENT);
+
+    expect((await repo.publish(ADMIN, "konten-login")).status).toBe("terbit");
+  });
+
+  test("kesepakatan hanya untuk Creator, wajib lengkap, dan pembaruan menambah catatan baru", async () => {
+    await expectRule(repo.recordAgreement(RAHMA, ANDI, AGREEMENT), /Admin/);
+    await expectRule(repo.recordAgreement(ADMIN, SOBAT, AGREEMENT), /Creator/);
+    await expectRule(repo.recordAgreement(ADMIN, ANDI, { tanggal: "", dokumen: "x" }), /Tanggal/);
+    await expectRule(repo.recordAgreement(ADMIN, ANDI, { tanggal: "2026-11-01", dokumen: " " }), /dokumen/);
+
+    await repo.recordAgreement(ADMIN, ANDI, AGREEMENT);
+    await repo.recordAgreement(ADMIN, ANDI, { tanggal: "2026-11-02", dokumen: "Dokumen baru" });
+
+    expect((await repo.listAgreements()).filter((item) => item.userId === ANDI)).toHaveLength(2);
+  });
+
+  test("nonaktifkan akun wajib alasan, dan Admin tidak bisa menonaktifkan dirinya", async () => {
+    await expectRule(repo.setAccountStatus(RAHMA, SOBAT, "nonaktif", REASON), /Admin/);
+    await expectRule(repo.setAccountStatus(ADMIN, SOBAT, "nonaktif", " "), /Alasan wajib/);
+    await expectRule(repo.setAccountStatus(ADMIN, ADMIN, "nonaktif", REASON), /akunmu sendiri/);
+
+    expect((await repo.setAccountStatus(ADMIN, SOBAT, "nonaktif", REASON)).status).toBe("nonaktif");
+    await expectRule(repo.setAccountStatus(ADMIN, SOBAT, "nonaktif", REASON), /sudah nonaktif/);
+    expect((await repo.setAccountStatus(ADMIN, SOBAT, "aktif", REASON)).status).toBe("aktif");
+  });
+
+  test("setiap aksi Admin tercatat lengkap di log, dan log tidak bisa diubah dari luar", async () => {
+    await repo.assignReviewer(ADMIN, "konten-api", RAHMA);
+    await repo.recordAgreement(ADMIN, ANDI, AGREEMENT);
+    await repo.publish(ADMIN, "konten-login");
+    await repo.takedown(ADMIN, "konten-locator", "Keliru.");
+    await repo.setRole(ADMIN, SOBAT, "creator", "tambah", REASON);
+    await repo.setRole(ADMIN, SOBAT, "creator", "cabut", REASON);
+    await repo.setAccountStatus(ADMIN, SOBAT, "nonaktif", REASON);
+    await repo.setAccountStatus(ADMIN, SOBAT, "aktif", REASON);
+
+    const log = await repo.listAuditLog();
+    expect(log.map((entry) => entry.action)).toEqual([
+      "tugaskan-reviewer",
+      "catat-kesepakatan",
+      "terbitkan",
+      "tarik-website",
+      "tambah-peran",
+      "cabut-peran",
+      "nonaktifkan-akun",
+      "aktifkan-akun",
+    ]);
+    expect(log[3]).toMatchObject({ adminId: ADMIN, targetId: "konten-locator", alasan: "Keliru.", before: { status: "terbit" }, after: { status: "draf" } });
+
+    log[0].alasan = "diubah";
+    log.pop();
+    const again = await repo.listAuditLog();
+    expect(again).toHaveLength(8);
+    expect(again[0].alasan).toBeNull();
+  });
+
+  test("aksi yang ditolak tidak tercatat di log", async () => {
+    await expectRule(repo.setRole(ADMIN, ADMIN, "admin", "cabut", REASON), /satu-satunya Admin/);
+    await expectRule(repo.publish(ADMIN, "konten-login"), /kesepakatan/);
+
+    expect(await repo.listAuditLog()).toEqual([]);
   });
 });
 

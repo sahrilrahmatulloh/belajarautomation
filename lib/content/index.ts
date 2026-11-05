@@ -3,6 +3,7 @@
 import { useEffect, useEffectEvent, useState } from "react";
 
 import { isDev } from "@/lib/env";
+import { ContentUser } from "@/types/ContentWorkflow";
 
 import { createDummyRepository } from "./dummyRepository";
 import { ContentRepository, ContentRuleError } from "./repository";
@@ -42,6 +43,17 @@ export function useContentData<T>(key: string, load: (repository: ContentReposit
   }, [key]);
 
   return result?.key === key ? result.data : undefined;
+}
+
+// Akun demo yang mewakili "pengguna saat ini" di leaderboard dan profil.
+export const DEMO_LEARNER_ID = "user-sobat";
+
+const NO_USERS: ContentUser[] = [];
+
+// Akun nonaktif, untuk menyembunyikannya dari leaderboard dan profil publik (PRD FR-16 C).
+export function useInactiveUsers() {
+  const users = useContentData("akun-nonaktif", async (current) => (await current.listUsers()).filter((user) => user.status === "nonaktif"));
+  return users ?? NO_USERS;
 }
 
 // Menjalankan aksi repository dan mengubah pelanggaran aturan menjadi pesan untuk pengguna.

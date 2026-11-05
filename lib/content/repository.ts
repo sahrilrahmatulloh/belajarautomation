@@ -1,7 +1,10 @@
 import {
+  AccountStatus,
+  AdminAuditLog,
   ContentDraftInput,
   ContentItem,
   ContentUser,
+  CreatorAgreement,
   ReviewNote,
   ReviewNoteKind,
   RoleChangeAction,
@@ -33,6 +36,9 @@ export interface ContentRepository {
   listAllNotes(): Promise<ReviewNote[]>;
   listStatusEvents(contentId?: string): Promise<StatusEvent[]>;
   listRoleEvents(): Promise<RoleChangeEvent[]>;
+  listAgreements(): Promise<CreatorAgreement[]>;
+  // Log hanya bisa dibaca: tidak ada operasi untuk mengubah atau menghapusnya (PRD FR-16 J).
+  listAuditLog(): Promise<AdminAuditLog[]>;
 
   // Creator
   createDraft(actorId: string, input: ContentDraftInput): Promise<ContentItem>;
@@ -60,7 +66,9 @@ export interface ContentRepository {
   assignReviewer(actorId: string, contentId: string, reviewerId: string): Promise<ContentItem>;
   publish(actorId: string, contentId: string): Promise<ContentItem>;
   takedown(actorId: string, contentId: string, alasan: string): Promise<ContentItem>;
-  setRole(actorId: string, userId: string, role: UserRole, action: RoleChangeAction): Promise<ContentUser>;
+  setRole(actorId: string, userId: string, role: UserRole, action: RoleChangeAction, alasan: string): Promise<ContentUser>;
+  setAccountStatus(actorId: string, userId: string, status: AccountStatus, alasan: string): Promise<ContentUser>;
+  recordAgreement(actorId: string, userId: string, agreement: { tanggal: string; dokumen: string }): Promise<CreatorAgreement>;
 
   // Mengembalikan data ke kondisi awal. Hanya untuk tahap dummy.
   reset(): Promise<void>;

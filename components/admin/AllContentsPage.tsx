@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
 
 import ConfirmDialog from "@/components/common/ConfirmDialog";
 import ListPagination, { pageSlice } from "@/components/common/ListPagination";
@@ -14,12 +14,16 @@ import ContentStatusBadge from "@/components/roles/ContentStatusBadge";
 import { runContentAction } from "@/lib/content";
 import { formatContentDate, KIND_LABELS, STATUS_LABELS } from "@/lib/content/document";
 import { matchesKeyword } from "@/lib/filters";
+import { useCatalogFilters } from "@/lib/useUrlFilters";
 import { ContentItem, ContentKind, ContentStatusId, ContentUser, StatusAction, StatusEvent } from "@/types/ContentWorkflow";
 
+import AdminList, { AdminColumn } from "./AdminList";
+import ReasonDialog from "./ReasonDialog";
 import { formatDateTime, isLongWaiting, LONG_WAIT_DAYS, useAdminData } from "./useAdminData";
 
 const PAGE_SIZE = 10;
 const UNASSIGNED = "belum";
+const FILTER_KEYS = ["q", "status", "jenis", "creator", "reviewer", "lama"] as const;
 const STATUSES = Object.keys(STATUS_LABELS) as ContentStatusId[];
 const KINDS = Object.keys(KIND_LABELS) as ContentKind[];
 const selectClass = "h-11 w-full rounded-lg border border-input bg-background px-3 text-sm font-medium dark:bg-card";
@@ -67,28 +71,6 @@ function AssignDialog({ content, users, error, onConfirm, onClose }: { content: 
   );
 }
 
-function TakedownDialog({ content, error, onConfirm, onClose }: { content: ContentItem; error: string; onConfirm: (alasan: string) => void; onClose: () => void }) {
-  const [alasan, setAlasan] = useState("");
-
-  return (
-    <ConfirmDialog
-      title="Tarik dari website?"
-      description={`"${content.judul}" kembali menjadi Draf milik Creator, dan alasannya tampil sebagai catatan umum.`}
-      confirmLabel="Tarik dari website"
-      isDestructive
-      isConfirmDisabled={!alasan.trim()}
-      error={error}
-      onConfirm={() => onConfirm(alasan)}
-      onClose={onClose}
-    >
-      <label className="mt-3 block text-sm font-medium">
-        Alasan penarikan
-        <textarea rows={3} value={alasan} onChange={(event) => setAlasan(event.target.value)} className={fieldClass} />
-      </label>
-    </ConfirmDialog>
-  );
-}
-
 function HistoryDialog({ content, events, users, onClose }: { content: ContentItem; events: StatusEvent[]; users: ContentUser[]; onClose: () => void }) {
   const own = events.filter((event) => event.contentId === content.id).reverse();
 
@@ -115,36 +97,22 @@ function HistoryDialog({ content, events, users, onClose }: { content: ContentIt
   );
 }
 
-// Semua Konten (PRD FR-15). Status, Reviewer, dan lama menunggu tersimpan di alamat, agar angka
-// di Ringkasan dan notifikasi bisa menautkan daftar yang sudah tersaring.
+// Semua Konten (PRD FR-16 B). Filter tersimpan di alamat, agar angka di Ringkasan dan notifikasi
+// bisa menautkan daftar yang sudah tersaring.
 export default function AllContentsPage() {
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
   const { userId, data } = useAdminData();
-  const [search, setSearch] = useState("");
-  const [kind, setKind] = useState("");
-  const [creator, setCreator] = useState("");
+  const { values, search, setSearch, setFilters } = useCatalogFilters(FILTER_KEYS);
   const [page, setPage] = useState(1);
   const [dialog, setDialog] = useState<DialogState>(null);
   const [dialogError, setDialogError] = useState("");
 
-  const status = searchParams.get("status") ?? "";
-  const reviewer = searchParams.get("reviewer") ?? "";
-  const isLongOnly = searchParams.get("lama") === "1";
-
   if (!data) return <p className="py-10 text-center text-sm text-muted-foreground">Memuat konten...</p>;
 
-  const { contents, users, events, loadedAt } = data;
+  const { contents, users, events, agreements, loadedAt } = data;
+  const hasAgreement = (authorId: string) => agreements.some((item) => item.userId === authorId);
 
-  const updateParams = (changes: Record<string, string>) => {
-    const next = new URLSearchParams(searchParams.toString());
-    for (const [key, value] of Object.entries(changes)) {
-      if (value) next.set(key, value);
-      else next.delete(key);
-    }
-    const query = next.toString();
-    router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false });
+  const updateFilter = (key: (typeof FILTER_KEYS)[number], value: string) => {
+    setFilters({ [key]: value });
     setPage(1);
   };
 
@@ -152,12 +120,12 @@ export default function AllContentsPage() {
   const reviewers = users.filter((user) => user.roles.includes("reviewer"));
   const filtered = contents.filter(
     (content) =>
-      (!status || content.status === status) &&
-      (!kind || content.type === kind) &&
-      (!creator || content.authorId === creator) &&
-      (!reviewer || (reviewer === UNASSIGNED ? !content.reviewerId : content.reviewerId === reviewer)) &&
-      (!isLongOnly || isLongWaiting(content, loadedAt)) &&
-      matchesKeyword(search, content.judul)
+      (!values.status || content.status === values.status) &&
+      (!values.jenis || content.type === values.jenis) &&
+      (!values.creator || content.authorId === values.creator) &&
+      (!values.reviewer || (values.reviewer === UNASSIGNED ? !content.reviewerId : content.reviewerId === values.reviewer)) &&
+      (values.lama !== "1" || isLongWaiting(content, loadedAt)) &&
+      matchesKeyword(values.q, content.judul)
   );
   const currentPage = Math.min(page, Math.max(1, Math.ceil(filtered.length / PAGE_SIZE)));
 
@@ -166,26 +134,55 @@ export default function AllContentsPage() {
     setDialog({ kind: kindOfDialog, content });
   };
 
+  const finish = (result: { ok: true } | { ok: false; message: string }) => {
+    if (result.ok) setDialog(null);
+    else setDialogError(result.message);
+  };
+
   const assign = async (reviewerId: string) => {
-    if (!dialog) return;
-    const result = await runContentAction((repository) => repository.assignReviewer(userId, dialog.content.id, reviewerId));
-    if (result.ok) setDialog(null);
-    else setDialogError(result.message);
+    if (dialog) finish(await runContentAction((repository) => repository.assignReviewer(userId, dialog.content.id, reviewerId)));
   };
-
   const publish = async () => {
-    if (!dialog) return;
-    const result = await runContentAction((repository) => repository.publish(userId, dialog.content.id));
-    if (result.ok) setDialog(null);
-    else setDialogError(result.message);
+    if (dialog) finish(await runContentAction((repository) => repository.publish(userId, dialog.content.id)));
+  };
+  const takedown = async (alasan: string) => {
+    if (dialog) finish(await runContentAction((repository) => repository.takedown(userId, dialog.content.id, alasan)));
   };
 
-  const takedown = async (alasan: string) => {
-    if (!dialog) return;
-    const result = await runContentAction((repository) => repository.takedown(userId, dialog.content.id, alasan));
-    if (result.ok) setDialog(null);
-    else setDialogError(result.message);
-  };
+  const columns: AdminColumn<ContentItem>[] = [
+    { header: "Judul", cell: (content) => content.judul || "Tanpa judul" },
+    { header: "Jenis", cell: (content) => KIND_LABELS[content.type] },
+    { header: "Creator", cell: (content) => userName(users, content.authorId) },
+    { header: "Reviewer", cell: (content) => userName(users, content.reviewerId) },
+    { header: "Status", cell: (content) => <ContentStatusBadge status={content.status} /> },
+    { header: "Terakhir diubah", cell: (content) => <span className="whitespace-nowrap">{formatContentDate(content.updatedAt)}</span> },
+    {
+      header: "Aksi",
+      cell: (content) => (
+        <span className="flex flex-wrap gap-x-3 gap-y-1">
+          {content.status === "menunggu-review" && (
+            <button type="button" onClick={() => openDialog("tugaskan", content)} className={actionClass}>Tugaskan Reviewer</button>
+          )}
+          {content.status === "disetujui" && hasAgreement(content.authorId) && (
+            <button type="button" onClick={() => openDialog("terbitkan", content)} className={actionClass}>Terbitkan</button>
+          )}
+          {content.status === "disetujui" && !hasAgreement(content.authorId) && (
+            <span className="block">
+              <button type="button" disabled className="cursor-not-allowed font-medium text-muted-foreground">Terbitkan</button>
+              <span className="block text-xs text-foreground">
+                Terkunci: Creator belum punya kesepakatan.{" "}
+                <Link href={`/admin/pengguna/${content.authorId}`} className="font-medium text-primary-accent underline underline-offset-2">Catat kesepakatan</Link>
+              </span>
+            </span>
+          )}
+          {content.status === "terbit" && (
+            <button type="button" onClick={() => openDialog("tarik", content)} className="whitespace-nowrap rounded font-medium text-destructive underline-offset-2 hover:underline">Tarik dari website</button>
+          )}
+          <button type="button" onClick={() => openDialog("riwayat", content)} className={actionClass}>Riwayat</button>
+        </span>
+      ),
+    },
+  ];
 
   return (
     <div className="mx-auto w-full max-w-7xl space-y-5">
@@ -206,15 +203,15 @@ export default function AllContentsPage() {
             setPage(1);
           }}
         />
-        <select aria-label="Filter jenis" value={kind} onChange={(event) => { setKind(event.target.value); setPage(1); }} className={selectClass}>
+        <select aria-label="Filter jenis" value={values.jenis} onChange={(event) => updateFilter("jenis", event.target.value)} className={selectClass}>
           <option value="">Semua jenis</option>
           {KINDS.map((item) => <option key={item} value={item}>{KIND_LABELS[item]}</option>)}
         </select>
-        <select aria-label="Filter Creator" value={creator} onChange={(event) => { setCreator(event.target.value); setPage(1); }} className={selectClass}>
+        <select aria-label="Filter Creator" value={values.creator} onChange={(event) => updateFilter("creator", event.target.value)} className={selectClass}>
           <option value="">Semua Creator</option>
           {creators.map((user) => <option key={user.id} value={user.id}>{user.name}</option>)}
         </select>
-        <select aria-label="Filter Reviewer" value={reviewer} onChange={(event) => updateParams({ reviewer: event.target.value })} className={selectClass}>
+        <select aria-label="Filter Reviewer" value={values.reviewer} onChange={(event) => updateFilter("reviewer", event.target.value)} className={selectClass}>
           <option value="">Semua Reviewer</option>
           <option value={UNASSIGNED}>Belum ditugaskan</option>
           {reviewers.map((user) => <option key={user.id} value={user.id}>{user.name}</option>)}
@@ -228,62 +225,24 @@ export default function AllContentsPage() {
           { value: "", label: `Semua (${contents.length})` },
           ...STATUSES.map((value) => ({ value, label: `${STATUS_LABELS[value]} (${contents.filter((content) => content.status === value).length})` })),
         ]}
-        active={status}
-        onChange={(value) => updateParams({ status: value })}
+        active={values.status}
+        onChange={(value) => updateFilter("status", value)}
       />
 
-      {isLongOnly && (
+      {values.lama === "1" && (
         <p className="flex flex-wrap items-center gap-3 text-sm">
           Hanya review yang menunggu lebih dari {LONG_WAIT_DAYS} hari.
-          <button type="button" onClick={() => updateParams({ lama: "" })} className={actionClass}>Hapus filter ini</button>
+          <button type="button" onClick={() => updateFilter("lama", "")} className={actionClass}>Hapus filter ini</button>
         </p>
       )}
 
       {filtered.length > 0 ? (
         <>
-          <div role="group" tabIndex={0} aria-label="Tabel semua konten" className="overflow-x-auto rounded-2xl border border-border bg-card">
-            <table className="w-full min-w-[920px] text-left text-sm">
-              <thead className="border-b border-border bg-muted/40 text-xs text-muted-foreground">
-                <tr>
-                  {["Judul", "Jenis", "Creator", "Reviewer", "Status", "Terakhir diubah", "Aksi"].map((heading) => (
-                    <th key={heading} scope="col" className="px-4 py-2.5 font-medium">{heading}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-border">
-                {pageSlice(filtered, currentPage, PAGE_SIZE).map((content) => (
-                  <tr key={content.id}>
-                    <th scope="row" className="px-4 py-3 font-medium">{content.judul || "Tanpa judul"}</th>
-                    <td className="px-4 py-3 text-muted-foreground">{KIND_LABELS[content.type]}</td>
-                    <td className="px-4 py-3">{userName(users, content.authorId)}</td>
-                    <td className="px-4 py-3 text-muted-foreground">{userName(users, content.reviewerId)}</td>
-                    <td className="px-4 py-3"><ContentStatusBadge status={content.status} /></td>
-                    <td className="whitespace-nowrap px-4 py-3 text-muted-foreground">{formatContentDate(content.updatedAt)}</td>
-                    <td className="px-4 py-3">
-                      <div className="flex flex-wrap gap-x-3 gap-y-1">
-                        {content.status === "menunggu-review" && (
-                          <button type="button" onClick={() => openDialog("tugaskan", content)} className={actionClass}>Tugaskan Reviewer</button>
-                        )}
-                        {content.status === "disetujui" && (
-                          <button type="button" onClick={() => openDialog("terbitkan", content)} className={actionClass}>Terbitkan</button>
-                        )}
-                        {content.status === "terbit" && (
-                          <button type="button" onClick={() => openDialog("tarik", content)} className="whitespace-nowrap rounded font-medium text-destructive underline-offset-2 hover:underline">Tarik dari website</button>
-                        )}
-                        <button type="button" onClick={() => openDialog("riwayat", content)} className={actionClass}>Riwayat</button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <AdminList label="semua konten" rows={pageSlice(filtered, currentPage, PAGE_SIZE)} columns={columns} rowKey={(content) => content.id} />
           <ListPagination total={filtered.length} page={currentPage} pageSize={PAGE_SIZE} itemLabel="konten" onChange={setPage} />
         </>
       ) : (
-        <p className="rounded-2xl border border-dashed border-border bg-card px-6 py-10 text-center text-sm text-muted-foreground">
-          Tidak ada konten yang cocok.
-        </p>
+        <p className="rounded-2xl border border-dashed border-border bg-card px-6 py-10 text-center text-sm text-muted-foreground">Tidak ada konten yang cocok.</p>
       )}
 
       {dialog?.kind === "tugaskan" && <AssignDialog content={dialog.content} users={users} error={dialogError} onConfirm={(id) => void assign(id)} onClose={() => setDialog(null)} />}
@@ -301,7 +260,18 @@ export default function AllContentsPage() {
           </p>
         </ConfirmDialog>
       )}
-      {dialog?.kind === "tarik" && <TakedownDialog content={dialog.content} error={dialogError} onConfirm={(alasan) => void takedown(alasan)} onClose={() => setDialog(null)} />}
+      {dialog?.kind === "tarik" && (
+        <ReasonDialog
+          title="Tarik dari website?"
+          description={`"${dialog.content.judul}" kembali menjadi Draf milik Creator, dan alasannya tampil sebagai catatan umum.`}
+          confirmLabel="Tarik dari website"
+          reasonLabel="Alasan penarikan"
+          isDestructive
+          error={dialogError}
+          onConfirm={(alasan) => void takedown(alasan)}
+          onClose={() => setDialog(null)}
+        />
+      )}
       {dialog?.kind === "riwayat" && <HistoryDialog content={dialog.content} events={events} users={users} onClose={() => setDialog(null)} />}
     </div>
   );

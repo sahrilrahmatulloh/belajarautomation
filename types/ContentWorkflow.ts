@@ -1,3 +1,4 @@
+import { MembershipTier } from "./Membership";
 import { UserRole } from "./Role";
 
 // Alur penerbitan konten (PRD FR-15).
@@ -115,11 +116,55 @@ export interface RoleChangeEvent {
   at: string;
 }
 
+export type AccountStatus = "aktif" | "nonaktif";
+
 export interface ContentUser {
   id: string;
   name: string;
+  username: string;
   email: string;
   roles: UserRole[];
+  status: AccountStatus;
+  membership: MembershipTier;
+  joinedAt: string;
+  lastActiveAt: string;
+  // Ringkasan belajar. Rank dihitung dari XP, tidak disimpan.
+  xp: number;
+  coursesStudied: number;
+}
+
+// Catatan setiap aksi Admin (PRD 7.23). Tidak dapat diubah atau dihapus.
+export type AdminAction =
+  | "tugaskan-reviewer"
+  | "terbitkan"
+  | "tarik-website"
+  | "tambah-peran"
+  | "cabut-peran"
+  | "nonaktifkan-akun"
+  | "aktifkan-akun"
+  | "catat-kesepakatan";
+
+export interface AdminAuditLog {
+  id: string;
+  at: string;
+  adminId: string;
+  action: AdminAction;
+  targetType: "konten" | "pengguna";
+  targetId: string;
+  targetLabel: string;
+  alasan: string | null;
+  before: Record<string, unknown> | null;
+  after: Record<string, unknown> | null;
+}
+
+// Kesepakatan tertulis Creator (PRD 7.24). Pembaruan menambah catatan baru.
+export interface CreatorAgreement {
+  id: string;
+  userId: string;
+  tanggal: string;
+  dokumen: string;
+  recordedBy: string;
+  recordedAt: string;
 }
 
 export type ContentDraftInput = Partial<

@@ -30,7 +30,7 @@ export default function ListPagination({
       <p className="text-sm text-muted-foreground">
         Menampilkan {(page - 1) * pageSize + 1}–{Math.min(page * pageSize, total)} dari {total} {itemLabel}
       </p>
-      <div className="flex gap-1">
+      <div className="flex flex-wrap gap-1">
         <button type="button" aria-label="Halaman sebelumnya" disabled={page === 1} onClick={() => onChange(page - 1)} className={buttonClass}>
           <ChevronLeft className="h-4 w-4" aria-hidden="true" />
         </button>

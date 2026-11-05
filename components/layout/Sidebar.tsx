@@ -1,5 +1,6 @@
 "use client";
 
+import { Fragment } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -76,8 +77,11 @@ export default function Sidebar({
         aria-label={`Menu ${ROLE_LABELS[role]}`}
         className={`flex-1 space-y-2 overflow-y-auto ${collapsed ? "px-3" : "px-4"}`}
       >
-        {menuItems.map((item) => {
+        {menuItems.map((item, index) => {
           const Icon = item.icon;
+          const groupTitle = !collapsed && item.group && item.group !== menuItems[index - 1]?.group ? (
+            <p className="px-3 pt-3 text-xs font-semibold text-muted-foreground first:pt-0">{item.group}</p>
+          ) : null;
           const layoutClass = `flex w-full items-center gap-3 rounded-lg py-2.5 text-sm ${
             collapsed ? "justify-center px-0" : "px-3"
           }`;
@@ -108,23 +112,25 @@ export default function Sidebar({
               : pathname.startsWith(item.href);
 
           return (
-            <AuthLink
-              key={item.label}
-              href={item.href}
-              aria-current={isActive ? "page" : undefined}
-              title={collapsed ? item.label : undefined}
-              className={`${layoutClass} transition-colors duration-150 ${
-                isActive
-                  ? "bg-sidebar-primary text-sidebar-primary-foreground shadow-sm"
-                  : "text-muted-foreground hover:bg-accent hover:text-foreground"
-              }`}
-            >
-              <Icon size={collapsed ? 20 : 18} aria-hidden="true" />
+            <Fragment key={item.label}>
+              {groupTitle}
+              <AuthLink
+                href={item.href}
+                aria-current={isActive ? "page" : undefined}
+                title={collapsed ? item.label : undefined}
+                className={`${layoutClass} transition-colors duration-150 ${
+                  isActive
+                    ? "bg-sidebar-primary text-sidebar-primary-foreground shadow-sm"
+                    : "text-muted-foreground hover:bg-accent hover:text-foreground"
+                }`}
+              >
+                <Icon size={collapsed ? 20 : 18} aria-hidden="true" />
 
-              <span className={collapsed ? "sr-only" : "font-medium"}>
-                {item.label}
-              </span>
-            </AuthLink>
+                <span className={collapsed ? "sr-only" : "font-medium"}>
+                  {item.label}
+                </span>
+              </AuthLink>
+            </Fragment>
           );
         })}
       </nav>

@@ -229,7 +229,7 @@ test.describe("Reviewer yang juga Creator", () => {
     ownId = await page.evaluate(
       async ({ title, checklist }) => {
         const repository = (window as unknown as { __contentRepository: ContentRepository }).__contentRepository;
-        await repository.setRole("user-admin", "user-rahma", "creator", "tambah");
+        await repository.setRole("user-admin", "user-rahma", "creator", "tambah", "Alasan uji.");
         const draft = await repository.createDraft("user-rahma", {
           judul: title,
           ringkasan: "Ringkasan.",
