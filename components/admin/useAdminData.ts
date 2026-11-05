@@ -28,7 +28,7 @@ export function useAdminData() {
   const userId = session?.userId ?? "";
 
   const data = useContentData("admin", async (repository) => {
-    const [contents, users, events, roleEvents, agreements, auditLog, transactions, entitlements, claims, products, overrides, flags, moderationActions, xpTransactions] = await Promise.all([
+    const [contents, users, events, roleEvents, agreements, auditLog, transactions, entitlements, claims, products, overrides, flags, moderationActions, xpTransactions, announcements] = await Promise.all([
       repository.listContents(),
       repository.listUsers(),
       repository.listStatusEvents(),
@@ -43,8 +43,9 @@ export function useAdminData() {
       repository.listModerationFlags(),
       repository.listModerationActions(),
       repository.listXpTransactions(),
+      repository.listAnnouncements(),
     ]);
-    return { contents, users, events, roleEvents, agreements, auditLog, transactions, entitlements, claims, products, overrides, flags, moderationActions, xpTransactions, loadedAt: Date.now() };
+    return { announcements, contents, users, events, roleEvents, agreements, auditLog, transactions, entitlements, claims, products, overrides, flags, moderationActions, xpTransactions, loadedAt: Date.now() };
   });
 
   return { userId, data };

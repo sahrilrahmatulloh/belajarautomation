@@ -1,7 +1,9 @@
 import { expect, test } from "@playwright/test";
 
 import { COURSES } from "@/data/courses";
+import { announcementMatches } from "@/lib/content/announcements";
 import { freeXpTotal } from "@/lib/content/catalogRules";
+import { buildReport, reportToCsv } from "@/lib/content/reports";
 import { createDummyRepository } from "@/lib/content/dummyRepository";
 import { ContentRepository, ContentRuleError } from "@/lib/content/repository";
 import { CREATOR_CHECKLIST, REVIEWER_CHECKLIST } from "@/lib/content/rules";
@@ -25,6 +27,8 @@ const COMPLETE = {
   sampul: "/covers/courses/playwright.webp",
   body: { type: "doc", content: [{ type: "paragraph", content: [{ type: "text", text: "Isi" }] }] },
 };
+
+type Recipient = Parameters<typeof announcementMatches>[1];
 
 const REASON = "Alasan uji.";
 const AGREEMENT = { tanggal: "2026-11-01", dokumen: "Dokumen kesepakatan" };
@@ -449,6 +453,94 @@ test.describe("Aturan Moderasi", () => {
     await expectRule(repo.setLeaderboardVisibility(ADMIN, "user-1", false, REASON, null), /sudah disembunyikan/);
 
     expect((await repo.setLeaderboardVisibility(ADMIN, "user-1", true, REASON, null)).hiddenFromLeaderboard).toBe(false);
+  });
+});
+
+test.describe("Aturan Pengumuman", () => {
+  const INPUT = { title: "Judul", body: "Isi", href: "/learn", group: "system", target: { type: "semua" }, scheduledAt: "" } as const;
+  const FUTURE = new Date(Date.now() + 86_400_000).toISOString();
+
+  test("hanya Admin, wajib judul dan isi, dan tautan harus internal yang tersedia", async () => {
+    await expectRule(repo.saveAnnouncement(RAHMA, null, INPUT, "kirim"), /Admin/);
+    await expectRule(repo.saveAnnouncement(ADMIN, null, { ...INPUT, title: " " }, "kirim"), /Judul/);
+    await expectRule(repo.saveAnnouncement(ADMIN, null, { ...INPUT, body: " " }, "kirim"), /Isi/);
+    for (const href of ["https://contoh.com", "//contoh.com", "/halaman-tidak-ada"]) {
+      await expectRule(repo.saveAnnouncement(ADMIN, null, { ...INPUT, href }, "kirim"), /internal/);
+    }
+
+    expect((await repo.saveAnnouncement(ADMIN, null, INPUT, "kirim")).status).toBe("terkirim");
+    expect((await repo.saveAnnouncement(ADMIN, null, { ...INPUT, href: "" }, "kirim")).status).toBe("terkirim");
+  });
+
+  test("jadwal wajib di masa depan, bisa dibatalkan, dan yang batal tidak terkirim", async () => {
+    await expectRule(repo.saveAnnouncement(ADMIN, null, INPUT, "jadwal"), /Waktu kirim wajib/);
+    await expectRule(repo.saveAnnouncement(ADMIN, null, { ...INPUT, scheduledAt: "2000-01-01T00:00" }, "jadwal"), /masa depan/);
+
+    const cancelled = await repo.saveAnnouncement(ADMIN, null, { ...INPUT, scheduledAt: FUTURE }, "jadwal");
+    const kept = await repo.saveAnnouncement(ADMIN, null, { ...INPUT, scheduledAt: FUTURE }, "jadwal");
+    await repo.cancelAnnouncement(ADMIN, cancelled.id);
+    await expectRule(repo.cancelAnnouncement(ADMIN, cancelled.id), /terjadwal/);
+
+    expect(await repo.processScheduledAnnouncements()).toBe(1);
+
+    const all = await repo.listAnnouncements();
+    expect(all.find((item) => item.id === cancelled.id)?.status).toBe("dibatalkan");
+    expect(all.find((item) => item.id === kept.id)?.status).toBe("terkirim");
+    await expectRule(repo.cancelAnnouncement(ADMIN, kept.id), /terjadwal/);
+  });
+
+  test("hanya draf yang bisa diubah, dan semua aksi tercatat", async () => {
+    const draft = await repo.saveAnnouncement(ADMIN, null, { ...INPUT, body: "" }, "draf");
+    expect(draft.status).toBe("draf");
+
+    const sent = await repo.saveAnnouncement(ADMIN, draft.id, INPUT, "kirim");
+    expect(sent.id).toBe(draft.id);
+    await expectRule(repo.saveAnnouncement(ADMIN, draft.id, INPUT, "kirim"), /Hanya draf/);
+    expect((await repo.listAuditLog()).map((entry) => entry.action)).toEqual(["simpan-pengumuman", "kirim-pengumuman"]);
+  });
+
+  test("target menentukan penerima", () => {
+    const creator: Recipient = { membership: "basic", roles: ["user", "creator"] };
+    const pro: Recipient = { membership: "pro", roles: ["user"] };
+
+    expect(announcementMatches({ type: "semua" }, creator)).toBe(true);
+    expect(announcementMatches({ type: "peran", role: "creator" }, creator)).toBe(true);
+    expect(announcementMatches({ type: "peran", role: "creator" }, pro)).toBe(false);
+    expect(announcementMatches({ type: "membership", tier: "pro" }, pro)).toBe(true);
+    expect(announcementMatches({ type: "membership", tier: "pro" }, creator)).toBe(false);
+  });
+});
+
+test.describe("Laporan dan CSV", () => {
+  const reportOf = async (from = "", to = "") =>
+    buildReport({ users: await repo.listUsers(), transactions: await repo.listTransactions(), contents: await repo.listContents(), events: await repo.listStatusEvents(), now: Date.now(), from, to });
+
+  test("angka dihitung dari data dan mengikuti perubahan", async () => {
+    const before = await reportOf();
+    const proBefore = before.sales.find((item) => item.title === "Membership Pro")?.count ?? 0;
+
+    await repo.simulateGateway("trx-sobat-pro", "berhasil");
+
+    const after = await reportOf();
+    expect(after.sales.find((item) => item.title === "Membership Pro")?.count).toBe(proBefore + 1);
+    expect(before.active30).toBeGreaterThan(before.active7);
+    expect(before.published.length).toBeGreaterThan(0);
+  });
+
+  test("rentang tanggal menyaring pengguna baru, penjualan, dan konten terbit", async () => {
+    const empty = await reportOf("2000-01-01", "2000-01-02");
+
+    expect(empty).toMatchObject({ newUsers: 0, sales: [], courses: [], published: [] });
+  });
+
+  test("CSV memuat kolom yang benar, dan sel berbahaya dinetralkan", async () => {
+    const report = await reportOf();
+    const lines = reportToCsv(report).split("\r\n");
+    expect(lines[0]).toBe("Bagian,Nama,Jumlah,Nominal");
+    expect(lines[1]).toBe(`Pengguna,Pengguna baru,${report.newUsers},`);
+
+    const risky = reportToCsv({ ...report, sales: [{ title: '=HYPERLINK("x"),a', count: 1, revenue: 2 }], courses: [], published: [] });
+    expect(risky).toContain("\"'=HYPERLINK(\"\"x\"\"),a\"");
   });
 });
 

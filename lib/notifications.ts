@@ -4,6 +4,7 @@ import { useMemo, useSyncExternalStore } from "react";
 
 import { DUMMY_NOTIFICATIONS } from "@/data/dummy/notifications";
 import { useContentData } from "@/lib/content";
+import { announcementsToNotifications } from "@/lib/content/announcements";
 import { buildRoleNotifications } from "@/lib/content/roleNotifications";
 import { isDev } from "@/lib/env";
 import { useNotificationPreferences } from "@/lib/notificationPreferences";
@@ -75,14 +76,21 @@ export function useNotifications() {
     userId ? buildRoleNotifications(activeRole, userId, await repository.listStatusEvents(), await repository.listContents()) : []
   );
 
+  // Pengumuman Admin hanya sampai ke pengguna yang sesuai targetnya (PRD FR-16 H).
+  const accountId = session?.userId;
+  const announcements = useContentData(`pengumuman-${accountId}`, async (repository) => {
+    const [items, users] = await Promise.all([repository.listAnnouncements(), repository.listUsers()]);
+    return announcementsToNotifications(items, users.find((user) => user.id === accountId));
+  });
+
   return useMemo<Notification[]>(() => {
     const readSet = new Set(readIdList);
-    return [...DUMMY_NOTIFICATIONS, ...(roleNotifications ?? [])]
+    return [...DUMMY_NOTIFICATIONS, ...(roleNotifications ?? []), ...(announcements ?? [])]
       .filter((item) => getVisibleNotificationGroups(isRoleMode).includes(item.group))
       .filter((item) => !mutedGroups.includes(item.group))
       .map((item) => ({ ...item, read: item.read || readSet.has(item.id) }))
       .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
-  }, [readIdList, roleNotifications, mutedGroups, isRoleMode]);
+  }, [readIdList, roleNotifications, announcements, mutedGroups, isRoleMode]);
 }
 
 export const notificationActions = {

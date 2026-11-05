@@ -55,6 +55,15 @@ function RowContent({ group, title, body, createdAt, read, arrow }: RowContentPr
   );
 }
 
+// Pratinjau pengumuman di Panel Admin, sama dengan baris yang diterima pengguna.
+export function NotificationPreviewRow({ group, title, body, createdAt }: Pick<RowContentProps, "group" | "title" | "body" | "createdAt">) {
+  return (
+    <div className={rowClassName}>
+      <RowContent group={group} title={title} body={body} createdAt={createdAt} read={false} arrow={<ChevronRight className="h-4 w-4 text-muted-foreground" aria-hidden="true" />} />
+    </div>
+  );
+}
+
 interface NotificationRowProps {
   notification: Notification;
   onAnnouncement: (notification: Notification) => void;

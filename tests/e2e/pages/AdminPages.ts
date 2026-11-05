@@ -286,6 +286,90 @@ export class ModerationPageObject {
   }
 }
 
+export class AnnouncementsPageObject {
+  readonly heading: Locator;
+  readonly title: Locator;
+  readonly body: Locator;
+  readonly href: Locator;
+  readonly group: Locator;
+  readonly target: Locator;
+  readonly preview: Locator;
+  readonly history: Locator;
+  readonly schedule: Locator;
+  readonly sendNow: Locator;
+  readonly saveDraft: Locator;
+  readonly process: Locator;
+  readonly dialog: Locator;
+
+  constructor(readonly page: Page) {
+    this.heading = page.getByRole("heading", { level: 1, name: "Pengumuman" });
+    this.title = page.getByRole("textbox", { name: "Judul" });
+    this.body = page.getByRole("textbox", { name: "Isi", exact: true });
+    this.href = page.getByRole("textbox", { name: /^Tautan tujuan/ });
+    this.group = page.getByRole("combobox", { name: "Grup notifikasi" });
+    this.target = page.getByRole("combobox", { name: "Target" });
+    this.preview = page.getByRole("region", { name: "Pratinjau Notifikasi" });
+    this.history = page
+      .getByRole("table")
+      .getByRole("row")
+      .filter({ has: page.getByRole("rowheader") })
+      .or(page.getByRole("list", { name: "Daftar pengumuman" }).getByRole("listitem"));
+    this.schedule = page.getByRole("checkbox", { name: "Jadwalkan" });
+    this.sendNow = page.getByRole("button", { name: "Kirim Sekarang" });
+    this.saveDraft = page.getByRole("button", { name: "Simpan Draf" });
+    this.process = page.getByRole("button", { name: "Simulasi: Proses jadwal sekarang" });
+    this.dialog = page.getByRole("dialog");
+  }
+
+  goto() {
+    return this.page.goto("/admin/pengumuman");
+  }
+
+  row(title: string) {
+    return this.history.filter({ hasText: title });
+  }
+
+  async fill(title: string, body: string) {
+    await this.title.fill(title);
+    await this.body.fill(body);
+  }
+
+  async targetRole(label: string) {
+    await this.target.selectOption({ label: "Peran tertentu" });
+    await this.page.getByRole("combobox", { name: "Peran" }).selectOption({ label });
+  }
+
+  async send() {
+    await this.sendNow.click();
+    await this.dialog.getByRole("button", { name: "Kirim", exact: true }).click();
+    await this.page.getByRole("status").filter({ hasText: "Pengumuman terkirim." }).waitFor();
+  }
+}
+
+export class ReportsPageObject {
+  readonly heading: Locator;
+  readonly exportButton: Locator;
+  readonly sales: Locator;
+
+  constructor(readonly page: Page) {
+    this.heading = page.getByRole("heading", { level: 1, name: "Laporan" });
+    this.exportButton = page.getByRole("button", { name: "Ekspor CSV" });
+    this.sales = page
+      .getByRole("group", { name: "Tabel penjualan" })
+      .getByRole("row")
+      .filter({ has: page.getByRole("rowheader") })
+      .or(page.getByRole("list", { name: "Daftar penjualan" }).getByRole("listitem"));
+  }
+
+  goto() {
+    return this.page.goto("/admin/laporan");
+  }
+
+  stat(label: string) {
+    return this.page.getByRole("heading", { level: 3, name: label }).locator("xpath=following-sibling::p");
+  }
+}
+
 // Berganti akun di browser yang sama, sehingga data dummy tetap sama.
 export async function switchAccount(page: Page, email: string) {
   // localStorage belum bisa dibaca sebelum halaman membuka alamat situs.

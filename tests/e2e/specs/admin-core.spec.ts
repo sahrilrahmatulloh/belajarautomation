@@ -61,7 +61,7 @@ test.describe("Sidebar", () => {
     if (isMobile) await page.getByRole("button", { name: "Buka atau tutup sidebar" }).click();
     const nav = page.getByRole("navigation", { name: "Menu Admin" });
 
-    await expect(nav.getByRole("link")).toHaveText(["Ringkasan", "Semua Konten", "Pengguna dan Peran", "Moderasi", "Transaksi", "Produk Digital", "Katalog Belajar", "Log Aktivitas Admin"]);
+    await expect(nav.getByRole("link")).toHaveText(["Ringkasan", "Semua Konten", "Pengguna dan Peran", "Moderasi", "Transaksi", "Produk Digital", "Katalog Belajar", "Pengumuman", "Laporan", "Log Aktivitas Admin"]);
     await expect(nav).toContainText("Konten");
     await expect(nav).toContainText("Pengguna");
     await expect(nav).toContainText("Laporan");

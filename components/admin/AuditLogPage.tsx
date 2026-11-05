@@ -37,6 +37,10 @@ const ACTION_LABELS: Record<AdminAction, string> = {
   "koreksi-xp": "Koreksi XP",
   "sembunyikan-leaderboard": "Sembunyikan dari leaderboard",
   "tampilkan-leaderboard": "Tampilkan di leaderboard",
+  "simpan-pengumuman": "Simpan draf pengumuman",
+  "kirim-pengumuman": "Kirim pengumuman",
+  "jadwalkan-pengumuman": "Jadwalkan pengumuman",
+  "batalkan-pengumuman": "Batalkan pengumuman",
 };
 
 function Snapshot({ title, value }: { title: string; value: Record<string, unknown> | null }) {
