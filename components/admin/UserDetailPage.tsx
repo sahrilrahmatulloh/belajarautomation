@@ -11,6 +11,7 @@ import { getRank } from "@/data/ranks";
 import { runContentAction } from "@/lib/content";
 import { formatContentDate } from "@/lib/content/document";
 import { formatNumber } from "@/lib/format";
+import { ModerationActionKind } from "@/types/AdminPlatform";
 import { AccountStatus, RoleChangeAction } from "@/types/ContentWorkflow";
 import { UserRole } from "@/types/Role";
 
@@ -20,6 +21,12 @@ import UserAccessSections from "./UserAccessSections";
 import { formatDateTime, useAdminData } from "./useAdminData";
 
 const MANAGED_ROLES: UserRole[] = ["creator", "reviewer", "admin"];
+const MODERATION_ACTION_LABELS: Record<ModerationActionKind, string> = {
+  abaikan: "Penandaan diabaikan",
+  "koreksi-xp": "Koreksi XP",
+  sembunyikan: "Disembunyikan dari leaderboard",
+  tampilkan: "Ditampilkan kembali di leaderboard",
+};
 const panelClass = "rounded-2xl border border-border bg-card p-5";
 const fieldClass = "mt-1.5 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm font-normal dark:bg-card";
 
@@ -57,6 +64,8 @@ export default function UserDetailPage({ userId }: { userId: string }) {
 
   const agreements = data.agreements.filter((item) => item.userId === userId).reverse();
   const roleEvents = data.roleEvents.filter((event) => event.userId === userId).reverse();
+  const moderationActions = data.moderationActions.filter((action) => action.userId === userId).reverse();
+  const xpTransactions = data.xpTransactions.filter((item) => item.userId === userId).reverse();
 
   const open = (next: Pending) => {
     setDialogError("");
@@ -175,6 +184,35 @@ export default function UserDetailPage({ userId }: { userId: string }) {
           transactions={data.transactions.filter((item) => item.userId === userId)}
           products={data.products}
         />
+
+        <section aria-labelledby="riwayat-moderasi" className={`${panelClass} text-sm lg:col-span-2`}>
+          <h2 id="riwayat-moderasi" className="font-bold">Riwayat Moderasi</h2>
+          {user.hiddenFromLeaderboard && <p className="mt-2 font-medium text-destructive">Disembunyikan dari leaderboard.</p>}
+          {moderationActions.length > 0 ? (
+            <ul aria-label="Riwayat moderasi" className="mt-3 space-y-2">
+              {moderationActions.map((action) => (
+                <li key={action.id}>
+                  <span className="block font-medium">{MODERATION_ACTION_LABELS[action.kind]}</span>
+                  <span className="block text-muted-foreground">
+                    {userName(data.users, action.actorId)} · {formatDateTime(action.at)}{action.alasan ? ` · ${action.alasan}` : ""}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="mt-2 text-muted-foreground">Belum ada tindakan moderasi.</p>
+          )}
+          {xpTransactions.length > 0 && (
+            <>
+              <h3 className="mt-4 font-semibold">Koreksi XP</h3>
+              <ul aria-label="Koreksi XP" className="mt-1 space-y-1 text-muted-foreground">
+                {xpTransactions.map((item) => (
+                  <li key={item.id}>{item.amount > 0 ? "+" : ""}{formatNumber(item.amount)} XP · {formatDateTime(item.at)} · {item.alasan}</li>
+                ))}
+              </ul>
+            </>
+          )}
+        </section>
 
         {user.roles.includes("creator") && (
           <section aria-labelledby="kesepakatan-creator" className={`${panelClass} lg:col-span-2`}>

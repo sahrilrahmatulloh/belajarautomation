@@ -75,6 +75,31 @@ export function useAccountMembership(userId: string | undefined, fallback: Membe
   return tier ?? fallback;
 }
 
+const EMPTY_OVERLAY = { excludedIds: [] as string[], xpOverrides: {} as Record<string, number> };
+
+// Perubahan Admin yang memengaruhi leaderboard: akun nonaktif, disembunyikan, dan koreksi XP.
+export function useLeaderboardOverlay() {
+  const overlay = useContentData("leaderboard", async (current) => {
+    const [users, corrections] = await Promise.all([current.listUsers(), current.listXpTransactions()]);
+    const corrected = new Set(corrections.map((item) => item.userId));
+    return {
+      excludedIds: users.filter((user) => user.status === "nonaktif" || user.hiddenFromLeaderboard).map((user) => user.id),
+      xpOverrides: Object.fromEntries(users.filter((user) => corrected.has(user.id)).map((user) => [user.id, user.xp])),
+    };
+  });
+  return overlay ?? EMPTY_OVERLAY;
+}
+
+export function usePublicProfileUserId(username: string) {
+  return useContentData(`profil-${username}`, async (current) => (await current.listUsers()).find((user) => user.username === username)?.id);
+}
+
+// Total koreksi XP pengguna yang sedang masuk.
+export function useXpCorrection(userId: string | undefined) {
+  const total = useContentData(`koreksi-xp-${userId}`, async (current) => (await current.listXpTransactions()).filter((item) => item.userId === userId).reduce((sum, item) => sum + item.amount, 0));
+  return total ?? 0;
+}
+
 // Menjalankan aksi repository dan mengubah pelanggaran aturan menjadi pesan untuk pengguna.
 export async function runContentAction<T>(action: (repository: ContentRepository) => Promise<T>) {
   try {

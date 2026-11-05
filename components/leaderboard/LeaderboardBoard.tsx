@@ -8,7 +8,7 @@ import RankEmblem from "@/components/common/RankEmblem";
 import { DUMMY_ACCOUNT } from "@/data/dummy/account";
 import { ACTIVE_AVATAR } from "@/data/dummy/appearance";
 import { getRankProgress } from "@/data/ranks";
-import { DEMO_LEARNER_ID, useInactiveUsers } from "@/lib/content";
+import { DEMO_LEARNER_ID, useLeaderboardOverlay } from "@/lib/content";
 import { formatNumber } from "@/lib/format";
 import { getLeaderboard, LEADERBOARD_LIMIT, LeaderboardTab } from "@/lib/leaderboard";
 import { useUrlFilters } from "@/lib/useUrlFilters";
@@ -25,9 +25,9 @@ export default function LeaderboardBoard() {
   // Label dan isi tab rank mengikuti XP pengguna, jadi otomatis berubah saat naik rank.
   const { rank, nextRank, xpToNext } = getRankProgress(DUMMY_ACCOUNT.xp);
   const isHidden = !DUMMY_ACCOUNT.showOnLeaderboard;
-  const inactiveIds = useInactiveUsers().map((user) => user.id);
-  const isCurrentUserVisible = DUMMY_ACCOUNT.showOnLeaderboard && !inactiveIds.includes(DEMO_LEARNER_ID);
-  const { top, total, currentUser, isCurrentUserInTop } = getLeaderboard(tab, undefined, isCurrentUserVisible, inactiveIds);
+  const { excludedIds, xpOverrides } = useLeaderboardOverlay();
+  const isCurrentUserVisible = DUMMY_ACCOUNT.showOnLeaderboard && !excludedIds.includes(DEMO_LEARNER_ID);
+  const { top, total, currentUser, isCurrentUserInTop } = getLeaderboard(tab, undefined, isCurrentUserVisible, excludedIds, xpOverrides);
 
   const tabs = [
     {

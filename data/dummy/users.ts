@@ -26,7 +26,7 @@ const PEOPLE: Person[] = [
 const MEMBERSHIP_CYCLE: MembershipTier[] = ["basic", "basic", "basic", "pro", "basic", "premium"];
 
 function toUser({ joinedDaysAgo, ...person }: Person): ContentUser {
-  return { membership: "basic", xp: 0, coursesStudied: 0, ...person, status: "aktif", joinedAt: daysAgo(joinedDaysAgo), lastActiveAt: daysAgo(Math.min(joinedDaysAgo, 2)) };
+  return { membership: "basic", xp: 0, coursesStudied: 0, ...person, status: "aktif", hiddenFromLeaderboard: false, joinedAt: daysAgo(joinedDaysAgo), lastActiveAt: daysAgo(Math.min(joinedDaysAgo, 2)) };
 }
 
 export const DUMMY_USERS: ContentUser[] = [

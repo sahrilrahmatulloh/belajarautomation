@@ -3,13 +3,15 @@
 import Link from "next/link";
 
 import { PublicProfile } from "@/data/dummy/publicProfiles";
-import { useInactiveUsers } from "@/lib/content";
+import { useInactiveUsers, useLeaderboardOverlay, usePublicProfileUserId } from "@/lib/content";
 
 import PublicProfilePage from "./PublicProfilePage";
 
 // Profil akun nonaktif tidak tampil, walaupun datanya tetap ada (PRD FR-16 C).
 export default function PublicProfileGate({ profile }: { profile: PublicProfile }) {
   const inactive = useInactiveUsers();
+  const { xpOverrides } = useLeaderboardOverlay();
+  const user = usePublicProfileUserId(profile.username);
 
   if (inactive.some((user) => user.username === profile.username)) {
     return (
@@ -20,5 +22,5 @@ export default function PublicProfileGate({ profile }: { profile: PublicProfile 
     );
   }
 
-  return <PublicProfilePage profile={profile} />;
+  return <PublicProfilePage profile={user && xpOverrides[user] !== undefined ? { ...profile, xp: xpOverrides[user] } : profile} />;
 }

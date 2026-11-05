@@ -1,0 +1,30 @@
+{
+  "requiredFree": ["qa-fundamentals", "dasar-web-api", "test-design", "bug-reporting", "git-github"],
+  "lessonTargets": {
+    "qa-fundamentals": 16,
+    "dasar-web-api": 8,
+    "test-design": 8,
+    "bug-reporting": 6,
+    "test-management": 6,
+    "sql-untuk-qa": 8,
+    "git-github": 8,
+    "javascript": 10,
+    "typescript": 8,
+    "java": 10,
+    "python": 10,
+    "playwright": 10,
+    "cypress": 8,
+    "selenium": 10,
+    "cucumber": 6,
+    "robot-framework": 8,
+    "katalon": 8,
+    "cicd-testing": 6,
+    "postman": 8,
+    "api-automation": 8,
+    "performance-testing": 8,
+    "mobile-testing-dasar": 6,
+    "appium": 8,
+    "dasar-ai-llm": 6,
+    "ai-for-testing": 8
+  }
+}

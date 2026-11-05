@@ -131,6 +131,7 @@ export interface ContentUser {
   // Ringkasan belajar. Rank dihitung dari XP, tidak disimpan.
   xp: number;
   coursesStudied: number;
+  hiddenFromLeaderboard: boolean;
 }
 
 // Catatan setiap aksi Admin (PRD 7.23). Tidak dapat diubah atau dihapus.
@@ -147,14 +148,19 @@ export type AdminAction =
   | "berikan-akses"
   | "cabut-akses"
   | "tambah-produk"
-  | "ubah-produk";
+  | "ubah-produk"
+  | "ubah-katalog"
+  | "abaikan-moderasi"
+  | "koreksi-xp"
+  | "sembunyikan-leaderboard"
+  | "tampilkan-leaderboard";
 
 export interface AdminAuditLog {
   id: string;
   at: string;
   adminId: string;
   action: AdminAction;
-  targetType: "konten" | "pengguna" | "transaksi" | "produk";
+  targetType: "konten" | "pengguna" | "transaksi" | "produk" | "katalog";
   targetId: string;
   targetLabel: string;
   alasan: string | null;

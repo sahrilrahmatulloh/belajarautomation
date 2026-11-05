@@ -6,6 +6,7 @@ import { COURSE_DETAILS } from "@/data/courseDetails";
 import { DUMMY_ACCOUNT } from "@/data/dummy/account";
 import { XP_PER_COURSE_COMPLETION, XP_PER_LESSON } from "@/data/xp";
 import { getCompletedLessonSlugs } from "@/lib/activity";
+import { useXpCorrection } from "@/lib/content";
 import { CourseInProgress, getStudiedCourses } from "@/lib/learningProgress";
 import { useSession } from "@/lib/session";
 import { COURSES } from "@/data/courses";
@@ -103,9 +104,12 @@ export function useLessonProgress() {
   const all = useSyncExternalStore(subscribe, getSnapshot, () => EMPTY);
   const keys = (session && all[session.email]) || [];
   const summary = summarize(keys);
+  // Koreksi XP dari Admin ikut menentukan total XP dan rank (PRD FR-16 D).
+  const correction = useXpCorrection(session?.userId);
 
   return {
     ...summary,
+    extraXp: summary.extraXp + correction,
     isCompleted: (courseSlug: string, lessonSlug: string) =>
       keys.includes(lessonKey(courseSlug, lessonSlug)) || getCompletedLessonSlugs(courseSlug).has(lessonSlug),
     completedSlugs: (courseSlug: string) => new Set([...getCompletedLessonSlugs(courseSlug), ...(summary.newByCourse.get(courseSlug) ?? [])]),

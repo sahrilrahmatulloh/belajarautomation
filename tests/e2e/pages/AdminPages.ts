@@ -216,6 +216,76 @@ export class ProductsPageObject {
   }
 }
 
+export class CatalogPageObject {
+  readonly heading: Locator;
+  readonly banner: Locator;
+  readonly indicator: Locator;
+  readonly rows: Locator;
+  readonly itemRows: Locator;
+  readonly search: Locator;
+  readonly dialog: Locator;
+
+  constructor(readonly page: Page) {
+    this.heading = page.getByRole("heading", { level: 1, name: "Katalog Belajar" });
+    this.banner = page.getByRole("note").filter({ hasText: "Simulasi — perubahan katalog sungguhan dilakukan lewat PR" });
+    this.indicator = page.getByRole("region", { name: "XP dari materi gratis" });
+    this.rows = page
+      .getByRole("group", { name: "Tabel course" })
+      .getByRole("row")
+      .filter({ has: page.getByRole("rowheader") })
+      .or(page.getByRole("list", { name: "Daftar course" }).getByRole("listitem"));
+    this.itemRows = page
+      .getByRole("group", { name: "Tabel roadmap dan latihan" })
+      .getByRole("row")
+      .filter({ has: page.getByRole("rowheader") })
+      .or(page.getByRole("list", { name: "Daftar roadmap dan latihan" }).getByRole("listitem"));
+    this.search = page.getByRole("textbox", { name: "Cari course" });
+    this.dialog = page.getByRole("dialog");
+  }
+
+  goto() {
+    return this.page.goto("/admin/katalog");
+  }
+
+  row(title: string) {
+    return this.rows.filter({ hasText: title });
+  }
+
+  async change(title: string, field: "Status katalog" | "Status konten" | "Tingkat akses", label: string) {
+    await this.search.fill(title);
+    await this.row(title).getByRole("button", { name: `Ubah ${title}` }).click();
+    await this.dialog.getByRole("combobox", { name: field }).selectOption({ label });
+    await this.dialog.getByRole("textbox", { name: "Alasan" }).fill("Alasan uji.");
+    await this.dialog.getByRole("button", { name: "Simpan" }).click();
+  }
+}
+
+export class ModerationPageObject {
+  readonly heading: Locator;
+  readonly rows: Locator;
+  readonly statusFilter: Locator;
+  readonly dialog: Locator;
+
+  constructor(readonly page: Page) {
+    this.heading = page.getByRole("heading", { level: 1, name: "Moderasi" });
+    this.rows = page
+      .getByRole("table")
+      .getByRole("row")
+      .filter({ has: page.getByRole("rowheader") })
+      .or(page.getByRole("list", { name: "Daftar akun ditandai" }).getByRole("listitem"));
+    this.statusFilter = page.getByRole("combobox", { name: "Filter status" });
+    this.dialog = page.getByRole("dialog");
+  }
+
+  goto(query = "") {
+    return this.page.goto(`/admin/moderasi${query}`);
+  }
+
+  row(name: string) {
+    return this.rows.filter({ hasText: name });
+  }
+}
+
 // Berganti akun di browser yang sama, sehingga data dummy tetap sama.
 export async function switchAccount(page: Page, email: string) {
   // localStorage belum bisa dibaca sebelum halaman membuka alamat situs.

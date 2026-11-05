@@ -18,7 +18,9 @@ import {
   Trophy,
   Package,
   Receipt,
+  LibraryBig,
   ScrollText,
+  ShieldAlert,
   Users,
 } from "lucide-react";
 
@@ -71,8 +73,10 @@ export const NAVIGATION: Record<UserRole, NavItem[]> = {
     { label: "Ringkasan", href: "/admin", icon: LayoutDashboard, group: "Konten" },
     { label: "Semua Konten", href: "/admin/konten", icon: Files, group: "Konten" },
     { label: "Pengguna dan Peran", href: "/admin/pengguna", icon: Users, group: "Pengguna" },
+    { label: "Moderasi", href: "/admin/moderasi", icon: ShieldAlert, group: "Pengguna" },
     { label: "Transaksi", href: "/admin/transaksi", icon: Receipt, group: "Bisnis" },
     { label: "Produk Digital", href: "/admin/produk", icon: Package, group: "Bisnis" },
+    { label: "Katalog Belajar", href: "/admin/katalog", icon: LibraryBig, group: "Platform" },
     { label: "Log Aktivitas Admin", href: "/admin/log", icon: ScrollText, group: "Laporan" },
   ],
 };

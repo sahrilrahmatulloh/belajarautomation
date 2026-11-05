@@ -12,6 +12,7 @@ import {
   StatusEvent,
 } from "@/types/ContentWorkflow";
 import { CreditClaim, Entitlement, EntitlementKind, GatewayResult, Product, ProductInput, Transaction } from "@/types/Commerce";
+import { CatalogItemKind, CatalogItemStatus, CourseCatalogState, ModerationAction, ModerationFlag, PlatformOverrides, XpTransaction } from "@/types/AdminPlatform";
 import { UserRole } from "@/types/Role";
 
 // Pelanggaran aturan alur konten atau peran. Pesannya aman ditampilkan ke pengguna.
@@ -42,6 +43,10 @@ export interface ContentRepository {
   listEntitlements(): Promise<Entitlement[]>;
   listClaims(): Promise<CreditClaim[]>;
   listProducts(): Promise<Product[]>;
+  getPlatformOverrides(): Promise<PlatformOverrides>;
+  listModerationFlags(): Promise<ModerationFlag[]>;
+  listModerationActions(): Promise<ModerationAction[]>;
+  listXpTransactions(): Promise<XpTransaction[]>;
   // Log hanya bisa dibaca: tidak ada operasi untuk mengubah atau menghapusnya (PRD FR-16 J).
   listAuditLog(): Promise<AdminAuditLog[]>;
 
@@ -83,6 +88,15 @@ export interface ContentRepository {
   saveProduct(actorId: string, productId: string | null, input: ProductInput, alasan: string): Promise<Product>;
   // Meniru kabar dari payment gateway. Hanya untuk tahap dummy; bukan aksi Admin.
   simulateGateway(transactionId: string, status: GatewayResult): Promise<Transaction>;
+
+  // Katalog Belajar: simulasi, sumber kebenaran tetap file data (PRD FR-16 G).
+  updateCourseCatalog(actorId: string, courseSlug: string, change: CourseCatalogState, alasan: string): Promise<CourseCatalogState>;
+  setCatalogItemStatus(actorId: string, kind: CatalogItemKind, itemId: string, status: CatalogItemStatus, alasan: string): Promise<void>;
+
+  // Moderasi (PRD FR-16 D).
+  ignoreFlag(actorId: string, flagId: string): Promise<ModerationFlag>;
+  correctXp(actorId: string, userId: string, amount: number, alasan: string, flagId: string | null): Promise<ContentUser>;
+  setLeaderboardVisibility(actorId: string, userId: string, visible: boolean, alasan: string, flagId: string | null): Promise<ContentUser>;
 
   // Mengembalikan data ke kondisi awal. Hanya untuk tahap dummy.
   reset(): Promise<void>;

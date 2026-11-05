@@ -8,8 +8,8 @@ import { readFileSync } from "node:fs";
 
 const strict = process.argv.includes("--strict");
 
-// Course fondasi yang wajib gratis menurut CURRICULUM v2.1.
-const REQUIRED_FREE = ["qa-fundamentals", "dasar-web-api", "test-design", "bug-reporting", "git-github"];
+// Course fondasi yang wajib gratis dan target lesson, sama dengan aturan Katalog Belajar di Panel Admin.
+const { requiredFree: REQUIRED_FREE, lessonTargets: LESSON_TARGETS } = JSON.parse(readFileSync("data/catalogRules.json", "utf8"));
 
 const courses = readFileSync("data/courses.ts", "utf8")
   .split(/\r?\n  \{/)
@@ -41,6 +41,15 @@ if (!courses.some((course) => isFree(course) && course.category === "Programming
 }
 if (!courses.some((course) => isFree(course) && course.category === "Web Automation" && course.hasLanguage)) {
   accessProblems.push("minimal satu tool automation wajib free");
+}
+
+// Target lesson wajib sama dengan katalog di CURRICULUM bagian 2.
+for (const line of readFileSync("docs/CURRICULUM.md", "utf8").split(/\r?\n/)) {
+  const cells = line.split("|").map((cell) => cell.trim());
+  if (!/^\d+$/.test(cells[1] ?? "") || !courses.some((course) => course.slug === cells[2])) continue;
+  if (Number(cells[7]) !== LESSON_TARGETS[cells[2]]) {
+    accessProblems.push(`${cells[2]}: target lesson di data/catalogRules.json tidak sama dengan CURRICULUM (${cells[7]})`);
+  }
 }
 
 if (accessProblems.length > 0) {
