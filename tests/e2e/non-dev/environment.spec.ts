@@ -58,6 +58,32 @@ test.describe("Halaman Creator di luar DEV", () => {
   }
 });
 
+test.describe("Halaman Reviewer di luar DEV", () => {
+  test.use({ role: "reviewer" });
+
+  for (const { path, title } of [
+    { path: "/reviewer/antrean", title: "Antrean Review" },
+    { path: "/reviewer/riwayat", title: "Riwayat Review" },
+  ]) {
+    test(`${title} tetap halaman informasi Google Docs`, async ({ page }) => {
+      await page.goto(path);
+      const main = page.getByRole("main");
+
+      await expect(main.getByRole("heading", { level: 1, name: title })).toBeVisible();
+      await expect(main.getByRole("heading", { level: 2, name: "Sementara, review dilakukan di Google Docs" })).toBeVisible();
+
+      const { violations } = await new AxeBuilder({ page }).analyze();
+      expect(violations.filter((item) => ["critical", "serious"].includes(item.impact ?? "")).map((item) => item.id)).toEqual([]);
+    });
+  }
+
+  test("halaman review tidak tersedia", async ({ page }) => {
+    const response = await page.goto("/reviewer/review/konten-pemula");
+
+    expect(response?.status()).toBe(404);
+  });
+});
+
 test.describe("Lingkungan UAT", () => {
   test('label lingkungan bertuliskan "UAT"', async ({ page }) => {
     const loginPage = new LoginPage(page);
