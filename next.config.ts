@@ -9,6 +9,7 @@ const nextConfig: NextConfig = {
   // jadi file artikel harus ikut tersedia di server.
   outputFileTracingIncludes: {
     "/blog/[slug]": ["./content/blog/**"],
+    "/learn/[slug]/[lesson]": ["./content/lessons/**"],
   },
   async redirects() {
     return [

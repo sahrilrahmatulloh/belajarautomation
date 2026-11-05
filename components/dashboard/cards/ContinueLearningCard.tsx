@@ -1,9 +1,12 @@
+"use client";
+
 import Link from "next/link";
 import { ArrowRight, BookOpen, CalendarClock, Layers3 } from "lucide-react";
 
 import ContentCover from "@/components/common/ContentCover";
 import { formatDaysAgo } from "@/lib/format";
-import { CourseInProgress, getCoursesInProgress } from "@/lib/learningProgress";
+import { CourseInProgress } from "@/lib/learningProgress";
+import { useCoursesInProgress } from "@/lib/lessonProgress";
 
 function ProgressBar({ percent, label }: { percent: number; label: string }) {
   return (
@@ -62,7 +65,7 @@ function OtherCourseItem({ item }: { item: CourseInProgress }) {
 }
 
 export default function ContinueLearningCard() {
-  const [current, ...others] = getCoursesInProgress();
+  const [current, ...others] = useCoursesInProgress();
 
   return (
     <section aria-labelledby="continue-learning-title" className="space-y-2.5">

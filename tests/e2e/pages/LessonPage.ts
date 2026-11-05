@@ -9,6 +9,8 @@ export class LessonPage extends BasePage {
   readonly previousLink: Locator;
   readonly nextLink: Locator;
   readonly allLessonsLink: Locator;
+  readonly completeButton: Locator;
+  readonly completedStatus: Locator;
 
   constructor(page: Page, courseSlug: string, lessonSlug: string) {
     super(page, `/learn/${courseSlug}/${lessonSlug}`);
@@ -16,6 +18,8 @@ export class LessonPage extends BasePage {
     this.title = page.getByRole("main").getByRole("heading", { level: 1 });
     this.writingNotice = page.getByRole("heading", { name: "Materi sedang ditulis" });
     this.position = page.getByText(/^Materi \d+ dari \d+$/);
+    this.completeButton = page.getByRole("button", { name: /^Tandai selesai/ });
+    this.completedStatus = page.getByRole("main").getByRole("status").filter({ hasText: "Lesson selesai" });
 
     const nav = page.getByRole("navigation", { name: "Navigasi lesson" });
     this.previousLink = nav.getByRole("link", { name: /^Sebelumnya/ });

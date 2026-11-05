@@ -1,0 +1,35 @@
+---
+status: draft
+author: "Tim BelajarAutomation"
+sources:
+  - title: "MDN: Client-server overview"
+    url: https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Server-side/First_steps/Client-Server_overview
+---
+
+{/* DATA DUMMY — hapus sebelum rilis. Contoh struktur lesson untuk pengujian di DEV; isi aslinya ditulis Creator. */}
+
+Ini contoh struktur lesson untuk pengujian. Isi aslinya akan ditulis Creator.
+
+## Apa itu client dan server?
+
+**Client** meminta data, dan **server** menjawabnya. Saat membuka sebuah halaman, browser menjadi client.
+
+<Tips>Mulai pengujian dari alur yang paling sering dipakai pengguna.</Tips>
+
+## Contoh request
+
+```ts
+const response = await fetch("https://contoh.com/api/profil");
+console.log(response.status);
+```
+
+<Peringatan>Jangan menguji langsung di data production.</Peringatan>
+
+## Ringkasan
+
+| Pihak | Peran |
+|---|---|
+| Client | Mengirim request |
+| Server | Mengirim response |
+
+<Gambar src="/covers/courses/dasar-web-api.webp" alt="Sampul course Dasar Web dan API" keterangan="Contoh gambar dengan keterangan." />

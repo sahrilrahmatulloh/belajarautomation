@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 
 import {
@@ -13,23 +15,27 @@ import {
 } from "lucide-react";
 
 import ContentCover from "@/components/common/ContentCover";
-import { getCompletedLessonSlugs } from "@/lib/activity";
+import { COURSES } from "@/data/courses";
+import { useLessonProgress } from "@/lib/lessonProgress";
 import { AvailableCourse } from "@/types/Course";
 import { CourseDetail } from "@/types/CourseDetail";
 
 interface CourseDetailPageProps {
-  course: AvailableCourse;
+  // Slug, bukan objek course: ikonnya tidak bisa dioper dari Server Component.
+  courseSlug: string;
   detail: CourseDetail;
 }
 
 export default function CourseDetailPage({
-  course,
+  courseSlug,
   detail,
 }: CourseDetailPageProps) {
+  const course = COURSES.find((item) => item.slug === courseSlug) as AvailableCourse;
   const Icon = course.icon;
+  const { completedSlugs: completedSlugsIn } = useLessonProgress();
 
-  // Status selesai berasal dari riwayat aktivitas, sama dengan dashboard dan profil.
-  const completedSlugs = getCompletedLessonSlugs(course.slug);
+  // Status selesai berasal dari riwayat aktivitas dan progres pengguna, sama dengan dashboard dan profil.
+  const completedSlugs = completedSlugsIn(course.slug);
 
   const completedLessons = detail.modules
     .flatMap((module) => module.lessons)

@@ -17,6 +17,8 @@ import ProfileHeader from "./ProfileHeader";
 import ProfileStats from "./ProfileStats";
 import ProfileTabs from "./ProfileTabs";
 import RecentActivity from "./RecentActivity";
+import { useLessonProgress } from "@/lib/lessonProgress";
+
 import ShareProfileDialog from "./ShareProfileDialog";
 
 export default function ProfilePage() {
@@ -25,14 +27,17 @@ export default function ProfilePage() {
   // Nama mengikuti akun yang masuk, agar sama di semua mode (PRD FR-15).
   const session = useSession();
   const displayName = session?.name ?? profile.displayName;
+  const { extraXp, extraLessons } = useLessonProgress();
+  const xp = profile.xp + extraXp;
+  const lessons = profile.lessons + extraLessons;
 
   const earnedAchievements = profile.achievements.filter((state) => state.earned).length;
 
   const summary = (
     <div className="space-y-6">
       <ProfileStats
-        xp={profile.xp}
-        lessons={profile.lessons}
+        xp={xp}
+        lessons={lessons}
         challenges={profile.challenges}
         achievements={earnedAchievements}
       />
@@ -55,7 +60,7 @@ export default function ProfilePage() {
         avatarImage={profile.avatarImage}
         avatarName={profile.avatarName}
         themeImage={profile.themeImage}
-        xp={profile.xp}
+        xp={xp}
         isOwner
         shareAction={
           <ShareProfileDialog
@@ -63,8 +68,8 @@ export default function ProfilePage() {
             username={profile.username}
             avatarImage={profile.avatarImage}
             themeImage={profile.themeImage}
-            xp={profile.xp}
-            lessons={profile.lessons}
+            xp={xp}
+            lessons={lessons}
             challenges={profile.challenges}
             achievements={earnedAchievements}
             isProfilePublic={profile.isProfilePublic}

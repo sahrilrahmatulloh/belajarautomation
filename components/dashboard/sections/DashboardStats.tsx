@@ -1,22 +1,25 @@
+"use client";
+
 import { BookOpenCheck, Flame, Target, Trophy } from "lucide-react";
 
 import { DUMMY_ACCOUNT } from "@/data/dummy/account";
 import { getCurrentUserPosition } from "@/lib/leaderboard";
 import { getCompletedLessonCount } from "@/lib/learningProgress";
+import { useLessonProgress } from "@/lib/lessonProgress";
 
 const leaderboardPosition = getCurrentUserPosition("global");
 
-const stats = [
+const getStats = (xp: number, lessons: number) => [
   {
     label: "Total XP",
-    value: DUMMY_ACCOUNT.xp.toLocaleString("id-ID"),
+    value: xp.toLocaleString("id-ID"),
     detail: `Peringkat #${leaderboardPosition} di leaderboard Global`,
     Icon: Trophy,
     iconStyle: "bg-amber-500/10 text-amber-600 dark:text-amber-300",
   },
   {
     label: "Materi Selesai",
-    value: String(getCompletedLessonCount()),
+    value: String(lessons),
     detail: "Lesson yang sudah dipelajari",
     Icon: BookOpenCheck,
     iconStyle: "bg-brand-blue/10 text-brand-blue",
@@ -38,6 +41,9 @@ const stats = [
 ];
 
 export default function DashboardStats() {
+  const { extraXp, extraLessons } = useLessonProgress();
+  const stats = getStats(DUMMY_ACCOUNT.xp + extraXp, getCompletedLessonCount() + extraLessons);
+
   return (
     <section aria-label="Statistik belajar" className="grid grid-cols-2 gap-3">
       {stats.map(({ label, value, detail, Icon, iconStyle }) => (

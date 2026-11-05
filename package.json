@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "prebuild": "npm run check:covers && npm run check:roadmaps && npm run check:challenges && npm run check:progress && npm run check:activity && npm run check:content && npm run check:blog",
+    "prebuild": "npm run check:covers && npm run check:roadmaps && npm run check:challenges && npm run check:progress && npm run check:activity && npm run check:content && npm run check:blog && npm run check:lessons",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
@@ -20,6 +20,7 @@
     "check:content": "node scripts/check-content.mjs",
     "check:content:release": "node scripts/check-content.mjs --strict",
     "check:blog": "node scripts/check-blog.mjs",
+    "check:lessons": "node scripts/check-lessons.mjs",
     "check:youtube": "node scripts/check-youtube-links.mjs",
     "optimize:covers": "node scripts/optimize-covers.mjs",
     "optimize:images": "node scripts/optimize-images.mjs",

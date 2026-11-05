@@ -1,13 +1,16 @@
+"use client";
+
 import { Check, Lock, Sparkles } from "lucide-react";
 
 import RankEmblem from "@/components/common/RankEmblem";
-import { DUMMY_ACCOUNT } from "@/data/dummy/account";
 import { getRankProgress, RANKS } from "@/data/ranks";
 import { XP_REWARDS } from "@/data/xp";
 import { formatNumber } from "@/lib/format";
+import { useAccountXp } from "@/lib/lessonProgress";
 
 export default function RankTiers() {
-  const { rank: currentRank, nextRank, percent } = getRankProgress(DUMMY_ACCOUNT.xp);
+  const xp = useAccountXp();
+  const { rank: currentRank, nextRank, percent } = getRankProgress(xp);
   const currentIndex = RANKS.indexOf(currentRank);
 
   return (
@@ -100,7 +103,7 @@ export default function RankTiers() {
                 {isLocked && (
                   <span className="inline-flex items-center gap-1 text-[11px] text-muted-foreground">
                     <Lock className="h-3 w-3" aria-hidden="true" />
-                    Butuh {formatNumber(rank.minXp - DUMMY_ACCOUNT.xp)} XP lagi
+                    Butuh {formatNumber(rank.minXp - xp)} XP lagi
                   </span>
                 )}
               </div>

@@ -1,4 +1,4 @@
-// Memeriksa apakah video referensi di artikel masih tersedia (PRD FR-02 bagian G). Exit 1 bila
+// Memeriksa apakah video referensi di artikel dan lesson masih tersedia (PRD FR-02 bagian G). Exit 1 bila
 // ada masalah. Tidak masuk prebuild agar build tidak bergantung pada jaringan; dijalankan
 // berkala oleh .github/workflows/youtube-links.yml.
 // Jalankan: npm run check:youtube
@@ -7,7 +7,7 @@ import path from "node:path";
 
 import { findVideos } from "./blog-videos.mjs";
 
-const CONTENT_DIR = process.argv[2] ?? "content/blog";
+const CONTENT_DIRS = process.argv[2] ? [process.argv[2]] : ["content/blog", "content/lessons"];
 const TIMEOUT_MS = 15000;
 
 async function checkVideo({ id, embed }) {
@@ -31,12 +31,16 @@ async function checkVideo({ id, embed }) {
   return `gagal diperiksa (status ${status})`;
 }
 
-const files = existsSync(CONTENT_DIR) ? readdirSync(CONTENT_DIR).filter((file) => file.endsWith(".mdx")) : [];
+const files = CONTENT_DIRS.flatMap((dir) =>
+  existsSync(dir)
+    ? readdirSync(dir, { recursive: true }).filter((file) => file.endsWith(".mdx")).map((file) => path.join(dir, file))
+    : []
+);
 const problems = [];
 let total = 0;
 
 for (const file of files) {
-  const videos = findVideos(readFileSync(path.join(CONTENT_DIR, file), "utf8"));
+  const videos = findVideos(readFileSync(file, "utf8"));
   total += videos.length;
 
   for (const video of videos) {

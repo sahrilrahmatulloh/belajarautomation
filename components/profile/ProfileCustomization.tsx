@@ -9,6 +9,7 @@ import FilterChips from "@/components/filters/FilterChips";
 import FilterEmptyState from "@/components/filters/FilterEmptyState";
 import { AVATARS, getAvatar } from "@/data/avatars";
 import { DUMMY_ACCOUNT } from "@/data/dummy/account";
+import { useAccountXp } from "@/lib/lessonProgress";
 import { useSession } from "@/lib/session";
 import { ACTIVE_AVATAR, ACTIVE_THEME } from "@/data/dummy/appearance";
 import { getMembershipPlan } from "@/data/membership";
@@ -138,7 +139,8 @@ export default function ProfileCustomization() {
 
   const avatar = getAvatar(avatarId) ?? ACTIVE_AVATAR;
   const theme = getTheme(themeId) ?? ACTIVE_THEME;
-  const rank = getRank(DUMMY_ACCOUNT.xp);
+  const xp = useAccountXp();
+  const rank = getRank(xp);
   const hasChanges = avatar.id !== ACTIVE_AVATAR.id || theme.id !== ACTIVE_THEME.id;
 
   const matchesOwnership = (isOwned: boolean) =>
@@ -175,7 +177,7 @@ export default function ProfileCustomization() {
                 {rank.name}
               </span>
               <span className="rounded-full border border-border px-2.5 py-1 tabular-nums">
-                {formatNumber(DUMMY_ACCOUNT.xp)} XP
+                {formatNumber(xp)} XP
               </span>
             </div>
           </div>
