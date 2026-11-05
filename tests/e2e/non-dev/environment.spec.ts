@@ -92,6 +92,8 @@ test.describe("Halaman Admin di luar DEV", () => {
     { path: "/admin/konten", title: "Semua Konten" },
     { path: "/admin/pengguna", title: "Pengguna dan Peran" },
     { path: "/admin/log", title: "Log Aktivitas Admin" },
+    { path: "/admin/transaksi", title: "Transaksi" },
+    { path: "/admin/produk", title: "Produk Digital" },
   ]) {
     test(`${title} tetap halaman informasi dengan tautan panduan`, async ({ page }) => {
       await page.goto(path);
@@ -106,11 +108,34 @@ test.describe("Halaman Admin di luar DEV", () => {
     });
   }
 
+  test("detail transaksi tidak tersedia", async ({ page }) => {
+    const response = await page.goto("/admin/transaksi/trx-sobat-ebook");
+
+    expect(response?.status()).toBe(404);
+  });
+
   test("detail pengguna tidak tersedia", async ({ page }) => {
     const response = await page.goto("/admin/pengguna/user-sobat");
 
     expect(response?.status()).toBe(404);
   });
+});
+
+test.describe("eBook dan Project di luar DEV", () => {
+  test.use({ role: "user" });
+
+  for (const { path, title } of [
+    { path: "/ebooks", title: "eBook" },
+    { path: "/projects", title: "Project" },
+  ]) {
+    test(`${title} tetap Segera hadir`, async ({ page }) => {
+      await page.goto(path);
+      const main = page.getByRole("main");
+
+      await expect(main.getByText("Segera hadir", { exact: true })).toBeVisible();
+      await expect(main.getByRole("heading", { level: 1, name: title })).toBeVisible();
+    });
+  }
 });
 
 test.describe("Lesson draf di luar DEV", () => {

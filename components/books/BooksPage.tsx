@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 
-import { BOOKS } from "@/data/books";
+import { useProductCatalog } from "@/lib/content";
+import { productToBook } from "@/lib/bookProducts";
+import { useSession } from "@/lib/session";
 
 import BooksHeader from "./BooksHeader";
 import BooksGrid from "@/components/books/BookGrid";
@@ -13,10 +15,14 @@ export default function BooksPage() {
   const [activeTab, setActiveTab] =
     useState<BooksTab>("all");
 
+  const session = useSession();
+  const catalog = useProductCatalog("ebook", session?.userId);
+  const books = (catalog?.products ?? []).map((product) => productToBook(product, catalog?.ownedIds.has(product.id) ?? false));
+
   const displayedBooks =
     activeTab === "all"
-      ? BOOKS
-      : BOOKS.filter((book) => book.owned);
+      ? books
+      : books.filter((book) => book.owned);
 
   return (
     <div className="space-y-8">

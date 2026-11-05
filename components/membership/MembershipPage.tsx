@@ -1,7 +1,11 @@
+"use client";
+
 import { Check, Crown, Info, Minus, Sparkles } from "lucide-react";
 
 import AddToCartButtons from "@/components/cart/AddToCartButtons";
 import { DUMMY_ACCOUNT } from "@/data/dummy/account";
+import { useAccountMembership } from "@/lib/content";
+import { useSession } from "@/lib/session";
 import { MEMBERSHIP_COMPARISON, MEMBERSHIP_PLANS } from "@/data/membership";
 import { getMembershipProductId } from "@/lib/cartProducts";
 import { formatRupiah } from "@/lib/format";
@@ -28,7 +32,8 @@ function ComparisonValue({ value }: { value: string | boolean }) {
 }
 
 export default function MembershipPage() {
-  const currentTier: MembershipTier = DUMMY_ACCOUNT.membership;
+  const session = useSession();
+  const currentTier: MembershipTier = useAccountMembership(session?.userId, DUMMY_ACCOUNT.membership);
   const tiers = MEMBERSHIP_PLANS.map((plan) => plan.tier);
 
   return (

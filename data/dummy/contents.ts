@@ -17,7 +17,9 @@ import {
 } from "@/types/ContentWorkflow";
 
 import { VIDEO_NODE } from "@/lib/content/document";
+import { CreditClaim, Entitlement, Product, Transaction } from "@/types/Commerce";
 
+import { DUMMY_COMMERCE } from "./commerce";
 import { DUMMY_USERS } from "./users";
 
 export interface DummyContentState {
@@ -28,6 +30,10 @@ export interface DummyContentState {
   roleEvents: RoleChangeEvent[];
   agreements: CreatorAgreement[];
   auditLog: AdminAuditLog[];
+  transactions: Transaction[];
+  entitlements: Entitlement[];
+  claims: CreditClaim[];
+  products: Product[];
   // Konten terbit yang sudah digantikan revisinya.
   supersededIds: string[];
   nextId: number;
@@ -186,6 +192,7 @@ export function createDummyContentState(): DummyContentState {
     roleEvents: [],
     agreements: AGREEMENTS,
     auditLog: [],
+    ...DUMMY_COMMERCE,
     supersededIds: [],
     nextId: 1000,
   });

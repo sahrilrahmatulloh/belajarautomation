@@ -27,6 +27,11 @@ const ACTION_LABELS: Record<AdminAction, string> = {
   "nonaktifkan-akun": "Nonaktifkan akun",
   "aktifkan-akun": "Aktifkan akun",
   "catat-kesepakatan": "Catat kesepakatan",
+  refund: "Refund",
+  "berikan-akses": "Berikan hak akses",
+  "cabut-akses": "Cabut hak akses",
+  "tambah-produk": "Tambah produk",
+  "ubah-produk": "Ubah produk",
 };
 
 function Snapshot({ title, value }: { title: string; value: Record<string, unknown> | null }) {

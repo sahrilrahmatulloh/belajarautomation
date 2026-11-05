@@ -1,9 +1,5 @@
-import { notFound } from "next/navigation";
-
 import DashboardLayout from "@/components/layout/DashboardLayout";
-import BookDetailPage from "@/components/books/BookDetailPage";
-
-import { BOOKS } from "@/data/books";
+import BookDetailGate from "@/components/books/BookDetailGate";
 
 interface BookPageProps {
   params: Promise<{
@@ -16,17 +12,9 @@ export default async function BookPage({
 }: BookPageProps) {
   const { slug } = await params;
 
-  const book = BOOKS.find(
-    (item) => item.slug === slug
-  );
-
-  if (!book) {
-    notFound();
-  }
-
   return (
     <DashboardLayout>
-      <BookDetailPage book={book} />
+      <BookDetailGate slug={slug} />
     </DashboardLayout>
   );
 }

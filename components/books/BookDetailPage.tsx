@@ -1,7 +1,7 @@
 import Link from "next/link";
 import AddToCartButtons from "@/components/cart/AddToCartButtons";
 import ContentCover from "@/components/common/ContentCover";
-import { getEbookProductId } from "@/lib/cartProducts";
+import { getCartProduct, getEbookProductId } from "@/lib/cartProducts";
 
 import {
   ArrowLeft,
@@ -135,11 +135,14 @@ export default function BookDetailPage({
                   {formattedPrice}
                 </p>
 
-                <div className="mt-5">
-                  <AddToCartButtons
-                    productId={getEbookProductId(book.slug)}
-                  />
-                </div>
+                {/* Keranjang masih memakai data katalog, jadi produk baru dari Panel Admin belum bisa dibeli. */}
+                {getCartProduct(getEbookProductId(book.slug)) && (
+                  <div className="mt-5">
+                    <AddToCartButtons
+                      productId={getEbookProductId(book.slug)}
+                    />
+                  </div>
+                )}
 
                 <p className="mt-3 text-center text-xs text-muted-foreground">
                   Pembayaran masih simulasi; file PDF belum tersedia.

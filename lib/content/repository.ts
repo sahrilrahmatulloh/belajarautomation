@@ -11,6 +11,7 @@ import {
   RoleChangeEvent,
   StatusEvent,
 } from "@/types/ContentWorkflow";
+import { CreditClaim, Entitlement, EntitlementKind, GatewayResult, Product, ProductInput, Transaction } from "@/types/Commerce";
 import { UserRole } from "@/types/Role";
 
 // Pelanggaran aturan alur konten atau peran. Pesannya aman ditampilkan ke pengguna.
@@ -37,6 +38,10 @@ export interface ContentRepository {
   listStatusEvents(contentId?: string): Promise<StatusEvent[]>;
   listRoleEvents(): Promise<RoleChangeEvent[]>;
   listAgreements(): Promise<CreatorAgreement[]>;
+  listTransactions(): Promise<Transaction[]>;
+  listEntitlements(): Promise<Entitlement[]>;
+  listClaims(): Promise<CreditClaim[]>;
+  listProducts(): Promise<Product[]>;
   // Log hanya bisa dibaca: tidak ada operasi untuk mengubah atau menghapusnya (PRD FR-16 J).
   listAuditLog(): Promise<AdminAuditLog[]>;
 
@@ -69,6 +74,15 @@ export interface ContentRepository {
   setRole(actorId: string, userId: string, role: UserRole, action: RoleChangeAction, alasan: string): Promise<ContentUser>;
   setAccountStatus(actorId: string, userId: string, status: AccountStatus, alasan: string): Promise<ContentUser>;
   recordAgreement(actorId: string, userId: string, agreement: { tanggal: string; dokumen: string }): Promise<CreatorAgreement>;
+
+  // Transaksi dan hak akses. Tidak ada operasi Admin untuk mengubah status pembayaran: refund
+  // adalah satu-satunya aksi Admin, dan hanya dari status Berhasil (PRD FR-16 E).
+  refundTransaction(actorId: string, transactionId: string, alasan: string): Promise<Transaction>;
+  grantEntitlement(actorId: string, userId: string, item: { kind: EntitlementKind; itemId: string }, alasan: string): Promise<Entitlement>;
+  revokeEntitlement(actorId: string, entitlementId: string, alasan: string): Promise<Entitlement>;
+  saveProduct(actorId: string, productId: string | null, input: ProductInput, alasan: string): Promise<Product>;
+  // Meniru kabar dari payment gateway. Hanya untuk tahap dummy; bukan aksi Admin.
+  simulateGateway(transactionId: string, status: GatewayResult): Promise<Transaction>;
 
   // Mengembalikan data ke kondisi awal. Hanya untuk tahap dummy.
   reset(): Promise<void>;

@@ -36,7 +36,7 @@ export function getCartProduct(id: string): CartProduct | undefined {
     (item) => getEbookProductId(item.slug) === id
   );
 
-  if (!book || book.owned) {
+  if (!book) {
     return undefined;
   }
 
