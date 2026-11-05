@@ -7,8 +7,6 @@ export interface DummyAccount {
   // Peran utama: menentukan halaman awal setelah login.
   role: UserRole;
   roles: UserRole[];
-  // Label pilihan di halaman login, bila berbeda dari nama peran utama.
-  label?: string;
 }
 
 // Sesi dummy di browser; tidak menyimpan password.

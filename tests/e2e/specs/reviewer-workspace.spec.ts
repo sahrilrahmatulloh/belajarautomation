@@ -2,13 +2,14 @@ import AxeBuilder from "@axe-core/playwright";
 import { Page } from "@playwright/test";
 
 import type { ContentRepository } from "@/lib/content/repository";
+import { CREATOR_CHECKLIST } from "@/lib/content/rules";
 
 import { expect, test } from "../fixtures/auth";
 import { DEMO_PASSWORD, REVIEWER_WORKSPACE, ROLE_MODE } from "../fixtures/testData";
 import { LoginPage } from "../pages/LoginPage";
 import { ReviewPageObject, ReviewQueuePageObject } from "../pages/ReviewerPages";
 
-const { assignedTitle, resubmittedId, resubmittedTitle, unassignedId, unassignedTitle, ownId, ownTitle, firstRoundId, columns, counts } = REVIEWER_WORKSPACE;
+const { assignedTitle, resubmittedId, resubmittedTitle, unassignedId, unassignedTitle, ownTitle, firstRoundId, columns, counts } = REVIEWER_WORKSPACE;
 
 const notesOf = (page: Page, contentId: string) =>
   page.evaluate((id) => (window as unknown as { __contentRepository: ContentRepository }).__contentRepository.listNotes(id), contentId);
@@ -216,11 +217,31 @@ test.describe("Reviewer", () => {
 });
 
 test.describe("Reviewer yang juga Creator", () => {
+  test.use({ role: "reviewer" });
+
+  let ownId: string;
+
+  // Admin menambah peran Creator, lalu Reviewer menulis dan mengirim kontennya sendiri.
   test.beforeEach(async ({ page }) => {
-    const login = new LoginPage(page);
-    await login.goto();
-    await login.login(ROLE_MODE.multiRoleEmail, DEMO_PASSWORD);
-    await expect(page).toHaveURL("/reviewer");
+    await new ReviewQueuePageObject(page).goto();
+    await expect(page.getByRole("heading", { level: 1, name: "Antrean Review" })).toBeVisible();
+
+    ownId = await page.evaluate(
+      async ({ title, checklist }) => {
+        const repository = (window as unknown as { __contentRepository: ContentRepository }).__contentRepository;
+        await repository.setRole("user-admin", "user-rahma", "creator", "tambah");
+        const draft = await repository.createDraft("user-rahma", {
+          judul: title,
+          ringkasan: "Ringkasan.",
+          kategori: "Career",
+          sampul: "/covers/courses/qa-fundamentals.webp",
+          body: { type: "doc", content: [{ type: "paragraph", content: [{ type: "text", text: "Isi." }] }] },
+        });
+        await repository.submitForReview("user-rahma", draft.id, checklist);
+        return draft.id;
+      },
+      { title: ownTitle, checklist: CREATOR_CHECKLIST.map((item) => item.id) }
+    );
   });
 
   test("tombol ambil disembunyikan untuk tulisan sendiri", async ({ page }) => {
@@ -242,7 +263,7 @@ test.describe("Reviewer yang juga Creator", () => {
 
     const message = await page.evaluate(
       (id) =>
-        (window as unknown as { __contentRepository: ContentRepository }).__contentRepository.claimReview("user-bima", id).then(
+        (window as unknown as { __contentRepository: ContentRepository }).__contentRepository.claimReview("user-rahma", id).then(
           () => "",
           (error: Error) => error.message
         ),

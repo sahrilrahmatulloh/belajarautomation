@@ -46,6 +46,7 @@ test.describe("Login sebagai tamu", () => {
 
     await expect(loginPage.demoAccounts).toBeVisible();
     await expect(loginPage.demoAccounts).toContainText(DEMO_PASSWORD);
+    await expect(loginPage.demoAccounts.getByRole("button")).toHaveText([/User/, /Creator/, /Reviewer/, /Admin/]);
   });
 
   test("membuka /profile tanpa login diarahkan ke halaman login", async ({ page }) => {
