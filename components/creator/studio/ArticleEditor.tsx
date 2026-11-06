@@ -7,6 +7,7 @@ import { Dialog } from "@base-ui/react/dialog";
 import { Eye, Plus, Trash2, X } from "lucide-react";
 
 import ContentArticleView from "@/components/content/ContentArticleView";
+import { useMaintenance } from "@/components/maintenance/useMaintenance";
 import { CHALLENGES } from "@/data/challenges";
 import { COURSES } from "@/data/courses";
 import { getContentRepository, runContentAction } from "@/lib/content";
@@ -175,6 +176,12 @@ function EditorForm({ existing, userId, userName, focusAnchor }: { existing: Con
 
   // Perubahan terakhir tetap tersimpan saat Creator meninggalkan editor sebelum jeda selesai.
   useEffect(() => () => latestSaveIfChanged.current(), []);
+
+  // Draf disimpan saat peringatan menit terakhir sebelum maintenance muncul (PRD FR-16 K).
+  const { isFinalMinute } = useMaintenance();
+  useEffect(() => {
+    if (isFinalMinute) latestSaveIfChanged.current();
+  }, [isFinalMinute]);
 
   const words = countWords(body);
   const missing = missingRequiredFields({ judul, ringkasan, kategori, sampul, body });

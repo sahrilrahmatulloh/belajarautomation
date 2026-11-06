@@ -24,6 +24,7 @@ import {
   ScrollText,
   ShieldAlert,
   Users,
+  Wrench,
 } from "lucide-react";
 
 import { isDev } from "@/lib/env";
@@ -80,6 +81,7 @@ export const NAVIGATION: Record<UserRole, NavItem[]> = {
     { label: "Produk Digital", href: "/admin/produk", icon: Package, group: "Bisnis" },
     { label: "Katalog Belajar", href: "/admin/katalog", icon: LibraryBig, group: "Platform" },
     { label: "Pengumuman", href: "/admin/pengumuman", icon: Megaphone, group: "Platform" },
+    { label: "Mode Maintenance", href: "/admin/maintenance", icon: Wrench, group: "Platform" },
     { label: "Laporan", href: "/admin/laporan", icon: BarChart3, group: "Laporan" },
     { label: "Log Aktivitas Admin", href: "/admin/log", icon: ScrollText, group: "Laporan" },
   ],

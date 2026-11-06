@@ -379,3 +379,87 @@ export async function switchAccount(page: Page, email: string) {
   await login.goto();
   await login.login(email, DEMO_PASSWORD);
 }
+
+export class MaintenancePageObject {
+  readonly heading: Locator;
+  readonly prep: Locator;
+  readonly startAt: Locator;
+  readonly estimatedEndAt: Locator;
+  readonly message: Locator;
+  readonly fillEarliest: Locator;
+  readonly schedule: Locator;
+  readonly current: Locator;
+  readonly history: Locator;
+  readonly dialog: Locator;
+
+  constructor(readonly page: Page) {
+    this.heading = page.getByRole("heading", { level: 1, name: "Mode Maintenance" });
+    this.prep = page.getByRole("combobox", { name: "Lama Persiapan" });
+    this.startAt = page.getByLabel("Waktu mulai");
+    this.estimatedEndAt = page.getByLabel("Perkiraan selesai");
+    this.message = page.getByRole("textbox", { name: "Pesan untuk pengguna" });
+    this.fillEarliest = page.getByRole("button", { name: "Isi waktu paling cepat" });
+    this.schedule = page.getByRole("button", { name: "Jadwalkan Maintenance" });
+    this.current = page.getByRole("region", { name: "Jadwal Berjalan" });
+    this.history = page
+      .getByRole("table")
+      .getByRole("row")
+      .filter({ has: page.getByRole("rowheader") })
+      .or(page.getByRole("list", { name: "Daftar maintenance" }).getByRole("listitem"));
+    this.dialog = page.getByRole("dialog");
+  }
+
+  goto() {
+    return this.page.goto("/admin/maintenance");
+  }
+
+  async confirmWithReason(button: string, reason = "Uji maintenance") {
+    await this.dialog.getByRole("textbox", { name: "Alasan" }).fill(reason);
+    await this.dialog.getByRole("button", { name: button, exact: true }).click();
+  }
+
+  async scheduleEarliest(prepMinutes: number, message: string) {
+    await this.prep.selectOption({ label: `${prepMinutes} menit` });
+    await this.fillEarliest.click();
+    await this.message.fill(message);
+    await this.schedule.click();
+    await this.confirmWithReason("Jadwalkan");
+  }
+}
+
+// Akun Admin dummy, untuk menjalankan aksi lewat repository tanpa membuka Panel Admin.
+const ADMIN_ID = "user-admin";
+
+// Menjadwalkan maintenance secepat mungkin (saat ini + Persiapan) lewat repository di browser.
+export async function scheduleMaintenance(page: Page, message = "Perbaikan fitur blog.", prepMinutes = 5) {
+  await page.waitForFunction(() => "__contentRepository" in window);
+  await page.evaluate(
+    async ({ adminId, message, prepMinutes }) => {
+      const start = Date.now() + prepMinutes * 60_000 + 60_000;
+      const repository = (window as unknown as { __contentRepository: { saveMaintenance: (...args: unknown[]) => Promise<unknown> } }).__contentRepository;
+      await repository.saveMaintenance(adminId, null, { startAt: new Date(start).toISOString(), estimatedEndAt: new Date(start + 3_600_000).toISOString(), prepMinutes, message }, "Uji maintenance");
+    },
+    { adminId: ADMIN_ID, message, prepMinutes }
+  );
+}
+
+// Memajukan waktu jadwal yang berjalan, seperti tombol simulasi di Panel Admin.
+export async function simulateMaintenance(page: Page, target: "persiapan" | "menit-terakhir" | "aktif") {
+  await page.evaluate(async (target) => {
+    type Repository = { listMaintenance: () => Promise<{ id: string; status: string }[]>; simulateMaintenance: (id: string, target: string) => Promise<unknown> };
+    const repository = (window as unknown as { __contentRepository: Repository }).__contentRepository;
+    const current = (await repository.listMaintenance()).find((item) => item.status === "terjadwal");
+    if (!current) throw new Error("Tidak ada maintenance terjadwal");
+    await repository.simulateMaintenance(current.id, target);
+  }, target);
+}
+
+export async function endMaintenance(page: Page) {
+  await page.evaluate(async (adminId) => {
+    type Repository = { listMaintenance: () => Promise<{ id: string; status: string }[]>; endMaintenance: (...args: unknown[]) => Promise<unknown> };
+    const repository = (window as unknown as { __contentRepository: Repository }).__contentRepository;
+    const current = (await repository.listMaintenance()).find((item) => item.status === "terjadwal");
+    if (!current) throw new Error("Tidak ada maintenance terjadwal");
+    await repository.endMaintenance(adminId, current.id, "Perbaikan selesai");
+  }, ADMIN_ID);
+}

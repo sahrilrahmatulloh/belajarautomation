@@ -14,13 +14,15 @@ import { isAvailableHref } from "@/lib/notificationTarget";
 import { ModerationActionKind } from "@/types/AdminPlatform";
 import { Announcement } from "@/types/Announcement";
 import { Entitlement, EntitlementKind, Product } from "@/types/Commerce";
+import { MaintenanceInput, MaintenanceWindow } from "@/types/Maintenance";
+import { earliestStartTime, formatMaintenanceTime, maintenanceAnnouncementBody, maintenancePhase, PREP_OPTIONS } from "@/lib/maintenanceRules";
 
 import { courseCatalogState, freeXpTotal, isRequiredFree, MASTER_XP } from "./catalogRules";
 import { ContentRepository, ContentRuleError } from "./repository";
 import { CREATOR_CHECKLIST, latestRoundNotes, MAX_VIDEOS, missingRequiredFields, REVIEWER_CHECKLIST } from "./rules";
 
 // Versi di nama kunci: data lama dengan bentuk berbeda tidak ikut terbaca.
-const STORAGE_KEY = "belajarautomation-content-workflow-v5";
+const STORAGE_KEY = "belajarautomation-content-workflow-v6";
 
 export interface KeyValueStorage {
   getItem(key: string): string | null;
@@ -179,6 +181,36 @@ export function createDummyRepository(storage: KeyValueStorage | null = browserS
     if (!list.every((item) => checked.includes(item.id))) throw new ContentRuleError(message);
   };
 
+  const maintenanceWindow = (windowId: string) => {
+    const found = state().maintenanceWindows.find((item) => item.id === windowId);
+    if (!found) throw new ContentRuleError("Jadwal maintenance tidak ditemukan.");
+    return found;
+  };
+
+  const validateMaintenance = (input: MaintenanceInput) => {
+    const prepMinutes = Number(input.prepMinutes);
+    if (!(PREP_OPTIONS as readonly number[]).includes(prepMinutes)) throw new ContentRuleError(`Lama Persiapan harus salah satu dari ${PREP_OPTIONS.join(", ")} menit.`);
+    const start = Date.parse(input.startAt);
+    if (Number.isNaN(start)) throw new ContentRuleError("Waktu mulai wajib diisi.");
+    // Toleransi satu menit karena isian waktu hanya sampai menit.
+    const earliest = earliestStartTime(Date.now(), prepMinutes) - 60_000;
+    if (start < earliest) throw new ContentRuleError(`Waktu mulai paling cepat ${formatMaintenanceTime(new Date(earliest + 60_000).toISOString())}, yaitu saat ini ditambah Persiapan ${prepMinutes} menit.`);
+    const end = Date.parse(input.estimatedEndAt);
+    if (Number.isNaN(end)) throw new ContentRuleError("Perkiraan selesai wajib diisi.");
+    if (end <= start) throw new ContentRuleError("Perkiraan selesai harus setelah waktu mulai.");
+    const message = input.message.trim();
+    if (!message) throw new ContentRuleError("Pesan untuk pengguna wajib diisi.");
+    return { startAt: new Date(start).toISOString(), estimatedEndAt: new Date(end).toISOString(), prepMinutes, message };
+  };
+
+  // Pengguna diberi tahu lewat grup Akun dan sistem, yang tidak bisa dimatikan (PRD 4.4).
+  const announceMaintenance = (actorId: string, title: string, body: string) => {
+    const at = now();
+    state().announcements.push({ id: newId("pengumuman"), title, body, href: "", group: "system", target: { type: "semua" }, status: "terkirim", scheduledAt: null, sentAt: at, createdBy: actorId, createdAt: at });
+  };
+
+  const maintenanceSnapshot = (item: MaintenanceWindow) => ({ mulai: item.startAt, perkiraanSelesai: item.estimatedEndAt, persiapanMenit: item.prepMinutes, pesan: item.message, status: item.status });
+
   const currentNotes = (item: ContentItem) => state().notes.filter((entry) => entry.contentId === item.id && entry.round === item.submissionCount);
 
   return {
@@ -248,6 +280,10 @@ export function createDummyRepository(storage: KeyValueStorage | null = browserS
     async listXpTransactions() {
       return structuredClone(state().xpTransactions);
     },
+    async listMaintenance() {
+      return structuredClone(state().maintenanceWindows);
+    },
+
     async listAnnouncements() {
       return structuredClone(state().announcements);
     },
@@ -906,6 +942,68 @@ export function createDummyRepository(storage: KeyValueStorage | null = browserS
       });
       commit();
       return due.length;
+    },
+
+    async saveMaintenance(actorId, windowId, input, alasan) {
+      requireRole(actorId, "admin", "Admin");
+      const reason = requireReason(alasan);
+      const fields = validateMaintenance(input);
+      const existing = windowId ? maintenanceWindow(windowId) : undefined;
+      if (existing) {
+        if (existing.status !== "terjadwal") throw new ContentRuleError("Jadwal ini sudah selesai atau dibatalkan.");
+        if (maintenancePhase(existing, Date.now()) === "aktif") throw new ContentRuleError("Maintenance yang sedang Aktif tidak dapat diubah. Akhiri maintenance bila perbaikan selesai.");
+      } else if (state().maintenanceWindows.some((item) => item.status === "terjadwal")) {
+        throw new ContentRuleError("Sudah ada maintenance yang dijadwalkan. Ubah atau batalkan jadwal itu lebih dulu.");
+      }
+
+      const before = existing ? maintenanceSnapshot(existing) : null;
+      const entry: MaintenanceWindow = existing ?? { id: newId("maintenance"), ...fields, status: "terjadwal", createdBy: actorId, createdAt: now(), endedAt: null, endedBy: null };
+      if (existing) Object.assign(existing, fields);
+      else state().maintenanceWindows.push(entry);
+      announceMaintenance(actorId, existing ? "Jadwal maintenance diubah" : "Jadwal maintenance", maintenanceAnnouncementBody(entry));
+      audit({ adminId: actorId, action: existing ? "ubah-maintenance" : "jadwalkan-maintenance", targetType: "maintenance", targetId: entry.id, targetLabel: `Maintenance ${formatMaintenanceTime(entry.startAt)}`, alasan: reason, before, after: maintenanceSnapshot(entry) });
+      commit();
+      return structuredClone(entry);
+    },
+
+    async cancelMaintenance(actorId, windowId, alasan) {
+      requireRole(actorId, "admin", "Admin");
+      const reason = requireReason(alasan);
+      const entry = maintenanceWindow(windowId);
+      if (entry.status !== "terjadwal") throw new ContentRuleError("Jadwal ini sudah selesai atau dibatalkan.");
+      if (maintenancePhase(entry, Date.now()) === "aktif") throw new ContentRuleError("Maintenance yang sedang Aktif tidak dapat dibatalkan. Akhiri maintenance bila perbaikan selesai.");
+      const before = maintenanceSnapshot(entry);
+      entry.status = "dibatalkan";
+      announceMaintenance(actorId, "Maintenance dibatalkan", `Maintenance yang dijadwalkan ${formatMaintenanceTime(entry.startAt)} dibatalkan. Situs tetap dapat digunakan seperti biasa.`);
+      audit({ adminId: actorId, action: "batalkan-maintenance", targetType: "maintenance", targetId: entry.id, targetLabel: `Maintenance ${formatMaintenanceTime(entry.startAt)}`, alasan: reason, before, after: maintenanceSnapshot(entry) });
+      commit();
+      return structuredClone(entry);
+    },
+
+    async endMaintenance(actorId, windowId, alasan) {
+      requireRole(actorId, "admin", "Admin");
+      const reason = requireReason(alasan);
+      const entry = maintenanceWindow(windowId);
+      if (maintenancePhase(entry, Date.now()) !== "aktif") throw new ContentRuleError("Hanya maintenance yang sedang Aktif yang dapat diakhiri.");
+      const before = maintenanceSnapshot(entry);
+      entry.status = "selesai";
+      entry.endedAt = now();
+      entry.endedBy = actorId;
+      audit({ adminId: actorId, action: "akhiri-maintenance", targetType: "maintenance", targetId: entry.id, targetLabel: `Maintenance ${formatMaintenanceTime(entry.startAt)}`, alasan: reason, before, after: maintenanceSnapshot(entry) });
+      commit();
+      return structuredClone(entry);
+    },
+
+    async simulateMaintenance(windowId, target) {
+      const entry = maintenanceWindow(windowId);
+      if (entry.status !== "terjadwal") throw new ContentRuleError("Jadwal ini sudah selesai atau dibatalkan.");
+      const duration = Date.parse(entry.estimatedEndAt) - Date.parse(entry.startAt);
+      const offset = target === "persiapan" ? (entry.prepMinutes * 60_000) / 2 : target === "menit-terakhir" ? 45_000 : -1_000;
+      const start = Date.now() + offset;
+      entry.startAt = new Date(start).toISOString();
+      entry.estimatedEndAt = new Date(start + duration).toISOString();
+      commit();
+      return structuredClone(entry);
     },
 
     async reset() {

@@ -3,9 +3,12 @@
 import { useRef, useState, useTransition } from "react";
 
 import { submitLocator } from "@/app/playground/[slug]/actions";
+import PendingSubmitNotice from "@/components/maintenance/PendingSubmitNotice";
+import { useProtectedSubmit } from "@/components/maintenance/useProtectedSubmit";
 import PracticePage from "@/components/practice/PracticePage";
 import { Input } from "@/components/ui/input";
 import { recordChallengeAttempt } from "@/lib/challengeAttempts";
+import { useChallengeDraft } from "@/lib/challengeDrafts";
 import { runSelector } from "@/lib/runSelector";
 import { LocatorResult, PublicChallengeDetail, SelectorType } from "@/types/ChallengeDetail";
 
@@ -30,8 +33,10 @@ const MATCH_ATTRIBUTE = "data-practice-match";
 
 export default function LocatorWorkspace({ slug, data }: { slug: string; data: LocatorData }) {
   const rootRef = useRef<HTMLDivElement>(null);
-  const [selectorType, setSelectorType] = useState<SelectorType>(data.selectorTypes[0]);
-  const [selector, setSelector] = useState("");
+  const draft = useChallengeDraft(slug, { selectorType: data.selectorTypes[0], selector: "" }, (state) => `selector "${state.selector}" tertulis`);
+  const { selectorType, selector } = draft.state;
+  const setSelectorType = (value: SelectorType) => draft.setState((state) => ({ ...state, selectorType: value }));
+  const setSelector = (value: string) => draft.setState((state) => ({ ...state, selector: value }));
   const [message, setMessage] = useState<{ text: string; isError: boolean } | null>(null);
   const [outcome, setOutcome] = useState<{ result: LocatorResult; xp: number } | null>(null);
   const [attempt, setAttempt] = useState(0);
@@ -72,17 +77,20 @@ export default function LocatorWorkspace({ slug, data }: { slug: string; data: L
         const result = await submitLocator(slug, matchedIds);
         if (!result) return setFailed(true);
         setOutcome({ result, xp: recordChallengeAttempt(slug, "locator", result) });
+        draft.clear();
       } catch {
         setFailed(true);
       }
     });
   };
 
+  const protectedSubmit = useProtectedSubmit(draft, submit);
+
   const retry = () => {
     clearHighlight();
     setOutcome(null);
     setMessage(null);
-    setSelector("");
+    draft.clear();
     setAttempt((value) => value + 1);
   };
 
@@ -161,6 +169,7 @@ export default function LocatorWorkspace({ slug, data }: { slug: string; data: L
           {!outcome && (
             <>
               {failed && <SubmitError />}
+              {draft.isPendingSubmit && <PendingSubmitNotice />}
               <div className="flex gap-2">
                 <button
                   type="button"
@@ -172,8 +181,8 @@ export default function LocatorWorkspace({ slug, data }: { slug: string; data: L
                 </button>
                 <button
                   type="button"
-                  disabled={!selector.trim() || isPending}
-                  onClick={submit}
+                  disabled={!selector.trim() || isPending || draft.isPendingSubmit}
+                  onClick={protectedSubmit}
                   className="min-h-11 flex-1 rounded-xl bg-primary px-3 text-sm font-semibold text-primary-foreground transition-colors enabled:hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   {isPending ? "Mengirim..." : "Kirim"}

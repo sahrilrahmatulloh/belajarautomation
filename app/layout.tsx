@@ -3,6 +3,7 @@ import "./globals.css";
 
 import EnvironmentBadge from "@/components/common/EnvironmentBadge";
 import SplashScreen from "@/components/common/SplashScreen";
+import MaintenanceGate from "@/components/maintenance/MaintenanceGate";
 import { isProduction } from "@/lib/env";
 import { SITE_URL } from "@/lib/siteUrl";
 import { SPLASH_INIT_SCRIPT } from "@/lib/splash";
@@ -31,7 +32,7 @@ export default function RootLayout({
         <SplashScreen />
         <ThemeProvider>
           <TooltipProvider>
-            {children}
+            <MaintenanceGate>{children}</MaintenanceGate>
           </TooltipProvider>
         </ThemeProvider>
         <EnvironmentBadge />

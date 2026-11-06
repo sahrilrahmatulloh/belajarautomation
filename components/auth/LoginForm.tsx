@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { AlertCircle, LogIn } from "lucide-react";
 
+import { useMaintenance } from "@/components/maintenance/useMaintenance";
 import { DUMMY_ACCOUNTS, DUMMY_PASSWORD } from "@/data/dummy/accounts";
 import { ROLE_HOME, ROLE_LABELS } from "@/data/navigation";
 import { getNextTarget, withNextParam } from "@/lib/authRedirect";
@@ -25,6 +26,7 @@ interface LoginErrors {
 export default function LoginForm() {
   const router = useRouter();
   const isHydrated = useHydrated();
+  const maintenance = useMaintenance();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<LoginErrors>({});
@@ -65,6 +67,12 @@ export default function LoginForm() {
         return;
       }
       const roles = user?.roles ?? account.roles;
+      // Selama maintenance Aktif hanya Admin yang dapat masuk (PRD FR-16 K).
+      if (maintenance.isActiveNow() && !roles.includes("admin")) {
+        setErrors({ form: "Situs sedang maintenance. Saat ini hanya Admin yang dapat masuk." });
+        setIsSubmitting(false);
+        return;
+      }
       // Akun dengan peran tambahan mulai di mode perannya (PRD FR-15).
       const extraRoles = roles.filter((item) => item !== "user");
       const role = extraRoles.find((item) => item === account.role) ?? extraRoles[0] ?? "user";

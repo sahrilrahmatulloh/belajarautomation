@@ -4,8 +4,11 @@ import { useState, useTransition } from "react";
 import { ArrowLeft, ArrowRight, Check, X } from "lucide-react";
 
 import { submitQuiz } from "@/app/playground/[slug]/actions";
+import PendingSubmitNotice from "@/components/maintenance/PendingSubmitNotice";
+import { useProtectedSubmit } from "@/components/maintenance/useProtectedSubmit";
 import { Progress } from "@/components/ui/progress";
 import { recordChallengeAttempt } from "@/lib/challengeAttempts";
+import { useChallengeDraft } from "@/lib/challengeDrafts";
 import { PublicChallengeDetail, QuizResult } from "@/types/ChallengeDetail";
 
 import ResultSummary from "./ResultSummary";
@@ -58,8 +61,14 @@ function QuizReview({ result }: { result: QuizResult }) {
 
 export default function QuizWorkspace({ slug, data }: { slug: string; data: QuizData }) {
   const { questions } = data;
-  const [current, setCurrent] = useState(0);
-  const [answers, setAnswers] = useState<(number | null)[]>(() => questions.map(() => null));
+  // Jawaban dan posisi soal tersimpan setiap kali berubah, agar bisa dilanjutkan (PRD FR-16 K).
+  const draft = useChallengeDraft(
+    slug,
+    { current: 0, answers: questions.map((): number | null => null) },
+    (state) => `${state.answers.filter((answer) => answer !== null).length} dari ${questions.length} soal terjawab`
+  );
+  const { current, answers } = draft.state;
+  const setCurrent = (change: (value: number) => number) => draft.setState((state) => ({ ...state, current: change(state.current) }));
   const [outcome, setOutcome] = useState<{ result: QuizResult; xp: number } | null>(null);
   const [failed, setFailed] = useState(false);
   const [isPending, startTransition] = useTransition();
@@ -75,16 +84,18 @@ export default function QuizWorkspace({ slug, data }: { slug: string; data: Quiz
         const result = await submitQuiz(slug, answers as number[]);
         if (!result) return setFailed(true);
         setOutcome({ result, xp: recordChallengeAttempt(slug, "quiz", result) });
+        draft.clear();
       } catch {
         setFailed(true);
       }
     });
   };
 
+  const protectedSubmit = useProtectedSubmit(draft, submit);
+
   const retry = () => {
     setOutcome(null);
-    setAnswers(questions.map(() => null));
-    setCurrent(0);
+    draft.clear();
   };
 
   if (outcome) {
@@ -131,7 +142,7 @@ export default function QuizWorkspace({ slug, data }: { slug: string; data: Quiz
               name="jawaban"
               checked={answers[current] === index}
               onChange={() =>
-                setAnswers((previous) => previous.map((answer, position) => (position === current ? index : answer)))
+                draft.setState((state) => ({ ...state, answers: state.answers.map((answer, position) => (position === state.current ? index : answer)) }))
               }
               className="mt-0.5 h-4 w-4 shrink-0 accent-primary"
             />
@@ -163,10 +174,11 @@ export default function QuizWorkspace({ slug, data }: { slug: string; data: Quiz
 
       <div className="border-t border-border pt-4">
         {failed && <SubmitError />}
+        {draft.isPendingSubmit && <PendingSubmitNotice />}
         <button
           type="button"
-          disabled={!allAnswered || isPending}
-          onClick={submit}
+          disabled={!allAnswered || isPending || draft.isPendingSubmit}
+          onClick={protectedSubmit}
           className="min-h-11 w-full rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground transition-colors enabled:hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50"
         >
           {isPending ? "Mengirim..." : "Kirim jawaban"}

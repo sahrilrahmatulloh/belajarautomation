@@ -20,6 +20,7 @@ import { VIDEO_NODE } from "@/lib/content/document";
 import { ModerationAction, ModerationFlag, PlatformOverrides, XpTransaction } from "@/types/AdminPlatform";
 import { Announcement } from "@/types/Announcement";
 import { CreditClaim, Entitlement, Product, Transaction } from "@/types/Commerce";
+import { MaintenanceWindow } from "@/types/Maintenance";
 
 import { DUMMY_COMMERCE } from "./commerce";
 import { DUMMY_MODERATION_FLAGS } from "./moderation";
@@ -42,6 +43,7 @@ export interface DummyContentState {
   moderationActions: ModerationAction[];
   xpTransactions: XpTransaction[];
   announcements: Announcement[];
+  maintenanceWindows: MaintenanceWindow[];
   // Konten terbit yang sudah digantikan revisinya.
   supersededIds: string[];
   nextId: number;
@@ -206,6 +208,7 @@ export function createDummyContentState(): DummyContentState {
     moderationActions: [],
     xpTransactions: [],
     announcements: [],
+    maintenanceWindows: [],
     supersededIds: [],
     nextId: 1000,
   });

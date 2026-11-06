@@ -157,14 +157,18 @@ export type AdminAction =
   | "simpan-pengumuman"
   | "kirim-pengumuman"
   | "jadwalkan-pengumuman"
-  | "batalkan-pengumuman";
+  | "batalkan-pengumuman"
+  | "jadwalkan-maintenance"
+  | "ubah-maintenance"
+  | "batalkan-maintenance"
+  | "akhiri-maintenance";
 
 export interface AdminAuditLog {
   id: string;
   at: string;
   adminId: string;
   action: AdminAction;
-  targetType: "konten" | "pengguna" | "transaksi" | "produk" | "katalog" | "pengumuman";
+  targetType: "konten" | "pengguna" | "transaksi" | "produk" | "katalog" | "pengumuman" | "maintenance";
   targetId: string;
   targetLabel: string;
   alasan: string | null;
