@@ -1,9 +1,15 @@
 # BELAJARAUTOMATION.COM
 ## Product Requirements Document (PRD)
-**Versi:** 2.16  
+**Versi:** 2.17  
 **Status:** Draft — Acuan Pengembangan Produk  
 **Platform:** Web Application  
 **Target Pengguna:** Pemula hingga praktisi QA, Software Testing, dan Programming
+
+### Perubahan di Versi 2.17
+- Menambahkan Mode Maintenance di Panel Admin: tahap Terjadwal, Persiapan, Aktif, dan Selesai, dengan lama Persiapan yang diatur Admin (FR-16 K).
+- Selama maintenance aktif, seluruh situs tertutup dan hanya Admin yang dapat login; Creator dan Reviewer ikut tertutup (FR-16 K).
+- Menetapkan perlindungan pekerjaan pengguna: jawaban tersimpan per soal, kiriman tertunda, waktu kuis dibekukan, percobaan tidak dihitung, dan dapat dilanjutkan (FR-16 K).
+- Menambahkan entitas MaintenanceWindow (7.27) dan pemeriksaan status maintenance di server (8.3).
 
 ### Perubahan di Versi 2.16
 - Menambahkan FR-16 Panel Admin: Ringkasan, Konten, Pengguna dan Peran, Kesepakatan Creator, Transaksi dan Hak Akses, Produk Digital, Katalog Belajar, Moderasi, Pengumuman, Laporan, dan Log Aktivitas Admin.
@@ -1349,7 +1355,7 @@ Menyediakan alat bagi Admin untuk mengelola konten, pengguna, transaksi, katalog
 | Konten | Ringkasan, Semua Konten |
 | Pengguna | Pengguna dan Peran, Moderasi |
 | Bisnis | Transaksi, Produk Digital |
-| Platform | Katalog Belajar, Pengumuman |
+| Platform | Katalog Belajar, Pengumuman, Mode Maintenance |
 | Laporan | Laporan, Log Aktivitas Admin |
 
 ### A. Ringkasan
@@ -1416,6 +1422,44 @@ Menyediakan alat bagi Admin untuk mengelola konten, pengguna, transaksi, katalog
 - Seluruh aksi Admin: waktu, Admin, aksi, target, dan alasan.
 - Pencarian dan filter Admin, jenis aksi, dan rentang tanggal.
 - Log tidak dapat diubah atau dihapus.
+
+### K. Mode Maintenance
+Menutup situs sementara untuk perbaikan tanpa membuat pengguna kehilangan pekerjaan. Maintenance tidak pernah dimulai mendadak: selalu didahului tahap Persiapan.
+
+**Tahap**
+
+| Tahap | Halaman login | Pengguna yang sedang login |
+|---|---|---|
+| Terjadwal | Banner berisi jadwal maintenance | Pengumuman grup Akun dan sistem terkirim otomatis saat maintenance dijadwalkan, dan banner jadwal tampil di atas halaman |
+| Persiapan | Login masih dapat dilakukan, dengan banner hitung mundur | Banner hitung mundur di semua halaman. Kuis dan latihan baru tidak dapat dimulai; yang sedang dikerjakan boleh diselesaikan. Satu menit sebelum Aktif, tampil peringatan yang lebih menonjol dan jawaban serta draf disimpan otomatis |
+| Aktif | Banner maintenance tampil otomatis. Hanya Admin yang dapat login; peran lain ditolak dengan pesan maintenance | Pengguna selain Admin diarahkan ke halaman maintenance |
+| Selesai | Banner hilang | Ajakan melanjutkan pekerjaan yang tertunda, mis. "Lanjutkan kuis" |
+
+**Pengaturan Admin**
+- Admin menentukan waktu mulai, perkiraan selesai, pesan untuk pengguna, dan lama tahap Persiapan: 5, 10, 20, 30, atau 60 menit (bawaan 30 menit).
+- Waktu mulai paling cepat adalah saat ini ditambah lama tahap Persiapan.
+- Jadwal dapat diubah atau dibatalkan sebelum maintenance Aktif.
+- Admin mengakhiri maintenance secara manual; perkiraan selesai hanya informasi bagi pengguna.
+- Menjadwalkan, mengubah, membatalkan, dan mengakhiri maintenance memakai dialog konfirmasi dengan alasan wajib dan tercatat di Log Aktivitas Admin.
+
+**Cakupan**
+- Selama Aktif, seluruh halaman tertutup, termasuk halaman publik seperti beranda, blog, dan katalog. Pengecualian: halaman login dan halaman maintenance.
+- Hanya Admin yang dapat login dan membuka seluruh situs untuk memeriksa perbaikan. Creator, Reviewer, dan User ikut tertutup.
+- Halaman yang tertutup dijawab server dengan kode 503 beserta perkiraan waktu kembali, agar mesin pencari menganggap penutupan bersifat sementara.
+
+**Perlindungan pekerjaan pengguna**
+- Jawaban kuis dan latihan tersimpan setiap kali satu soal dijawab, bukan hanya saat dikirim.
+- Jawaban yang dikirim saat maintenance Aktif disimpan di perangkat dan dikirim otomatis setelah maintenance selesai, dengan pesan "Jawabanmu aman dan akan dikirim setelah maintenance selesai."
+- Batas waktu kuis berhenti selama maintenance; sisa waktu tetap sama saat dilanjutkan.
+- Percobaan yang terpotong maintenance tidak dihitung sebagai percobaan, tidak tercatat gagal, dan tidak mengurangi XP.
+- Setelah maintenance selesai, pengguna melanjutkan dari soal terakhir, tidak mengulang dari awal.
+- Halaman maintenance menyebut pekerjaan yang tersimpan, mis. "Jawabanmu sampai soal 7 tersimpan."
+- Draf Creator disimpan otomatis sebelum maintenance Aktif; perubahan yang belum terkirim dikirim setelah situs kembali.
+
+**Tahap data dummy**
+- Dibangun sekarang sebagai simulasi DEV seperti bagian Panel Admin lainnya: status maintenance tersimpan per browser, sehingga Admin dan pengguna dicoba di browser yang sama.
+- Perlindungan kuis diterapkan saat format kuis dibangun; sebelum itu berlaku untuk latihan Playground dan draf Creator.
+- Pemeriksaan status di server, kode 503, dan antrean kiriman ke server menunggu backend.
 
 ---
 
@@ -1637,7 +1681,7 @@ Menyimpan informasi materi pembelajaran, termasuk isi teks lesson dan daftar ref
 Mencatat status dan progress materi pengguna.
 
 ## 7.5 QuizAttempt
-Mencatat sesi pengerjaan kuis dan hasilnya.
+Mencatat sesi pengerjaan kuis, jawaban yang tersimpan per soal, sisa waktu, dan hasilnya. Percobaan yang terpotong maintenance ditandai tertunda dan tidak dihitung (FR-16 K).
 
 ## 7.6 ChallengeSubmission
 Mencatat pengiriman jawaban challenge dan hasil validasinya.
@@ -1702,6 +1746,9 @@ Mencatat penandaan akun oleh sistem moderasi, alasan penandaan, dan tindakan Adm
 ## 7.26 Announcement
 Menyimpan pengumuman: isi, tautan, grup notifikasi, target, jadwal, status, dan pembuat.
 
+## 7.27 MaintenanceWindow
+Menyimpan jadwal maintenance: waktu mulai, perkiraan selesai, lama tahap Persiapan, pesan, status (Terjadwal, Persiapan, Aktif, Selesai, Dibatalkan), Admin pembuat, serta waktu dan Admin yang mengakhirinya.
+
 ### Prinsip penting
 - Riwayat transaksi tidak boleh bergantung pada status tampilan frontend.
 - Kuota klaim harus dapat diaudit.
@@ -1733,6 +1780,7 @@ Aplikasi harus dapat digunakan pada desktop, tablet, dan perangkat mobile.
 - Akses terhadap file produk berbayar harus mengikuti entitlement.
 - Akun Admin wajib memakai verifikasi dua langkah saat backend tersedia.
 - Halaman dan aksi Admin hanya dapat diakses pengguna berperan Admin, diperiksa di backend.
+- Status maintenance diperiksa di server; penolakan login dan penutupan halaman selama maintenance tidak hanya dilakukan di frontend (FR-16 K).
 
 ## 8.4 Data Integrity
 - Progress belajar harus konsisten.
