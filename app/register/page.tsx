@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import AuthShell from "@/components/auth/AuthShell";
+import GoogleAuthOption from "@/components/auth/GoogleAuthOption";
 import GuestOnly from "@/components/auth/GuestOnly";
 import RegisterForm from "@/components/auth/RegisterForm";
 
@@ -15,6 +16,7 @@ export default function Page() {
         title="Buat akun baru"
         description="Gratis untuk mulai belajar QA Automation dari dasar."
       >
+        <GoogleAuthOption mode="register" />
         <RegisterForm />
       </AuthShell>
     </GuestOnly>

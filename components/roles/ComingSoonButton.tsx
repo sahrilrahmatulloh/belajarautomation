@@ -15,6 +15,7 @@ interface ComingSoonButtonProps {
   size?: "default" | "sm";
   // Label aksesibel bila label tampilan kurang spesifik (mis. di baris tabel).
   ariaLabel?: string;
+  fullWidth?: boolean;
 }
 
 const variantStyles = {
@@ -34,6 +35,7 @@ export default function ComingSoonButton({
   variant = "primary",
   size = "default",
   ariaLabel,
+  fullWidth = false,
 }: ComingSoonButtonProps) {
   return (
     <Tooltip>
@@ -41,7 +43,7 @@ export default function ComingSoonButton({
         aria-disabled="true"
         aria-label={`${ariaLabel ?? label} (Segera hadir)`}
         onClick={(event) => event.preventDefault()}
-        className={`inline-flex cursor-not-allowed items-center justify-center gap-2 whitespace-nowrap rounded-xl font-semibold opacity-60 ${variantStyles[variant]} ${sizeStyles[size]}`}
+        className={`${fullWidth ? "flex w-full" : "inline-flex"} cursor-not-allowed items-center justify-center gap-2 whitespace-nowrap rounded-xl font-semibold opacity-60 ${variantStyles[variant]} ${sizeStyles[size]}`}
       >
         {icon}
         {label}
