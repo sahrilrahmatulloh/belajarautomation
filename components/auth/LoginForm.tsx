@@ -10,6 +10,7 @@ import { DUMMY_ACCOUNTS, DUMMY_PASSWORD } from "@/data/dummy/accounts";
 import { ROLE_HOME, ROLE_LABELS } from "@/data/navigation";
 import { getNextTarget, withNextParam } from "@/lib/authRedirect";
 import { isDev } from "@/lib/env";
+import { maintenanceLoginNotice } from "@/lib/maintenanceRules";
 import { getContentRepository } from "@/lib/content";
 import { sessionActions } from "@/lib/session";
 import { useHydrated } from "@/lib/useHydrated";
@@ -67,9 +68,10 @@ export default function LoginForm() {
         return;
       }
       const roles = user?.roles ?? account.roles;
-      // Selama maintenance Aktif hanya Admin yang dapat masuk (PRD FR-16 K).
-      if (maintenance.isActiveNow() && !roles.includes("admin")) {
-        setErrors({ form: "Situs sedang maintenance. Saat ini hanya Admin yang dapat masuk." });
+      // Selama maintenance Aktif hanya Admin yang dapat masuk (PRD FR-16 K). Pengguna lain diberi
+      // tahu alasan dan perkiraan selesainya.
+      if (maintenance.current && maintenance.isActiveNow() && !roles.includes("admin")) {
+        setErrors({ form: maintenanceLoginNotice(maintenance.current) });
         setIsSubmitting(false);
         return;
       }

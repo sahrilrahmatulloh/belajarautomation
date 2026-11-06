@@ -80,7 +80,7 @@ export default function MaintenanceBanner() {
           </>
         ) : (
           <>
-            <span className="font-semibold">Situs sedang maintenance</span> sampai sekitar {formatMaintenanceTime(current.estimatedEndAt)}. Saat ini hanya Admin yang dapat masuk.
+            <span className="font-semibold">Situs sedang maintenance.</span> {current.message} Perkiraan selesai {formatMaintenanceTime(current.estimatedEndAt)}. Silakan kembali setelah maintenance selesai.
           </>
         )}
       </Bar>

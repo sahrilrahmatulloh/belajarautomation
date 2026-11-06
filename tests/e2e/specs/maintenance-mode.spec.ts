@@ -12,6 +12,14 @@ const { quiz, bugHunt } = CHALLENGE_KEYS;
 
 const banner = (page: Page) => page.getByRole("region", { name: "Pemberitahuan maintenance" });
 const maintenanceHeading = (page: Page) => page.getByRole("heading", { level: 1, name: "Situs sedang maintenance" });
+const popup = (page: Page) => page.getByRole("dialog");
+
+// Popup maintenance untuk akun non-Admin menutupi halaman sampai ditutup.
+async function dismissPopup(page: Page, title: string) {
+  await expect(popup(page)).toContainText(title);
+  await popup(page).getByRole("button", { name: "Mengerti" }).click();
+  await expect(popup(page)).toHaveCount(0);
+}
 
 test.describe("Panel Admin: Mode Maintenance", () => {
   test.use({ role: "admin" });
@@ -52,6 +60,7 @@ test.describe("Panel Admin: Mode Maintenance", () => {
     await switchAccount(page, ACCOUNTS.user.email);
     await expect(page).toHaveURL(ACCOUNTS.user.home);
     await page.goto("/notifications");
+    await dismissPopup(page, "Maintenance terjadwal");
     const notifications = new NotificationsPage(page);
     // Notifikasi dummy juga berjudul "Jadwal maintenance", jadi dicocokkan dengan pesannya.
     await expect(notifications.item("Jadwal maintenance").filter({ hasText: "Perbaikan fitur blog." })).toBeVisible();
@@ -101,6 +110,7 @@ test.describe("Pengguna selama maintenance", () => {
 
     await scheduleMaintenance(page);
     await simulateMaintenance(page, "persiapan");
+    await dismissPopup(page, "Maintenance segera dimulai");
     await expect(banner(page)).toContainText("Maintenance dimulai dalam");
 
     await page.reload();
@@ -116,6 +126,7 @@ test.describe("Pengguna selama maintenance", () => {
     await page.goto("/playground");
     await scheduleMaintenance(page);
     await simulateMaintenance(page, "menit-terakhir");
+    await dismissPopup(page, "Maintenance segera dimulai");
 
     await expect(page.getByRole("alert").filter({ hasText: "kurang dari 1 menit lagi" })).toBeVisible();
   });
@@ -159,6 +170,7 @@ test.describe("Pengguna selama maintenance", () => {
     await scheduleMaintenance(page);
 
     await simulateMaintenance(page, "menit-terakhir");
+    await dismissPopup(page, "Maintenance segera dimulai");
     await page.clock.pauseAt(await page.evaluate(() => Date.now() + 1_000));
     // Waktu melewati jam mulai tanpa menjalankan timer: halaman belum diperbarui saat Kirim ditekan.
     await page.clock.setSystemTime(await page.evaluate(() => Date.now() + 60_000));
@@ -176,17 +188,50 @@ test.describe("Pengguna selama maintenance", () => {
   });
 });
 
+test.describe("Popup maintenance", () => {
+  test.use({ role: "creator" });
+
+  test("muncul untuk non-Admin sekali per tahap, dan muncul lagi saat Persiapan", async ({ page }) => {
+    await page.goto(ACCOUNTS.creator.home);
+    await scheduleMaintenance(page, "Perbaikan fitur review.");
+
+    await expect(popup(page)).toContainText("Perbaikan fitur review.");
+    await dismissPopup(page, "Maintenance terjadwal");
+    await page.reload();
+    await expect(banner(page)).toContainText("Maintenance terjadwal");
+    await expect(popup(page)).toHaveCount(0);
+
+    await simulateMaintenance(page, "persiapan");
+    await dismissPopup(page, "Maintenance segera dimulai");
+  });
+
+  test("tidak muncul untuk Admin", async ({ page }) => {
+    await page.goto(ACCOUNTS.creator.home);
+    await scheduleMaintenance(page);
+    await dismissPopup(page, "Maintenance terjadwal");
+
+    await switchAccount(page, ACCOUNTS.admin.email);
+    await expect(page).toHaveURL(ACCOUNTS.admin.home);
+    await expect(banner(page)).toContainText("Maintenance terjadwal");
+    await expect(popup(page)).toHaveCount(0);
+  });
+});
+
 test.describe("Halaman login selama maintenance Aktif", () => {
-  test("banner tampil otomatis dan hanya Admin yang bisa masuk", async ({ page }) => {
+  test("banner tampil otomatis, dan pengguna selain Admin ditolak dengan alasan serta perkiraan selesai", async ({ page }) => {
     const login = new LoginPage(page);
     await login.goto();
-    await scheduleMaintenance(page);
+    await scheduleMaintenance(page, "Kami sedang memperbaiki fitur blog.");
     await simulateMaintenance(page, "aktif");
 
-    await expect(banner(page)).toContainText("Situs sedang maintenance");
+    await expect(banner(page)).toContainText("Situs sedang maintenance. Kami sedang memperbaiki fitur blog. Perkiraan selesai");
+    await expect(banner(page)).not.toContainText("Admin");
 
     await login.login(ACCOUNTS.creator.email, DEMO_PASSWORD);
-    await expect(page.getByRole("alert").filter({ hasText: "Saat ini hanya Admin yang dapat masuk." })).toBeVisible();
+    const notice = page.getByRole("alert").filter({ hasText: "sedang dalam maintenance" });
+    await expect(notice).toContainText("Kami sedang memperbaiki fitur blog.");
+    await expect(notice).toContainText(/Perkiraan selesai .+ WIB/);
+    await expect(notice).not.toContainText("Admin");
     await expect(page).toHaveURL("/login");
 
     await login.login(ACCOUNTS.admin.email, DEMO_PASSWORD);
@@ -201,8 +246,7 @@ test.describe("Halaman login selama maintenance Aktif", () => {
 
     await page.goto("/blog");
     await expect(maintenanceHeading(page)).toBeVisible();
-    await page.getByRole("link", { name: "Masuk sebagai Admin" }).click();
-    await expect(page).toHaveURL("/login");
+    await expect(page.getByText("Admin")).toHaveCount(0);
   });
 });
 
@@ -215,11 +259,17 @@ test.describe("Aksesibilitas", () => {
         await page.goto("/playground");
         await scheduleMaintenance(page);
         await simulateMaintenance(page, "persiapan");
+        await expect(popup(page)).toBeVisible();
+        const dialog = await new AxeBuilder({ page }).include('[role="dialog"]').analyze();
+        expect(dialog.violations.filter((item) => ["critical", "serious"].includes(item.impact ?? "")).map((item) => item.id)).toEqual([]);
+        await dismissPopup(page, "Maintenance segera dimulai");
         await expect(banner(page)).toBeVisible();
         const prep = await new AxeBuilder({ page }).include('[aria-label="Pemberitahuan maintenance"]').analyze();
         expect(prep.violations.filter((item) => ["critical", "serious"].includes(item.impact ?? "")).map((item) => item.id)).toEqual([]);
 
         await simulateMaintenance(page, "menit-terakhir");
+        // Simulasi menggeser jam mulai, jadi popup muncul lagi seperti saat jadwal diubah.
+        await dismissPopup(page, "Maintenance segera dimulai");
         await expect(page.getByRole("alert").filter({ hasText: "kurang dari 1 menit lagi" })).toBeVisible();
         const finalMinute = await new AxeBuilder({ page }).include('[aria-label="Pemberitahuan maintenance"]').analyze();
         expect(finalMinute.violations.filter((item) => ["critical", "serious"].includes(item.impact ?? "")).map((item) => item.id)).toEqual([]);

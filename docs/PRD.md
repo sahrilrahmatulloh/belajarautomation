@@ -1,9 +1,13 @@
 # BELAJARAUTOMATION.COM
 ## Product Requirements Document (PRD)
-**Versi:** 2.17  
+**Versi:** 2.18  
 **Status:** Draft — Acuan Pengembangan Produk  
 **Platform:** Web Application  
 **Target Pengguna:** Pemula hingga praktisi QA, Software Testing, dan Programming
+
+### Perubahan di Versi 2.18
+- Popup maintenance untuk pengguna selain Admin yang sudah login, pada tahap Terjadwal dan Persiapan (FR-16 K).
+- Mengubah dan membatalkan jadwal maintenance juga mengirim pengumuman ke semua pengguna (FR-16 K).
 
 ### Perubahan di Versi 2.17
 - Menambahkan Mode Maintenance di Panel Admin: tahap Terjadwal, Persiapan, Aktif, dan Selesai, dengan lama Persiapan yang diatur Admin (FR-16 K).
@@ -1434,6 +1438,9 @@ Menutup situs sementara untuk perbaikan tanpa membuat pengguna kehilangan pekerj
 | Persiapan | Login masih dapat dilakukan, dengan banner hitung mundur | Banner hitung mundur di semua halaman. Kuis dan latihan baru tidak dapat dimulai; yang sedang dikerjakan boleh diselesaikan. Satu menit sebelum Aktif, tampil peringatan yang lebih menonjol dan jawaban serta draf disimpan otomatis |
 | Aktif | Banner maintenance tampil otomatis. Hanya Admin yang dapat login; peran lain ditolak dengan pesan maintenance | Pengguna selain Admin diarahkan ke halaman maintenance |
 | Selesai | Banner hilang | Ajakan melanjutkan pekerjaan yang tertunda, mis. "Lanjutkan kuis" |
+
+- Pengguna selain Admin (User, Creator, Reviewer) yang sudah login juga melihat popup maintenance pada tahap Terjadwal dan Persiapan. Popup muncul sekali per tahap dan muncul lagi bila jadwal diubah. Admin hanya melihat banner.
+- Mengubah atau membatalkan jadwal juga mengirim pengumuman ke semua pengguna, agar jadwal yang sudah diumumkan tidak menyesatkan.
 
 **Pengaturan Admin**
 - Admin menentukan waktu mulai, perkiraan selesai, pesan untuk pengguna, dan lama tahap Persiapan: 5, 10, 20, 30, atau 60 menit (bawaan 30 menit).

@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { ShieldCheck, Wrench } from "lucide-react";
 
 import { CHALLENGES } from "@/data/challenges";
@@ -46,17 +45,13 @@ export default function MaintenanceScreen({ window: maintenance }: { window: Mai
           </section>
         )}
 
-        <div className="mt-6 text-sm">
-          {session ? (
-            <button type="button" onClick={() => sessionActions.signOut()} className="font-semibold text-primary-accent hover:underline">
-              Keluar dari akun
-            </button>
-          ) : (
-            <Link href="/login" className="font-semibold text-primary-accent hover:underline">
-              Masuk sebagai Admin
-            </Link>
-          )}
-        </div>
+        <p className="mt-6 text-sm text-muted-foreground">Terima kasih atas kesabaranmu. Silakan kembali setelah maintenance selesai.</p>
+
+        {session && (
+          <button type="button" onClick={() => sessionActions.signOut()} className="mt-3 text-sm font-semibold text-primary-accent hover:underline">
+            Keluar dari akun
+          </button>
+        )}
       </div>
     </main>
   );
