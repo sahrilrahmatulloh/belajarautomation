@@ -4,8 +4,9 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Dialog } from "@base-ui/react/dialog";
-import { FileText, Plus } from "lucide-react";
+import { ExternalLink, Eye, FilePen, FileText, MessageSquareText, Pencil, Plus, Send, Trash2, Undo2 } from "lucide-react";
 
+import IconAction from "@/components/common/IconAction";
 import ListPagination, { pageSlice } from "@/components/common/ListPagination";
 import FilterChips from "@/components/filters/FilterChips";
 import SearchField from "@/components/filters/SearchField";
@@ -21,8 +22,6 @@ import { useCreatorData, userName } from "./useCreatorData";
 const PAGE_SIZE = 5;
 const STATUSES = Object.keys(STATUS_LABELS) as ContentStatusId[];
 const KINDS = Object.keys(KIND_LABELS) as ContentKind[];
-
-const actionClass = "whitespace-nowrap rounded font-medium text-primary-accent underline-offset-2 hover:underline";
 
 function RowActions({
   content,
@@ -51,33 +50,31 @@ function RowActions({
   };
 
   return (
-    <div className="flex flex-wrap gap-x-3 gap-y-1 text-sm">
+    <div className="flex flex-wrap items-center gap-1">
       {content.status === "draf" && (
         <>
-          <Link href={editHref} className={actionClass}>Edit</Link>
-          <Link href={editHref} className={actionClass}>Kirim untuk Review</Link>
-          <button type="button" onClick={() => onDelete(content)} className="whitespace-nowrap rounded font-medium text-destructive underline-offset-2 hover:underline">
-            Hapus
-          </button>
+          <IconAction label="Kirim untuk Review" icon={Send} href={editHref} showLabel />
+          <IconAction label="Edit" icon={Pencil} href={editHref} />
+          <IconAction label="Hapus" icon={Trash2} tone="destructive" onClick={() => onDelete(content)} />
         </>
       )}
       {content.status === "menunggu-review" && (
         <>
-          <Link href={detailHref} className={actionClass}>Lihat</Link>
-          <button type="button" onClick={() => void withdraw()} className={actionClass}>Tarik kembali</button>
+          <IconAction label="Lihat" icon={Eye} href={detailHref} />
+          <IconAction label="Tarik kembali" icon={Undo2} onClick={() => void withdraw()} />
         </>
       )}
       {content.status === "perlu-revisi" && (
         <>
-          <Link href={`/creator/revisi/${content.id}`} className={actionClass}>Lihat catatan</Link>
-          <Link href={editHref} className={actionClass}>Edit</Link>
+          <IconAction label="Lihat catatan" icon={MessageSquareText} href={`/creator/revisi/${content.id}`} />
+          <IconAction label="Edit" icon={Pencil} href={editHref} />
         </>
       )}
-      {content.status === "disetujui" && <Link href={detailHref} className={actionClass}>Lihat</Link>}
+      {content.status === "disetujui" && <IconAction label="Lihat" icon={Eye} href={detailHref} />}
       {content.status === "terbit" && (
         <>
-          {content.publicPath && <Link href={content.publicPath} className={actionClass}>Lihat di website</Link>}
-          <button type="button" onClick={() => void createRevision()} className={actionClass}>Buat revisi</button>
+          <IconAction label="Buat revisi" icon={FilePen} onClick={() => void createRevision()} showLabel />
+          {content.publicPath && <IconAction label="Lihat di website" icon={ExternalLink} href={content.publicPath} />}
         </>
       )}
     </div>

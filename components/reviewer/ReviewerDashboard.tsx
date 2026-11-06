@@ -1,9 +1,9 @@
 "use client";
 
-import Link from "next/link";
-import { CheckCircle2, ClipboardCheck, History, Inbox, RotateCcw, SearchCheck, ThumbsUp } from "lucide-react";
+import { CheckCircle2, ClipboardCheck, FileSearch, History, Inbox, RotateCcw, SearchCheck, ThumbsUp } from "lucide-react";
 
 import EmptyState from "@/components/common/EmptyState";
+import IconAction from "@/components/common/IconAction";
 import { userName } from "@/components/creator/studio/useCreatorData";
 import ComingSoonButton from "@/components/roles/ComingSoonButton";
 import ContentStatusBadge from "@/components/roles/ContentStatusBadge";
@@ -78,9 +78,7 @@ export default function ReviewerDashboard() {
                     <td className="whitespace-nowrap px-3 py-3">{waitingDays(content, data?.loadedAt ?? 0)} hari</td>
                     <td className="px-4 py-3 text-right sm:px-5">
                       {isDev ? (
-                        <Link href={`/reviewer/review/${content.id}`} aria-label={`Buka review ${content.judul}`} className="font-medium text-primary-accent underline-offset-2 hover:underline">
-                          Review
-                        </Link>
+                        <IconAction label={`Buka review ${content.judul}`} tooltip="Review" icon={FileSearch} href={`/reviewer/review/${content.id}`} showLabel />
                       ) : (
                         <ComingSoonButton label="Mulai Review" variant="outline" size="sm" ariaLabel={`Mulai review ${content.judul}`} />
                       )}

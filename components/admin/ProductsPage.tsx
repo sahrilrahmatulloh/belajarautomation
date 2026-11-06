@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { Plus } from "lucide-react";
+import { Pencil, Plus } from "lucide-react";
 
+import IconAction from "@/components/common/IconAction";
 import ListPagination, { pageSlice } from "@/components/common/ListPagination";
 import { EditorDialog } from "@/components/creator/studio/EditorDialogs";
 import PrototypeNotice from "@/components/creator/studio/PrototypeNotice";
@@ -144,7 +145,7 @@ export default function ProductsPage() {
     {
       header: "Aksi",
       cell: (product) => (
-        <button type="button" aria-label={`Ubah ${product.title}`} onClick={() => setEditing({ product })} className="font-medium text-primary-accent underline-offset-2 hover:underline">Ubah</button>
+        <IconAction label={`Ubah ${product.title}`} tooltip="Ubah" icon={Pencil} onClick={() => setEditing({ product })} />
       ),
     },
   ];

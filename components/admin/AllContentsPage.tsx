@@ -1,9 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import { Globe, History, Undo2, UserPlus } from "lucide-react";
 import Link from "next/link";
 
 import ConfirmDialog from "@/components/common/ConfirmDialog";
+import IconAction from "@/components/common/IconAction";
 import ListPagination, { pageSlice } from "@/components/common/ListPagination";
 import { EditorDialog } from "@/components/creator/studio/EditorDialogs";
 import PrototypeNotice from "@/components/creator/studio/PrototypeNotice";
@@ -27,7 +29,6 @@ const FILTER_KEYS = ["q", "status", "jenis", "creator", "reviewer", "lama"] as c
 const STATUSES = Object.keys(STATUS_LABELS) as ContentStatusId[];
 const KINDS = Object.keys(KIND_LABELS) as ContentKind[];
 const selectClass = "h-11 w-full rounded-lg border border-input bg-background px-3 text-sm font-medium dark:bg-card";
-const actionClass = "whitespace-nowrap rounded font-medium text-primary-accent underline-offset-2 hover:underline";
 const fieldClass = "mt-1.5 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm dark:bg-card";
 
 const ACTION_LABELS: Record<StatusAction, string> = {
@@ -159,26 +160,23 @@ export default function AllContentsPage() {
     {
       header: "Aksi",
       cell: (content) => (
-        <span className="flex flex-wrap gap-x-3 gap-y-1">
-          {content.status === "menunggu-review" && (
-            <button type="button" onClick={() => openDialog("tugaskan", content)} className={actionClass}>Tugaskan Reviewer</button>
-          )}
-          {content.status === "disetujui" && hasAgreement(content.authorId) && (
-            <button type="button" onClick={() => openDialog("terbitkan", content)} className={actionClass}>Terbitkan</button>
-          )}
+        <span className="flex flex-wrap items-center gap-1">
+          {content.status === "menunggu-review" && <IconAction label="Tugaskan Reviewer" icon={UserPlus} onClick={() => openDialog("tugaskan", content)} showLabel />}
+          {content.status === "disetujui" && hasAgreement(content.authorId) && <IconAction label="Terbitkan" icon={Globe} onClick={() => openDialog("terbitkan", content)} showLabel />}
           {content.status === "disetujui" && !hasAgreement(content.authorId) && (
             <span className="block">
-              <button type="button" disabled className="cursor-not-allowed font-medium text-muted-foreground">Terbitkan</button>
+              <button type="button" disabled className="inline-flex min-h-9 cursor-not-allowed items-center gap-1.5 px-2 text-sm font-medium text-muted-foreground">
+                <Globe className="h-4 w-4 shrink-0" aria-hidden="true" />
+                Terbitkan
+              </button>
               <span className="block text-xs text-foreground">
                 Terkunci: Creator belum punya kesepakatan.{" "}
                 <Link href={`/admin/pengguna/${content.authorId}`} className="font-medium text-primary-accent underline underline-offset-2">Catat kesepakatan</Link>
               </span>
             </span>
           )}
-          {content.status === "terbit" && (
-            <button type="button" onClick={() => openDialog("tarik", content)} className="whitespace-nowrap rounded font-medium text-destructive underline-offset-2 hover:underline">Tarik dari website</button>
-          )}
-          <button type="button" onClick={() => openDialog("riwayat", content)} className={actionClass}>Riwayat</button>
+          {content.status === "terbit" && <IconAction label="Tarik dari website" icon={Undo2} tone="destructive" onClick={() => openDialog("tarik", content)} showLabel />}
+          <IconAction label="Riwayat" icon={History} onClick={() => openDialog("riwayat", content)} />
         </span>
       ),
     },
@@ -232,7 +230,7 @@ export default function AllContentsPage() {
       {values.lama === "1" && (
         <p className="flex flex-wrap items-center gap-3 text-sm">
           Hanya review yang menunggu lebih dari {LONG_WAIT_DAYS} hari.
-          <button type="button" onClick={() => updateFilter("lama", "")} className={actionClass}>Hapus filter ini</button>
+          <button type="button" onClick={() => updateFilter("lama", "")} className="whitespace-nowrap rounded font-medium text-primary-accent underline-offset-2 hover:underline">Hapus filter ini</button>
         </p>
       )}
 

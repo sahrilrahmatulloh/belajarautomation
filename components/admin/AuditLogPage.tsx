@@ -1,7 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import { Eye } from "lucide-react";
 
+import IconAction from "@/components/common/IconAction";
 import ListPagination, { pageSlice } from "@/components/common/ListPagination";
 import { EditorDialog } from "@/components/creator/studio/EditorDialogs";
 import PrototypeNotice from "@/components/creator/studio/PrototypeNotice";
@@ -93,9 +95,7 @@ export default function AuditLogPage() {
     {
       header: "Aksi",
       cell: (entry) => (
-        <button type="button" onClick={() => setSelected(entry)} aria-label={`Lihat perubahan ${ACTION_LABELS[entry.action]}: ${entry.targetLabel}`} className="whitespace-nowrap font-medium text-primary-accent underline-offset-2 hover:underline">
-          Lihat perubahan
-        </button>
+        <IconAction label={`Lihat perubahan ${ACTION_LABELS[entry.action]}: ${entry.targetLabel}`} tooltip="Lihat perubahan" icon={Eye} onClick={() => setSelected(entry)} />
       ),
     },
   ];
