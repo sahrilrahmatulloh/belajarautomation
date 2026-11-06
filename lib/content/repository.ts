@@ -14,6 +14,7 @@ import {
 import { Announcement, AnnouncementInput } from "@/types/Announcement";
 import { CreditClaim, Entitlement, EntitlementKind, GatewayResult, Product, ProductInput, Transaction } from "@/types/Commerce";
 import { CatalogItemKind, CatalogItemStatus, CourseCatalogState, ModerationAction, ModerationFlag, PlatformOverrides, XpTransaction } from "@/types/AdminPlatform";
+import { MaintenanceInput, MaintenanceSimulation, MaintenanceWindow } from "@/types/Maintenance";
 import { UserRole } from "@/types/Role";
 
 // Pelanggaran aturan alur konten atau peran. Pesannya aman ditampilkan ke pengguna.
@@ -49,6 +50,7 @@ export interface ContentRepository {
   listModerationActions(): Promise<ModerationAction[]>;
   listXpTransactions(): Promise<XpTransaction[]>;
   listAnnouncements(): Promise<Announcement[]>;
+  listMaintenance(): Promise<MaintenanceWindow[]>;
   // Log hanya bisa dibaca: tidak ada operasi untuk mengubah atau menghapusnya (PRD FR-16 J).
   listAuditLog(): Promise<AdminAuditLog[]>;
 
@@ -105,6 +107,13 @@ export interface ContentRepository {
   cancelAnnouncement(actorId: string, announcementId: string): Promise<Announcement>;
   // Meniru penjadwal di server. Hanya untuk tahap dummy; mengirim semua yang terjadwal.
   processScheduledAnnouncements(): Promise<number>;
+
+  // Mode Maintenance (PRD FR-16 K). Hanya satu jadwal yang berjalan pada satu waktu.
+  saveMaintenance(actorId: string, windowId: string | null, input: MaintenanceInput, alasan: string): Promise<MaintenanceWindow>;
+  cancelMaintenance(actorId: string, windowId: string, alasan: string): Promise<MaintenanceWindow>;
+  endMaintenance(actorId: string, windowId: string, alasan: string): Promise<MaintenanceWindow>;
+  // Meniru waktu yang berjalan. Hanya untuk tahap dummy; bukan aksi Admin.
+  simulateMaintenance(windowId: string, target: MaintenanceSimulation): Promise<MaintenanceWindow>;
 
   // Mengembalikan data ke kondisi awal. Hanya untuk tahap dummy.
   reset(): Promise<void>;

@@ -3,8 +3,11 @@
 import { useState, useTransition } from "react";
 
 import { submitBugHunt } from "@/app/playground/[slug]/actions";
+import PendingSubmitNotice from "@/components/maintenance/PendingSubmitNotice";
+import { useProtectedSubmit } from "@/components/maintenance/useProtectedSubmit";
 import PracticePage from "@/components/practice/PracticePage";
 import { recordChallengeAttempt } from "@/lib/challengeAttempts";
+import { useChallengeDraft } from "@/lib/challengeDrafts";
 import { BugFinding, BugHuntResult, PublicChallengeDetail } from "@/types/ChallengeDetail";
 
 import ResultSummary from "./ResultSummary";
@@ -33,14 +36,15 @@ function FindingGroup({ title, items }: { title: string; items: BugFinding[] }) 
 }
 
 export default function BugHuntWorkspace({ slug, data }: { slug: string; data: BugHuntData }) {
-  const [selected, setSelected] = useState<string[]>([]);
+  const draft = useChallengeDraft<string[]>(slug, [], (state) => `${state.length} temuan ditandai`);
+  const selected = draft.state;
   const [outcome, setOutcome] = useState<{ result: BugHuntResult; xp: number } | null>(null);
   const [attempt, setAttempt] = useState(0);
   const [failed, setFailed] = useState(false);
   const [isPending, startTransition] = useTransition();
 
   const toggle = (id: string) =>
-    setSelected((current) => (current.includes(id) ? current.filter((item) => item !== id) : [...current, id]));
+    draft.setState((current) => (current.includes(id) ? current.filter((item) => item !== id) : [...current, id]));
 
   const submit = () => {
     setFailed(false);
@@ -49,15 +53,18 @@ export default function BugHuntWorkspace({ slug, data }: { slug: string; data: B
         const result = await submitBugHunt(slug, selected);
         if (!result) return setFailed(true);
         setOutcome({ result, xp: recordChallengeAttempt(slug, "bug-hunt", result) });
+        draft.clear();
       } catch {
         setFailed(true);
       }
     });
   };
 
+  const protectedSubmit = useProtectedSubmit(draft, submit);
+
   const retry = () => {
     setOutcome(null);
-    setSelected([]);
+    draft.clear();
     // Mengulang juga mengembalikan halaman latihan ke keadaan awal.
     setAttempt((value) => value + 1);
   };
@@ -109,10 +116,11 @@ export default function BugHuntWorkspace({ slug, data }: { slug: string; data: B
             </div>
 
             {failed && <SubmitError />}
+            {draft.isPendingSubmit && <PendingSubmitNotice />}
             <button
               type="button"
-              disabled={selected.length === 0 || isPending}
-              onClick={submit}
+              disabled={selected.length === 0 || isPending || draft.isPendingSubmit}
+              onClick={protectedSubmit}
               className="min-h-11 w-full rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground transition-colors enabled:hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50"
             >
               {isPending ? "Mengirim..." : "Kirim temuan"}

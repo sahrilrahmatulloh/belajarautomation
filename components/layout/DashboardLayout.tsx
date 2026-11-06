@@ -4,6 +4,7 @@ import { useState } from "react";
 import { usePathname } from "next/navigation";
 
 import RequireAuth from "@/components/auth/RequireAuth";
+import MaintenanceBanner from "@/components/maintenance/MaintenanceBanner";
 import { isLearnerPath, useViewMode } from "@/lib/viewMode";
 
 import Sidebar from "./Sidebar";
@@ -60,6 +61,7 @@ export default function DashboardLayout({
         {/* Main Content */}
         <div className="flex min-w-0 flex-1 flex-col">
           <Navbar onToggleSidebar={toggleSidebar} />
+          <MaintenanceBanner />
 
           {/* relative: elemen absolute di dalam isi (mis. teks sr-only) tidak memperpanjang
               dokumen, yang membuat seluruh layout bergeser saat lompat ke heading.

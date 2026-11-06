@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowLeft, Clock3, Crown, GraduationCap, ListChecks } from "lucide-react";
 
+import MaintenanceStartGuard from "@/components/maintenance/MaintenanceStartGuard";
 import { COURSES } from "@/data/courses";
 import { Challenge } from "@/types/Challenge";
 import { PublicChallengeDetail } from "@/types/ChallengeDetail";
@@ -98,7 +99,9 @@ export default function ChallengeWorkspace({ challenge, detail, locked }: Challe
           </Link>
         </section>
       ) : (
-        <Body slug={challenge.slug} detail={detail} />
+        <MaintenanceStartGuard slug={challenge.slug}>
+          <Body slug={challenge.slug} detail={detail} />
+        </MaintenanceStartGuard>
       )}
     </div>
   );

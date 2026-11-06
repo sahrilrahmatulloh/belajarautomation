@@ -3,7 +3,10 @@
 import { useState, useTransition } from "react";
 
 import { revealTestCase, submitTestCaseCheck } from "@/app/playground/[slug]/actions";
+import PendingSubmitNotice from "@/components/maintenance/PendingSubmitNotice";
+import { useProtectedSubmit } from "@/components/maintenance/useProtectedSubmit";
 import { recordChallengeAttempt } from "@/lib/challengeAttempts";
+import { useChallengeDraft } from "@/lib/challengeDrafts";
 import { ChallengeScore, PublicChallengeDetail, TestCaseReveal } from "@/types/ChallengeDetail";
 
 import ResultSummary from "./ResultSummary";
@@ -23,7 +26,9 @@ const primaryButton =
   "min-h-11 w-full rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground transition-colors enabled:hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50";
 
 export default function TestCaseWorkspace({ slug, data }: { slug: string; data: TestCaseData }) {
-  const [answer, setAnswer] = useState("");
+  const draft = useChallengeDraft(slug, "", () => "jawaban test case tertulis");
+  const answer = draft.state;
+  const setAnswer = draft.setState;
   const [reveal, setReveal] = useState<TestCaseReveal | null>(null);
   const [checked, setChecked] = useState<string[]>([]);
   const [outcome, setOutcome] = useState<{ result: ChallengeScore; xp: number } | null>(null);
@@ -53,11 +58,14 @@ export default function TestCaseWorkspace({ slug, data }: { slug: string; data: 
       const result = await submitTestCaseCheck(slug, checked);
       if (!result) return false;
       setOutcome({ result, xp: recordChallengeAttempt(slug, "test-case", result) });
+      draft.clear();
       return true;
     });
 
+  const protectedSubmitAnswer = useProtectedSubmit(draft, submitAnswer);
+
   const retry = () => {
-    setAnswer("");
+    draft.clear();
     setReveal(null);
     setChecked([]);
     setOutcome(null);
@@ -161,7 +169,8 @@ export default function TestCaseWorkspace({ slug, data }: { slug: string; data: 
           />
 
           {failed && <SubmitError />}
-          <button type="button" disabled={!answer.trim() || isPending} onClick={submitAnswer} className={primaryButton}>
+          {draft.isPendingSubmit && <PendingSubmitNotice />}
+          <button type="button" disabled={!answer.trim() || isPending || draft.isPendingSubmit} onClick={protectedSubmitAnswer} className={primaryButton}>
             {isPending ? "Mengirim..." : "Kirim jawaban"}
           </button>
         </section>

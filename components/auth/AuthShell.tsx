@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import MaintenanceBanner from "@/components/maintenance/MaintenanceBanner";
 import { DEFAULT_THEME_ID, getTheme } from "@/data/themes";
 
 interface AuthShellProps {
@@ -42,7 +43,9 @@ export default function AuthShell({
       </aside>
 
       {/* Form */}
-      <main className="flex min-w-0 flex-col px-4 py-6 sm:px-8">
+      <div className="flex min-w-0 flex-col">
+      <MaintenanceBanner />
+      <main className="flex min-w-0 flex-1 flex-col px-4 py-6 sm:px-8">
         <Link
           href="/"
           className="flex w-fit items-center gap-3"
@@ -72,6 +75,7 @@ export default function AuthShell({
           </div>
         </div>
       </main>
+      </div>
     </div>
   );
 }
