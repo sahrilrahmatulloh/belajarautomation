@@ -45,3 +45,8 @@ export function formatMaintenanceTime(iso: string) {
 export function maintenanceAnnouncementBody(window: Pick<MaintenanceWindow, "startAt" | "estimatedEndAt" | "message">) {
   return `Situs tidak dapat diakses mulai ${formatMaintenanceTime(window.startAt)} sampai sekitar ${formatMaintenanceTime(window.estimatedEndAt)}. ${window.message}`;
 }
+
+// Pesan untuk pengguna yang mencoba masuk selama maintenance Aktif: alasan dan perkiraan selesai.
+export function maintenanceLoginNotice(window: Pick<MaintenanceWindow, "estimatedEndAt" | "message">) {
+  return `Mohon maaf, belajarautomation.com sedang dalam maintenance. ${window.message} Perkiraan selesai ${formatMaintenanceTime(window.estimatedEndAt)}. Silakan masuk kembali setelah maintenance selesai.`;
+}
