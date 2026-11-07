@@ -9,7 +9,7 @@
 // Global (#51) tetapi di dalam 50 besar tab Apprentice (#36), dan tab
 // Apprentice berisi lebih dari 50 orang.
 
-import { DEFAULT_AVATAR_ID } from "@/data/avatars";
+import { AVATARS, DEFAULT_AVATAR_ID } from "@/data/avatars";
 
 export interface LeaderboardUser {
   id: string;
@@ -68,7 +68,8 @@ export const DUMMY_LEADERBOARD_USERS: LeaderboardUser[] = [...VISIBLE_XP, ...HID
     // Setiap pengguna ke-9 memilih profil privat.
     isProfilePublic: index % 9 !== 8,
     totalXp,
-    avatarId: DEFAULT_AVATAR_ID,
+    // Avatar bervariasi agar leaderboard dummy menampilkan seluruh koleksi.
+    avatarId: AVATARS[index % AVATARS.length]?.id ?? DEFAULT_AVATAR_ID,
     showOnLeaderboard: index < VISIBLE_XP.length,
   })
 );

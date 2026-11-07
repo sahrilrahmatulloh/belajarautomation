@@ -71,13 +71,14 @@ export default function ProfileHeader({
           di kartu lebar dibatasi agar teks tidak menimpa ilustrasi di sisi kanan. */}
       <div className="flex flex-col gap-5 p-5 sm:p-6 @2xl:max-w-[68%]">
         <div className={`flex min-w-0 items-center gap-4 sm:gap-5 ${isOwner ? "pr-12 @2xl:pr-0" : ""}`}>
-          <div className="shrink-0 overflow-hidden rounded-2xl bg-white p-1 shadow-lg">
+          {/* Bingkai bulat mengikuti bentuk avatar kucing. */}
+          <div className="shrink-0 overflow-hidden rounded-full bg-white p-1 shadow-lg">
             <Image
               src={avatarImage}
               alt={`Avatar ${avatarName}`}
               width={112}
               height={112}
-              className="h-20 w-20 sm:h-24 sm:w-24"
+              className="h-20 w-20 rounded-full sm:h-24 sm:w-24"
             />
           </div>
           <div className="min-w-0">

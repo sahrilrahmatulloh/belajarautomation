@@ -9,6 +9,16 @@
 - Menambahkan pengaturan Informasi Profil: nama tampilan, Tentang saya (maksimal 160 karakter, tautan http/https dapat diklik), username dengan jeda 30 hari, dan ganti email dengan konfirmasi ke email lama dan baru (FR-13).
 - Foto profil diganti lewat tab Kustomisasi; isian "Role" teks bebas di Pengaturan dihapus (FR-13).
 
+### Perubahan di Versi 2.23
+- Rilis awal avatar menjadi 8 kucing gaya Basic: Kucing Putih dan Kucing Oren gratis; Hitam, Tuxedo, Abu-abu, Coklat, Corak Tiga, dan Siam terbuka di Pro dan Premium (FR-12).
+- Kucing Putih menjadi avatar bawaan pengguna baru (FR-12).
+- Koleksi avatar dikelompokkan per gaya dengan chip; gaya yang belum punya gambar tampil "Segera hadir" (FR-13).
+- Filter kepemilikan di Kustomisasi menjadi tombol ikon dengan dropdown (FR-13).
+- Bingkai avatar di header profil dan pratinjau berbentuk bulat (FR-13).
+- Saat development, pemeriksaan lokal cukup lint, build, dan test terkait; seluruh test end-to-end dijalankan CI, sebelum UAT, dan untuk regresi (Bagian 13.4).
+- Bagian "Digunakan saat ini" di Kustomisasi dihapus; pilihan aktif ditandai pada kartu koleksi dan tombol simpan berada di bawah pratinjau (FR-13).
+- Menetapkan 9 gaya avatar: Basic, Bug Hunter, Cyberpunk, Wizard, Driver Formula, Space Explorer, Ninja, Knight, dan Master Chef. Gaya kostum berlaku untuk semua jenis kucing dan terbuka di Pro dan Premium (FR-12).
+
 ### Perubahan di Versi 2.22
 - Menetapkan aturan username: 3–20 karakter, huruf kecil, angka, dan garis bawah, tidak diawali angka, bukan nama cadangan, dan dapat diganti dengan jeda 30 hari (FR-13).
 - Pendaftar dengan email mengisi username di form daftar; akun aktif setelah email diverifikasi (Bagian 4.5).
@@ -1082,11 +1092,33 @@ Memberikan identitas brand yang mudah dikenali dan sarana ekspresi diri pengguna
 
 ### Avatar kucing
 - Avatar adalah foto profil pengguna berupa ilustrasi kucing.
-- Tersedia beberapa **jenis kucing** agar pilihan tidak monoton, misalnya kucing putih, oren-putih, hitam-putih, dan abu-abu. Setiap jenis dapat memiliki beberapa **gaya** (mis. Basic, Developer, Scholar).
+- Tersedia beberapa **jenis kucing** agar pilihan tidak monoton (daftarnya di Rilis awal). Setiap jenis dapat memiliki beberapa **gaya**.
+- Avatar = satu jenis kucing dengan satu gaya, mis. "Kucing Tuxedo Ninja".
 - Kucing putih Basic menjadi avatar bawaan setiap pengguna baru.
 - Semua avatar memakai gaya ilustrasi yang sama dengan maskot resmi agar terasa satu keluarga.
 - Avatar tampil di header, halaman profil, leaderboard, dan Welcome Banner.
 - Avatar tidak menggantikan emblem rank.
+
+### Gaya avatar
+Sembilan gaya berikut berlaku untuk semua jenis kucing:
+
+| Gaya | Ciri kostum | Akses |
+|---|---|---|
+| Basic | Tanpa kostum | Mengikuti jenis kucing (lihat Rilis awal) |
+| Bug Hunter | Topi detektif, kaca pembesar, dan jaring serangga | Pro dan Premium |
+| Cyberpunk | Visor dan hoodie bercahaya neon | Pro dan Premium |
+| Wizard | Topi dan jubah penyihir berbintang | Pro dan Premium |
+| Driver Formula | Helm balap | Pro dan Premium |
+| Space Explorer | Helm dan baju astronot | Pro dan Premium |
+| Ninja | Ikat kepala, pakaian ninja, dan katana | Pro dan Premium |
+| Knight | Helm dan zirah ksatria | Pro dan Premium |
+| Master Chef | Topi dan seragam koki | Pro dan Premium |
+
+Ketentuan:
+- Semua gaya kostum berbayar, termasuk untuk Kucing Putih dan Kucing Oren yang gaya Basic-nya gratis.
+- Gambar ditambahkan bertahap. Koleksi hanya menampilkan kombinasi jenis dan gaya yang gambarnya sudah tersedia.
+- Kostum tetap mengikuti Aturan desain di bawah, termasuk tidak memakai kombinasi warna identitas rank (mis. crimson dengan gold milik Master).
+- Nama gaya ditulis dalam bentuk di atas di seluruh antarmuka.
 
 Setiap avatar memiliki:
 - ID unik, nama, jenis kucing, dan gaya.
@@ -1105,8 +1137,16 @@ Setiap tema memiliki:
 - Tingkat akses: gratis atau berbayar (Pro/Premium).
 
 ### Rilis awal
-- **5 avatar** dan **5 tema banner**.
-- Komposisi gratis dan berbayar ditetapkan di Bagian 12. Minimal 1 avatar dan 1 tema tersedia gratis.
+- **8 avatar** dan **5 tema banner**.
+- Avatar, semuanya gaya Basic:
+
+| Avatar | Akses |
+|---|---|
+| Kucing Putih (bawaan) | Gratis |
+| Kucing Oren | Gratis |
+| Kucing Hitam, Kucing Tuxedo, Kucing Abu-abu, Kucing Coklat, Kucing Corak Tiga, Kucing Siam | Pro dan Premium |
+
+- Komposisi gratis dan berbayar untuk tema ditetapkan di Bagian 12. Minimal 1 avatar dan 1 tema tersedia gratis.
 - Jumlah ini adalah rilis awal, bukan batas permanen.
 
 ### Akses
@@ -1166,10 +1206,12 @@ Ketentuan:
 
 ### Kustomisasi
 - Dua bagian: **Avatar** dan **Tema Banner**.
-- Filter koleksi: Semua, Dimiliki, Terkunci.
-- Avatar dikelompokkan per jenis kucing.
+- Filter koleksi (Semua, Dimiliki, Terkunci) berupa tombol ikon filter di kanan judul koleksi, yang membuka dropdown. Tombol diberi penanda titik saat filter selain Semua aktif.
+- Avatar dikelompokkan per **gaya** (FR-12) dengan chip yang dapat digeser: Basic, Bug Hunter, Cyberpunk, Wizard, Driver Formula, Space Explorer, Ninja, Knight, dan Master Chef. Chip awal adalah gaya avatar yang sedang dipakai.
+- Setiap gaya menampilkan grid jenis kucing yang gambarnya sudah tersedia. Gaya yang belum punya gambar tetap tampil dengan keterangan "Segera hadir".
+- Filter Semua, Dimiliki, dan Terkunci berlaku di dalam gaya yang dipilih.
 - Preview profil memperlihatkan hasil pilihan sebelum disimpan.
-- Bagian "Digunakan saat ini" menampilkan avatar dan tema aktif.
+- Avatar dan tema yang sedang dipakai ditandai "Digunakan" pada kartu koleksi. Tombol "Simpan Pilihan" berada di bawah pratinjau profil.
 - Item terkunci menampilkan cara memperolehnya (mis. "Tersedia di Pro dan Premium").
 
 ### Username
@@ -2171,7 +2213,7 @@ Hal berikut harus diputuskan sebelum implementasi fitur terkait mencapai tahap p
 ## Membership
 - Harga final Pro dan Premium.
 - Daftar course gratis dan premium.
-- Daftar avatar dan tema per paket.
+- Daftar tema per paket (daftar avatar sudah ditetapkan di FR-12).
 - Masa berlaku dan ketentuan penggunaan kredit.
 - Kebijakan akses untuk course premium baru dan produk yang dihentikan.
 - Kebijakan harga upgrade dari Pro ke Premium.
@@ -2184,8 +2226,7 @@ Hal berikut harus diputuskan sebelum implementasi fitur terkait mencapai tahap p
 ## Maskot, Avatar, Tema, dan Achievement
 - Nama maskot resmi.
 - Varian ringkas emblem untuk ukuran kecil.
-- Daftar 5 avatar dan 5 tema rilis awal, beserta komposisi gratis dan berbayar.
-- Jenis kucing yang tersedia sebagai avatar.
+- Daftar 5 tema rilis awal, beserta komposisi gratis dan berbayar (daftar avatar sudah ditetapkan di FR-12).
 - Apakah avatar atau tema dapat dibeli secara individual di luar membership.
 - Apakah avatar dan tema baru dirilis secara berkala.
 - Daftar final achievement.
@@ -2249,7 +2290,9 @@ Aturan:
 - Repository memiliki test end-to-end menggunakan Playwright untuk alur utama aplikasi.
 - GitHub Actions menjalankan lint, build (termasuk script pengecekan data), dan test end-to-end pada setiap pull request ke `develop` dan setiap push ke `develop`.
 - Pull request hanya boleh di-merge jika seluruh pemeriksaan CI lulus.
-- Setiap fitur baru atau perubahan perilaku wajib menambah atau memperbarui test yang relevan.
+- Setiap fitur baru atau perubahan perilaku wajib menambah atau memperbarui test yang relevan; test ditulis bersama fiturnya.
+- Saat development, pemeriksaan lokal sebelum pull request cukup lint, build, dan test yang berhubungan dengan perubahan. Seluruh test end-to-end dijalankan oleh CI di setiap pull request.
+- Seluruh test end-to-end (termasuk build di luar DEV) dijalankan di lokal sebelum perubahan naik ke UAT dan sebagai uji regresi.
 - Test ditulis dengan pola Page Object Model, locator berbasis peran dan label yang dapat diakses, serta tanpa jeda waktu tetap (hard wait).
 - Test otomatis tidak menggantikan UAT; pemilik produk tetap melakukan UAT sebelum perubahan naik ke `main`.
 
