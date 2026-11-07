@@ -83,6 +83,7 @@ Aturan:
 - Kunci rahasia (secret key atau service_role) tidak pernah ditulis di repository, `.env.example`, atau variabel berawalan `NEXT_PUBLIC_`.
 - Migrasi yang sudah diterapkan tidak diubah. Perubahan berikutnya ditulis sebagai file migrasi baru.
 - Migrasi diterapkan ke DEV lebih dulu, lalu UAT, lalu Production.
+- Katalog avatar dan tema di database (`private.cosmetic_items`) harus sama dengan `data/avatars.ts` dan `data/themes.ts`. Menambah atau mengubah avatar/tema berarti juga menambah migrasi baru; `npm run check:cosmetics` (otomatis saat build) gagal bila keduanya berbeda.
 
 ## Blog
 

@@ -7,6 +7,7 @@ import { Eye } from "lucide-react";
 import { getPublicProfile } from "@/data/dummy/publicProfiles";
 import { DUMMY_PROFILE } from "@/data/dummy/profile";
 import { useSession } from "@/lib/session";
+import { useAppearance } from "@/lib/useAppearance";
 
 import FeaturedAchievements from "./FeaturedAchievements";
 import LearningProgress from "./LearningProgress";
@@ -31,6 +32,10 @@ export default function ProfilePage() {
   const isRealAccount = session?.source === "supabase";
   const username = isRealAccount ? (session.username ?? "") : profile.username;
   const bio = isRealAccount ? (session.bio ?? "") : profile.bio;
+  const appearance = useAppearance();
+  const avatarImage = isRealAccount ? appearance.avatar.image : profile.avatarImage;
+  const avatarName = isRealAccount ? appearance.avatar.name : profile.avatarName;
+  const themeImage = isRealAccount ? appearance.theme.image : profile.themeImage;
   const { extraXp, extraLessons } = useLessonProgress();
   const xp = profile.xp + extraXp;
   const lessons = profile.lessons + extraLessons;
@@ -61,17 +66,17 @@ export default function ProfilePage() {
         displayName={displayName}
         username={username}
         bio={bio}
-        avatarImage={profile.avatarImage}
-        avatarName={profile.avatarName}
-        themeImage={profile.themeImage}
+        avatarImage={avatarImage}
+        avatarName={avatarName}
+        themeImage={themeImage}
         xp={xp}
         isOwner
         shareAction={
           <ShareProfileDialog
             displayName={displayName}
             username={profile.username}
-            avatarImage={profile.avatarImage}
-            themeImage={profile.themeImage}
+            avatarImage={avatarImage}
+            themeImage={themeImage}
             xp={xp}
             lessons={lessons}
             challenges={profile.challenges}

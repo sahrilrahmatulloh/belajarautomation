@@ -1,8 +1,10 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { CheckCircle2, RotateCcw, XCircle } from "lucide-react";
 
-import { ACTIVE_AVATAR } from "@/data/dummy/appearance";
+import { useAppearance } from "@/lib/useAppearance";
 import { ChallengeScore } from "@/types/ChallengeDetail";
 
 interface ResultSummaryProps {
@@ -14,6 +16,7 @@ interface ResultSummaryProps {
 }
 
 export default function ResultSummary({ result, xp, detail, onRetry }: ResultSummaryProps) {
+  const { avatar } = useAppearance();
   const Icon = result.passed ? CheckCircle2 : XCircle;
 
   return (
@@ -23,7 +26,7 @@ export default function ResultSummary({ result, xp, detail, onRetry }: ResultSum
         result.passed ? "border-emerald-500/30 bg-emerald-500/10" : "border-amber-500/30 bg-amber-500/10"
       }`}
     >
-      <Image src={ACTIVE_AVATAR.image} alt="" width={64} height={64} className="h-16 w-16 shrink-0" />
+      <Image src={avatar.image} alt="" width={64} height={64} className="h-16 w-16 shrink-0" />
 
       <div className="min-w-0 flex-1 basis-48">
         <h2

@@ -1,9 +1,13 @@
 # BELAJARAUTOMATION.COM
 ## Product Requirements Document (PRD)
-**Versi:** 2.24  
+**Versi:** 2.25  
 **Status:** Draft — Acuan Pengembangan Produk  
 **Platform:** Web Application  
 **Target Pengguna:** Pemula hingga praktisi QA, Software Testing, dan Programming
+
+### Perubahan di Versi 2.25
+- Tombol "Simpan Pilihan" di Kustomisasi menyimpan avatar dan tema ke akun; pilihan tampil di semua halaman. Akun baru memakai Kucing Putih dan tema bawaan (FR-12, FR-13).
+- Katalog avatar dan tema disimpan di database, dan hak pakainya diperiksa di server. Sampai hak akses paket tersedia (Fase 5), item berbayar tidak dapat dipakai akun sungguhan (FR-12).
 
 ### Perubahan di Versi 2.24
 - Menambahkan pengaturan Informasi Profil: nama tampilan, Tentang saya (maksimal 160 karakter, tautan http/https dapat diklik), username dengan jeda 30 hari, dan ganti email dengan konfirmasi ke email lama dan baru (FR-13).
@@ -1211,6 +1215,7 @@ Ketentuan:
 - Setiap gaya menampilkan grid jenis kucing yang gambarnya sudah tersedia. Gaya yang belum punya gambar tetap tampil dengan keterangan "Segera hadir".
 - Filter Semua, Dimiliki, dan Terkunci berlaku di dalam gaya yang dipilih.
 - Preview profil memperlihatkan hasil pilihan sebelum disimpan.
+- "Simpan Pilihan" menyimpan avatar dan tema ke akun. Setelah disimpan, pilihan tampil di header profil, menu profil, Welcome Banner, Playground, dan kartu "Posisi kamu" di leaderboard. Akun demo di DEV hanya melihat pratinjau.
 - Avatar dan tema yang sedang dipakai ditandai "Digunakan" pada kartu koleksi. Tombol "Simpan Pilihan" berada di bawah pratinjau profil.
 - Item terkunci menampilkan cara memperolehnya (mis. "Tersedia di Pro dan Premium").
 

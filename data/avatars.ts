@@ -1,7 +1,8 @@
 import { CatAvatar } from "@/types/Appearance";
 
 // Avatar kucing (PRD FR-12). Menambah avatar baru cukup dengan menaruh PNG di
-// public/profile, menjalankan npm run optimize:images -- avatars, lalu menambah satu entri.
+// public/profile, menjalankan npm run optimize:images -- avatars, menambah satu entri di sini,
+// lalu menambah barisnya di private.cosmetic_items lewat migrasi baru (dicek npm run check:cosmetics).
 // Rilis awal: 8 avatar gaya Basic. Putih dan Oren gratis; enam lainnya terbuka di Pro dan
 // Premium (keputusan pemilik, PRD v2.23).
 // Kucing Putih Basic adalah avatar bawaan pengguna baru.

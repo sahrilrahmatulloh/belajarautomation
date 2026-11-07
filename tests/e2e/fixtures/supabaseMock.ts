@@ -27,6 +27,8 @@ export interface MockAccount {
   bio?: string;
   usernameChangedAt?: string | null;
   newEmail?: string | null;
+  avatarId?: string | null;
+  themeId?: string | null;
 }
 
 export const MOCK_STUDENT: MockAccount = {
@@ -125,6 +127,8 @@ export async function mockSupabase(page: Page, options: MockOptions = {}) {
           username: signedIn.username,
           bio: signedIn.bio ?? "",
           username_changed_at: signedIn.usernameChangedAt ?? null,
+          avatar_id: signedIn.avatarId ?? null,
+          theme_id: signedIn.themeId ?? null,
           status: signedIn.status ?? "active",
           roles: signedIn.roles ?? ["student"],
         })
@@ -135,6 +139,13 @@ export async function mockSupabase(page: Page, options: MockOptions = {}) {
       if (!signedIn) return route.fulfill(dbError("tidak_login"));
       signedIn.name = String(body?.new_display_name ?? "").trim();
       signedIn.bio = String(body?.new_bio ?? "").trim();
+      return route.fulfill({ status: 204, body: "" });
+    }
+
+    if (path === "/rest/v1/rpc/set_appearance") {
+      if (!signedIn) return route.fulfill(dbError("tidak_login"));
+      signedIn.avatarId = String(body?.new_avatar_id ?? "");
+      signedIn.themeId = String(body?.new_theme_id ?? "");
       return route.fulfill({ status: 204, body: "" });
     }
 

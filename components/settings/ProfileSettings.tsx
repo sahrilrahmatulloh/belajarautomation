@@ -6,7 +6,7 @@ import { AlertCircle, AtSign, CheckCircle2, Mail, UserRound } from "lucide-react
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
-import { ACTIVE_AVATAR } from "@/data/dummy/appearance";
+import { useAppearance } from "@/lib/useAppearance";
 import {
   BIO_MAX,
   changeEmail,
@@ -62,6 +62,7 @@ const SAVE_BUTTON =
 // Pengaturan Informasi Profil (PRD FR-13): nama tampilan, Tentang saya, username, dan email.
 // Hanya akun sungguhan (Supabase) yang dapat menyimpan; akun demo melihat isian tanpa tombol aktif.
 export default function ProfileSettings() {
+  const { avatar } = useAppearance();
   const session = useSession();
   const isRealAccount = session?.source === "supabase";
 
@@ -179,7 +180,7 @@ export default function ProfileSettings() {
 
       <div className="mt-6 flex items-center gap-4">
         <Avatar className="h-20 w-20">
-          <AvatarImage src={ACTIVE_AVATAR.image} alt="Foto profil" />
+          <AvatarImage src={avatar.image} alt="Foto profil" />
           <AvatarFallback>{avatarInitial}</AvatarFallback>
         </Avatar>
         <div>
