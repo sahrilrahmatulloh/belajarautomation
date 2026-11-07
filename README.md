@@ -92,11 +92,19 @@ Artikel disimpan sebagai file MDX di `content/blog/`, dan menambah artikel tidak
 
 Test end-to-end memakai [Playwright](https://playwright.dev) dan berjalan di dua project: `desktop-chromium` dan `mobile-chromium` (Pixel 7). CI GitHub Actions menjalankan lint, build, dan test ini pada setiap pull request dan push ke `develop`.
 
+Kapan menjalankan apa (PRD 13.4):
+
+| Tahap | Di lokal | Otomatis |
+|---|---|---|
+| Development (PR ke `develop`) | `npm run lint`, `npm run build`, dan spec yang berhubungan dengan perubahan | CI menjalankan lint, build, seluruh e2e, dan non-DEV di setiap PR |
+| Sebelum naik ke UAT dan regresi | `npm run test:e2e` dan `npm run test:e2e:non-dev` | — |
+
 Menjalankan di lokal:
 
 ```bash
 npx playwright install chromium   # sekali saja, setelah npm install
-npm run test:e2e                  # semua test
+npm run test:e2e                  # semua test (sebelum UAT dan regresi)
+npx playwright test tests/e2e/specs/profile.spec.ts   # satu spec, untuk development
 npm run test:e2e:non-dev          # perilaku di luar DEV, dengan build UAT sendiri
 npm run test:e2e:ui               # mode UI untuk men-debug test
 npm run test:e2e:report           # membuka laporan HTML test terakhir

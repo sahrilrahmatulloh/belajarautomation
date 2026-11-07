@@ -10,9 +10,8 @@ export class ProfilePage extends BasePage {
   readonly viewAsPublicLink: Locator;
   readonly stats: Locator;
   readonly featuredAchievements: Locator;
-  readonly activeAppearance: Locator;
-  readonly usedAvatar: Locator;
-  readonly usedTheme: Locator;
+  readonly preview: Locator;
+  readonly saveAppearanceButton: Locator;
   readonly activitySummary: Locator;
   readonly activityRows: Locator;
   readonly xpChart: Locator;
@@ -31,9 +30,8 @@ export class ProfilePage extends BasePage {
     this.viewAsPublicLink = page.getByRole("link", { name: "Lihat sebagai publik" });
     this.stats = page.getByRole("region", { name: "Statistik belajar" });
     this.featuredAchievements = page.getByRole("region", { name: "Achievement Unggulan" });
-    this.activeAppearance = page.getByRole("region", { name: "Digunakan Saat Ini" });
-    this.usedAvatar = this.activeAppearance.getByRole("button", { name: /^Avatar/ });
-    this.usedTheme = this.activeAppearance.getByRole("button", { name: /^Tema/ });
+    this.preview = page.getByRole("region", { name: "Pratinjau Profil" });
+    this.saveAppearanceButton = this.preview.getByRole("button", { name: "Simpan Pilihan" });
     this.activitySummary = page.getByRole("region", { name: /^Ringkasan \d+ hari terakhir$/ });
     this.activityRows = page.getByRole("region", { name: "Riwayat aktivitas" }).getByRole("listitem");
     this.xpChart = page.getByRole("region", { name: "XP 7 Hari Terakhir" });
