@@ -1,9 +1,13 @@
 # BELAJARAUTOMATION.COM
 ## Product Requirements Document (PRD)
-**Versi:** 2.19  
+**Versi:** 2.20  
 **Status:** Draft — Acuan Pengembangan Produk  
 **Platform:** Web Application  
 **Target Pengguna:** Pemula hingga praktisi QA, Software Testing, dan Programming
+
+### Perubahan di Versi 2.20
+- Menetapkan PostgreSQL lewat Supabase di region Singapura, dengan rancangan tabel, indeks, Row Level Security, dan tahapan pembangunan di `docs/DATABASE.md` (Bagian 6.3).
+- Menambahkan target performa dan aturan agar situs tetap cepat untuk 1 juta pengguna terdaftar (Bagian 8.2).
 
 ### Perubahan di Versi 2.19
 - Menambahkan masuk dan daftar dengan Google (Bagian 4.5). Tombol tampil sekarang dengan keterangan "Segera hadir" dan aktif setelah backend Supabase Auth tersedia.
@@ -1665,7 +1669,9 @@ Tanggung jawab:
 - Penyimpanan preferensi pengguna.
 
 ## 6.3 Database
-Backend memakai Supabase: Auth untuk autentikasi, Postgres untuk database dengan Row Level Security sebagai penegak hak akses, dan Storage untuk gambar konten serta file produk.
+Backend memakai Supabase: Auth untuk autentikasi, Postgres untuk database dengan Row Level Security sebagai penegak hak akses, dan Storage untuk gambar konten serta file produk. Region Singapura (`ap-southeast-1`), yang paling dekat dengan pengguna Indonesia.
+
+Rancangan tabel, indeks, aturan akses, perkiraan beban, dan tahapan pembangunan ada di `docs/DATABASE.md`. Jika dokumen tersebut bertentangan dengan PRD, PRD yang berlaku.
 
 Database menjadi sumber data persisten untuk:
 - Pengguna.
@@ -1795,6 +1801,22 @@ Aplikasi harus dapat digunakan pada desktop, tablet, dan perangkat mobile.
 - Gambar produk dan materi perlu dioptimalkan.
 - Embed video pihak ketiga dimuat hanya saat pengguna mengklik putar.
 - Proses yang berat harus dipertimbangkan untuk dijalankan secara asinkron jika diperlukan.
+- Halaman publik (blog, katalog, detail course, lesson, roadmap, detail latihan) disiapkan saat build dan disajikan dari CDN. Data pribadi di halaman tersebut diambil terpisah agar halaman tetap bisa di-cache.
+- Total XP, rank, dan jumlah materi selesai disimpan sebagai ringkasan yang diperbarui saat XP bertambah, bukan dihitung ulang dari seluruh riwayat setiap kali halaman dibuka.
+- Leaderboard dibaca dari snapshot yang diperbarui berkala (7.9), bukan mengurutkan seluruh pengguna setiap kali dibuka.
+- Daftar panjang memakai pagination dan tidak memuat seluruh data ke browser.
+- Splash screen tampil sekali per browser, bukan setiap kali membuka tab baru.
+
+### Target
+Diukur untuk 1 juta pengguna terdaftar, dengan perkiraan beban di `docs/DATABASE.md` Bagian 2.
+
+| Ukuran | Target |
+|---|---|
+| LCP halaman publik (HP kelas menengah, 4G) | ≤ 2,5 detik |
+| Waktu respons halaman statis | ≤ 100 ms dari CDN |
+| Respons API (p95) | ≤ 300 ms |
+| Kueri database (p95) | ≤ 50 ms |
+| JavaScript halaman publik (terkompres) | ≤ 250 KB |
 
 ## 8.3 Security
 - Autentikasi dan otorisasi harus diterapkan sesuai kebutuhan.
@@ -2091,7 +2113,7 @@ Hal berikut harus diputuskan sebelum implementasi fitur terkait mencapai tahap p
 - Audit stack saat ini.
 - Strategi autentikasi (detail implementasi di Supabase Auth).
 - Desain API.
-- Struktur database final.
+- Struktur database final: rancangan di `docs/DATABASE.md`, menunggu persetujuan pemilik.
 - Strategi penyimpanan dan pengamanan file.
 - Strategi deployment, logging, backup, dan monitoring.
 
