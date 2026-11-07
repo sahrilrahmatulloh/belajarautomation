@@ -10,10 +10,13 @@ export async function GET(request: NextRequest) {
   const nextParam = url.searchParams.get("next") ?? "/";
   const next = isSafeTarget(nextParam) ? nextParam : "/";
   const isRecovery = next === "/reset-password";
+  // Konfirmasi ganti email (PRD FR-13) kembali ke Pengaturan, karena pengguna masih login.
+  const isEmailChange = next.startsWith("/settings");
   const loginWith = (reason: string) => NextResponse.redirect(new URL(`/login?auth=${reason}`, url.origin));
 
   // Tautan kedaluwarsa atau sudah dipakai.
   if (url.searchParams.get("error") || url.searchParams.get("error_code")) {
+    if (isEmailChange) return NextResponse.redirect(new URL("/settings?email=gagal", url.origin));
     return loginWith(isRecovery ? "reset-invalid" : "link-invalid");
   }
 
@@ -23,6 +26,10 @@ export async function GET(request: NextRequest) {
     const { error } = await supabase.auth.exchangeCodeForSession(code);
     if (!error) return NextResponse.redirect(new URL(next, url.origin));
   }
+
+  // Ganti email memakai dua tautan (email lama dan baru); tautan pertama tidak selalu
+  // membawa kode sesi, jadi tetap kembali ke Pengaturan.
+  if (isEmailChange) return NextResponse.redirect(new URL(next, url.origin));
 
   // Penukaran gagal biasanya karena tautan dibuka di browser lain. Untuk
   // verifikasi, email tetap sudah terverifikasi, jadi cukup masuk ulang.

@@ -27,6 +27,10 @@ export default function ProfilePage() {
   // Nama mengikuti akun yang masuk, agar sama di semua mode (PRD FR-15).
   const session = useSession();
   const displayName = session?.name ?? profile.displayName;
+  // Akun sungguhan memakai username dan Tentang saya miliknya (PRD FR-13); akun demo memakai data dummy.
+  const isRealAccount = session?.source === "supabase";
+  const username = isRealAccount ? (session.username ?? "") : profile.username;
+  const bio = isRealAccount ? (session.bio ?? "") : profile.bio;
   const { extraXp, extraLessons } = useLessonProgress();
   const xp = profile.xp + extraXp;
   const lessons = profile.lessons + extraLessons;
@@ -55,8 +59,8 @@ export default function ProfilePage() {
     <div className="mx-auto max-w-6xl space-y-6">
       <ProfileHeader
         displayName={displayName}
-        username={profile.username}
-        bio={profile.bio}
+        username={username}
+        bio={bio}
         avatarImage={profile.avatarImage}
         avatarName={profile.avatarName}
         themeImage={profile.themeImage}

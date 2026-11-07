@@ -6,6 +6,15 @@ import { Page, Request } from "@playwright/test";
 export const SUPABASE_TEST_URL = "https://supabase-uji.invalid";
 export const SUPABASE_TEST_KEY = "sb_publishable_uji";
 
+// Masuk lewat halaman login dengan Supabase tiruan yang sudah dipasang.
+export async function signInWithMock(page: Page, account: MockAccount) {
+  await page.goto("/login");
+  await page.getByLabel("Email").fill(account.email);
+  await page.getByRole("textbox", { name: "Password" }).fill(account.password);
+  await page.getByRole("button", { name: "Masuk", exact: true }).click();
+  await page.waitForURL("/");
+}
+
 export interface MockAccount {
   id: string;
   email: string;
@@ -15,6 +24,9 @@ export interface MockAccount {
   roles?: ("student" | "creator" | "reviewer" | "admin")[];
   status?: "active" | "deactivated";
   emailConfirmed?: boolean;
+  bio?: string;
+  usernameChangedAt?: string | null;
+  newEmail?: string | null;
 }
 
 export const MOCK_STUDENT: MockAccount = {
@@ -31,6 +43,10 @@ interface MockOptions {
   usernames?: Record<string, "tersedia" | "format" | "cadangan" | "dipakai">;
 }
 
+function dbError(message: string, details: string | null = null) {
+  return { status: 400, contentType: "application/json", body: JSON.stringify({ code: "P0001", message, details, hint: null }) };
+}
+
 function base64Url(value: object) {
   return Buffer.from(JSON.stringify(value)).toString("base64url");
 }
@@ -42,6 +58,7 @@ function userJson(account: MockAccount) {
     role: "authenticated",
     email: account.email,
     email_confirmed_at: account.emailConfirmed === false ? null : "2026-11-01T00:00:00Z",
+    new_email: account.newEmail ?? undefined,
     app_metadata: { provider: "email", providers: ["email"] },
     user_metadata: { full_name: account.name },
     created_at: "2026-11-01T00:00:00Z",
@@ -95,7 +112,8 @@ export async function mockSupabase(page: Page, options: MockOptions = {}) {
       if (account.emailConfirmed === false) {
         return route.fulfill(authError(400, "email_not_confirmed", "Email not confirmed"));
       }
-      signedIn = account;
+      // Salinan, agar perubahan profil di satu test tidak bocor ke test lain.
+      signedIn = { ...account };
       return route.fulfill(json(sessionJson(account)));
     }
 
@@ -105,10 +123,34 @@ export async function mockSupabase(page: Page, options: MockOptions = {}) {
         json({
           display_name: signedIn.name,
           username: signedIn.username,
+          bio: signedIn.bio ?? "",
+          username_changed_at: signedIn.usernameChangedAt ?? null,
           status: signedIn.status ?? "active",
           roles: signedIn.roles ?? ["student"],
         })
       );
+    }
+
+    if (path === "/rest/v1/rpc/update_profile") {
+      if (!signedIn) return route.fulfill(dbError("tidak_login"));
+      signedIn.name = String(body?.new_display_name ?? "").trim();
+      signedIn.bio = String(body?.new_bio ?? "").trim();
+      return route.fulfill({ status: 204, body: "" });
+    }
+
+    if (path === "/rest/v1/rpc/change_username") {
+      if (!signedIn) return route.fulfill(dbError("tidak_login"));
+      const candidate = String(body?.new_username ?? "");
+      const changedAt = signedIn.usernameChangedAt ? new Date(signedIn.usernameChangedAt).getTime() : 0;
+      const nextAt = changedAt + 30 * 24 * 60 * 60 * 1000;
+      if (signedIn.username && changedAt && nextAt > Date.now()) {
+        return route.fulfill(dbError("username_jeda", new Date(nextAt).toISOString()));
+      }
+      const availability = options.usernames?.[candidate] ?? "tersedia";
+      if (availability !== "tersedia") return route.fulfill(dbError(`username_${availability}`));
+      signedIn.username = candidate;
+      signedIn.usernameChangedAt = new Date().toISOString();
+      return route.fulfill(json(new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()));
     }
 
     if (path === "/rest/v1/rpc/check_username") {
@@ -130,6 +172,7 @@ export async function mockSupabase(page: Page, options: MockOptions = {}) {
 
     if (path === "/auth/v1/user") {
       if (!signedIn) return route.fulfill(authError(401, "session_not_found", "Session not found"));
+      if (request.method() === "PUT" && typeof body?.email === "string") signedIn.newEmail = body.email;
       return route.fulfill(json(userJson(signedIn)));
     }
 

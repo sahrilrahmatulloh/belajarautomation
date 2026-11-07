@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Settings2 } from "lucide-react";
 
+import LinkifiedText from "@/components/common/LinkifiedText";
 import RankEmblem from "@/components/common/RankEmblem";
 import { getRankProgress } from "@/data/ranks";
 import { formatNumber } from "@/lib/format";
@@ -82,8 +83,12 @@ export default function ProfileHeader({
           </div>
           <div className="min-w-0">
             <h1 className="line-clamp-2 break-words text-2xl font-bold tracking-tight sm:text-3xl">{displayName}</h1>
-            <p className="truncate text-sm text-white/75">@{username}</p>
-            <p className="mt-1 line-clamp-3 text-sm leading-5 text-white/85 sm:line-clamp-2">{bio}</p>
+            {username && <p className="truncate text-sm text-white/75">@{username}</p>}
+            {bio && (
+              <p className="mt-1 line-clamp-3 break-words text-sm leading-5 text-white/85 sm:line-clamp-2">
+                <LinkifiedText text={bio} linkClassName="text-white hover:text-sky-200" />
+              </p>
+            )}
           </div>
         </div>
 
