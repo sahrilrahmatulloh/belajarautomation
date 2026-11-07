@@ -17,6 +17,11 @@ export interface Session {
   userId?: string;
   // Hanya untuk akun Supabase; kosong jika belum memilih username.
   username?: string | null;
+  // Hanya akun Supabase: Tentang saya, waktu ganti username terakhir, dan email baru
+  // yang menunggu konfirmasi.
+  bio?: string;
+  usernameChangedAt?: string | null;
+  pendingEmail?: string | null;
   name: string;
   email: string;
   // Peran utama: menentukan halaman awal setelah login.

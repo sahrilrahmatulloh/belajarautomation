@@ -1,9 +1,13 @@
 # BELAJARAUTOMATION.COM
 ## Product Requirements Document (PRD)
-**Versi:** 2.22  
+**Versi:** 2.24  
 **Status:** Draft — Acuan Pengembangan Produk  
 **Platform:** Web Application  
 **Target Pengguna:** Pemula hingga praktisi QA, Software Testing, dan Programming
+
+### Perubahan di Versi 2.24
+- Menambahkan pengaturan Informasi Profil: nama tampilan, Tentang saya (maksimal 160 karakter, tautan http/https dapat diklik), username dengan jeda 30 hari, dan ganti email dengan konfirmasi ke email lama dan baru (FR-13).
+- Foto profil diganti lewat tab Kustomisasi; isian "Role" teks bebas di Pengaturan dihapus (FR-13).
 
 ### Perubahan di Versi 2.22
 - Menetapkan aturan username: 3–20 karakter, huruf kecil, angka, dan garis bawah, tidak diawali angka, bukan nama cadangan, dan dapat diganti dengan jeda 30 hari (FR-13).
@@ -1175,6 +1179,20 @@ Ketentuan:
 - Pendaftar dengan email mengisi username di form daftar; pendaftar dengan Google memilihnya sekali setelah login (4.5).
 - Username dapat diganti dengan jeda minimal 30 hari sejak penggantian terakhir. Tautan profil dengan username lama tidak lagi berlaku.
 - Aturan ini ditegakkan di database, bukan hanya di form.
+
+### Informasi Profil (Pengaturan)
+| Isian | Aturan |
+|---|---|
+| Nama tampilan | Wajib, maksimal 100 karakter |
+| Username | Mengikuti aturan Username di atas; menampilkan tanggal paling cepat untuk mengganti lagi |
+| Tentang saya | Opsional, maksimal 160 karakter dengan penghitung karakter. Tautan yang diawali http:// atau https:// dapat diklik di profil, dibuka di tab baru, dan diberi rel "nofollow ugc"; bentuk lain tetap teks biasa |
+| Email | Tautan konfirmasi dikirim ke email lama dan email baru. Email baru berlaku setelah keduanya dikonfirmasi; selama itu tampil keterangan "Menunggu konfirmasi" |
+
+Ketentuan:
+- Foto profil adalah avatar kucing dan diganti di tab Kustomisasi (FR-12); tidak ada unggah foto.
+- Perubahan langsung tampil di header profil, menu profil, dan bagian lain yang memakai nama atau username.
+- Akun demo di DEV dapat melihat isian tetapi tidak dapat menyimpan.
+- Aturan panjang, jeda username, dan status akun ditegakkan di database.
 
 ### Profil publik
 - Profil dapat dilihat oleh pengguna lain.

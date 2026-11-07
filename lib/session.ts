@@ -90,6 +90,8 @@ function writeDemoSession(session: Session | null) {
 interface AccountRow {
   display_name: string;
   username: string | null;
+  bio?: string;
+  username_changed_at?: string | null;
   status: "active" | "deactivated";
   roles: ("student" | "creator" | "reviewer" | "admin")[];
 }
@@ -107,6 +109,9 @@ function toSession(user: User, row: AccountRow): Session {
     name: row.display_name || (user.email ?? "").split("@")[0],
     email: user.email ?? "",
     username: row.username,
+    bio: row.bio ?? "",
+    usernameChangedAt: row.username_changed_at ?? null,
+    pendingEmail: user.new_email ?? null,
     role: extraRoles[0] ?? "user",
     roles,
   };
@@ -136,6 +141,15 @@ export async function loadSupabaseAccount(user: User): Promise<AccountLoadResult
   loadedUserId = user.id;
   setSupabaseSession(session);
   return { status: "ok", session };
+}
+
+// Memuat ulang data akun setelah pengguna mengubah profil atau email.
+export async function refreshSupabaseAccount(): Promise<AccountLoadResult> {
+  const client = getSupabaseBrowserClient();
+  if (!client) return { status: "missing" };
+  const { data } = await client.auth.getUser();
+  if (!data.user) return { status: "missing" };
+  return loadSupabaseAccount(data.user);
 }
 
 function setSupabaseSession(session: Session | null) {
