@@ -1,9 +1,15 @@
 # BELAJARAUTOMATION.COM
 ## Product Requirements Document (PRD)
-**Versi:** 2.21  
+**Versi:** 2.22  
 **Status:** Draft — Acuan Pengembangan Produk  
 **Platform:** Web Application  
 **Target Pengguna:** Pemula hingga praktisi QA, Software Testing, dan Programming
+
+### Perubahan di Versi 2.22
+- Menetapkan aturan username: 3–20 karakter, huruf kecil, angka, dan garis bawah, tidak diawali angka, bukan nama cadangan, dan dapat diganti dengan jeda 30 hari (FR-13).
+- Pendaftar dengan email mengisi username di form daftar; akun aktif setelah email diverifikasi (Bagian 4.5).
+- Menambahkan lupa password dan reset password lewat tautan email (Bagian 4.5).
+- Akun demo hanya dapat dipakai di DEV, atau selama Supabase belum dipasang di lingkungan tersebut (Bagian 4.5).
 
 ### Perubahan di Versi 2.21
 - Setelah backend tersedia, isi course, lesson, dan soal kuis disimpan di database dan menjadi sumber kebenaran katalog. Halamannya tetap statis dan diperbarui per halaman saat konten diterbitkan (Bagian 6.3, 8.2, FR-16 G).
@@ -1162,6 +1168,14 @@ Ketentuan:
 - Bagian "Digunakan saat ini" menampilkan avatar dan tema aktif.
 - Item terkunci menampilkan cara memperolehnya (mis. "Tersedia di Pro dan Premium").
 
+### Username
+- 3–20 karakter: huruf kecil, angka, dan garis bawah (_). Tidak boleh diawali angka.
+- Unik tanpa membedakan huruf besar dan kecil.
+- Nama cadangan tidak dapat dipakai, mis. nama merek (belajarautomation), nama peran (admin, creator, reviewer), dan nama halaman aplikasi (login, settings, blog). Daftar lengkapnya dikelola di database.
+- Pendaftar dengan email mengisi username di form daftar; pendaftar dengan Google memilihnya sekali setelah login (4.5).
+- Username dapat diganti dengan jeda minimal 30 hari sejak penggantian terakhir. Tautan profil dengan username lama tidak lagi berlaku.
+- Aturan ini ditegakkan di database, bukan hanya di form.
+
 ### Profil publik
 - Profil dapat dilihat oleh pengguna lain.
 - Yang terlihat publik: banner, avatar, nama tampilan, username, bio, rank, total XP, ringkasan statistik, dan achievement.
@@ -1607,6 +1621,21 @@ Klik notifikasi menandainya sebagai dibaca dan langsung membuka halaman terkait:
 ### Metode
 - Email dan password.
 - Akun Google: tombol "Masuk dengan Google" di halaman masuk dan "Daftar dengan Google" di halaman daftar, di atas form email.
+
+### Daftar dengan email
+- Isian: nama lengkap, username (FR-13), email, password (minimal 8 karakter), konfirmasi password, dan persetujuan syarat dan ketentuan.
+- Ketersediaan username diperiksa sebelum akun dibuat.
+- Setelah mendaftar, pengguna diminta membuka tautan verifikasi di email. Akun baru dapat dipakai untuk masuk setelah email terverifikasi.
+- Untuk email yang sudah terdaftar, tampilan tetap sama seperti pendaftaran berhasil, agar keberadaan akun tidak dapat ditebak.
+- Email verifikasi dapat dikirim ulang dari halaman daftar dan dari halaman masuk jika email belum terverifikasi.
+
+### Lupa password
+- Tautan "Lupa password?" di halaman masuk membuka halaman permintaan reset.
+- Pesan setelah meminta reset selalu sama, terdaftar atau tidak emailnya.
+- Tautan di email membuka halaman "Buat password baru". Tautan kedaluwarsa atau tidak valid diarahkan ke halaman masuk dengan pesan untuk meminta tautan baru.
+
+### Akun demo
+- Akun demo per peran hanya dapat dipakai di DEV, atau di lingkungan yang belum memasang Supabase. Di UAT dan Production dengan Supabase, masuk hanya lewat akun sungguhan.
 
 ### Aturan akun Google
 - Pengguna baru yang mendaftar dengan Google memilih username satu kali sebelum memakai aplikasi, karena username dipakai di profil publik (FR-13). Nama tampilan dan foto diambil dari akun Google dan dapat diubah.

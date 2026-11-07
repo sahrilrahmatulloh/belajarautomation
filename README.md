@@ -106,12 +106,14 @@ npm run test:e2e:report           # membuka laporan HTML test terakhir
 - Bila server dev sedang berjalan, test akan memakai server dev tersebut. Untuk menguji hasil build, pakai port lain: `PORT=3100 npm run test:e2e` (Git Bash) atau `$env:PORT=3100; npm run test:e2e` (PowerShell).
 - Test label "DEV" mengharapkan `NEXT_PUBLIC_APP_ENV` bernilai `dev`.
 - Perilaku yang berbeda di luar DEV, mis. akun demo dan artikel draf, ditulis di `tests/e2e/non-dev/`.
+- Build test diarahkan ke Supabase tiruan (`https://supabase-uji.invalid`), bukan project dari `.env.local`. Test yang memakai Supabase memanggil `mockSupabase(page)` dari `fixtures/supabaseMock.ts`, jadi tidak ada data atau email sungguhan yang tersentuh. Build non-DEV dijalankan tanpa Supabase agar akun demo tetap dapat dipakai.
+- Bila test memakai server dev yang sudah berjalan, server itu membaca `.env.local` dan memakai Supabase DEV sungguhan. Untuk hasil yang konsisten, jalankan test di port lain.
 
 Struktur folder:
 
 ```text
 tests/e2e/
-├── fixtures/   # auth.ts (login per role), testData.ts (data test), mainPages.ts (halaman utama)
+├── fixtures/   # auth.ts (login per role), testData.ts (data test), mainPages.ts (halaman utama), supabaseMock.ts (Supabase tiruan)
 ├── pages/      # Page Object, satu kelas per halaman
 └── specs/      # skenario test per fitur
 ```

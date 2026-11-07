@@ -14,7 +14,7 @@ export function loginHref(target: string) {
 
 // Hanya alamat di dalam situs ini, agar tautan login tidak bisa dipakai untuk
 // mengarahkan pengguna ke situs lain setelah masuk.
-function isSafeTarget(target: string) {
+export function isSafeTarget(target: string) {
   return /^\/(?![/\\])/.test(target) && !target.includes("\\") && !/^\/(login|register)\b/.test(target);
 }
 

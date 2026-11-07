@@ -30,7 +30,11 @@ export async function updateSupabaseSession(request: NextRequest): Promise<NextR
 
   // getClaims memverifikasi JWT dan memicu penyegaran token bila kedaluwarsa.
   // Jangan menaruh kode lain di antara createServerClient dan baris ini.
-  await supabase.auth.getClaims();
+  try {
+    await supabase.auth.getClaims();
+  } catch {
+    // Supabase tidak terjangkau: halaman tetap dimuat, sesi dicoba lagi di permintaan berikutnya.
+  }
 
   return response;
 }
