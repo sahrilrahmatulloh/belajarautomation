@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { Pencil, X } from "lucide-react";
 
 import ConfirmDialog from "@/components/common/ConfirmDialog";
+import IconAction from "@/components/common/IconAction";
 import PrototypeNotice from "@/components/creator/studio/PrototypeNotice";
 import { userName } from "@/components/creator/studio/useCreatorData";
 import { NotificationPreviewRow } from "@/components/notifications/NotificationItem";
@@ -21,7 +23,6 @@ import { formatDateTime, MEMBERSHIP_LABELS, useAdminData } from "./useAdminData"
 const FILTER_KEYS = ["status"] as const;
 const fieldClass = "mt-1.5 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm font-normal dark:bg-card";
 const selectClass = "h-11 w-full rounded-lg border border-input bg-background px-3 text-sm font-medium dark:bg-card";
-const actionClass = "whitespace-nowrap font-medium text-primary-accent underline-offset-2 hover:underline";
 
 const STATUS_LABELS: Record<AnnouncementStatus, string> = { draf: "Draf", terjadwal: "Terjadwal", terkirim: "Terkirim", dibatalkan: "Dibatalkan" };
 const ROLES: UserRole[] = ["user", "creator", "reviewer", "admin"];
@@ -103,9 +104,9 @@ export default function AnnouncementsPage() {
     {
       header: "Aksi",
       cell: (item) => (
-        <span className="flex flex-wrap gap-x-3 gap-y-1">
-          {item.status === "draf" && <button type="button" aria-label={`Ubah ${item.title}`} onClick={() => edit(item)} className={actionClass}>Ubah</button>}
-          {item.status === "terjadwal" && <button type="button" aria-label={`Batalkan ${item.title}`} onClick={() => setCancelling(item)} className="whitespace-nowrap font-medium text-destructive underline-offset-2 hover:underline">Batalkan</button>}
+        <span className="flex flex-wrap items-center gap-1">
+          {item.status === "draf" && <IconAction label={`Ubah ${item.title}`} tooltip="Ubah draf" icon={Pencil} onClick={() => edit(item)} />}
+          {item.status === "terjadwal" && <IconAction label={`Batalkan ${item.title}`} tooltip="Batalkan jadwal" icon={X} tone="destructive" onClick={() => setCancelling(item)} />}
           {item.status !== "draf" && item.status !== "terjadwal" && "-"}
         </span>
       ),

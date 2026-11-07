@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 
-import { Info } from "lucide-react";
+import { Info, Pencil, Power, PowerOff } from "lucide-react";
 
+import IconAction from "@/components/common/IconAction";
 import PrototypeNotice from "@/components/creator/studio/PrototypeNotice";
 import SearchField from "@/components/filters/SearchField";
 import { CHALLENGES } from "@/data/challenges";
@@ -24,7 +25,6 @@ import { useAdminData } from "./useAdminData";
 const FILTER_KEYS = ["q", "akses", "katalog"] as const;
 const selectClass = "h-11 w-full rounded-lg border border-input bg-background px-3 text-sm font-medium dark:bg-card";
 const fieldClass = "mt-1.5 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm font-normal dark:bg-card";
-const actionClass = "whitespace-nowrap font-medium text-primary-accent underline-offset-2 hover:underline";
 
 const AVAILABILITY_LABELS = { available: "Tersedia", "coming-soon": "Segera hadir" };
 const CONTENT_LABELS = { ready: "Siap", draft: "Draf" };
@@ -116,7 +116,7 @@ export default function CatalogPage() {
     { header: "Akses", cell: (course) => ACCESS_LABELS[stateOf(course).access] },
     {
       header: "Aksi",
-      cell: (course) => <button type="button" aria-label={`Ubah ${course.title}`} onClick={() => setEditing(course)} className={actionClass}>Ubah</button>,
+      cell: (course) => <IconAction label={`Ubah ${course.title}`} tooltip="Ubah" icon={Pencil} onClick={() => setEditing(course)} />,
     },
   ];
 
@@ -127,17 +127,16 @@ export default function CatalogPage() {
     {
       header: "Aksi",
       cell: (item) => (
-        <button
-          type="button"
-          aria-label={`${item.status === "aktif" ? "Nonaktifkan" : "Aktifkan"} ${item.title}`}
+        <IconAction
+          label={`${item.status === "aktif" ? "Nonaktifkan" : "Aktifkan"} ${item.title}`}
+          tooltip={item.status === "aktif" ? "Nonaktifkan" : "Aktifkan"}
+          icon={item.status === "aktif" ? PowerOff : Power}
+          tone={item.status === "aktif" ? "destructive" : "default"}
           onClick={() => {
             setItemError("");
             setEditingItem(item);
           }}
-          className={actionClass}
-        >
-          {item.status === "aktif" ? "Nonaktifkan" : "Aktifkan"}
-        </button>
+        />
       ),
     },
   ];

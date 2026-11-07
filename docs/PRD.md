@@ -1,9 +1,12 @@
 # BELAJARAUTOMATION.COM
 ## Product Requirements Document (PRD)
-**Versi:** 2.18  
+**Versi:** 2.19  
 **Status:** Draft — Acuan Pengembangan Produk  
 **Platform:** Web Application  
 **Target Pengguna:** Pemula hingga praktisi QA, Software Testing, dan Programming
+
+### Perubahan di Versi 2.19
+- Menambahkan masuk dan daftar dengan Google (Bagian 4.5). Tombol tampil sekarang dengan keterangan "Segera hadir" dan aktif setelah backend Supabase Auth tersedia.
 
 ### Perubahan di Versi 2.18
 - Popup maintenance untuk pengguna selain Admin yang sudah login, pada tahap Terjadwal dan Persiapan (FR-16 K).
@@ -1565,6 +1568,22 @@ Klik notifikasi menandainya sebagai dibaca dan langsung membuka halaman terkait:
 ### Penyimpanan
 - Notifikasi berusia lebih dari 90 hari dihapus otomatis.
 - Status dibaca tersimpan per pengguna di backend.
+
+## 4.5 Masuk dan Daftar
+
+### Metode
+- Email dan password.
+- Akun Google: tombol "Masuk dengan Google" di halaman masuk dan "Daftar dengan Google" di halaman daftar, di atas form email.
+
+### Aturan akun Google
+- Pengguna baru yang mendaftar dengan Google memilih username satu kali sebelum memakai aplikasi, karena username dipakai di profil publik (FR-13). Nama tampilan dan foto diambil dari akun Google dan dapat diubah.
+- Jika email Google sudah terdaftar dengan password dan email tersebut terverifikasi oleh Google, akun disambungkan; tidak dibuat akun baru.
+- Semua peran dapat masuk dengan Google. Admin tetap wajib verifikasi dua langkah di aplikasi (8.3).
+- Akun nonaktif tetap ditolak (FR-16 C), dan selama maintenance Aktif hanya Admin yang dapat masuk (FR-16 K).
+
+### Tahap
+- Sebelum backend: tombol tampil dengan keterangan "Segera hadir" dan tidak dapat dipakai.
+- Setelah backend: memakai login Google dari Supabase Auth. Pemilik menyiapkan project Google Cloud, layar persetujuan OAuth (nama aplikasi, logo, tautan kebijakan privasi), Client ID dan Secret, serta alamat redirect untuk DEV, UAT, dan Production.
 
 ---
 

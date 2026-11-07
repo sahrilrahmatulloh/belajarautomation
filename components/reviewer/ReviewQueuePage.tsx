@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
+import { ClipboardCheck, Eye, FileSearch } from "lucide-react";
 import { useRouter } from "next/navigation";
 
+import IconAction from "@/components/common/IconAction";
 import ListPagination, { pageSlice } from "@/components/common/ListPagination";
 import { userName } from "@/components/creator/studio/useCreatorData";
 import PrototypeNotice from "@/components/creator/studio/PrototypeNotice";
@@ -19,7 +20,6 @@ import { reviewQueues, submissionLabel, useReviewerData, waitingDays } from "./u
 
 const PAGE_SIZE = 10;
 const KINDS = Object.keys(KIND_LABELS) as ContentKind[];
-const actionClass = "whitespace-nowrap rounded font-medium text-primary-accent underline-offset-2 hover:underline";
 
 type TabId = "ditugaskan" | "belum" | "riwayat";
 
@@ -124,10 +124,14 @@ export default function ReviewQueuePage({ initialTab = "ditugaskan" }: { initial
                         content.authorId === userId ? (
                           <span className="text-muted-foreground">Tulisanmu sendiri</span>
                         ) : (
-                          <button type="button" onClick={() => void claim(content)} className={actionClass}>Ambil untuk review</button>
+                          <IconAction label="Ambil untuk review" icon={ClipboardCheck} onClick={() => void claim(content)} showLabel />
                         )
                       ) : (
-                        <Link href={`/reviewer/review/${content.id}`} className={actionClass}>{isHistory ? "Lihat" : "Review"}</Link>
+                        isHistory ? (
+                          <IconAction label="Lihat" icon={Eye} href={`/reviewer/review/${content.id}`} />
+                        ) : (
+                          <IconAction label="Review" icon={FileSearch} href={`/reviewer/review/${content.id}`} showLabel />
+                        )
                       )}
                     </td>
                   </tr>

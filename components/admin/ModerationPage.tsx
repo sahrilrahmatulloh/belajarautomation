@@ -1,9 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import { CircleSlash, Eye, EyeOff, SlidersHorizontal } from "lucide-react";
 import Link from "next/link";
 
 import ConfirmDialog from "@/components/common/ConfirmDialog";
+import IconAction from "@/components/common/IconAction";
 import PrototypeNotice from "@/components/creator/studio/PrototypeNotice";
 import { userName } from "@/components/creator/studio/useCreatorData";
 import { getRank } from "@/data/ranks";
@@ -21,7 +23,6 @@ import { useAdminData } from "./useAdminData";
 const FILTER_KEYS = ["status", "alasan"] as const;
 const selectClass = "h-11 w-full rounded-lg border border-input bg-background px-3 text-sm font-medium dark:bg-card";
 const fieldClass = "mt-1.5 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm font-normal dark:bg-card";
-const actionClass = "whitespace-nowrap font-medium text-primary-accent underline-offset-2 hover:underline";
 
 const REASON_LABELS: Record<ModerationReason, string> = { "lonjakan-xp": "Lonjakan XP harian", "lesson-terlalu-cepat": "Lesson terlalu cepat" };
 const STATUS_LABELS: Record<ModerationFlagStatus, string> = { terbuka: "Perlu ditinjau", diabaikan: "Diabaikan", ditangani: "Ditangani" };
@@ -109,12 +110,14 @@ export default function ModerationPage() {
         const isHidden = userOf(flag)?.hiddenFromLeaderboard;
         const name = userName(users, flag.userId);
         return (
-          <span className="flex flex-wrap gap-x-3 gap-y-1">
-            {flag.status === "terbuka" && <button type="button" aria-label={`Abaikan ${name}`} onClick={() => open("abaikan", flag)} className={actionClass}>Abaikan</button>}
-            <button type="button" aria-label={`Koreksi XP ${name}`} onClick={() => open("koreksi", flag)} className={actionClass}>Koreksi XP</button>
-            <button type="button" aria-label={isHidden ? `Tampilkan kembali ${name}` : `Sembunyikan dari leaderboard: ${name}`} onClick={() => open(isHidden ? "tampilkan" : "sembunyikan", flag)} className={actionClass}>
-              {isHidden ? "Tampilkan kembali" : "Sembunyikan dari leaderboard"}
-            </button>
+          <span className="flex flex-wrap items-center gap-1">
+            {flag.status === "terbuka" && <IconAction label={`Abaikan ${name}`} tooltip="Abaikan" icon={CircleSlash} onClick={() => open("abaikan", flag)} />}
+            <IconAction label={`Koreksi XP ${name}`} tooltip="Koreksi XP" icon={SlidersHorizontal} onClick={() => open("koreksi", flag)} />
+            {isHidden ? (
+              <IconAction label={`Tampilkan kembali ${name}`} tooltip="Tampilkan kembali di leaderboard" icon={Eye} onClick={() => open("tampilkan", flag)} />
+            ) : (
+              <IconAction label={`Sembunyikan dari leaderboard: ${name}`} tooltip="Sembunyikan dari leaderboard" icon={EyeOff} onClick={() => open("sembunyikan", flag)} />
+            )}
           </span>
         );
       },

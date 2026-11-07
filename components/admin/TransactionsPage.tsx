@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
+import { Eye } from "lucide-react";
 
+import IconAction from "@/components/common/IconAction";
 import ListPagination, { pageSlice } from "@/components/common/ListPagination";
 import PrototypeNotice from "@/components/creator/studio/PrototypeNotice";
 import { userName } from "@/components/creator/studio/useCreatorData";
@@ -56,9 +57,7 @@ export default function TransactionsPage() {
     {
       header: "Aksi",
       cell: (item) => (
-        <Link href={`/admin/transaksi/${item.id}`} aria-label={`Lihat detail ${item.id}`} className="whitespace-nowrap font-medium text-primary-accent underline-offset-2 hover:underline">
-          Lihat detail
-        </Link>
+        <IconAction label={`Lihat detail ${item.id}`} tooltip="Lihat detail" icon={Eye} href={`/admin/transaksi/${item.id}`} />
       ),
     },
   ];

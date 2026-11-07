@@ -369,11 +369,11 @@ export const CREATOR_STUDIO = {
   approvedTitle: "Contoh Test Case Login yang Lengkap",
   publishedTitle: "Best Practice Locator di Playwright",
   actionsByStatus: [
-    { title: "Apa Itu Quality Assurance?", actions: ["Edit", "Kirim untuk Review", "Hapus"] },
+    { title: "Apa Itu Quality Assurance?", actions: ["Kirim untuk Review", "Edit", "Hapus"] },
     { title: "Mengenal Playwright untuk Pemula", actions: ["Lihat", "Tarik kembali"] },
     { title: "Cara Menulis Bug Report", actions: ["Lihat catatan", "Edit"] },
     { title: "Contoh Test Case Login yang Lengkap", actions: ["Lihat"] },
-    { title: "Best Practice Locator di Playwright", actions: ["Lihat di website", "Buat revisi"] },
+    { title: "Best Practice Locator di Playwright", actions: ["Buat revisi", "Lihat di website"] },
   ],
   newArticle: { title: "Artikel Uji Ruang Kerja", excerpt: "Ringkasan uji.", category: "Career" },
   // Gambar PNG 1x1 yang valid.

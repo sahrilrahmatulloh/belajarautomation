@@ -13,7 +13,7 @@ export class LoginPage extends BasePage {
     super(page, "/login");
     this.emailInput = page.getByLabel("Email");
     this.passwordInput = page.getByRole("textbox", { name: "Password" });
-    this.submitButton = page.getByRole("button", { name: "Masuk" });
+    this.submitButton = page.getByRole("button", { name: "Masuk", exact: true });
     this.formError = page.getByRole("alert").filter({ hasText: "Email atau password salah." });
     this.demoAccounts = page.getByRole("region", { name: "Akun demo" });
   }

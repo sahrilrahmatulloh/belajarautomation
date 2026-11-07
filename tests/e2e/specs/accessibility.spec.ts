@@ -90,7 +90,7 @@ for (const colorScheme of ["light", "dark"] as const) {
       test("tombol berteks putih memakai warna yang sama di semua mode", async ({ page }) => {
         await page.goto("/login");
 
-        const button = page.getByRole("button", { name: "Masuk" });
+        const button = page.getByRole("button", { name: "Masuk", exact: true });
         await expect(button).toHaveCSS("background-color", COLORS.primaryButton);
         await expect(button).toHaveCSS("color", COLORS.white);
       });

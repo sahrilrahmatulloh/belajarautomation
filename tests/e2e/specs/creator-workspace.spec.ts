@@ -80,7 +80,10 @@ test.describe("Konten Saya", () => {
     test(`aksi "${title}" mengikuti status`, async () => {
       await contents.find(title);
 
-      await expect(contents.actions(title)).toHaveText([...actions]);
+      // Sebagian aksi hanya berupa ikon, jadi yang dicek nama aksesibelnya.
+      const items = contents.actions(title);
+      await expect(items).toHaveCount(actions.length);
+      for (const [index, name] of actions.entries()) await expect(items.nth(index)).toHaveAccessibleName(name);
     });
   }
 

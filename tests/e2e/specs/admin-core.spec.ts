@@ -167,7 +167,8 @@ test.describe("Semua Konten", () => {
   test("aksi hanya muncul pada status yang sesuai", async () => {
     await contents.statusTab(/^Draf/).click();
 
-    await expect(contents.rows.first().getByRole("button")).toHaveText(["Riwayat"]);
+    await expect(contents.rows.first().getByRole("button")).toHaveCount(1);
+    await expect(contents.rows.first().getByRole("button")).toHaveAccessibleName("Riwayat");
   });
 
   test("tarik dari website wajib alasan, dan Creator melihatnya sebagai catatan umum", async ({ page }) => {
@@ -412,7 +413,8 @@ test.describe("Log Aktivitas Admin", () => {
     await expect(page.getByText("Tidak ada log yang cocok.")).toBeVisible();
     await page.getByLabel("Sampai tanggal").fill("");
 
-    await expect(log.rows.first().getByRole("button")).toHaveText([/^Lihat perubahan/]);
+    await expect(log.rows.first().getByRole("button")).toHaveCount(1);
+    await expect(log.rows.first().getByRole("button")).toHaveAccessibleName(/^Lihat perubahan/);
     await expect(page.getByRole("main").getByRole("button", { name: /Hapus|Ubah|Edit/ })).toHaveCount(0);
   });
 });
