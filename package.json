@@ -24,11 +24,18 @@
     "check:youtube": "node scripts/check-youtube-links.mjs",
     "optimize:covers": "node scripts/optimize-covers.mjs",
     "optimize:images": "node scripts/optimize-images.mjs",
-    "optimize:ranks": "node scripts/optimize-images.mjs ranks"
+    "optimize:ranks": "node scripts/optimize-images.mjs ranks",
+    "db:link": "supabase link",
+    "db:push": "supabase db push --remote",
+    "db:diff": "supabase db diff --remote",
+    "db:types": "supabase gen types typescript --remote --schema public > types/supabase.ts",
+    "db:push:dry": "supabase db push --remote --dry-run"
   },
   "dependencies": {
     "@base-ui/react": "^1.6.0",
     "@mdx-js/mdx": "^3.1.1",
+    "@supabase/ssr": "^0.12.7",
+    "@supabase/supabase-js": "^2.119.0",
     "@tiptap/extension-table": "^3.32.2",
     "@tiptap/pm": "^3.32.2",
     "@tiptap/react": "^3.32.2",
@@ -58,6 +65,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.2.10",
     "shadcn": "^4.12.0",
+    "supabase": "^3.0.0",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

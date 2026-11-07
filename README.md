@@ -46,6 +46,44 @@ Pengaturan lingkungan:
 - `NEXT_PUBLIC_SITE_URL` berisi alamat situs untuk Open Graph dan sitemap. Isi di Production saat domain sudah pasti; jika kosong, memakai alamat dari Vercel.
 - Di Vercel, isi `NEXT_PUBLIC_APP_ENV` per lingkungan (mis. per branch `develop` dan `uat`). Nilainya disisipkan saat build, jadi perubahan baru berlaku setelah deploy ulang.
 
+## Database (Supabase)
+
+Rancangan dan tahapan ada di [`docs/DATABASE.md`](docs/DATABASE.md).
+
+| Lingkungan | Project Supabase |
+|---|---|
+| DEV | `belajarautomation-dev` |
+| UAT | `belajarautomation-uat` |
+| Production | Dibuat menjelang rilis |
+
+Struktur kode:
+
+- `lib/supabase/client.ts`: klien untuk komponen klien.
+- `lib/supabase/server.ts`: klien untuk Server Component, Server Action, dan Route Handler (`server-only`).
+- `proxy.ts`: menyegarkan sesi. Tamu tanpa cookie sesi tidak memicu panggilan ke Supabase.
+- `supabase/migrations/`: seluruh perubahan skema. Tabel tidak dibuat atau diubah lewat dashboard.
+
+Mengisi `.env.local`:
+
+- Isi `NEXT_PUBLIC_SUPABASE_URL` dan `NEXT_PUBLIC_SUPABASE_ANON_KEY` (publishable key) dari project DEV.
+- Tanpa kedua variabel itu, aplikasi tetap berjalan dengan data dummy.
+
+Menjalankan migrasi (oleh pemilik akses Supabase):
+
+```bash
+npx supabase login          # sekali, token tersimpan di komputer sendiri
+npm run db:link             # pilih project yang dituju (DEV atau UAT)
+npm run db:push:dry         # melihat migrasi yang akan diterapkan, tanpa menerapkan
+npm run db:push             # menerapkan migrasi ke project yang di-link
+npm run db:types            # memperbarui types/supabase.ts dari skema
+```
+
+Aturan:
+
+- Kunci rahasia (secret key atau service_role) tidak pernah ditulis di repository, `.env.example`, atau variabel berawalan `NEXT_PUBLIC_`.
+- Migrasi yang sudah diterapkan tidak diubah. Perubahan berikutnya ditulis sebagai file migrasi baru.
+- Migrasi diterapkan ke DEV lebih dulu, lalu UAT, lalu Production.
+
 ## Blog
 
 Artikel disimpan sebagai file MDX di `content/blog/`, dan menambah artikel tidak perlu mengubah kode aplikasi. Panduannya ada di [`docs/CONTENT_GUIDE.md`](docs/CONTENT_GUIDE.md).
