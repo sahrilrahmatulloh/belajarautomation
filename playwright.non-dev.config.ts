@@ -18,7 +18,9 @@ export default defineConfig({
   webServer: {
     command: "npm run build && npm run start",
     url: baseURL,
-    env: { NEXT_PUBLIC_APP_ENV: "uat", PORT: port },
+    // Tanpa Supabase: akun demo tetap dipakai test peran di luar DEV. Nilai kosong
+    // mengalahkan isi .env.local.
+    env: { NEXT_PUBLIC_APP_ENV: "uat", PORT: port, NEXT_PUBLIC_SUPABASE_URL: "", NEXT_PUBLIC_SUPABASE_ANON_KEY: "" },
     reuseExistingServer: false,
     timeout: 5 * 60 * 1000,
   },

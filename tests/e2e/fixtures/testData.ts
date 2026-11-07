@@ -245,6 +245,9 @@ export const COLORS = {
 export const GUEST_PAGES = [
   { name: "Login", path: "/login" },
   { name: "Daftar", path: "/register" },
+  { name: "Lupa password", path: "/forgot-password" },
+  { name: "Reset password", path: "/reset-password" },
+  { name: "Login dengan pesan verifikasi", path: "/login?auth=verified" },
   { name: "Blog tamu", path: "/blog" },
   { name: "Artikel tamu", path: "/blog/locator-playwright-best-practice" },
   { name: "Artikel tidak ditemukan", path: "/blog/tidak-ada" },

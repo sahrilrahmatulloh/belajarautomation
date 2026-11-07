@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import { usePathname, useRouter } from "next/navigation";
 
 import { getRoleFromPath, ROLE_HOME } from "@/data/navigation";
-import { useSession } from "@/lib/session";
+import { useSession, useSessionReady } from "@/lib/session";
 import { useHydrated } from "@/lib/useHydrated";
 import { useViewMode, viewModeActions } from "@/lib/viewMode";
 
@@ -22,12 +22,14 @@ export default function RequireAuth({
   const pathname = usePathname();
   const session = useSession();
   const isHydrated = useHydrated();
+  const isSessionReady = useSessionReady();
   const { activeRole, isRoleMode, hasRole } = useViewMode();
 
   const pageRole = getRoleFromPath(pathname);
   let redirectTo: string | null = null;
 
-  if (isHydrated) {
+  // Menunggu status login Supabase agar pengguna yang sudah login tidak sempat diarahkan ke /login.
+  if (isHydrated && isSessionReady) {
     if (!session) {
       redirectTo = "/login";
     } else if (pageRole !== "user" && !session.roles.includes(pageRole)) {
@@ -56,7 +58,7 @@ export default function RequireAuth({
     }
   }, [redirectTo, router]);
 
-  if (!isHydrated || redirectTo) {
+  if (!isHydrated || !isSessionReady || redirectTo) {
     return <AuthLoading />;
   }
 
