@@ -1,9 +1,19 @@
 # BELAJARAUTOMATION.COM
 ## Product Requirements Document (PRD)
-**Versi:** 2.20  
+**Versi:** 2.21  
 **Status:** Draft — Acuan Pengembangan Produk  
 **Platform:** Web Application  
 **Target Pengguna:** Pemula hingga praktisi QA, Software Testing, dan Programming
+
+### Perubahan di Versi 2.21
+- Setelah backend tersedia, isi course, lesson, dan soal kuis disimpan di database dan menjadi sumber kebenaran katalog. Halamannya tetap statis dan diperbarui per halaman saat konten diterbitkan (Bagian 6.3, 8.2, FR-16 G).
+- Konten yang sudah ada dipindahkan ke database lewat skrip impor. Alur Creator, Reviewer, dan Admin di aplikasi sudah aktif di UAT dan Production saat rilis (FR-15).
+- Urutan pembangunan backend: semua aksi selain pembayaran dibangun lebih dulu, dan pembayaran dikerjakan paling akhir (`docs/DATABASE.md` Bagian 10).
+- Peran dasar setiap akun bernama `student` dengan label "Pelajar". Membership adalah hak akses, bukan peran (FR-15).
+- Progres course dihitung dari progres lesson, tanpa langkah "daftar course" (FR-02).
+- Pembayaran memakai Midtrans Snap dengan QRIS dan Virtual Account. Production baru dirilis setelah pembayaran Midtrans siap; simulasi pembayaran tidak pernah aktif di UAT maupun Production (FR-10).
+- Email dikirim lewat Resend: email akun dari Supabase Auth dan email transaksi dari antrean di database (Bagian 4.4).
+- Lingkungan Supabase: DEV dan UAT memakai paket Free, Production memakai Pro (Bagian 6.3).
 
 ### Perubahan di Versi 2.20
 - Menetapkan PostgreSQL lewat Supabase di region Singapura, dengan rancangan tabel, indeks, Row Level Security, dan tahapan pembangunan di `docs/DATABASE.md` (Bagian 6.3).
@@ -435,6 +445,7 @@ Ketentuan:
 - Hak akses course premium mengikuti model Lifetime di FR-10: pengguna memperoleh akses permanen ke materi premium yang tersedia pada saat pembelian.
 - Course yang sudah dinyatakan gratis tidak boleh diubah menjadi premium bagi pengguna yang sudah mulai mempelajarinya.
 - Hak akses course premium diverifikasi oleh backend.
+- Tidak ada langkah "daftar course". Course dianggap dimulai saat pengguna membuka lesson pertamanya, dan progres course dihitung dari progres lesson.
 
 Pengguna Basic tidak harus membayar untuk:
 - Mempelajari course gratis.
@@ -772,7 +783,7 @@ Menyediakan artikel edukasi seputar QA, testing, automation, dan programming, se
 - Setelah peran Creator aktif, artikel dapat menampilkan nama Creator yang menulisnya.
 
 ### Format konten
-- Setiap artikel disimpan sebagai satu file konten (mis. MDX) dengan metadata: slug, judul, ringkasan, kategori, penulis, tanggal terbit, tanggal diperbarui, sampul, status, artikel unggulan, ajakan (course atau latihan tujuan), dan sumber.
+- Sebelum backend, setiap artikel disimpan sebagai satu file konten (mis. MDX); setelah backend, artikel disimpan di database (Bagian 6.3). Keduanya memakai metadata: slug, judul, ringkasan, kategori, penulis, tanggal terbit, tanggal diperbarui, sampul, status, artikel unggulan, ajakan (course atau latihan tujuan), dan sumber.
 - Waktu baca dihitung otomatis dari isi artikel.
 - Status artikel: `draft` atau `published`. Artikel `draft` hanya tampil di lingkungan DEV dengan badge "Draf"; UAT dan Production hanya menampilkan artikel `published`.
 - Ajakan hanya boleh menuju course atau latihan yang tersedia; pengecekan otomatis menggagalkan build jika tujuan tidak valid.
@@ -996,7 +1007,16 @@ Sistem pembayaran harus:
 - Memiliki kebijakan refund yang jelas sebelum peluncuran komersial.
 - Tidak menjanjikan hasil karier yang tidak dapat dijamin (lihat Bagian 16).
 
-Harga paket dan metode pembayaran final belum ditetapkan.
+Payment gateway: **Midtrans Snap**, dengan metode QRIS dan Virtual Account. DEV dan UAT memakai sandbox; Production memakai kunci produksi.
+- Production baru dirilis setelah pembayaran Midtrans siap: merchant terverifikasi dan alur pembayaran lulus pengujian di UAT. Jika verifikasi merchant terlambat, rilis ikut mundur.
+- Simulasi pembayaran hanya ada di DEV dan tidak pernah aktif di UAT maupun Production.
+- Harga dihitung di server dari database, bukan dari data yang dikirim browser.
+- Hak akses diberikan hanya setelah notifikasi Midtrans terverifikasi (signature dan nominal cocok). Halaman "pembayaran berhasil" bukan bukti pembayaran.
+- Notifikasi yang sama diproses sekali saja, dan transaksi tertunda dicek ulang berkala ke Midtrans.
+- Status pembayaran tidak dapat diubah manual oleh Admin (FR-16 E).
+- Refund lewat Refund API Midtrans untuk metode yang mendukungnya. Dukungan refund untuk QRIS dan Virtual Account perlu dikonfirmasi ke Midtrans sebelum peluncuran.
+
+Harga paket final belum ditetapkan.
 
 ---
 
@@ -1197,6 +1217,8 @@ Memungkinkan konten ditulis oleh lebih dari satu orang dengan kualitas yang teta
 | **Reviewer** | Memeriksa akurasi, kejelasan, contoh kode, referensi video, dan kunci jawaban; menyetujui atau meminta revisi | Tidak me-review konten yang ditulisnya sendiri dan tidak mengedit isi konten secara langsung |
 | **Admin** | Menugaskan reviewer, menerbitkan dan menarik konten, mengelola peran pengguna, dan tugas lain di Panel Admin (FR-16) | Tidak dapat mencabut peran Admin dari dirinya sendiri jika ia satu-satunya Admin |
 
+- Setiap akun memiliki peran dasar **Pelajar** (nilai di database: `student`). Creator, Reviewer, dan Admin adalah peran tambahan.
+- Membership (Basic, Pro, Premium) adalah hak akses, bukan peran.
 - Satu akun dapat memiliki beberapa peran. Selama tim masih kecil, pemilik produk dapat merangkap Reviewer dan Admin.
 - Creator, Reviewer, dan Admin tetap dapat belajar: XP, rank, profil pelajar, dan membership tetap berlaku di **Mode Belajar**.
 - Pengguna dengan peran tambahan memiliki pengalih **"Mode Belajar"** dan **"Mode Creator"**, **"Mode Reviewer"**, atau **"Mode Admin"** di menu profil. Mode tersimpan dan bertahan saat berpindah halaman.
@@ -1262,6 +1284,12 @@ Ketentuan:
 - Gambar dari dokumen dioptimalkan dan disimpan di repository saat konversi.
 - Creator tidak memerlukan akun atau akses GitHub.
 - Halaman Konten Saya, Buat Konten, dan Catatan Revisi di aplikasi tetap berupa halaman informasi yang menautkan ke template dan panduan.
+
+### Peralihan ke database
+Isi course, lesson, soal kuis, dan artikel disimpan di database (Bagian 6.3). Alur Creator, Reviewer, dan Admin di aplikasi sudah aktif di UAT dan Production saat rilis.
+- Seluruh konten yang sudah ada dipindahkan ke database lewat skrip impor.
+- Skrip impor aman dijalankan berulang: konten dengan slug yang sama diperbarui, bukan diduplikasi, dan slug tidak pernah berubah.
+- Sampai alur di aplikasi aktif di suatu lingkungan, konten baru di lingkungan itu tetap ditulis lewat Google Docs dan dimasukkan dengan skrip impor.
 
 ### Tahap antarmuka dengan data dummy
 Agar alur ketiga peran dapat dicoba dan diuji sebelum backend tersedia, seluruh antarmuka Creator, Reviewer, dan Admin dibangun sekarang dengan data dummy.
@@ -1418,6 +1446,7 @@ Menyediakan alat bagi Admin untuk mengelola konten, pengguna, transaksi, katalog
 - Indikator total XP dari materi gratis dibandingkan batas rank Master.
 - Daftar roadmap dan latihan Playground beserta statusnya.
 - Selama belum ada backend, sumber kebenaran katalog tetap file data di repository dan `docs/CURRICULUM.md`; perubahan di Panel Admin DEV bersifat simulasi.
+- Setelah backend tersedia, sumber kebenaran katalog, isi lesson, dan soal kuis adalah database. `docs/CURRICULUM.md` tetap menjadi acuan rencana kurikulum.
 
 ### H. Pengumuman
 - Membuat notifikasi untuk pengguna: judul, isi, tautan tujuan, grup notifikasi (Konten baru atau Akun dan sistem), dan target (semua pengguna, pemilik membership tertentu, atau peran tertentu).
@@ -1562,7 +1591,7 @@ Klik notifikasi menandainya sebagai dibaca dan langsung membuka halaman terkait:
 
 ### Saluran
 1. Di website (lonceng dan halaman notifikasi): tahap awal.
-2. Email: setelah backend tersedia; wajib untuk transaksi, opsional untuk kelompok lain.
+2. Email: setelah backend tersedia; wajib untuk transaksi, opsional untuk kelompok lain. Dikirim lewat Resend: email akun (verifikasi, reset password) dari Supabase Auth, dan email transaksi dari antrean di database yang dicoba ulang bila gagal. Pengumuman massal lewat email menyusul setelah kuota dan reputasi pengirim siap.
 3. Push notification browser: fase berikutnya.
 
 ### Preferensi
@@ -1685,6 +1714,19 @@ Database menjadi sumber data persisten untuk:
 - Klaim benefit.
 - Preferensi pengguna.
 
+Isi konten:
+- Isi course, lesson, soal kuis, dan artikel disimpan di database.
+- Halaman publik tetap dibuat statis dari isi database saat build, lalu hanya halaman yang berubah yang diperbarui saat konten diterbitkan atau ditarik. Pembaca tidak memicu kueri database (Bagian 8.2).
+- Kunci jawaban kuis dan latihan tidak pernah dikirim ke browser. Penilaian tetap dilakukan di server.
+
+Lingkungan:
+
+| Lingkungan | Paket Supabase | Catatan |
+|---|---|---|
+| DEV | Free | Data uji dan data dummy |
+| UAT | Free | Berhenti otomatis bila tidak dipakai sekitar seminggu; diaktifkan kembali dari dashboard Supabase sebelum pengujian |
+| Production | Pro | Backup harian; compute ditambah berdasarkan metrik, bukan perkiraan |
+
 ## 6.4 Prinsip Arsitektur
 - Validasi penting dilakukan di backend.
 - Hak akses tidak boleh bergantung pada data lokal browser.
@@ -1701,7 +1743,7 @@ Database menjadi sumber data persisten untuk:
 Entitas berikut adalah model konseptual awal. Nama tabel, tipe data, relasi, dan implementasi final harus mengikuti hasil audit kode dan desain database.
 
 ## 7.1 User
-Menyimpan identitas dan informasi dasar pengguna.
+Menyimpan identitas dan informasi dasar pengguna, beserta perannya: `student` (Pelajar, dimiliki setiap akun), `creator`, `reviewer`, dan `admin`.
 
 ## 7.2 UserPreferences
 Menyimpan preferensi tampilan dan pengaturan pengguna.
@@ -1802,6 +1844,7 @@ Aplikasi harus dapat digunakan pada desktop, tablet, dan perangkat mobile.
 - Embed video pihak ketiga dimuat hanya saat pengguna mengklik putar.
 - Proses yang berat harus dipertimbangkan untuk dijalankan secara asinkron jika diperlukan.
 - Halaman publik (blog, katalog, detail course, lesson, roadmap, detail latihan) disiapkan saat build dan disajikan dari CDN. Data pribadi di halaman tersebut diambil terpisah agar halaman tetap bisa di-cache.
+- Walaupun isi konten disimpan di database, halaman publik tidak membaca database setiap kali dibuka. Halaman diperbarui per halaman saat konten diterbitkan atau ditarik.
 - Total XP, rank, dan jumlah materi selesai disimpan sebagai ringkasan yang diperbarui saat XP bertambah, bukan dihitung ulang dari seluruh riwayat setiap kali halaman dibuka.
 - Leaderboard dibaca dari snapshot yang diperbarui berkala (7.9), bukan mengurutkan seluruh pengguna setiap kali dibuka.
 - Daftar panjang memakai pagination dan tidak memuat seluruh data ke browser.
@@ -2071,7 +2114,6 @@ Hal berikut harus diputuskan sebelum implementasi fitur terkait mencapai tahap p
 - Struktur final materi dan modul.
 - Imbalan untuk Creator dan bentuk kesepakatan kepemilikan konten.
 - Waktu peralihan dari menulis di Google Docs ke editor di aplikasi (setelah backend Supabase untuk alur konten siap).
-- Waktu pemindahan sumber kebenaran katalog dari file repository ke database (FR-16).
 - Produksi video sendiri (misalnya untuk materi premium) beserta layanan hosting-nya; tidak termasuk rilis awal.
 
 ## Gamification
