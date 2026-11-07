@@ -21,6 +21,17 @@ export const SPLASH_SEEN_KEY = "belajarautomation-splash-seen";
 export const USER_RANK = "Apprentice";
 
 export const ACTIVE_AVATAR_NAME = "Kucing Oren";
+
+// Koleksi avatar rilis awal (PRD FR-12).
+export const FREE_AVATAR_NAMES = ["Kucing Putih", "Kucing Oren"];
+export const PAID_AVATAR_NAMES = [
+  "Kucing Hitam",
+  "Kucing Tuxedo",
+  "Kucing Abu-abu",
+  "Kucing Coklat",
+  "Kucing Corak Tiga",
+  "Kucing Siam",
+];
 export const ACTIVE_THEME_NAME = "Mountain Workspace";
 
 export const OWN_USERNAME = "sobatqa";
