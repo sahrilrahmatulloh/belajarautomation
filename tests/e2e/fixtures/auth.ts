@@ -15,9 +15,9 @@ interface AuthWorkerFixtures {
 // Splash menutupi halaman 1,8 detik di setiap context baru dan bukan bagian yang diuji.
 function markSplashSeen(key: string) {
   try {
-    window.sessionStorage.setItem(key, "1");
+    window.localStorage.setItem(key, "1");
   } catch {
-    // Halaman tanpa origin (about:blank) tidak punya sessionStorage.
+    // Halaman tanpa origin (about:blank) tidak punya localStorage.
   }
 }
 

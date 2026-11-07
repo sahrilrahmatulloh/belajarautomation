@@ -10,12 +10,12 @@ export default function SplashScreen() {
   // Diperiksa lagi sebelum tampil agar splash tidak muncul ulang bagi yang sudah melihatnya.
   useLayoutEffect(() => {
     try {
-      if (window.sessionStorage.getItem(SPLASH_STORAGE_KEY)) {
+      if (window.localStorage.getItem(SPLASH_STORAGE_KEY)) {
         document.documentElement.dataset.splash = "seen";
       }
-      window.sessionStorage.setItem(SPLASH_STORAGE_KEY, "1");
+      window.localStorage.setItem(SPLASH_STORAGE_KEY, "1");
     } catch {
-      // sessionStorage tidak tersedia; splash akan tampil lagi saat dimuat ulang.
+      // localStorage tidak tersedia; splash akan tampil lagi saat dimuat ulang.
     }
   }, []);
 

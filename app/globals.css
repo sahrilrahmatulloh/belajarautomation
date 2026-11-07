@@ -176,7 +176,7 @@
   }
 }
 
-/* Splash screen: tampil sekali per sesi, lalu menghilang sendiri tanpa JavaScript. */
+/* Splash screen: tampil sekali per browser, lalu menghilang sendiri tanpa JavaScript. */
 html[data-splash="seen"] .splash-screen {
   display: none;
 }
