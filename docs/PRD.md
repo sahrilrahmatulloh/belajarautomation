@@ -7,7 +7,8 @@
 
 ### Perubahan di Versi 2.21
 - Setelah backend tersedia, isi course, lesson, dan soal kuis disimpan di database dan menjadi sumber kebenaran katalog. Halamannya tetap statis dan diperbarui per halaman saat konten diterbitkan (Bagian 6.3, 8.2, FR-16 G).
-- Konten yang sudah ada dipindahkan ke database lewat skrip impor. Alur Creator, Reviewer, dan Admin di aplikasi untuk UAT dan Production menyusul setelah rilis (FR-15).
+- Konten yang sudah ada dipindahkan ke database lewat skrip impor. Alur Creator, Reviewer, dan Admin di aplikasi sudah aktif di UAT dan Production saat rilis (FR-15).
+- Urutan pembangunan backend: semua aksi selain pembayaran dibangun lebih dulu, dan pembayaran dikerjakan paling akhir (`docs/DATABASE.md` Bagian 10).
 - Peran dasar setiap akun bernama `student` dengan label "Pelajar". Membership adalah hak akses, bukan peran (FR-15).
 - Progres course dihitung dari progres lesson, tanpa langkah "daftar course" (FR-02).
 - Pembayaran memakai Midtrans Snap dengan QRIS dan Virtual Account. Production baru dirilis setelah pembayaran Midtrans siap; simulasi pembayaran tidak pernah aktif di UAT maupun Production (FR-10).
@@ -1284,12 +1285,11 @@ Ketentuan:
 - Creator tidak memerlukan akun atau akses GitHub.
 - Halaman Konten Saya, Buat Konten, dan Catatan Revisi di aplikasi tetap berupa halaman informasi yang menautkan ke template dan panduan.
 
-### Tahap peralihan: konten di database, alur tetap Google Docs
-Saat backend dirilis, isi course, lesson, soal kuis, dan artikel disimpan di database (Bagian 6.3). Alur Creator, Reviewer, dan Admin di aplikasi untuk UAT dan Production menyusul setelah rilis, jadi selama peralihan:
-- Alur menulis dan review tetap memakai Google Docs seperti tabel di atas.
-- Pada tahap Terbit, file MDX hasil konversi Admin dimasukkan ke database UAT atau Production lewat skrip impor, bukan dibaca langsung dari repository.
-- Skrip impor juga dipakai sekali untuk memindahkan seluruh konten yang sudah ada.
+### Peralihan ke database
+Isi course, lesson, soal kuis, dan artikel disimpan di database (Bagian 6.3). Alur Creator, Reviewer, dan Admin di aplikasi sudah aktif di UAT dan Production saat rilis.
+- Seluruh konten yang sudah ada dipindahkan ke database lewat skrip impor.
 - Skrip impor aman dijalankan berulang: konten dengan slug yang sama diperbarui, bukan diduplikasi, dan slug tidak pernah berubah.
+- Sampai alur di aplikasi aktif di suatu lingkungan, konten baru di lingkungan itu tetap ditulis lewat Google Docs dan dimasukkan dengan skrip impor.
 
 ### Tahap antarmuka dengan data dummy
 Agar alur ketiga peran dapat dicoba dan diuji sebelum backend tersedia, seluruh antarmuka Creator, Reviewer, dan Admin dibangun sekarang dengan data dummy.

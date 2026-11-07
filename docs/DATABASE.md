@@ -192,11 +192,13 @@ Antarmuka sudah memakai satu pintu data (`lib/content/repository.ts`). Setiap fa
 | 2–3 | 2b. Auth | Email, verifikasi, reset, Google, `profiles`, `user_roles`, verifikasi dua langkah Admin, test RLS | Sesi dan akun demo |
 | 4–5 | 3. Belajar | Tabel konten, skrip impor MDX, halaman statis dari database, progres lesson, penilaian kuis dan latihan di server, draf jawaban, akses premium | `data/courses`, `content/`, `lessonProgress`, `challengeAttempts`, `challengeDrafts` |
 | 6 | 4. Gamifikasi | Ledger XP, ringkasan, rank, achievement, snapshot leaderboard, profil publik | Data dummy leaderboard dan profil |
-| 7–9 | 5. Commerce | Produk, order, Midtrans sandbox, webhook, rekonsiliasi, refund, hak akses, klaim kredit, file berbayar | Keranjang, transaksi dummy, "Simulasi gateway" |
-| 10 | 7. Email dan notifikasi | Resend, `email_outbox`, notifikasi transaksi dan sistem, pengumuman, maintenance di server | Notifikasi dummy |
-| 11 | 8. Kesiapan | UAT, test keamanan dan RLS, uji beban skenario stres, backup dan restore, monitoring | — |
-| 12 | Rilis | Production dan cadangan waktu. Hanya jika merchant Midtrans sudah terverifikasi; jika belum, rilis mundur sampai siap (PRD FR-10) | — |
-| Setelah rilis | 6. Manajemen konten | Alur Creator, Reviewer, dan Admin di aplikasi untuk UAT dan Production, upload gambar ke Storage | Alur Google Docs dan skrip impor (PRD FR-15) |
+| 7–9 | 6. Manajemen konten | Creator: buat, edit, hapus, kirim review, tarik kembali. Reviewer: catatan revisi, setujui. Admin: terbitkan, tarik, tugaskan reviewer, peran, kesepakatan Creator, nonaktifkan akun, katalog, produk, moderasi, pengumuman, maintenance di server, audit log. Upload gambar ke Storage, revalidasi halaman saat terbit | Repository konten dummy, alur Google Docs |
+| 10 | 7. Email dan notifikasi | Resend untuk email akun, `email_outbox`, notifikasi sistem dan konten | Notifikasi dummy |
+| 11–13 | 5. Commerce | Produk, order, Midtrans sandbox, webhook, rekonsiliasi, refund, hak akses, klaim kredit, file berbayar, email transaksi | Keranjang, transaksi dummy, "Simulasi gateway" |
+| 14 | 8. Kesiapan | UAT, test keamanan dan RLS, uji beban skenario stres, backup dan restore, monitoring | — |
+| 15 | Rilis | Production dan cadangan waktu. Hanya jika merchant Midtrans sudah terverifikasi; jika belum, rilis mundur sampai siap (PRD FR-10) | — |
+
+Pembayaran dikerjakan paling akhir. Sampai Fase 5, checkout di DEV tetap memakai simulasi pembayaran, dan pemberian hak akses premium hanya lewat Admin dengan alasan wajib dan audit log.
 
 Setiap fase:
 - Migrasi dan RLS ditulis lebih dulu.
