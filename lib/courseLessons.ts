@@ -3,6 +3,13 @@ import { COURSES } from "@/data/courses";
 
 // Lesson beserta posisinya di course. Hanya course "available" yang punya halaman
 // lesson; course "coming-soon" belum menampilkan daftar modul (CURRICULUM bagian 1).
+// Semua lesson dari course yang tersedia, untuk disiapkan sebagai halaman statis saat build.
+export function getLessonParams() {
+  return COURSE_DETAILS.filter((detail) => COURSES.find((item) => item.slug === detail.courseSlug)?.availability === "available").flatMap((detail) =>
+    detail.modules.flatMap((module) => module.lessons.map((lesson) => ({ slug: detail.courseSlug, lesson: lesson.slug })))
+  );
+}
+
 export function getLessonPageData(courseSlug: string, lessonSlug: string) {
   const course = COURSES.find((item) => item.slug === courseSlug);
   const detail = COURSE_DETAILS.find((item) => item.courseSlug === courseSlug);

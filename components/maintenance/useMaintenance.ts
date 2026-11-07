@@ -8,6 +8,8 @@ import { isFinalMinute, maintenancePhase } from "@/lib/maintenanceRules";
 import { useSession } from "@/lib/session";
 import { MaintenanceWindow } from "@/types/Maintenance";
 
+const NO_WINDOWS: MaintenanceWindow[] = [];
+
 // Jam yang diperbarui setiap detik, hanya selama ada jadwal yang berjalan.
 function useNow(isTicking: boolean) {
   const [now, setNow] = useState(() => Date.now());
@@ -30,7 +32,8 @@ function useNow(isTicking: boolean) {
 // browser ini. Saat backend tersedia, status wajib diperiksa di server (PRD 8.3).
 export function useMaintenance() {
   const session = useSession();
-  const windows = useContentData("maintenance", (repository) => repository.listMaintenance());
+  // Di luar DEV data dummy tidak disentuh, agar setiap halaman tidak menyiapkan data yang tidak dipakai.
+  const windows = useContentData("maintenance", (repository) => (isDev ? repository.listMaintenance() : Promise.resolve(NO_WINDOWS)));
   const list = isDev ? (windows ?? []) : [];
   const current: MaintenanceWindow | null = list.find((item) => item.status === "terjadwal") ?? null;
   const now = useNow(current !== null);

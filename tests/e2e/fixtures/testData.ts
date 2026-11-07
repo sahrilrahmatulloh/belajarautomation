@@ -15,7 +15,7 @@ export const ACCOUNTS: Record<Role, { name: string; email: string; home: string 
 
 export const ROLES = Object.keys(ACCOUNTS) as Role[];
 
-// Penanda sessionStorage bahwa splash sudah tampil (lib/splash.ts).
+// Penanda localStorage bahwa splash sudah tampil (lib/splash.ts).
 export const SPLASH_SEEN_KEY = "belajarautomation-splash-seen";
 
 export const USER_RANK = "Apprentice";

@@ -11,6 +11,11 @@ interface CareerPageProps {
   }>;
 }
 
+// Disiapkan saat build dan disajikan dari CDN, bukan dirender ulang di server setiap kali dibuka.
+export function generateStaticParams() {
+  return CAREER_RESOURCES.filter((item) => item.status !== "coming-soon").map((item) => ({ slug: item.slug }));
+}
+
 export default async function CareerResourcePage({
   params,
 }: CareerPageProps) {
