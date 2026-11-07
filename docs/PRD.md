@@ -1,9 +1,13 @@
 # BELAJARAUTOMATION.COM
 ## Product Requirements Document (PRD)
-**Versi:** 2.25  
+**Versi:** 2.26  
 **Status:** Draft — Acuan Pengembangan Produk  
 **Platform:** Web Application  
 **Target Pengguna:** Pemula hingga praktisi QA, Software Testing, dan Programming
+
+### Perubahan di Versi 2.26
+- Tema bawaan diganti menjadi **Penerbangan Fuji** (gratis): kabin pesawat dengan jendela menghadap Gunung Fuji, dalam versi bergerak. Tema Mountain Workspace dihapus (FR-12).
+- Menambahkan aturan tema bergerak: video tanpa suara yang berulang di atas gambar diam, dan gambar diam untuk pengguna yang mengaktifkan "kurangi gerakan" (FR-12).
 
 ### Perubahan di Versi 2.25
 - Tombol "Simpan Pilihan" di Kustomisasi menyimpan avatar dan tema ke akun; pilihan tampil di semua halaman. Akun baru memakai Kucing Putih dan tema bawaan (FR-12, FR-13).
@@ -305,7 +309,7 @@ Memberikan gambaran ringkas mengenai aktivitas belajar dan perkembangan pengguna
 - Deskripsi singkat platform.
 - Avatar kucing aktif pengguna dalam ukuran besar.
 - Latar banner sesuai tema banner aktif pengguna (FR-12).
-- Pengguna baru melihat avatar Kucing Putih Basic dan tema gratis bawaan.
+- Pengguna baru melihat avatar Kucing Putih Basic dan tema gratis bawaan (Penerbangan Fuji).
 
 Ketentuan Welcome Banner:
 - Tema banner hanya berlaku di Welcome Banner dan banner profil; bagian website lainnya mengikuti brand guideline.
@@ -1138,10 +1142,20 @@ Setiap avatar memiliki:
 Setiap tema memiliki:
 - ID unik dan nama.
 - Aset latar (mode terang dan gelap bila diperlukan) dan thumbnail.
+- Opsional: video untuk tema bergerak.
 - Tingkat akses: gratis atau berbayar (Pro/Premium).
 
+### Tema bergerak
+- Tema dapat berupa video pendek tanpa suara yang diputar berulang (MP4), di atas gambar diam tema.
+- Gambar diam tampil lebih dulu dan menjadi patokan kecepatan halaman; video diputar setelah halaman siap.
+- Pengguna yang mengaktifkan "kurangi gerakan" di perangkatnya hanya melihat gambar diam.
+- Gerakan pelan dan halus, tanpa kedip atau goyangan kamera, agar tidak mengganggu belajar.
+- Video tidak memuat teks dan tidak menutupi area teks banner.
+- Ukuran video sebaiknya di bawah 1 MB, dengan resolusi yang cukup untuk banner lebar (minimal sekitar 1.600 piksel).
+- Tema yang ilustrasinya sudah memuat karakter kucing tidak menampilkan avatar pengguna di atasnya, agar tidak ada dua kucing.
+
 ### Rilis awal
-- **8 avatar** dan **5 tema banner**.
+- **8 avatar** dan tema banner **Penerbangan Fuji** (gratis, bergerak, menjadi tema bawaan). Target rilis awal tetap 5 tema; tema lain menyusul.
 - Avatar, semuanya gaya Basic:
 
 | Avatar | Akses |

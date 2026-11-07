@@ -61,6 +61,7 @@ export default function PublicProfilePage({ profile }: { profile: PublicProfile 
         avatarImage={profile.avatarImage}
         avatarName={profile.avatarName}
         themeImage={profile.themeImage}
+        themeVideo={profile.themeVideo}
         xp={profile.xp}
         isOwner={false}
       />

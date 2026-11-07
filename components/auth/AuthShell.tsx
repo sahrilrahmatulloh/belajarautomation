@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import ThemeBackdrop from "@/components/common/ThemeBackdrop";
 import MaintenanceBanner from "@/components/maintenance/MaintenanceBanner";
 import { DEFAULT_THEME_ID, getTheme } from "@/data/themes";
 
@@ -11,6 +12,8 @@ interface AuthShellProps {
 }
 
 // Tampilan bersama untuk halaman masuk dan daftar (semua role).
+const defaultTheme = getTheme(DEFAULT_THEME_ID)!;
+
 export default function AuthShell({
   title,
   description,
@@ -20,10 +23,9 @@ export default function AuthShell({
     <div className="grid min-h-dvh bg-background text-foreground lg:grid-cols-2">
       {/* Panel ilustrasi (desktop), memakai tema banner bawaan */}
       <aside className="relative hidden overflow-hidden lg:block">
-        <Image
-          src={getTheme(DEFAULT_THEME_ID)!.image}
-          alt=""
-          fill
+        <ThemeBackdrop
+          image={defaultTheme.image}
+          video={defaultTheme.video}
           priority
           sizes="50vw"
           className="object-cover object-[78%_50%]"

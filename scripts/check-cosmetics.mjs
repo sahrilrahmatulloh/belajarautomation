@@ -29,6 +29,10 @@ for (const file of migrations) {
       fromDb.set(id, { kind, access });
     }
   }
+  // Baris yang dihapus migrasi berikutnya tidak lagi ada di katalog.
+  for (const [, id] of sql.matchAll(/delete from private.cosmetic_items where id = '([^']+)'/g)) {
+    fromDb.delete(id);
+  }
 }
 
 const problems = [];
