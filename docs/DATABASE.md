@@ -195,7 +195,7 @@ Antarmuka sudah memakai satu pintu data (`lib/content/repository.ts`). Setiap fa
 | 7–9 | 5. Commerce | Produk, order, Midtrans sandbox, webhook, rekonsiliasi, refund, hak akses, klaim kredit, file berbayar | Keranjang, transaksi dummy, "Simulasi gateway" |
 | 10 | 7. Email dan notifikasi | Resend, `email_outbox`, notifikasi transaksi dan sistem, pengumuman, maintenance di server | Notifikasi dummy |
 | 11 | 8. Kesiapan | UAT, test keamanan dan RLS, uji beban skenario stres, backup dan restore, monitoring | — |
-| 12 | Rilis | Production dan cadangan waktu | — |
+| 12 | Rilis | Production dan cadangan waktu. Hanya jika merchant Midtrans sudah terverifikasi; jika belum, rilis mundur sampai siap (PRD FR-10) | — |
 | Setelah rilis | 6. Manajemen konten | Alur Creator, Reviewer, dan Admin di aplikasi untuk UAT dan Production, upload gambar ke Storage | Alur Google Docs dan skrip impor (PRD FR-15) |
 
 Setiap fase:
@@ -219,6 +219,6 @@ Setiap fase:
 
 1. Organisasi Supabase, project DEV dan UAT (Free, region Singapura), lalu project Production (Pro) menjelang Fase 8. Tentukan pemegang akses Owner.
 2. Project Google Cloud untuk login Google: layar persetujuan OAuth, Client ID dan Secret, alamat redirect DEV, UAT, dan Production (PRD 4.5).
-3. Pendaftaran merchant Midtrans dan konfirmasi dukungan refund untuk QRIS dan Virtual Account.
+3. Pendaftaran merchant Midtrans sejak awal, karena rilis menunggu verifikasinya, serta konfirmasi dukungan refund untuk QRIS dan Virtual Account. Akun sandbox sudah cukup untuk pengembangan Fase 5.
 4. Akun Resend dan akses DNS domain untuk SPF, DKIM, dan DMARC.
 5. Pengisian semua nilai rahasia di Vercel dan dashboard vendor.

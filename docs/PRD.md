@@ -10,7 +10,7 @@
 - Konten yang sudah ada dipindahkan ke database lewat skrip impor. Alur Creator, Reviewer, dan Admin di aplikasi untuk UAT dan Production menyusul setelah rilis (FR-15).
 - Peran dasar setiap akun bernama `student` dengan label "Pelajar". Membership adalah hak akses, bukan peran (FR-15).
 - Progres course dihitung dari progres lesson, tanpa langkah "daftar course" (FR-02).
-- Pembayaran memakai Midtrans Snap dengan QRIS dan Virtual Account (FR-10).
+- Pembayaran memakai Midtrans Snap dengan QRIS dan Virtual Account. Production baru dirilis setelah pembayaran Midtrans siap; simulasi pembayaran tidak pernah aktif di UAT maupun Production (FR-10).
 - Email dikirim lewat Resend: email akun dari Supabase Auth dan email transaksi dari antrean di database (Bagian 4.4).
 - Lingkungan Supabase: DEV dan UAT memakai paket Free, Production memakai Pro (Bagian 6.3).
 
@@ -1007,6 +1007,8 @@ Sistem pembayaran harus:
 - Tidak menjanjikan hasil karier yang tidak dapat dijamin (lihat Bagian 16).
 
 Payment gateway: **Midtrans Snap**, dengan metode QRIS dan Virtual Account. DEV dan UAT memakai sandbox; Production memakai kunci produksi.
+- Production baru dirilis setelah pembayaran Midtrans siap: merchant terverifikasi dan alur pembayaran lulus pengujian di UAT. Jika verifikasi merchant terlambat, rilis ikut mundur.
+- Simulasi pembayaran hanya ada di DEV dan tidak pernah aktif di UAT maupun Production.
 - Harga dihitung di server dari database, bukan dari data yang dikirim browser.
 - Hak akses diberikan hanya setelah notifikasi Midtrans terverifikasi (signature dan nominal cocok). Halaman "pembayaran berhasil" bukan bukti pembayaran.
 - Notifikasi yang sama diproses sekali saja, dan transaksi tertunda dicek ulang berkala ke Midtrans.
