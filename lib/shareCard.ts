@@ -22,7 +22,7 @@ export interface ShareCardData {
 const LOGO_IMAGE = "/logo.webp";
 const CONTENT_LEFT = 64;
 
-function loadImage(src: string) {
+export function loadImage(src: string) {
   return new Promise<HTMLImageElement>((resolve, reject) => {
     const image = new Image();
     image.onload = () => resolve(image);
@@ -41,7 +41,7 @@ function drawCover(ctx: CanvasRenderingContext2D, image: HTMLImageElement) {
   ctx.drawImage(image, sourceX, sourceY, sourceWidth, sourceHeight, 0, 0, SHARE_CARD_WIDTH, SHARE_CARD_HEIGHT);
 }
 
-function drawContained(ctx: CanvasRenderingContext2D, image: HTMLImageElement, x: number, y: number, box: number) {
+export function drawContained(ctx: CanvasRenderingContext2D, image: HTMLImageElement, x: number, y: number, box: number) {
   const scale = Math.min(box / image.width, box / image.height);
   const width = image.width * scale;
   const height = image.height * scale;

@@ -1,3 +1,4 @@
+import AxeBuilder from "@axe-core/playwright";
 import { Page } from "@playwright/test";
 
 import { expect, test } from "../fixtures/auth";
@@ -71,5 +72,23 @@ test.describe("Popup naik rank", () => {
     await signInWithXp(page, request, 5500, 3800);
 
     await expect(celebrationOf(page)).toContainText("Kamu mencapai rank tertinggi.");
+  });
+
+  test("tombol bagikan menampilkan kartu naik rank yang bisa diunduh dan tautan profil", async ({ page, request }) => {
+    const account = await signInWithXp(page, request, 300, 0);
+    await celebrationOf(page).getByRole("button", { name: "Bagikan pencapaian" }).click();
+
+    const share = page.getByRole("dialog", { name: "Bagikan Pencapaian" });
+    await expect(share).toBeVisible();
+    await expect(share.getByRole("img", { name: `Kartu naik rank ${account.name} ke Apprentice, 300 XP` })).toBeVisible();
+    await expect(share.getByRole("link", { name: "Unduh PNG" })).toHaveAttribute("download", "naik-rank-apprentice.png");
+    await expect(share.getByRole("link", { name: "WhatsApp" })).toHaveAttribute("href", new RegExp(`u%2F${account.username}|u/${account.username}`));
+    await expect(share.getByRole("button", { name: "Salin tautan" })).toBeVisible();
+
+    const { violations } = await new AxeBuilder({ page }).include("[role=dialog]").analyze();
+    expect(violations.filter((item) => ["critical", "serious"].includes(item.impact ?? "")).map((item) => item.id)).toEqual([]);
+
+    await share.getByRole("button", { name: "Kembali" }).click();
+    await expect(celebrationOf(page)).toContainText("Apprentice");
   });
 });
