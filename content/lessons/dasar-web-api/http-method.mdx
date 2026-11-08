@@ -1,0 +1,39 @@
+---
+status: draft
+author: "Tim BelajarAutomation"
+---
+
+{/* DATA DUMMY — hapus sebelum rilis. Draf contoh untuk pengujian di DEV; isi aslinya ditulis dan ditinjau Creator. */}
+
+Setiap request HTTP punya **method** yang menjelaskan apa yang ingin dilakukan client terhadap sebuah data (resource).
+
+## Method yang paling sering dipakai
+
+| Method | Fungsi | Contoh |
+|---|---|---|
+| GET | Mengambil data | Melihat daftar produk |
+| POST | Mengirim data dan membuat data baru | Mendaftar akun, membuat pesanan |
+| PUT | Mengganti seluruh isi data | Memperbarui seluruh profil |
+| PATCH | Mengubah sebagian data | Mengganti nomor telepon saja |
+| DELETE | Menghapus data | Menghapus item dari keranjang |
+
+## Contoh dalam satu fitur
+
+Pada fitur keranjang belanja:
+
+- **GET** /api/keranjang menampilkan isi keranjang.
+- **POST** /api/keranjang menambah produk baru ke keranjang.
+- **PATCH** /api/keranjang/5 mengubah jumlah produk nomor 5.
+- **DELETE** /api/keranjang/5 menghapus produk nomor 5.
+
+## Yang perlu diuji QA
+
+- Method yang benar menghasilkan perubahan yang benar. Misalnya setelah POST, data baru benar-benar muncul saat diambil dengan GET.
+- Method yang tidak diizinkan ditolak. Misalnya pengguna biasa tidak bisa melakukan DELETE pada data milik orang lain.
+- GET tidak boleh mengubah data, walau dipanggil berkali-kali.
+
+<Peringatan>Jangan mengirim data sensitif seperti password lewat URL pada request GET, karena URL bisa tersimpan di riwayat browser dan log server.</Peringatan>
+
+## Ringkasan
+
+GET mengambil data, POST membuat data baru, PUT dan PATCH mengubah data, dan DELETE menghapus data.

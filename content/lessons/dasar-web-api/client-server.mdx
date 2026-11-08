@@ -6,30 +6,42 @@ sources:
     url: https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Server-side/First_steps/Client-Server_overview
 ---
 
-{/* DATA DUMMY — hapus sebelum rilis. Contoh struktur lesson untuk pengujian di DEV; isi aslinya ditulis Creator. */}
+{/* DATA DUMMY — hapus sebelum rilis. Draf contoh untuk pengujian di DEV; isi aslinya ditulis dan ditinjau Creator. */}
 
-Ini contoh struktur lesson untuk pengujian. Isi aslinya akan ditulis Creator.
+Setiap kali kamu membuka sebuah aplikasi web, ada dua pihak yang bekerja sama: **client** dan **server**. Memahami keduanya membantu QA menebak di mana sebuah bug terjadi.
 
 ## Apa itu client dan server?
 
-**Client** meminta data, dan **server** menjawabnya. Saat membuka sebuah halaman, browser menjadi client.
+**Client** meminta data, dan **server** menjawabnya. Saat membuka sebuah halaman, browser menjadi client: ia mengirim **request** ke server, lalu menampilkan **response** yang diterima.
 
-<Tips>Mulai pengujian dari alur yang paling sering dipakai pengguna.</Tips>
+Server menerima request, memprosesnya (misalnya mengambil data dari database), lalu mengirim response kembali ke client.
+
+## Alur request dan response
+
+1. Pengguna mengetik alamat atau menekan tombol.
+2. Browser mengirim request ke server.
+3. Server memproses request dan menyiapkan data.
+4. Server mengirim response.
+5. Browser menampilkan hasilnya ke pengguna.
+
+<Tips>Saat menemukan bug, tanyakan dulu: apakah data dari server sudah salah, atau server benar tetapi tampilan di browser yang salah? Jawabannya menentukan siapa yang perlu memperbaiki.</Tips>
 
 ## Contoh request
+
+Kode berikut meminta data profil dari server dan menampilkan status code-nya.
 
 ```ts
 const response = await fetch("https://contoh.com/api/profil");
 console.log(response.status);
 ```
 
-<Peringatan>Jangan menguji langsung di data production.</Peringatan>
+<Peringatan>Jangan menguji langsung di data production. Gunakan lingkungan pengujian dan akun uji.</Peringatan>
 
 ## Ringkasan
 
 | Pihak | Peran |
 |---|---|
-| Client | Mengirim request |
-| Server | Mengirim response |
+| Client | Mengirim request dan menampilkan response |
+| Server | Memproses request dan mengelola data |
 
-<Gambar src="/covers/courses/dasar-web-api.webp" alt="Sampul course Dasar Web dan API" keterangan="Contoh gambar dengan keterangan." />
+<Gambar src="/covers/courses/dasar-web-api.webp" alt="Sampul course Dasar Web dan API" keterangan="Client dan server bertukar request dan response." />

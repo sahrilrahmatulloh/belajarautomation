@@ -302,6 +302,24 @@ export const QA_FUNDAMENTAL = {
   ],
 } as const;
 
+// Course Dasar Web & API: seluruh lesson sudah punya isi draf.
+export const DASAR_WEB_API = {
+  courseSlug: "dasar-web-api",
+  lessons: [
+    "client-server",
+    "apa-itu-http",
+    "http-method",
+    "status-code",
+    "browser-dan-dom",
+    "format-json",
+    "mengenal-devtools",
+    "membaca-request-di-tab-network",
+  ],
+} as const;
+
+// Lesson yang belum punya isi ("Materi sedang ditulis").
+export const UNWRITTEN_LESSON = { courseSlug: "playwright", lessonSlug: "apa-itu-playwright" } as const;
+
 export const LESSON_CONTENT = {
   courseSlug: "dasar-web-api",
   courseTitle: "Dasar Web & API untuk QA",
