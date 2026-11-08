@@ -1,12 +1,12 @@
 import Link from "next/link";
-import { ArrowLeft, ArrowRight, Clock3, PenLine } from "lucide-react";
+import { ArrowLeft, Clock3, PenLine } from "lucide-react";
 
 import ArticleDraftBadge from "@/components/blog/ArticleDraftBadge";
 import { ArticleSources } from "@/components/blog/ArticleParts";
 import { getLessonPageData } from "@/lib/courseLessons";
 import { LessonContent } from "@/lib/lessons";
 
-import LessonCompleteButton from "./LessonCompleteButton";
+import LessonNavigation from "./LessonNavigation";
 
 type LessonPageProps = NonNullable<ReturnType<typeof getLessonPageData>> & {
   lessonContent: LessonContent | null;
@@ -14,11 +14,6 @@ type LessonPageProps = NonNullable<ReturnType<typeof getLessonPageData>> & {
   body: React.ReactNode;
 };
 
-const navLinkClassName =
-  "flex min-w-0 flex-1 items-center gap-3 rounded-2xl border border-border bg-card p-4 transition-colors hover:bg-accent";
-
-// Lesson yang belum ditulis tidak punya tombol selesai, agar tidak mencatat progres atau XP
-// dari materi yang belum dipelajari.
 export default function LessonPage({
   course,
   lesson,
@@ -74,7 +69,6 @@ export default function LessonPage({
             {body}
             <ArticleSources sources={lessonContent.sources} />
           </section>
-          <LessonCompleteButton courseSlug={course.slug} lessonSlug={lesson.slug} />
         </>
       ) : (
         <section className="rounded-3xl border border-dashed border-border bg-card p-6">
@@ -89,32 +83,17 @@ export default function LessonPage({
         </section>
       )}
 
-      <nav aria-label="Navigasi lesson" className="flex flex-col gap-3 sm:flex-row">
-        {previous && (
-          <Link href={`${courseHref}/${previous.slug}`} className={navLinkClassName}>
-            <ArrowLeft className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden="true" />
-            <span className="min-w-0">
-              <span className="block text-xs text-muted-foreground">Sebelumnya</span>
-              <span className="block text-sm font-semibold">{previous.title}</span>
-            </span>
-          </Link>
-        )}
-
-        {next ? (
-          <Link href={`${courseHref}/${next.slug}`} className={`${navLinkClassName} justify-end text-right`}>
-            <span className="min-w-0">
-              <span className="block text-xs text-muted-foreground">Berikutnya</span>
-              <span className="block text-sm font-semibold">{next.title}</span>
-            </span>
-            <ArrowRight className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden="true" />
-          </Link>
-        ) : (
-          <Link href={courseHref} className={`${navLinkClassName} justify-end text-right`}>
-            <span className="text-sm font-semibold">Lihat semua materi</span>
-            <ArrowRight className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden="true" />
-          </Link>
-        )}
-      </nav>
+      <LessonNavigation
+        // Status "sudah digulir sampai akhir" dimulai ulang di setiap lesson.
+        key={lesson.slug}
+        courseSlug={course.slug}
+        courseTitle={course.title}
+        lessonSlug={lesson.slug}
+        total={total}
+        previous={previous ? { slug: previous.slug, title: previous.title } : null}
+        next={next ? { slug: next.slug, title: next.title } : null}
+        hasContent={lessonContent !== null}
+      />
     </div>
   );
 }

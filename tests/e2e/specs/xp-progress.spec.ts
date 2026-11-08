@@ -29,6 +29,14 @@ async function openLesson(page: Page, course: string = courseSlug, slug: string 
   return lesson;
 }
 
+// Klik Berikutnya dan tunggu Server Action pencatat lesson selesai, agar pindah halaman
+// sesudahnya tidak memotong penyimpanan.
+async function completeAndNext(page: Page, lesson: LessonPage) {
+  const saved = page.waitForResponse((response) => response.request().method() === "POST" && Boolean(response.request().headers()["next-action"]));
+  await lesson.completeAndNext();
+  await saved;
+}
+
 async function signIn(page: Page, account: MockAccount) {
   await mockSupabase(page, { accounts: [account] });
   await signInWithMock(page, account);
@@ -51,19 +59,19 @@ test.describe("XP akun Supabase", () => {
     await expect(statValue(dashboard, "Materi Selesai")).toHaveText("0");
 
     const lesson = await openLesson(page);
-    await expect(lesson.completeButton).toBeDisabled();
-    await lesson.complete();
-    await expect(lesson.completedStatus).toBeVisible();
+    await expect(lesson.completeHint).toBeVisible();
+    await completeAndNext(page, lesson);
+    await expect(page).toHaveURL(`/learn/${courseSlug}/${LESSON_CONTENT.nextLessonSlug}`);
     await expect(page.getByText("Lesson selesai, +10 XP.")).toBeVisible();
 
     await dashboard.goto();
     await expect(statValue(dashboard, "Total XP")).toHaveText("10");
     await expect(statValue(dashboard, "Materi Selesai")).toHaveText("1");
 
-    // Lesson yang sudah selesai tidak bisa ditandai lagi.
+    // Lesson yang sudah selesai tidak memberi XP lagi.
     await lesson.goto();
     await expect(lesson.completedStatus).toBeVisible();
-    await expect(lesson.completeButton).toBeHidden();
+    await expect(lesson.nextLink).not.toContainText("+10 XP");
   });
 
   test("kuis lulus memberi +30 XP sekali; mengulang boleh tanpa XP tambahan", async ({ page }) => {
@@ -108,7 +116,7 @@ test.describe("XP akun Supabase", () => {
     await signIn(page, account);
 
     const lesson = await openLesson(page);
-    await lesson.complete();
+    await completeAndNext(page, lesson);
 
     const celebration = page.getByRole("dialog", { name: "Selamat, kamu naik rank!" });
     await expect(celebration).toBeVisible();
@@ -129,14 +137,24 @@ test.describe("XP akun Supabase", () => {
     test.slow();
     await signIn(page, uniqueMockAccount());
 
-    for (const [index, slug] of QA_FUNDAMENTAL.lessons.entries()) {
+    const lessons = QA_FUNDAMENTAL.lessons;
+    for (const slug of lessons.slice(0, -1)) {
       const lesson = await openLesson(page, QA_FUNDAMENTAL.courseSlug, slug);
       await expect(lesson.writingNotice).toBeHidden();
-      await lesson.complete();
-      const isLast = index === QA_FUNDAMENTAL.lessons.length - 1;
-      await expect(lesson.completedStatus).toContainText(isLast ? "Course tuntas, bonus +50 XP!" : "Lesson selesai.");
+      await completeAndNext(page, lesson);
     }
-    await expect(page.getByText("Lesson selesai, +60 XP termasuk bonus course tuntas.")).toBeVisible();
+
+    // Lesson terakhir: "Selesaikan course" menandai selesai, memberi bonus, lalu kembali ke course.
+    const last = await openLesson(page, QA_FUNDAMENTAL.courseSlug, lessons.at(-1)!);
+    await expect(last.nextLink).toBeHidden();
+    await expect(last.finishButton).toContainText("Selesaikan course");
+    await expect(last.finishButton).toContainText("+60 XP termasuk bonus course");
+    await last.scrollToEnd();
+    const { violations } = await new AxeBuilder({ page }).analyze();
+    expect(violations.filter((item) => ["critical", "serious"].includes(item.impact ?? "")).map((item) => item.id)).toEqual([]);
+    await last.finishButton.click();
+    await expect(page).toHaveURL(`/learn/${QA_FUNDAMENTAL.courseSlug}`);
+    await expect(page.getByText("Course QA Fundamental tuntas! +60 XP termasuk bonus course.")).toBeVisible();
 
     const challenge = await passQuiz(page, quiz.alreadyPassed.slug, quiz.alreadyPassed.answers);
     await expect(challenge.result).toContainText("+30 XP");

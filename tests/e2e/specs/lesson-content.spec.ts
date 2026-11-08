@@ -40,23 +40,25 @@ test.describe("Lesson yang sudah punya isi", () => {
     await expect(main.getByText("Draf", { exact: true })).toBeVisible();
   });
 
-  test("tombol selesai baru aktif setelah menggulir sampai akhir materi", async () => {
-    await expect(lesson.completeButton).toBeDisabled();
+  test("Berikutnya memberi XP setelah materi digulir sampai akhir", async ({ page }) => {
+    await expect(page.getByRole("button", { name: /^Tandai selesai/ })).toHaveCount(0);
     await expect(lesson.completeHint).toBeVisible();
+    await expect(lesson.nextLink).toContainText("Berikutnya (+10 XP)");
 
-    await lesson.completeButton.scrollIntoViewIfNeeded();
+    await lesson.scrollToEnd();
 
-    await expect(lesson.completeButton).toBeEnabled();
     await expect(lesson.completeHint).toBeHidden();
   });
 
-  test("tandai selesai memperbarui progres dan bertahan setelah dimuat ulang", async ({ page }) => {
-    await lesson.complete();
-    await expect(lesson.completedStatus).toContainText("Lesson selesai.");
-    await expect(lesson.completeButton).toBeHidden();
+  test("klik Berikutnya menandai selesai dan bertahan setelah dimuat ulang", async ({ page }) => {
+    await lesson.completeAndNext();
+    await expect(page).toHaveURL(`/learn/${courseSlug}/${nextLessonSlug}`);
+    await expect(page.getByText("Lesson selesai, +10 XP.")).toBeVisible();
 
-    await page.reload();
-    await expect(lesson.completedStatus).toBeVisible();
+    await lesson.goto();
+    await expect(lesson.completedStatus).toContainText("Lesson selesai.");
+    await expect(lesson.nextLink).not.toContainText("+10 XP");
+    await expect(lesson.completeHint).toBeHidden();
 
     const course = new CourseDetailPage(page, courseSlug);
     await course.goto();
@@ -72,15 +74,18 @@ test.describe("Lesson yang sudah punya isi", () => {
     const expected = (Number((await xp.innerText()).replace(/\D/g, "")) + 10).toLocaleString("id-ID");
 
     await lesson.goto();
-    await lesson.complete();
-    await expect(lesson.completedStatus).toBeVisible();
+    await lesson.completeAndNext();
+    await expect(page).toHaveURL(`/learn/${courseSlug}/${nextLessonSlug}`);
 
     await dashboard.goto();
     await expect(xp).toHaveText(expected);
     await expect(dashboard.continueLearning).toContainText(courseTitle);
 
+    // Klik Berikutnya lagi pada lesson yang sudah selesai tidak menambah XP.
     await lesson.goto();
     await expect(lesson.completedStatus).toBeVisible();
+    await lesson.nextLink.click();
+    await expect(page).toHaveURL(`/learn/${courseSlug}/${nextLessonSlug}`);
     await dashboard.goto();
     await expect(xp).toHaveText(expected);
   });
@@ -93,20 +98,20 @@ test.describe("Lesson yang sudah punya isi", () => {
     const before = Number((await lessons.innerText()).replace(/\D/g, ""));
 
     await lesson.goto();
-    await lesson.complete();
-    await expect(lesson.completedStatus).toBeVisible();
+    await lesson.completeAndNext();
+    await expect(page).toHaveURL(`/learn/${courseSlug}/${nextLessonSlug}`);
     await profile.goto();
 
     await expect(lessons).toContainText(String(before + 1));
     await expect(page.getByRole("heading", { name: "Progres Belajar" }).locator("..")).toContainText(courseTitle);
   });
 
-  test("lesson berikutnya yang belum ditulis tidak punya tombol selesai", async ({ page }) => {
-    await lesson.nextLink.click();
-    await expect(page).toHaveURL(`/learn/${courseSlug}/${nextLessonSlug}`);
+  test("lesson berikutnya yang belum ditulis tidak memberi XP", async ({ page }) => {
+    await new LessonPage(page, courseSlug, nextLessonSlug).goto();
 
     await expect(lesson.writingNotice).toBeVisible();
-    await expect(lesson.completeButton).toBeHidden();
+    await expect(lesson.completeHint).toBeHidden();
+    await expect(lesson.nextLink).not.toContainText("+10 XP");
   });
 
   test("lesson terbuka dari daftar modul", async ({ page }) => {
@@ -124,8 +129,7 @@ test.describe("Lesson yang sudah punya isi", () => {
       test.use({ colorScheme });
 
       test("tanpa pelanggaran critical dan serious", async ({ page }) => {
-        await lesson.complete();
-        await expect(lesson.completedStatus).toBeVisible();
+        await lesson.scrollToEnd();
 
         const { violations } = await new AxeBuilder({ page }).analyze();
 
