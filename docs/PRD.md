@@ -1,9 +1,13 @@
 # BELAJARAUTOMATION.COM
 ## Product Requirements Document (PRD)
-**Versi:** 2.26  
+**Versi:** 2.27  
 **Status:** Draft — Acuan Pengembangan Produk  
 **Platform:** Web Application  
 **Target Pengguna:** Pemula hingga praktisi QA, Software Testing, dan Programming
+
+### Perubahan di Versi 2.27
+- Menambahkan tema **Neon Night** (gratis, bergerak): kota cyberpunk malam dengan kucing abu-abu di depan laptop (FR-12).
+- Aset tema disimpan satu folder per tema di `public/banner/<id-tema>/` (FR-12).
 
 ### Perubahan di Versi 2.26
 - Tema bawaan diganti menjadi **Penerbangan Fuji** (gratis): kabin pesawat dengan jendela menghadap Gunung Fuji, dalam versi bergerak. Tema Mountain Workspace dihapus (FR-12).
@@ -1155,7 +1159,14 @@ Setiap tema memiliki:
 - Tema yang ilustrasinya sudah memuat karakter kucing tidak menampilkan avatar pengguna di atasnya, agar tidak ada dua kucing.
 
 ### Rilis awal
-- **8 avatar** dan tema banner **Penerbangan Fuji** (gratis, bergerak, menjadi tema bawaan). Target rilis awal tetap 5 tema; tema lain menyusul.
+- **8 avatar** dan 2 tema banner:
+
+| Tema | Akses | Catatan |
+|---|---|---|
+| Penerbangan Fuji (bawaan) | Gratis | Bergerak; kabin pesawat dengan jendela menghadap Gunung Fuji |
+| Neon Night | Gratis | Bergerak; kota cyberpunk malam |
+
+- Target rilis awal tetap 5 tema; tema lain menyusul.
 - Avatar, semuanya gaya Basic:
 
 | Avatar | Akses |
