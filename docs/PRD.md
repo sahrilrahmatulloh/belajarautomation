@@ -1747,7 +1747,7 @@ Klik notifikasi menandainya sebagai dibaca dan langsung membuka halaman terkait:
 - Setelah mendaftar, pengguna diminta membuka tautan verifikasi di email. Akun baru dapat dipakai untuk masuk setelah email terverifikasi.
 - Untuk email yang sudah terdaftar, tampilan tetap sama seperti pendaftaran berhasil, agar keberadaan akun tidak dapat ditebak.
 - Email verifikasi dapat dikirim ulang dari halaman daftar dan dari halaman masuk jika email belum terverifikasi.
-- Email verifikasi berbahasa Indonesia dengan identitas belajarautomation.com: subjek "Verifikasi email akun belajarautomation.com", tombol "Verifikasi email", tautan cadangan, keterangan masa berlaku, dan pesan bila tidak merasa mendaftar. Template disimpan di `supabase/templates/confirm-signup.html`.
+- Email verifikasi berbahasa Indonesia dengan identitas belajarautomation.com: subjek "Verifikasi email akun belajarautomation.com", tombol "Verifikasi email", tautan cadangan, keterangan masa berlaku, dan pesan bila tidak merasa mendaftar. Desain mengikuti mockup pemilik: header gelap dengan logo, ilustrasi kucing dengan perisai centang, judul "Verifikasi Email Anda", tombol "Verifikasi Akun Sekarang", masa berlaku tautan, kotak "Tidak merasa mendaftar?", dan footer dengan logo serta fitur utama. Template disimpan di `supabase/templates/confirm-signup.html`; gambarnya PNG di `public/email/` karena sebagian aplikasi email tidak mendukung WebP. Teks masa berlaku mengikuti pengaturan Email OTP Expiration.
 
 ### Lupa password
 - Tautan "Lupa password?" di halaman masuk membuka halaman permintaan reset.
