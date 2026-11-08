@@ -18,6 +18,11 @@ export const ROLES = Object.keys(ACCOUNTS) as Role[];
 // Penanda localStorage bahwa splash sudah tampil (lib/splash.ts).
 export const SPLASH_SEEN_KEY = "belajarautomation-splash-seen";
 
+// Popup promosi setelah login (data/promoPopups.ts, PRD 4.7).
+export const PROMO_DISMISSED_KEY = "belajarautomation-promo-dismissed";
+export const ACTIVE_PROMO_ID = "tema-neon-night-2026-11";
+export const ACTIVE_PROMO_TITLE = "Tema bergerak Neon Night";
+
 export const USER_RANK = "Apprentice";
 
 export const ACTIVE_AVATAR_NAME = "Kucing Oren";

@@ -1,9 +1,15 @@
 # BELAJARAUTOMATION.COM
 ## Product Requirements Document (PRD)
-**Versi:** 2.31  
+**Versi:** 2.32  
 **Status:** Draft — Acuan Pengembangan Produk  
 **Platform:** Web Application  
 **Target Pengguna:** Pemula hingga praktisi QA, Software Testing, dan Programming
+
+### Perubahan di Versi 2.32
+- Sertifikat kelulusan dicatat sebagai fitur yang direncanakan (Bagian 12).
+- Slide pertama panel promosi berupa poster utuh; panel berbingkai potret 3:4 yang mengikuti tinggi layar (Bagian 4.5).
+- Daftar akun demo tidak lagi ditampilkan di halaman masuk; dipindah ke README (Bagian 4.5).
+- Menambahkan popup promosi di tengah layar setelah login, dengan pilihan "Nanti saja" dan "Jangan tampilkan lagi" (Bagian 4.7).
 
 ### Perubahan di Versi 2.31
 - Halaman masuk dan daftar (desktop) menampilkan panel promosi berisi 3 slide yang bergeser otomatis atau digeser: sambutan, koleksi avatar kucing, dan eBook (Bagian 4.5).
@@ -1748,10 +1754,13 @@ Klik notifikasi menandainya sebagai dibaca dan langsung membuka halaman terkait:
 
 ### Akun demo
 - Akun demo per peran hanya dapat dipakai di DEV, atau di lingkungan yang belum memasang Supabase. Di UAT dan Production dengan Supabase, masuk hanya lewat akun sungguhan.
+- Daftar akun demo tidak ditampilkan di halaman masuk agar form tetap ringkas; daftarnya ada di README.
 
 ### Panel promosi
 - Di desktop, sisi kiri halaman masuk dan daftar menampilkan 3 slide promosi; di layar kecil panel ini tidak ditampilkan agar form tetap di atas.
-- Slide awal: sambutan dengan tema bawaan, koleksi avatar kucing, dan eBook.
+- Slide awal: poster belajarautomation.com, koleksi avatar kucing, dan eBook.
+- Panel berupa bingkai potret 3:4 yang tingginya mengikuti layar; form mengisi sisa ruang. Titik navigasi dan tombol jeda berada di bawah bingkai.
+- Slide poster ditampilkan utuh tanpa teks tambahan, dengan teks alternatif yang menjelaskan isinya. Poster disimpan di `public/auth-slides/` (potret 3:4).
 - Slide bergeser otomatis setiap 6 detik dan berhenti saat diarahkan mouse atau difokuskan. Tersedia titik navigasi, tombol jeda, dan dapat digeser.
 - Pengguna yang mengaktifkan "kurangi gerakan" tidak melihat pergeseran otomatis.
 - Isi promosi harus sesuai kondisi nyata: fitur yang belum tersedia di lingkungan tersebut diberi label "Segera hadir".
@@ -1791,6 +1800,17 @@ Alert singkat di atas tengah layar memberi tahu hasil aksi pengguna dan perubaha
 ### Tahap penerapan
 - Tahap 1: sistem alert, alert koneksi, dan fitur Pelajar (Pengaturan profil, Kustomisasi, keranjang).
 - Tahap 2: aksi Creator, Reviewer, dan Admin (buat, ubah, hapus konten, review, kelola pengguna, dan lainnya).
+
+## 4.7 Popup Promosi
+Popup di tengah layar yang memberi tahu promosi atau info terbaru (mis. eBook, project, avatar, atau tema baru).
+
+- Tampil satu kali setiap pengguna masuk lewat halaman masuk, di halaman pertama setelah masuk. Tidak tampil saat pengguna membuka situs dengan sesi yang masih aktif.
+- Hanya di Mode Belajar. Bila popup maintenance sedang berlaku, popup promosi tidak ditampilkan.
+- Berisi gambar, judul, deskripsi, tombol ajakan (opsional), "Nanti saja", dan "Jangan tampilkan lagi".
+- "Nanti saja" menutup popup; popup tampil lagi di login berikutnya.
+- "Jangan tampilkan lagi" menutup popup dan tidak menampilkan promosi itu lagi untuk akun tersebut. Promosi baru dengan id berbeda tetap tampil.
+- Isi promosi harus sesuai kondisi nyata.
+- Satu promosi aktif dalam satu waktu, dikelola lewat file data sampai tersedia di Panel Admin (Fase 6). Pilihan "Jangan tampilkan lagi" disimpan di browser sampai tersedia di backend.
 
 ---
 
@@ -2285,6 +2305,7 @@ Pengembangan harus dilakukan secara bertahap agar perubahan tidak merusak fitur 
 Hal berikut harus diputuskan sebelum implementasi fitur terkait mencapai tahap produksi.
 
 ## Produk dan Konten
+- Fitur sertifikat kelulusan: direncanakan oleh pemilik produk dan sudah disebut di poster panel promosi halaman masuk. Bentuk, syarat, dan hubungannya dengan rank (rank bukan sertifikasi profesional, FR-05) belum ditetapkan.
 - Struktur final materi dan modul.
 - Imbalan untuk Creator dan bentuk kesepakatan kepemilikan konten.
 - Waktu peralihan dari menulis di Google Docs ke editor di aplikasi (setelah backend Supabase untuk alur konten siap).

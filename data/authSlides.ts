@@ -7,6 +7,9 @@ import { isDev } from "@/lib/env";
 // Isi promosi harus sesuai kondisi nyata: fitur yang belum tersedia diberi label "Segera hadir".
 
 export type AuthSlideVisual =
+  // Poster utuh (potret 3:4) dari public/auth-slides. Poster sudah memuat teksnya sendiri,
+  // jadi tidak ditimpa judul slide. alt menjelaskan isi poster untuk pembaca layar.
+  | { kind: "poster"; src: string; alt: string }
   // Tema banner bawaan (gambar dan video bergerak).
   | { kind: "theme" }
   // Deretan avatar kucing.
@@ -27,11 +30,15 @@ const featuredBooks = BOOKS.slice(0, 3).map((book) => book.title);
 
 export const AUTH_SLIDES: AuthSlide[] = [
   {
-    id: "sambutan",
-    eyebrow: "Learn · Practice · Build · Grow",
-    title: "Belajar QA Automation dari nol hingga siap kerja.",
-    description: "Materi terstruktur, latihan langsung di Playground, dan roadmap yang jelas.",
-    visual: { kind: "theme" },
+    id: "poster-pertama",
+    eyebrow: "Belajar Automation",
+    title: "Platform belajar automation secara praktis, terstruktur, dan interaktif.",
+    description: "",
+    visual: {
+      kind: "poster",
+      src: "/auth-slides/poster-pertama.webp",
+      alt: "Poster belajarautomation.com: Belajar Automation, platform belajar automation secara praktis, terstruktur, dan interaktif. Kucing putih belajar di depan laptop, dengan daftar fitur dan enam rank dari Trainee sampai Master.",
+    },
   },
   {
     id: "avatar-kucing",
