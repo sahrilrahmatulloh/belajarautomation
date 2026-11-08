@@ -14,8 +14,9 @@ export default function DashboardSection() {
       </div>
 
       <aside className="flex min-w-0 flex-col gap-5 lg:gap-6" aria-label="Ringkasan belajar">
-        <StudyCalendar />
+        {/* Statistik lebih sering dilirik, jadi di atas; kalender yang lebih tinggi di bawah. */}
         <DashboardStats />
+        <StudyCalendar />
       </aside>
     </div>
   );
