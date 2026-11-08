@@ -7,12 +7,12 @@ import { AlertCircle, CheckCircle2, LogIn } from "lucide-react";
 
 import { useMaintenance } from "@/components/maintenance/useMaintenance";
 import { DUMMY_ACCOUNTS, DUMMY_PASSWORD } from "@/data/dummy/accounts";
-import { ROLE_HOME, ROLE_LABELS } from "@/data/navigation";
+import { ROLE_HOME } from "@/data/navigation";
 import { isDemoLoginEnabled, isSupabaseConfigured } from "@/lib/auth/mode";
 import { resendVerificationEmail, signInWithEmail } from "@/lib/auth/supabaseAuth";
 import { getNextTarget, withNextParam } from "@/lib/authRedirect";
-import { isDev } from "@/lib/env";
 import { maintenanceLoginNotice } from "@/lib/maintenanceRules";
+import { markPromoPending } from "@/lib/promo";
 import { getContentRepository } from "@/lib/content";
 import { loadSupabaseAccount, sessionActions } from "@/lib/session";
 import { useHydrated } from "@/lib/useHydrated";
@@ -64,9 +64,14 @@ export default function LoginForm() {
   const blockedByMaintenance = (roles: Session["roles"]) =>
     maintenance.current && maintenance.isActiveNow() && !roles.includes("admin") ? maintenanceLoginNotice(maintenance.current) : null;
 
-  const finish = (role: Session["role"]) => router.replace(getNextTarget() ?? ROLE_HOME[role]);
+  const finish = (role: Session["role"]) => {
+    // Popup promosi tampil di halaman pertama setelah login (PRD 4.7).
+    markPromoPending();
+    router.replace(getNextTarget() ?? ROLE_HOME[role]);
+  };
 
-  // DUMMY: dicocokkan dengan akun demo di browser, bukan ke server.
+  // DUMMY: dicocokkan dengan akun demo di browser, bukan ke server. Daftar akun demo ada di
+  // README.md (bagian Akun demo), tidak ditampilkan di halaman masuk.
   const signInDemo = async (account: (typeof DUMMY_ACCOUNTS)[number]) => {
     if (password !== DUMMY_PASSWORD) return fail("Email atau password salah.");
 
@@ -145,12 +150,6 @@ export default function LoginForm() {
       return;
     }
     setResendState("sent");
-  };
-
-  const fillDemoAccount = (accountEmail: string) => {
-    setEmail(accountEmail);
-    setPassword(DUMMY_PASSWORD);
-    setErrors({});
   };
 
   return (
@@ -252,43 +251,6 @@ export default function LoginForm() {
           </Link>
         </p>
       </form>
-
-      {/* Akun demo per role, hanya untuk pengembangan. */}
-      {isDev && (
-        <section
-          aria-labelledby="demo-accounts"
-          className="rounded-2xl border border-dashed border-border bg-muted/30 p-4"
-        >
-          <h2 id="demo-accounts" className="text-sm font-semibold">
-            Akun demo
-          </h2>
-          <p className="mt-1 text-xs text-muted-foreground">
-            Pilih role untuk mengisi form otomatis. Password semua akun:{" "}
-            <span className="font-mono font-semibold text-foreground">{DUMMY_PASSWORD}</span>
-          </p>
-
-          <div className="mt-3 grid grid-cols-2 gap-2">
-            {DUMMY_ACCOUNTS.map((account) => (
-              <button
-                key={account.email}
-                type="button"
-                onClick={() => fillDemoAccount(account.email)}
-                aria-pressed={email === account.email}
-                className={`rounded-lg border px-3 py-2 text-left text-sm transition-colors ${
-                  email === account.email
-                    ? "border-primary bg-primary/5"
-                    : "border-border bg-card hover:bg-accent"
-                }`}
-              >
-                <span className="block font-semibold">{ROLE_LABELS[account.role]}</span>
-                <span className="block truncate text-xs text-muted-foreground">
-                  {account.name}
-                </span>
-              </button>
-            ))}
-          </div>
-        </section>
-      )}
     </div>
   );
 }

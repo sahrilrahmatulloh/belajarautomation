@@ -23,7 +23,8 @@ test.describe("Panel promosi halaman masuk (desktop)", () => {
     await expect(panel.root).toBeVisible();
     await expect(panel.root.getByRole("button", { name: /^Slide \d:/ })).toHaveCount(3);
     await expect(panel.dot(1)).toHaveAttribute("aria-current", "true");
-    await expect(panel.root.getByText("Belajar QA Automation dari nol hingga siap kerja.")).toBeVisible();
+    // Slide pertama berupa poster utuh dengan teks alternatif untuk pembaca layar.
+    await expect(panel.root.getByRole("img", { name: /^Poster belajarautomation.com/ })).toBeVisible();
     await expect(panel.pauseButton).toBeVisible();
   });
 
@@ -43,6 +44,7 @@ test.describe("Panel promosi halaman masuk (desktop)", () => {
   test("titik navigasi membuka slide yang dipilih", async ({ page }) => {
     await new LoginPage(page).goto();
     const panel = showcase(page);
+    await expect(panel.pauseButton).toBeVisible();
 
     await panel.dot(3).click();
 
@@ -67,6 +69,8 @@ test.describe("Panel promosi halaman masuk (desktop)", () => {
 
   test("bisa digeser dengan menarik slide", async ({ page }) => {
     await new LoginPage(page).goto();
+    // Tombol jeda baru tampil setelah halaman siap menerima interaksi.
+    await expect(showcase(page).pauseButton).toBeVisible();
     const box = (await showcase(page).root.boundingBox())!;
     const y = box.y + box.height / 2;
 

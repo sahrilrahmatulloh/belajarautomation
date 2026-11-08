@@ -9,6 +9,7 @@
 // - mockups: mockup yang disetujui (docs/desain), lebar maks 2400px, < 500 KB, agar teksnya tetap
 //            terbaca. Nama file mengikuti fitur (PRD 13.2).
 // - blog:    gambar artikel (public/covers/blog), lebar maks 1600px, < 200 KB.
+// - slides:  poster slide halaman masuk (public/auth-slides), potret 3:4, lebar maks 1200px, < 250 KB.
 // Jalankan: npm run optimize:images (semua) atau npm run optimize:images -- avatars
 import { readdir, stat, unlink, writeFile } from "node:fs/promises";
 import path from "node:path";
@@ -21,6 +22,7 @@ const GROUPS = {
   themes: { dir: "public/banner", maxWidth: 2400, limitKb: 250, thumbnailWidth: 480, perFolder: true },
   mockups: { dir: "docs/desain", maxWidth: 2400, limitKb: 500 },
   blog: { dir: "public/covers/blog", maxWidth: 1600, limitKb: 200 },
+  slides: { dir: "public/auth-slides", maxWidth: 1200, limitKb: 250 },
 };
 
 const START_QUALITY = 90;

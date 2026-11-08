@@ -46,6 +46,19 @@ Pengaturan lingkungan:
 - `NEXT_PUBLIC_SITE_URL` berisi alamat situs untuk Open Graph dan sitemap. Isi di Production saat domain sudah pasti; jika kosong, memakai alamat dari Vercel.
 - Di Vercel, isi `NEXT_PUBLIC_APP_ENV` per lingkungan (mis. per branch `develop` dan `uat`). Nilainya disisipkan saat build, jadi perubahan baru berlaku setelah deploy ulang.
 
+## Akun demo (DEV)
+
+Untuk mencoba setiap peran di lingkungan DEV, masuk di `/login` dengan akun berikut. Akun demo tidak ditampilkan di halaman masuk agar form tetap ringkas, dan tidak dapat dipakai di UAT maupun Production yang sudah memasang Supabase (PRD 4.5).
+
+| Peran | Email | Password |
+|---|---|---|
+| User (Pelajar) | `user@demo.belajarautomation.com` | `demo1234` |
+| Creator | `creator@demo.belajarautomation.com` | `demo1234` |
+| Reviewer | `reviewer@demo.belajarautomation.com` | `demo1234` |
+| Admin | `admin@demo.belajarautomation.com` | `demo1234` |
+
+Sumber datanya `data/dummy/accounts.ts`.
+
 ## Database (Supabase)
 
 Rancangan dan tahapan ada di [`docs/DATABASE.md`](docs/DATABASE.md).
