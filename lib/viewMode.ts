@@ -100,6 +100,7 @@ const LEARNER_PATHS = [
   "/membership",
   "/playground",
   "/projects",
+  "/rank",
   "/roadmap",
 ];
 

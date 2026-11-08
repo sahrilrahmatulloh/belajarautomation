@@ -1,9 +1,13 @@
 # BELAJARAUTOMATION.COM
 ## Product Requirements Document (PRD)
-**Versi:** 2.28  
+**Versi:** 2.29  
 **Status:** Draft — Acuan Pengembangan Produk  
 **Platform:** Web Application  
 **Target Pengguna:** Pemula hingga praktisi QA, Software Testing, dan Programming
+
+### Perubahan di Versi 2.29
+- Menambahkan halaman **Rank & XP** (`/rank`) berisi Tingkatan Rank dan Cara Mendapatkan XP; keduanya dipindah dari halaman Leaderboard (FR-05, FR-06).
+- Tombol di kartu Rank & XP dashboard menjadi "Lihat detail rank" yang membuka halaman Rank & XP (FR-01).
 
 ### Perubahan di Versi 2.28
 - Leaderboard menampilkan 50 peringkat teratas dalam 5 halaman berisi 10 baris, dengan navigasi halaman dan tombol "Lompat ke posisiku" (FR-06).
@@ -332,7 +336,7 @@ Ketentuan Welcome Banner:
 - Progress menuju rank berikutnya.
 - Persentase progress.
 - Informasi rank berikutnya.
-- Tombol menuju detail rank.
+- Tombol "Lihat detail rank" menuju halaman Rank & XP (FR-05).
 
 **D. Kalender Belajar**
 - Tampilan kalender bulanan.
@@ -694,6 +698,13 @@ XP hanya diberikan saat aktivitas tersebut diselesaikan pertama kali. Pengguna b
 
 Batas ini dihitung dari perkiraan total XP konten yang direncanakan (sekitar 6.600 XP) dan wajib ditinjau ulang setiap kali jumlah konten atau pembagian course gratis dan premium berubah, agar rank Master tetap dapat dicapai hanya dari konten gratis.
 
+### Halaman Rank & XP
+- Alamat `/rank`, dibuka dari kartu Rank & XP di dashboard dan dari tautan "Lihat tingkatan rank" di kartu posisi leaderboard.
+- Berisi **Tingkatan Rank**: enam rank berjajar dari Trainee ke Master dengan emblem, minimal XP, gambaran pencapaian, dan status (Rank kamu dengan progres, Tercapai, atau XP yang masih dibutuhkan).
+- Berisi **Cara Mendapatkan XP**: daftar aktivitas dan XP-nya, serta ketentuan XP hanya diberikan sekali per aktivitas.
+- Memiliki tombol "Lihat leaderboard".
+- Halaman khusus Mode Belajar; di mode peran menampilkan ajakan beralih mode (FR-15).
+
 ### Progress Rank
 Sistem menampilkan:
 - Total XP.
@@ -769,6 +780,7 @@ Ketentuan:
 - Tab rank menampilkan informasi rank berikutnya, mis. "Butuh 320 XP lagi untuk naik ke Practitioner". Pengguna Master melihat keterangan bahwa rank tertinggi telah tercapai.
 - Setiap baris menampilkan posisi, avatar kucing aktif, nama tampilan, emblem tameng rank, dan total XP.
 - Tiga posisi teratas di setiap tab boleh diberi penekanan visual.
+- Halaman leaderboard hanya memuat peringkat. Tingkatan rank dan cara mendapatkan XP ada di halaman Rank & XP (FR-05); kartu posisi memberi tautan "Lihat tingkatan rank".
 
 ### Privasi
 - Pengguna dapat memilih untuk tidak ditampilkan di leaderboard melalui pengaturan.
