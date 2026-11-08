@@ -16,13 +16,23 @@ const podiumStyles = [
   "bg-orange-500/20 text-orange-700 ring-1 ring-orange-500/40 dark:text-orange-300",
 ];
 
-export default function LeaderboardRowItem({ row }: { row: LeaderboardRow }) {
+interface LeaderboardRowItemProps {
+  row: LeaderboardRow;
+  // Id elemen untuk tujuan "Lompat ke posisiku".
+  id?: string;
+  // Disorot sebentar setelah pengguna melompat ke barisnya.
+  isHighlighted?: boolean;
+}
+
+export default function LeaderboardRowItem({ row, id, isHighlighted = false }: LeaderboardRowItemProps) {
   const session = useSession();
   return (
     <li
-      className={`flex items-center gap-3 px-3 py-3 sm:gap-4 sm:px-5 ${
+      id={id}
+      tabIndex={id ? -1 : undefined}
+      className={`flex items-center gap-3 px-3 py-3 outline-none transition-shadow sm:gap-4 sm:px-5 ${
         row.isCurrentUser ? "bg-primary/[0.06]" : ""
-      }`}
+      } ${isHighlighted ? "ring-2 ring-inset ring-primary" : ""}`}
     >
       <span
         className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold tabular-nums ${

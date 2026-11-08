@@ -1,9 +1,12 @@
 # BELAJARAUTOMATION.COM
 ## Product Requirements Document (PRD)
-**Versi:** 2.27  
+**Versi:** 2.28  
 **Status:** Draft — Acuan Pengembangan Produk  
 **Platform:** Web Application  
 **Target Pengguna:** Pemula hingga praktisi QA, Software Testing, dan Programming
+
+### Perubahan di Versi 2.28
+- Leaderboard menampilkan 50 peringkat teratas dalam 5 halaman berisi 10 baris, dengan navigasi halaman dan tombol "Lompat ke posisiku" (FR-06).
 
 ### Perubahan di Versi 2.27
 - Menambahkan tema **Neon Night** (gratis, bergerak): kota cyberpunk malam dengan kucing abu-abu di depan laptop (FR-12).
@@ -758,7 +761,8 @@ Ketentuan:
 
 ### Tampilan
 - Saat leaderboard dibuka, tab yang aktif pertama kali adalah tab rank pengguna.
-- Setiap tab menampilkan 50 peringkat teratas.
+- Setiap tab menampilkan 50 peringkat teratas, dibagi 10 baris per halaman (halaman 1–5) dengan navigasi nomor halaman, tombol sebelumnya, dan berikutnya. Nomor halaman tersimpan di URL; berpindah tab kembali ke halaman 1.
+- Bila posisi pengguna termasuk 50 teratas tetapi berada di halaman lain, kartu posisi menampilkan tombol "Lompat ke posisiku" yang membuka halaman itu dan menyorot barisnya.
 - Posisi pengguna yang sedang login selalu ditampilkan (disematkan) di kedua tab, termasuk jika berada di luar 50 besar:
   - Tab Global: posisi di antara seluruh pengguna.
   - Tab rank: posisi di antara sesama rank.
