@@ -1,9 +1,12 @@
 # BELAJARAUTOMATION.COM
 ## Product Requirements Document (PRD)
-**Versi:** 2.29  
+**Versi:** 2.31  
 **Status:** Draft — Acuan Pengembangan Produk  
 **Platform:** Web Application  
 **Target Pengguna:** Pemula hingga praktisi QA, Software Testing, dan Programming
+
+### Perubahan di Versi 2.31
+- Halaman masuk dan daftar (desktop) menampilkan panel promosi berisi 3 slide yang bergeser otomatis atau digeser: sambutan, koleksi avatar kucing, dan eBook (Bagian 4.5).
 
 ### Perubahan di Versi 2.29
 - Menambahkan halaman **Rank & XP** (`/rank`) berisi Tingkatan Rank dan Cara Mendapatkan XP; keduanya dipindah dari halaman Leaderboard (FR-05, FR-06).
@@ -1742,6 +1745,14 @@ Klik notifikasi menandainya sebagai dibaca dan langsung membuka halaman terkait:
 
 ### Akun demo
 - Akun demo per peran hanya dapat dipakai di DEV, atau di lingkungan yang belum memasang Supabase. Di UAT dan Production dengan Supabase, masuk hanya lewat akun sungguhan.
+
+### Panel promosi
+- Di desktop, sisi kiri halaman masuk dan daftar menampilkan 3 slide promosi; di layar kecil panel ini tidak ditampilkan agar form tetap di atas.
+- Slide awal: sambutan dengan tema bawaan, koleksi avatar kucing, dan eBook.
+- Slide bergeser otomatis setiap 6 detik dan berhenti saat diarahkan mouse atau difokuskan. Tersedia titik navigasi, tombol jeda, dan dapat digeser.
+- Pengguna yang mengaktifkan "kurangi gerakan" tidak melihat pergeseran otomatis.
+- Isi promosi harus sesuai kondisi nyata: fitur yang belum tersedia di lingkungan tersebut diberi label "Segera hadir".
+- Isi slide dikelola lewat file data sampai pengelolaannya tersedia di Panel Admin (Fase 6).
 
 ### Aturan akun Google
 - Pengguna baru yang mendaftar dengan Google memilih username satu kali sebelum memakai aplikasi, karena username dipakai di profil publik (FR-13). Nama tampilan dan foto diambil dari akun Google dan dapat diubah.
