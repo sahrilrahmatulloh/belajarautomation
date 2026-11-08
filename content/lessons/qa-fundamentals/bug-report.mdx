@@ -1,0 +1,44 @@
+---
+status: draft
+author: "Tim BelajarAutomation"
+---
+
+{/* DATA DUMMY — hapus sebelum rilis. Draf contoh untuk pengujian di DEV; isi aslinya ditulis dan ditinjau Creator. */}
+
+Bug yang ditemukan baru berguna jika dilaporkan dengan jelas. Bug report yang baik membuat developer cepat memahami dan memperbaikinya.
+
+## Bagian bug report
+
+| Bagian | Isi |
+|---|---|
+| Judul | Ringkas dan spesifik |
+| Lingkungan | Browser, perangkat, versi aplikasi |
+| Langkah reproduksi | Urutan tindakan untuk memunculkan bug |
+| Expected result | Yang seharusnya terjadi |
+| Actual result | Yang benar-benar terjadi |
+| Bukti | Screenshot, video, atau log |
+| Severity dan priority | Tingkat dampak dan urgensi |
+
+## Contoh
+
+**Judul:** Tombol Masuk tetap aktif saat kolom email kosong
+
+- Lingkungan: Chrome 130, Windows 11, build DEV.
+- Langkah reproduksi:
+  1. Buka halaman login.
+  2. Kosongkan kolom email, isi password.
+  3. Klik tombol Masuk.
+- Expected result: tombol nonaktif atau muncul pesan "Email wajib diisi".
+- Actual result: form terkirim dan muncul error server.
+
+## Tips menulis
+
+- Satu laporan untuk satu bug.
+- Tulis langkah sampai orang lain bisa mengulangnya.
+- Gunakan bahasa netral dan fokus pada fakta.
+
+<Peringatan>Judul seperti "Login error" terlalu umum. Sebutkan kondisi dan akibatnya.</Peringatan>
+
+## Ringkasan
+
+Bug report yang baik berisi langkah reproduksi, expected dan actual result, serta bukti. Langkah reproduksi membuat developer bisa melihat bug yang sama.

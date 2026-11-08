@@ -3,7 +3,7 @@ import { Page } from "@playwright/test";
 
 import { expect, test } from "../fixtures/auth";
 import { MockAccount, SUPABASE_TEST_URL, mockSupabase, signInWithMock, uniqueMockAccount } from "../fixtures/supabaseMock";
-import { CHALLENGE_KEYS, LESSON_CONTENT } from "../fixtures/testData";
+import { CHALLENGE_KEYS, LESSON_CONTENT, QA_FUNDAMENTAL } from "../fixtures/testData";
 import { ChallengePage } from "../pages/ChallengePage";
 import { DashboardPage } from "../pages/DashboardPage";
 import { LessonPage } from "../pages/LessonPage";
@@ -21,8 +21,8 @@ function statValue(dashboard: DashboardPage, label: string) {
 }
 
 // Membuka lesson dan menunggu progres akun termuat, agar perubahan XP sesudahnya terbaca.
-async function openLesson(page: Page) {
-  const lesson = new LessonPage(page, courseSlug, lessonSlug);
+async function openLesson(page: Page, course: string = courseSlug, slug: string = lessonSlug) {
+  const lesson = new LessonPage(page, course, slug);
   const progressLoaded = page.waitForResponse((response) => response.url().endsWith("/rest/v1/rpc/get_my_progress"));
   await lesson.goto();
   await progressLoaded;
@@ -34,10 +34,10 @@ async function signIn(page: Page, account: MockAccount) {
   await signInWithMock(page, account);
 }
 
-async function passQuiz(page: Page) {
-  const challenge = new ChallengePage(page, quiz.slug);
+async function passQuiz(page: Page, slug: string = quiz.slug, answers: readonly number[] = quiz.answers) {
+  const challenge = new ChallengePage(page, slug);
   await challenge.goto();
-  await challenge.answerQuiz(quiz.answers);
+  await challenge.answerQuiz(answers);
   await challenge.submitAnswerButton.click();
   await expect(challenge.result.getByRole("heading", { name: "Lulus" })).toBeVisible();
   return challenge;
@@ -123,5 +123,28 @@ test.describe("XP akun Supabase", () => {
     const notifications = new NotificationsPage(page);
     await notifications.goto();
     await expect(notifications.item("Naik rank ke Apprentice")).toBeVisible();
+  });
+
+  test("QA Fundamental: 16 lesson memberi 160 XP plus bonus course 50, lalu kuisnya +30", async ({ page }) => {
+    test.slow();
+    await signIn(page, uniqueMockAccount());
+
+    for (const [index, slug] of QA_FUNDAMENTAL.lessons.entries()) {
+      const lesson = await openLesson(page, QA_FUNDAMENTAL.courseSlug, slug);
+      await expect(lesson.writingNotice).toBeHidden();
+      await lesson.complete();
+      const isLast = index === QA_FUNDAMENTAL.lessons.length - 1;
+      await expect(lesson.completedStatus).toContainText(isLast ? "Course tuntas, bonus +50 XP!" : "Lesson selesai.");
+    }
+    await expect(page.getByText("Lesson selesai, +60 XP termasuk bonus course tuntas.")).toBeVisible();
+
+    const challenge = await passQuiz(page, quiz.alreadyPassed.slug, quiz.alreadyPassed.answers);
+    await expect(challenge.result).toContainText("+30 XP");
+
+    const dashboard = new DashboardPage(page);
+    await dashboard.goto();
+    await expect(statValue(dashboard, "Total XP")).toHaveText("240");
+    await expect(statValue(dashboard, "Materi Selesai")).toHaveText("16");
+    await expect(statValue(dashboard, "Challenge Selesai")).toHaveText("1");
   });
 });
