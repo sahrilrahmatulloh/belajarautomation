@@ -7,7 +7,7 @@ import PendingSubmitNotice from "@/components/maintenance/PendingSubmitNotice";
 import { useProtectedSubmit } from "@/components/maintenance/useProtectedSubmit";
 import PracticePage from "@/components/practice/PracticePage";
 import { Input } from "@/components/ui/input";
-import { recordChallengeAttempt } from "@/lib/challengeAttempts";
+import { useRecordChallengeAttempt } from "@/lib/challengeAttempts";
 import { useChallengeDraft } from "@/lib/challengeDrafts";
 import { runSelector } from "@/lib/runSelector";
 import { LocatorResult, PublicChallengeDetail, SelectorType } from "@/types/ChallengeDetail";
@@ -32,6 +32,7 @@ const OUTCOME_MESSAGES: Record<LocatorResult["outcome"], (count: number) => stri
 const MATCH_ATTRIBUTE = "data-practice-match";
 
 export default function LocatorWorkspace({ slug, data }: { slug: string; data: LocatorData }) {
+  const recordAttempt = useRecordChallengeAttempt();
   const rootRef = useRef<HTMLDivElement>(null);
   const draft = useChallengeDraft(slug, { selectorType: data.selectorTypes[0], selector: "" }, (state) => `selector "${state.selector}" tertulis`);
   const { selectorType, selector } = draft.state;
@@ -76,7 +77,7 @@ export default function LocatorWorkspace({ slug, data }: { slug: string; data: L
         const matchedIds = elements.map((element) => element.getAttribute("data-practice-id") ?? "");
         const result = await submitLocator(slug, matchedIds);
         if (!result) return setFailed(true);
-        setOutcome({ result, xp: recordChallengeAttempt(slug, "locator", result) });
+        setOutcome({ result, xp: recordAttempt(slug, "locator", result) });
         draft.clear();
       } catch {
         setFailed(true);

@@ -224,14 +224,15 @@ test.describe("Test Case Writing", () => {
     await expect(challenge.checklist).toContainText("penilaian mandiri");
   });
 
-  test("lulus jika semua poin wajib tercentang", async () => {
+  test("lulus jika semua poin wajib tercentang, tanpa XP karena dinilai sendiri", async () => {
     await submitAnswer();
 
     for (const label of testCase.required) await challenge.checklistItem(label).check();
     await challenge.finishCheckButton.click();
 
     await expect(challenge.result.getByRole("heading", { name: "Lulus" })).toBeVisible();
-    await expect(challenge.result).toContainText("+75 XP");
+    await expect(challenge.result).toContainText("Test Case dinilai sendiri, jadi tidak memberi XP.");
+    await expect(challenge.result).not.toContainText("+75 XP");
   });
 
   test("belum lulus jika ada poin wajib yang tidak tercentang", async () => {

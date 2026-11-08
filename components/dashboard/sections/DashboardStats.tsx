@@ -4,16 +4,25 @@ import { BookOpenCheck, Flame, Target, Trophy } from "lucide-react";
 
 import { DUMMY_ACCOUNT } from "@/data/dummy/account";
 import { getCurrentUserPosition } from "@/lib/leaderboard";
-import { getCompletedLessonCount } from "@/lib/learningProgress";
-import { useLessonProgress } from "@/lib/lessonProgress";
+import { useAccountStats } from "@/lib/lessonProgress";
+import { useIsRealAccount, useRealProgress } from "@/lib/realProgress";
+import { learningStreak } from "@/lib/streak";
 
 const leaderboardPosition = getCurrentUserPosition("global");
 
-const getStats = (xp: number, lessons: number) => [
+interface StatsInput {
+  xp: number;
+  lessons: number;
+  challenges: number;
+  streakDays: number;
+  xpDetail: string;
+}
+
+const getStats = ({ xp, lessons, challenges, streakDays, xpDetail }: StatsInput) => [
   {
     label: "Total XP",
     value: xp.toLocaleString("id-ID"),
-    detail: `Peringkat #${leaderboardPosition} di leaderboard Global`,
+    detail: xpDetail,
     Icon: Trophy,
     iconStyle: "bg-amber-500/10 text-amber-600 dark:text-amber-300",
   },
@@ -26,14 +35,14 @@ const getStats = (xp: number, lessons: number) => [
   },
   {
     label: "Challenge Selesai",
-    value: String(DUMMY_ACCOUNT.completedChallenges),
+    value: String(challenges),
     detail: "Latihan di Playground",
     Icon: Target,
     iconStyle: "bg-rose-500/10 text-rose-600 dark:text-rose-300",
   },
   {
     label: "Streak Belajar",
-    value: `${DUMMY_ACCOUNT.streakDays} hari`,
+    value: `${streakDays} hari`,
     detail: "Belajar berturut-turut",
     Icon: Flame,
     iconStyle: "bg-orange-500/10 text-orange-600 dark:text-orange-300",
@@ -41,8 +50,17 @@ const getStats = (xp: number, lessons: number) => [
 ];
 
 export default function DashboardStats() {
-  const { extraXp, extraLessons } = useLessonProgress();
-  const stats = getStats(DUMMY_ACCOUNT.xp + extraXp, getCompletedLessonCount() + extraLessons);
+  const { xp, lessons, challenges } = useAccountStats();
+  const isReal = useIsRealAccount();
+  const real = useRealProgress();
+  const stats = getStats({
+    xp,
+    lessons,
+    challenges,
+    // Akun Supabase: hari berturut-turut menyelesaikan lesson, dihitung dari progres di database.
+    streakDays: isReal ? learningStreak(real?.lessons.map((item) => item.completedAt) ?? []) : DUMMY_ACCOUNT.streakDays,
+    xpDetail: isReal ? "Dari lesson, kuis, dan challenge" : `Peringkat #${leaderboardPosition} di leaderboard Global`,
+  });
 
   return (
     <section aria-label="Statistik belajar" className="grid grid-cols-2 gap-3">

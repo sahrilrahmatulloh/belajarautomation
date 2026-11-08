@@ -18,7 +18,7 @@ import ProfileHeader from "./ProfileHeader";
 import ProfileStats from "./ProfileStats";
 import ProfileTabs from "./ProfileTabs";
 import RecentActivity from "./RecentActivity";
-import { useLessonProgress } from "@/lib/lessonProgress";
+import { useAccountStats, useLessonProgress } from "@/lib/lessonProgress";
 
 import ShareProfileDialog from "./ShareProfileDialog";
 
@@ -38,8 +38,11 @@ export default function ProfilePage() {
   const themeImage = isRealAccount ? appearance.theme.image : profile.themeImage;
   const themeVideo = isRealAccount ? appearance.theme.video : profile.themeVideo;
   const { extraXp, extraLessons } = useLessonProgress();
-  const xp = profile.xp + extraXp;
-  const lessons = profile.lessons + extraLessons;
+  const stats = useAccountStats();
+  // Akun Supabase memakai XP dan progres dari database; akun demo dari data dummy.
+  const xp = isRealAccount ? stats.xp : profile.xp + extraXp;
+  const lessons = isRealAccount ? stats.lessons : profile.lessons + extraLessons;
+  const challenges = isRealAccount ? stats.challenges : profile.challenges;
 
   const earnedAchievements = profile.achievements.filter((state) => state.earned).length;
 
@@ -48,7 +51,7 @@ export default function ProfilePage() {
       <ProfileStats
         xp={xp}
         lessons={lessons}
-        challenges={profile.challenges}
+        challenges={challenges}
         achievements={earnedAchievements}
       />
 
@@ -81,7 +84,7 @@ export default function ProfilePage() {
             themeImage={themeImage}
             xp={xp}
             lessons={lessons}
-            challenges={profile.challenges}
+            challenges={challenges}
             achievements={earnedAchievements}
             isProfilePublic={profile.isProfilePublic}
           />
