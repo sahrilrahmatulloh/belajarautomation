@@ -215,3 +215,101 @@ html[data-splash="seen"] .splash-screen {
     width: 100%;
   }
 }
+
+/* Popup naik rank (components/rank/RankUpCelebration.tsx). Semua animasi dimatikan bila
+   pengguna memilih mengurangi animasi. */
+.rank-rays {
+  animation: rank-spin 18s linear infinite;
+}
+
+.rank-pop {
+  animation: rank-pop 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.rank-float {
+  animation: rank-float 3.2s ease-in-out 0.9s infinite;
+}
+
+.rank-rise {
+  animation: rank-rise 0.6s ease-out both;
+}
+
+.rank-twinkle {
+  animation: rank-twinkle 1.6s ease-in-out infinite;
+}
+
+.rank-shimmer {
+  background-size: 250% 100%;
+  animation: rank-shimmer 2.8s ease-in-out 1s infinite;
+}
+
+.rank-glow {
+  animation: rank-glow 2.4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rank-rays,
+  .rank-pop,
+  .rank-float,
+  .rank-rise,
+  .rank-twinkle,
+  .rank-shimmer,
+  .rank-glow {
+    animation: none;
+  }
+}
+
+@keyframes rank-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes rank-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.2) rotate(-12deg);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.12) rotate(3deg);
+  }
+  100% {
+    transform: scale(1) rotate(0);
+  }
+}
+
+@keyframes rank-float {
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes rank-rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+
+@keyframes rank-twinkle {
+  50% {
+    opacity: 0.35;
+    transform: scale(0.7) rotate(20deg);
+  }
+}
+
+@keyframes rank-shimmer {
+  from {
+    background-position: 150% 0;
+  }
+  to {
+    background-position: -100% 0;
+  }
+}
+
+@keyframes rank-glow {
+  50% {
+    opacity: 0.6;
+  }
+}
