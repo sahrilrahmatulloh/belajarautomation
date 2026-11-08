@@ -76,7 +76,7 @@ export default function ProfilePage() {
         shareAction={
           <ShareProfileDialog
             displayName={displayName}
-            username={profile.username}
+            username={username || profile.username}
             avatarImage={avatarImage}
             themeImage={themeImage}
             xp={xp}
@@ -90,7 +90,7 @@ export default function ProfilePage() {
 
       <div className="flex justify-end">
         <Link
-          href={`/u/${profile.username}`}
+          href={`/u/${username || profile.username}`}
           className="inline-flex min-h-10 items-center gap-2 rounded-xl border border-border bg-card px-4 text-sm font-medium transition-colors hover:bg-accent"
         >
           <Eye className="h-4 w-4" aria-hidden="true" />
