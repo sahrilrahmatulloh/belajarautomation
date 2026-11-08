@@ -212,7 +212,7 @@ export const ROLE_MODE = {
     { role: "reviewer", modeLabel: "Mode Reviewer" },
     { role: "admin", modeLabel: "Mode Admin" },
   ],
-  learnerPaths: ["/cart", "/membership", "/leaderboard", "/learn", "/playground", "/roadmap"],
+  learnerPaths: ["/cart", "/membership", "/leaderboard", "/rank", "/learn", "/playground", "/roadmap"],
   promptTitle: "Halaman ini untuk Mode Belajar",
   creatorStatLabels: ["Draf", "Menunggu Review", "Perlu Revisi", "Disetujui", "Terbit"],
   publishedTitle: "Best Practice Locator di Playwright",

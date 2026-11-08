@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ChevronLeft, ChevronRight, Crown, EyeOff, Globe2, LocateFixed, TrendingUp } from "lucide-react";
+import { ArrowRight, ChevronLeft, ChevronRight, Crown, EyeOff, Globe2, LocateFixed, TrendingUp } from "lucide-react";
 
 import RankEmblem from "@/components/common/RankEmblem";
 import { DUMMY_ACCOUNT } from "@/data/dummy/account";
@@ -168,6 +168,14 @@ export default function LeaderboardBoard() {
               )}
             </p>
           )}
+
+          <Link
+            href="/rank"
+            className="inline-flex items-center gap-1 text-sm font-semibold text-primary-accent hover:underline"
+          >
+            Lihat tingkatan rank
+            <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+          </Link>
 
           {currentUserPage && currentUserPage !== page && (
             <button

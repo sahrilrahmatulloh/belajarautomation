@@ -1,10 +1,9 @@
 "use client";
 
-import { Check, Lock, Sparkles } from "lucide-react";
+import { Check, Lock } from "lucide-react";
 
 import RankEmblem from "@/components/common/RankEmblem";
 import { getRankProgress, RANKS } from "@/data/ranks";
-import { XP_REWARDS } from "@/data/xp";
 import { formatNumber } from "@/lib/format";
 import { useAccountXp } from "@/lib/lessonProgress";
 
@@ -111,25 +110,6 @@ export default function RankTiers() {
           );
         })}
       </ol>
-
-      <div className="rounded-2xl border border-border bg-card p-4 sm:p-5">
-        <h3 className="flex items-center gap-2 font-semibold">
-          <Sparkles className="h-4 w-4 text-primary-accent" aria-hidden="true" />
-          Cara mendapatkan XP
-        </h3>
-        <ul className="mt-3 divide-y divide-border text-sm">
-          {XP_REWARDS.map((reward) => (
-            <li key={reward.activity} className="flex items-center justify-between gap-3 py-2">
-              <span className="text-muted-foreground">{reward.activity}</span>
-              <span className="shrink-0 font-semibold tabular-nums">+{reward.xp} XP</span>
-            </li>
-          ))}
-        </ul>
-        <p className="mt-3 text-xs text-muted-foreground">
-          XP hanya diberikan saat aktivitas diselesaikan pertama kali. Mengulang lesson,
-          kuis, atau challenge tetap boleh, tetapi tidak menambah XP.
-        </p>
-      </div>
     </section>
   );
 }

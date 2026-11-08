@@ -6,6 +6,7 @@ import { BlogPage } from "../pages/BlogPage";
 import { ChallengePage } from "../pages/ChallengePage";
 import { DashboardPage } from "../pages/DashboardPage";
 import { LeaderboardPage } from "../pages/LeaderboardPage";
+import { RankPage } from "../pages/RankPage";
 import { LearnPage } from "../pages/LearnPage";
 import { LessonPage } from "../pages/LessonPage";
 import { NotificationsPage } from "../pages/NotificationsPage";
@@ -40,6 +41,7 @@ export const MAIN_PAGES: { name: string; open: (page: Page) => Promise<BasePage>
   { name: "Pengerjaan Test Case", open: (page) => open(new ChallengePage(page, "login-test-case"), (p) => p.answerInput) },
   { name: "Pengerjaan Locator", open: (page) => open(new ChallengePage(page, "locator-form-registrasi"), (p) => p.selectorPanel) },
   { name: "Leaderboard", open: (page) => open(new LeaderboardPage(page), (p) => p.topList.first()) },
+  { name: "Rank & XP", open: (page) => open(new RankPage(page), (p) => p.currentTier) },
   { name: "Profil", open: (page) => open(new ProfilePage(page), (p) => p.featuredAchievements) },
   {
     name: "Profil tab Aktivitas",

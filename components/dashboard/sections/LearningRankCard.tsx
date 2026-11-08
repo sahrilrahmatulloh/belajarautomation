@@ -82,10 +82,10 @@ export default function LearningRankCard() {
         </div>
 
         <Link
-          href="/leaderboard"
+          href="/rank"
           className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-500"
         >
-          Lihat leaderboard
+          Lihat detail rank
           <ArrowRight className="h-4 w-4" aria-hidden="true" />
         </Link>
 
