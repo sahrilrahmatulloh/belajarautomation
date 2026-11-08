@@ -40,13 +40,17 @@ test.describe("Login sebagai tamu", () => {
     await expect(page).toHaveURL(ACCOUNTS.user.home);
   });
 
-  test("akun demo tampil di DEV", async ({ page }) => {
+  test("daftar akun demo tidak ditampilkan di halaman masuk, tetapi akunnya tetap bisa dipakai di DEV", async ({ page }) => {
     const loginPage = new LoginPage(page);
     await loginPage.goto();
+    await expect(loginPage.submitButton).toBeEnabled();
 
-    await expect(loginPage.demoAccounts).toBeVisible();
-    await expect(loginPage.demoAccounts).toContainText(DEMO_PASSWORD);
-    await expect(loginPage.demoAccounts.getByRole("button")).toHaveText([/User/, /Creator/, /Reviewer/, /Admin/]);
+    // Daftar akun demo ada di README.md, bukan di halaman masuk (PRD 4.5).
+    await expect(loginPage.demoAccounts).toHaveCount(0);
+    await expect(page.getByText(DEMO_PASSWORD)).toHaveCount(0);
+
+    await loginPage.login(ACCOUNTS.creator.email, DEMO_PASSWORD);
+    await expect(page).toHaveURL(ACCOUNTS.creator.home);
   });
 
   test("membuka /profile tanpa login diarahkan ke halaman login", async ({ page }) => {

@@ -18,9 +18,10 @@ export default function AuthShell({
   children,
 }: AuthShellProps) {
   return (
-    <div className="grid min-h-dvh bg-background text-foreground lg:grid-cols-2">
-      {/* Panel promosi bergeser (desktop), PRD 4.5 */}
-      <aside className="relative hidden overflow-hidden lg:block">
+    <div className="grid min-h-dvh bg-background text-foreground lg:grid-cols-[auto_minmax(0,1fr)]">
+      {/* Panel promosi bergeser (desktop), PRD 4.5. Lebarnya mengikuti tinggi layar (rasio 3:4),
+          dan form mengisi sisa ruang. */}
+      <aside className="sticky top-0 hidden h-dvh items-center justify-center py-6 pl-6 lg:flex">
         <AuthShowcase />
       </aside>
 
