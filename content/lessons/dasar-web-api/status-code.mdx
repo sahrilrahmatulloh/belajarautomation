@@ -1,0 +1,42 @@
+---
+status: draft
+author: "Tim BelajarAutomation"
+---
+
+{/* DATA DUMMY — hapus sebelum rilis. Draf contoh untuk pengujian di DEV; isi aslinya ditulis dan ditinjau Creator. */}
+
+Setiap response HTTP membawa **status code**: angka tiga digit yang memberi tahu hasil request. Bagi QA, status code adalah petunjuk pertama saat sesuatu tidak berjalan semestinya.
+
+## Lima kelompok status code
+
+| Kelompok | Arti |
+|---|---|
+| 1xx | Informasi, jarang terlihat langsung |
+| 2xx | Berhasil |
+| 3xx | Pengalihan ke alamat lain |
+| 4xx | Kesalahan di sisi client, misalnya request salah |
+| 5xx | Kesalahan di sisi server |
+
+## Status code yang wajib dihafal
+
+| Kode | Nama | Arti |
+|---|---|---|
+| 200 | OK | Request berhasil |
+| 201 | Created | Data baru berhasil dibuat |
+| 301 | Moved Permanently | Alamat pindah permanen |
+| 400 | Bad Request | Isi request tidak valid |
+| 401 | Unauthorized | Belum terautentikasi, misalnya belum login |
+| 403 | Forbidden | Sudah dikenali, tetapi tidak punya izin |
+| 404 | Not Found | Resource tidak ditemukan |
+| 500 | Internal Server Error | Terjadi kesalahan di server |
+
+## 401 atau 403?
+
+- **401**: server belum tahu siapa kamu. Solusinya biasanya login.
+- **403**: server tahu siapa kamu, tetapi kamu tidak berhak. Contohnya pengguna biasa membuka halaman Admin.
+
+<Tips>Dalam bug report, selalu cantumkan status code yang muncul. Developer bisa langsung tahu apakah masalahnya di client (4xx) atau di server (5xx).</Tips>
+
+## Ringkasan
+
+2xx berarti berhasil, 3xx pengalihan, 4xx kesalahan client, dan 5xx kesalahan server. Kenali perbedaan 401 dan 403, serta arti 404 dan 500.

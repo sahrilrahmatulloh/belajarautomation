@@ -1,0 +1,42 @@
+---
+status: draft
+author: "Tim BelajarAutomation"
+---
+
+{/* DATA DUMMY — hapus sebelum rilis. Draf contoh untuk pengujian di DEV; isi aslinya ditulis dan ditinjau Creator. */}
+
+Tab **Network** di DevTools menampilkan setiap request yang dikirim halaman beserta response-nya. Di sinilah semua materi sebelumnya bertemu: HTTP, method, status code, dan JSON.
+
+## Langkah membaca request
+
+1. Buka DevTools lalu pilih tab **Network**.
+2. Muat ulang halaman atau lakukan aksi, misalnya klik tombol Masuk.
+3. Pilih filter **Fetch/XHR** agar hanya request API yang tampil.
+4. Klik salah satu request untuk melihat detailnya.
+
+## Kolom di daftar request
+
+| Kolom | Arti |
+|---|---|
+| Name | Alamat request |
+| Status | Status code, misalnya 200 atau 404 |
+| Type | Jenis data, misalnya fetch atau document |
+| Size | Ukuran response |
+| Time | Lama request sampai selesai |
+
+## Detail sebuah request
+
+- **Headers**: method, URL lengkap, status code, dan header request maupun response.
+- **Payload**: data yang dikirim client, misalnya isi formulir.
+- **Preview** dan **Response**: data yang dikirim server, biasanya JSON.
+- **Timing**: rincian waktu, berguna untuk masalah halaman lambat.
+
+## Contoh kasus
+
+Tombol Simpan diklik tetapi tidak terjadi apa-apa. Di tab Network kamu melihat request **POST** /api/profil dengan status **500**. Artinya, masalah ada di server, dan bug report-mu kini punya bukti yang jelas.
+
+<Peringatan>Response bisa berisi data pribadi atau token. Sensor bagian tersebut sebelum menempelkan screenshot ke bug report.</Peringatan>
+
+## Ringkasan
+
+Tab Network menunjukkan method, status code, payload, dan response setiap request. Gunakan untuk mencari tahu apakah bug ada di client atau di server.

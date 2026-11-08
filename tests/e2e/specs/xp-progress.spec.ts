@@ -1,9 +1,10 @@
 import AxeBuilder from "@axe-core/playwright";
 import { Page } from "@playwright/test";
 
+import { waitForEntranceAnimations } from "../fixtures/animations";
 import { expect, test } from "../fixtures/auth";
 import { MockAccount, SUPABASE_TEST_URL, mockSupabase, signInWithMock, uniqueMockAccount } from "../fixtures/supabaseMock";
-import { CHALLENGE_KEYS, LESSON_CONTENT, QA_FUNDAMENTAL } from "../fixtures/testData";
+import { CHALLENGE_KEYS, DASAR_WEB_API, LESSON_CONTENT, QA_FUNDAMENTAL } from "../fixtures/testData";
 import { ChallengePage } from "../pages/ChallengePage";
 import { DashboardPage } from "../pages/DashboardPage";
 import { LessonPage } from "../pages/LessonPage";
@@ -122,6 +123,7 @@ test.describe("XP akun Supabase", () => {
     await expect(celebration).toBeVisible();
     await expect(celebration).toContainText("Apprentice");
 
+    await waitForEntranceAnimations(page);
     const { violations } = await new AxeBuilder({ page }).include("[role=dialog]").analyze();
     expect(violations.filter((item) => ["critical", "serious"].includes(item.impact ?? "")).map((item) => item.id)).toEqual([]);
 
@@ -164,5 +166,29 @@ test.describe("XP akun Supabase", () => {
     await expect(statValue(dashboard, "Total XP")).toHaveText("240");
     await expect(statValue(dashboard, "Materi Selesai")).toHaveText("16");
     await expect(statValue(dashboard, "Challenge Selesai")).toHaveText("1");
+  });
+
+  test("Dasar Web & API: 8 lesson memberi 80 XP plus bonus course 50, lalu kuisnya +30", async ({ page }) => {
+    test.slow();
+    await signIn(page, uniqueMockAccount());
+
+    const lessons = DASAR_WEB_API.lessons;
+    for (const slug of lessons.slice(0, -1)) {
+      const lesson = await openLesson(page, DASAR_WEB_API.courseSlug, slug);
+      await expect(lesson.writingNotice).toBeHidden();
+      await completeAndNext(page, lesson);
+    }
+    const last = await openLesson(page, DASAR_WEB_API.courseSlug, lessons.at(-1)!);
+    await last.finishCourse();
+    await expect(page).toHaveURL(`/learn/${DASAR_WEB_API.courseSlug}`);
+    await expect(page.getByText("Course Dasar Web & API untuk QA tuntas! +60 XP termasuk bonus course.")).toBeVisible();
+
+    const challenge = await passQuiz(page);
+    await expect(challenge.result).toContainText("+30 XP");
+
+    const dashboard = new DashboardPage(page);
+    await dashboard.goto();
+    await expect(statValue(dashboard, "Total XP")).toHaveText("160");
+    await expect(statValue(dashboard, "Materi Selesai")).toHaveText("8");
   });
 });

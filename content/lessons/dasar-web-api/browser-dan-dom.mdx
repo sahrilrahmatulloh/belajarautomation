@@ -1,0 +1,42 @@
+---
+status: draft
+author: "Tim BelajarAutomation"
+---
+
+{/* DATA DUMMY — hapus sebelum rilis. Draf contoh untuk pengujian di DEV; isi aslinya ditulis dan ditinjau Creator. */}
+
+Setelah menerima HTML dari server, browser mengubahnya menjadi halaman yang bisa kamu lihat dan klik. Di balik layar, browser membangun **DOM**.
+
+## Apa itu DOM?
+
+**DOM (Document Object Model)** adalah representasi struktur halaman HTML dalam bentuk pohon, yang dapat diakses dan diubah oleh script seperti JavaScript.
+
+Contoh HTML sederhana:
+
+```html
+<form id="login">
+  <input name="email" />
+  <button>Masuk</button>
+</form>
+```
+
+Browser mengubahnya menjadi pohon: elemen form sebagai induk, dengan input dan button sebagai anaknya.
+
+## Mengapa DOM penting untuk QA?
+
+- **Automation testing bekerja di atas DOM.** Tool seperti Playwright dan Selenium mencari elemen lewat selector, misalnya `#login button`.
+- **Tampilan bisa berubah tanpa memuat ulang halaman.** JavaScript dapat menambah atau menghapus elemen DOM, misalnya menampilkan pesan error.
+- **Atribut aksesibilitas tersimpan di DOM**, seperti label dan role, yang juga dipakai pembaca layar.
+
+## Proses singkat di browser
+
+1. Browser menerima HTML.
+2. Browser membangun DOM dari HTML tersebut.
+3. CSS diterapkan untuk menentukan tampilan.
+4. JavaScript berjalan dan dapat mengubah DOM.
+
+<Tips>Klik kanan sebuah elemen lalu pilih Inspect untuk melihat posisinya di pohon DOM.</Tips>
+
+## Ringkasan
+
+DOM adalah struktur pohon halaman yang dibuat browser dari HTML. Selector pada automation testing bekerja di atas struktur ini.

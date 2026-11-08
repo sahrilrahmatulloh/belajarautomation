@@ -5,7 +5,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 
 import { expect, test } from "../fixtures/auth";
-import { LESSON_CONTENT } from "../fixtures/testData";
+import { LESSON_CONTENT, UNWRITTEN_LESSON } from "../fixtures/testData";
 import { CourseDetailPage } from "../pages/CourseDetailPage";
 import { DashboardPage } from "../pages/DashboardPage";
 import { LessonPage } from "../pages/LessonPage";
@@ -106,8 +106,8 @@ test.describe("Lesson yang sudah punya isi", () => {
     await expect(page.getByRole("heading", { name: "Progres Belajar" }).locator("..")).toContainText(courseTitle);
   });
 
-  test("lesson berikutnya yang belum ditulis tidak memberi XP", async ({ page }) => {
-    await new LessonPage(page, courseSlug, nextLessonSlug).goto();
+  test("lesson yang belum ditulis tidak memberi XP", async ({ page }) => {
+    await new LessonPage(page, UNWRITTEN_LESSON.courseSlug, UNWRITTEN_LESSON.lessonSlug).goto();
 
     await expect(lesson.writingNotice).toBeVisible();
     await expect(lesson.completeHint).toBeHidden();

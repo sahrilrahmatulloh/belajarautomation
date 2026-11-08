@@ -1,0 +1,46 @@
+---
+status: draft
+author: "Tim BelajarAutomation"
+---
+
+{/* DATA DUMMY — hapus sebelum rilis. Draf contoh untuk pengujian di DEV; isi aslinya ditulis dan ditinjau Creator. */}
+
+Client dan server perlu "bahasa" yang sama agar bisa berkomunikasi. Di web, bahasa itu adalah **HTTP**.
+
+## Pengertian
+
+**HTTP (Hypertext Transfer Protocol)** adalah aturan komunikasi antara client dan server. Setiap interaksi terdiri dari satu **request** dari client dan satu **response** dari server.
+
+**HTTPS** adalah HTTP yang dienkripsi, sehingga data seperti password tidak bisa dibaca pihak lain di tengah jalan.
+
+## Isi sebuah request
+
+| Bagian | Contoh |
+|---|---|
+| Method | GET, POST, PUT, DELETE |
+| URL | https://contoh.com/api/produk |
+| Header | Informasi tambahan, misalnya jenis data atau token login |
+| Body | Data yang dikirim, misalnya isi formulir (tidak selalu ada) |
+
+## Isi sebuah response
+
+| Bagian | Contoh |
+|---|---|
+| Status code | 200, 404, 500 |
+| Header | Jenis data yang dikirim, aturan cache |
+| Body | Data yang diminta, misalnya dalam format JSON atau HTML |
+
+## Contoh sederhana
+
+```http
+GET /api/produk/12 HTTP/1.1
+Host: contoh.com
+```
+
+Server bisa menjawab dengan status 200 dan data produk nomor 12, atau 404 bila produk itu tidak ada.
+
+<Tips>Hampir semua pengujian API adalah memeriksa empat hal: method, URL, status code, dan isi body response.</Tips>
+
+## Ringkasan
+
+HTTP adalah aturan pertukaran request dan response. Request membawa method, URL, header, dan body; response membawa status code, header, dan body.
