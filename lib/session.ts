@@ -92,6 +92,8 @@ interface AccountRow {
   username: string | null;
   bio?: string;
   username_changed_at?: string | null;
+  avatar_id?: string | null;
+  theme_id?: string | null;
   status: "active" | "deactivated";
   roles: ("student" | "creator" | "reviewer" | "admin")[];
 }
@@ -112,6 +114,8 @@ function toSession(user: User, row: AccountRow): Session {
     bio: row.bio ?? "",
     usernameChangedAt: row.username_changed_at ?? null,
     pendingEmail: user.new_email ?? null,
+    avatarId: row.avatar_id ?? null,
+    themeId: row.theme_id ?? null,
     role: extraRoles[0] ?? "user",
     roles,
   };

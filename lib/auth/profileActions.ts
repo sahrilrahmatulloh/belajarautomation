@@ -31,6 +31,9 @@ const MESSAGES: Record<string, string> = {
   username_format: "Username hanya boleh huruf kecil, angka, dan garis bawah (_).",
   username_cadangan: "Username ini tidak dapat dipakai. Pilih yang lain.",
   username_dipakai: "Username sudah dipakai. Pilih yang lain.",
+  item_terkunci: "Avatar atau tema ini terkunci untuk paketmu.",
+  avatar_tidak_dikenal: "Avatar tidak dikenal. Muat ulang halaman lalu coba lagi.",
+  tema_tidak_dikenal: "Tema tidak dikenal. Muat ulang halaman lalu coba lagi.",
 };
 
 const NETWORK_MESSAGE = "Tidak dapat terhubung ke server. Periksa koneksi lalu coba lagi.";
@@ -84,6 +87,20 @@ export async function changeUsername(username: string): Promise<AuthResult<strin
     if (error) return toFailure(error);
     await refreshSupabaseAccount();
     return { ok: true, data: data as string };
+  } catch (error) {
+    return toFailure(error as DbError);
+  }
+}
+
+// Menyimpan avatar dan tema pilihan (PRD FR-12). Hak pakai diperiksa di database.
+export async function saveAppearance(avatarId: string, themeId: string): Promise<AuthResult> {
+  const client = getSupabaseBrowserClient();
+  if (!client) return notConfigured();
+  try {
+    const { error } = await client.rpc("set_appearance", { new_avatar_id: avatarId, new_theme_id: themeId });
+    if (error) return toFailure(error);
+    await refreshSupabaseAccount();
+    return { ok: true, data: undefined };
   } catch (error) {
     return toFailure(error as DbError);
   }

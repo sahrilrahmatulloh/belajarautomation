@@ -22,6 +22,9 @@ export interface Session {
   bio?: string;
   usernameChangedAt?: string | null;
   pendingEmail?: string | null;
+  // Hanya akun Supabase: avatar dan tema pilihan; kosong berarti bawaan (PRD FR-12).
+  avatarId?: string | null;
+  themeId?: string | null;
   name: string;
   email: string;
   // Peran utama: menentukan halaman awal setelah login.

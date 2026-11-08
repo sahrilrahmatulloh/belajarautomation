@@ -8,7 +8,7 @@ import { ownDecisions, useReviewerData } from "@/components/reviewer/useReviewer
 import RoleStatCard from "@/components/roles/RoleStatCard";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ROLE_LABELS } from "@/data/navigation";
-import { ACTIVE_AVATAR } from "@/data/dummy/appearance";
+import { useAppearance } from "@/lib/useAppearance";
 import { formatContentDate, KIND_LABELS } from "@/lib/content/document";
 import { useSession } from "@/lib/session";
 import { useViewMode } from "@/lib/viewMode";
@@ -116,6 +116,7 @@ function AdminProfile() {
 // Profil saat mode peran (PRD FR-15): identitas yang sama dengan Mode Belajar, tanpa XP,
 // rank, achievement, dan membership.
 export default function RoleProfile() {
+  const { avatar } = useAppearance();
   const session = useSession();
   const { activeRole } = useViewMode();
   if (!session) return null;
@@ -124,7 +125,7 @@ export default function RoleProfile() {
     <div className="mx-auto w-full max-w-4xl space-y-5">
       <header className="flex items-center gap-4 rounded-2xl border border-border bg-card p-5">
         <Avatar className="h-16 w-16 shrink-0 sm:h-20 sm:w-20">
-          <AvatarImage src={ACTIVE_AVATAR.image} alt="" />
+          <AvatarImage src={avatar.image} alt="" />
           <AvatarFallback>BA</AvatarFallback>
         </Avatar>
         <div className="min-w-0">

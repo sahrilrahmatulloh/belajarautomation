@@ -6,7 +6,7 @@ import { Crown, EyeOff, Globe2, TrendingUp } from "lucide-react";
 
 import RankEmblem from "@/components/common/RankEmblem";
 import { DUMMY_ACCOUNT } from "@/data/dummy/account";
-import { ACTIVE_AVATAR } from "@/data/dummy/appearance";
+import { useAppearance } from "@/lib/useAppearance";
 import { getRankProgress } from "@/data/ranks";
 import { DEMO_LEARNER_ID, useLeaderboardOverlay } from "@/lib/content";
 import { formatNumber } from "@/lib/format";
@@ -18,6 +18,7 @@ import LeaderboardRowItem from "./LeaderboardRowItem";
 const FILTER_KEYS = ["tab"] as const;
 
 export default function LeaderboardBoard() {
+  const { avatar } = useAppearance();
   const { values, setFilters } = useUrlFilters(FILTER_KEYS);
   // Tab rank pengguna aktif lebih dulu; nilai URL lain dianggap tab rank.
   const tab: LeaderboardTab = values.tab === "global" ? "global" : "rank";
@@ -91,7 +92,7 @@ export default function LeaderboardBoard() {
         >
           <div className="flex items-center gap-3">
             <Image
-              src={ACTIVE_AVATAR.image}
+              src={avatar.image}
               alt=""
               width={56}
               height={56}

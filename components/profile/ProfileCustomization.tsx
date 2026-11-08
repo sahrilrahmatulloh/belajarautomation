@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { Cat, Check, Eye, ImageIcon, ListFilter, Lock, Sparkles } from "lucide-react";
 
@@ -18,8 +18,9 @@ import FilterEmptyState from "@/components/filters/FilterEmptyState";
 import { AVATAR_STYLES, AVATARS, getAvatar } from "@/data/avatars";
 import { DUMMY_ACCOUNT } from "@/data/dummy/account";
 import { useAccountXp } from "@/lib/lessonProgress";
+import { saveAppearance } from "@/lib/auth/profileActions";
 import { useSession } from "@/lib/session";
-import { ACTIVE_AVATAR, ACTIVE_THEME } from "@/data/dummy/appearance";
+import { useAppearance } from "@/lib/useAppearance";
 import { getMembershipPlan } from "@/data/membership";
 import { getRank } from "@/data/ranks";
 import { getTheme, THEMES } from "@/data/themes";
@@ -71,7 +72,6 @@ function OwnershipFilter({ value, onChange }: { value: Ownership; onChange: (val
   );
 }
 
-const tier = DUMMY_ACCOUNT.membership;
 
 function unlockNote(item: CatAvatar | BannerTheme) {
   const plans = item.includedIn.map((planTier) => getMembershipPlan(planTier).name);
@@ -167,18 +167,39 @@ function UpcomingCard({ label }: { label: string }) {
 
 export default function ProfileCustomization() {
   const session = useSession();
+  // Pilihan yang sedang dipakai: dari akun Supabase, atau data dummy untuk akun demo.
+  const { avatar: activeAvatar, theme: activeTheme, tier, canSave } = useAppearance();
   const [section, setSection] = useState<Section>("avatar");
   const [ownership, setOwnership] = useState<Ownership>("semua");
-  const [avatarId, setAvatarId] = useState(ACTIVE_AVATAR.id);
+  const [avatarId, setAvatarId] = useState(activeAvatar.id);
   // Gaya yang sedang dilihat di koleksi; awalnya gaya avatar yang sedang dipakai.
-  const [style, setStyle] = useState<string>(ACTIVE_AVATAR.style);
-  const [themeId, setThemeId] = useState(ACTIVE_THEME.id);
+  const [style, setStyle] = useState<string>(activeAvatar.style);
+  const [themeId, setThemeId] = useState(activeTheme.id);
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveStatus, setSaveStatus] = useState<{ tone: "success" | "error"; text: string } | null>(null);
 
-  const avatar = getAvatar(avatarId) ?? ACTIVE_AVATAR;
-  const theme = getTheme(themeId) ?? ACTIVE_THEME;
+  // Pilihan di pratinjau mengikuti akun setelah sesi termuat atau setelah disimpan.
+  useEffect(() => {
+    /* eslint-disable react-hooks/set-state-in-effect -- menyalin pilihan akun ke pratinjau saat akun berubah */
+    setAvatarId(activeAvatar.id);
+    setThemeId(activeTheme.id);
+    setStyle(activeAvatar.style);
+    /* eslint-enable react-hooks/set-state-in-effect */
+  }, [activeAvatar.id, activeAvatar.style, activeTheme.id]);
+
+  const avatar = getAvatar(avatarId) ?? activeAvatar;
+  const theme = getTheme(themeId) ?? activeTheme;
   const xp = useAccountXp();
   const rank = getRank(xp);
-  const hasChanges = avatar.id !== ACTIVE_AVATAR.id || theme.id !== ACTIVE_THEME.id;
+  const hasChanges = avatar.id !== activeAvatar.id || theme.id !== activeTheme.id;
+
+  const handleSave = async () => {
+    setIsSaving(true);
+    setSaveStatus(null);
+    const result = await saveAppearance(avatar.id, theme.id);
+    setIsSaving(false);
+    setSaveStatus(result.ok ? { tone: "success", text: "Pilihan tersimpan." } : { tone: "error", text: result.message });
+  };
 
   const matchesOwnership = (isOwned: boolean) =>
     ownership === "semua" || (ownership === "dimiliki" ? isOwned : !isOwned);
@@ -228,15 +249,30 @@ export default function ProfileCustomization() {
           <div className="border-t border-border p-4">
             <button
               type="button"
-              disabled
-              className="w-full rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground disabled:cursor-not-allowed disabled:opacity-50"
+              onClick={handleSave}
+              disabled={!canSave || !hasChanges || isSaving}
+              className="w-full rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50"
             >
-              Simpan Pilihan
+              {isSaving ? "Menyimpan..." : "Simpan Pilihan"}
             </button>
-            <p className="mt-2 text-xs leading-5 text-muted-foreground">
-              {hasChanges ? "Pilihan baru baru tampil di pratinjau. " : ""}
-              Penyimpanan aktif setelah data akun dapat disimpan.
-            </p>
+            {saveStatus ? (
+              <p
+                role={saveStatus.tone === "error" ? "alert" : "status"}
+                className={`mt-2 text-xs font-medium leading-5 ${
+                  saveStatus.tone === "error" ? "text-destructive" : "text-emerald-700 dark:text-emerald-300"
+                }`}
+              >
+                {saveStatus.text}
+              </p>
+            ) : (
+              <p className="mt-2 text-xs leading-5 text-muted-foreground">
+                {canSave
+                  ? hasChanges
+                    ? "Pilihan baru tampil di pratinjau. Simpan untuk memakainya di semua halaman."
+                    : "Pilih avatar atau tema dari koleksi."
+                  : "Akun demo tidak dapat menyimpan pilihan."}
+              </p>
+            )}
           </div>
         </section>
       </aside>
@@ -311,10 +347,13 @@ export default function ProfileCustomization() {
                   image={item.image}
                   imageClassName="mx-auto aspect-square h-auto w-3/4 p-3"
                   isOwned={canUseAvatar(item.id, tier)}
-                  isActive={item.id === ACTIVE_AVATAR.id}
+                  isActive={item.id === activeAvatar.id}
                   isSelected={item.id === avatar.id}
                   lockNote={unlockNote(item)}
-                  onSelect={() => setAvatarId(item.id)}
+                  onSelect={() => {
+                    setAvatarId(item.id);
+                    setSaveStatus(null);
+                  }}
                 />
               ))}
               {ownership !== "terkunci" && <UpcomingCard label="Jenis kucing lain segera hadir" />}
@@ -328,10 +367,13 @@ export default function ProfileCustomization() {
                   image={item.thumbnail}
                   imageClassName="aspect-[3/1] h-auto w-full object-cover"
                   isOwned={canUseTheme(item.id, tier)}
-                  isActive={item.id === ACTIVE_THEME.id}
+                  isActive={item.id === activeTheme.id}
                   isSelected={item.id === theme.id}
                   lockNote={unlockNote(item)}
-                  onSelect={() => setThemeId(item.id)}
+                  onSelect={() => {
+                    setThemeId(item.id);
+                    setSaveStatus(null);
+                  }}
                 />
               ))}
               {ownership !== "terkunci" && <UpcomingCard label="Tema lain segera hadir" />}

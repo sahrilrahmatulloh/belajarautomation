@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "prebuild": "npm run check:covers && npm run check:roadmaps && npm run check:challenges && npm run check:progress && npm run check:activity && npm run check:content && npm run check:blog && npm run check:lessons",
+    "prebuild": "npm run check:covers && npm run check:roadmaps && npm run check:challenges && npm run check:progress && npm run check:activity && npm run check:content && npm run check:blog && npm run check:lessons && npm run check:cosmetics",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
@@ -13,6 +13,7 @@
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:report": "playwright show-report",
     "check:covers": "node scripts/check-covers.mjs",
+    "check:cosmetics": "node scripts/check-cosmetics.mjs",
     "check:roadmaps": "node scripts/check-roadmaps.mjs",
     "check:challenges": "node scripts/check-challenges.mjs",
     "check:progress": "node scripts/check-learning-progress.mjs",

@@ -25,7 +25,7 @@ import {
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ROLE_HOME, ROLE_LABELS } from "@/data/navigation";
-import { ACTIVE_AVATAR } from "@/data/dummy/appearance";
+import { useAppearance } from "@/lib/useAppearance";
 import { sessionActions, useSession } from "@/lib/session";
 import { UserRole } from "@/types/Role";
 import { useViewMode, viewModeActions } from "@/lib/viewMode";
@@ -33,6 +33,7 @@ import { useViewMode, viewModeActions } from "@/lib/viewMode";
 const LEARNING_MODE = "belajar";
 
 export default function ProfileDropdown() {
+  const { avatar } = useAppearance();
   const router = useRouter();
   const session = useSession();
 
@@ -70,7 +71,7 @@ export default function ProfileDropdown() {
         <span className="sr-only">Buka menu profil</span>
 
         <Avatar aria-hidden="true" className="h-8 w-8 sm:h-10 sm:w-10">
-          <AvatarImage src={ACTIVE_AVATAR.image} alt="" />
+          <AvatarImage src={avatar.image} alt="" />
           <AvatarFallback>
             BA
           </AvatarFallback>
