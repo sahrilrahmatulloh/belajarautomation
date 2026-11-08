@@ -1,9 +1,12 @@
 # BELAJARAUTOMATION.COM
 ## Product Requirements Document (PRD)
-**Versi:** 2.34  
+**Versi:** 2.35  
 **Status:** Draft — Acuan Pengembangan Produk  
 **Platform:** Web Application  
 **Target Pengguna:** Pemula hingga praktisi QA, Software Testing, dan Programming
+
+### Perubahan di Versi 2.35
+- Batas waktu pengerjaan latihan: Kuis 15 menit, Bug Hunt, Test Case Writing, dan Locator Challenge 30 menit, dengan teks sisa waktu. Saat waktu habis, jawaban dikirim otomatis (FR-04).
 
 ### Perubahan di Versi 2.34
 - Aturan penyelesaian aktivitas ditetapkan: lesson ditandai selesai setelah isinya digulir sampai akhir, kuis dan challenge boleh diulang tanpa batas, dan Test Case Writing tercatat selesai tanpa XP karena dinilai sendiri (FR-05).
@@ -633,6 +636,26 @@ Ketentuan:
 - Soal, kunci jawaban, daftar bug, dan hasil penilaian diproses di server dan tidak dikirim ke browser sebelum jawaban dikirim.
 - Latihan yang terkait course gratis dapat diakses semua pengguna. Latihan yang terkait course premium mengikuti hak akses course tersebut.
 - Playground tidak memiliki forum diskusi.
+
+### Batas waktu
+
+| Jenis latihan | Batas waktu |
+|---|---|
+| Kuis (pilihan ganda) | 15 menit |
+| Bug Hunt | 30 menit |
+| Test Case Writing | 30 menit |
+| Locator Challenge | 30 menit |
+
+- Waktu mulai berjalan saat halaman latihan dibuka dan tetap berjalan bila halaman dimuat ulang atau ditinggalkan.
+- Sisa waktu ditampilkan dalam format menit:detik, menempel di bagian atas saat halaman digulir. Satu menit terakhir ditandai warna merah dan alert "Sisa waktu 1 menit."
+- Saat waktu habis, jawaban yang sudah diisi langsung dikirim dan dinilai seperti biasa, disertai alert "Waktu habis. Jawabanmu dikirim otomatis."
+  - Kuis: soal yang belum dijawab dihitung salah dan tampil "Tidak dijawab" di pembahasan.
+  - Bug Hunt: temuan yang sudah dicentang dikirim.
+  - Locator Challenge: selector yang tertulis dikirim; selector kosong atau tidak valid dinilai tidak mengenai elemen apa pun.
+  - Test Case Writing: batas waktu hanya untuk menulis jawaban. Jawaban yang tertulis dikirim, lalu penilaian mandiri dengan checklist dikerjakan tanpa batas waktu.
+- Mengulang latihan memulai waktu penuh dari awal.
+- Pengerjaan yang waktunya habis tanpa jawaban tersimpan dimulai ulang saat dibuka kembali, bukan dikirim kosong.
+- Waktu berhenti selama maintenance Aktif (FR-16 K).
 
 ### Konten awal
 - Tahap pengembangan memakai 10 latihan dummy: 4 Kuis, 2 Bug Hunt, 2 Test Case Writing, dan 2 Locator Challenge, yang terhubung ke course yang tersedia.

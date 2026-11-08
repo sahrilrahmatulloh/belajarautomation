@@ -95,7 +95,8 @@ export interface QuizResult extends ChallengeScore {
   review: {
     question: string;
     options: string[];
-    userIndex: number;
+    // null: tidak dijawab sampai waktu habis.
+    userIndex: number | null;
     correctIndex: number;
     explanation: string;
   }[];

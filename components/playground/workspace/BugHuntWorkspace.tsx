@@ -8,8 +8,10 @@ import { useProtectedSubmit } from "@/components/maintenance/useProtectedSubmit"
 import PracticePage from "@/components/practice/PracticePage";
 import { useRecordChallengeAttempt } from "@/lib/challengeAttempts";
 import { useChallengeDraft } from "@/lib/challengeDrafts";
+import { useChallengeTimer } from "@/lib/challengeTimer";
 import { BugFinding, BugHuntResult, PublicChallengeDetail } from "@/types/ChallengeDetail";
 
+import ChallengeTimer from "./ChallengeTimer";
 import ResultSummary from "./ResultSummary";
 import SubmitError from "./SubmitError";
 
@@ -39,7 +41,7 @@ export default function BugHuntWorkspace({ slug, data }: { slug: string; data: B
   const recordAttempt = useRecordChallengeAttempt();
   const draft = useChallengeDraft<string[]>(slug, [], (state) => `${state.length} temuan ditandai`);
   const selected = draft.state;
-  const [outcome, setOutcome] = useState<{ result: BugHuntResult; xp: number } | null>(null);
+  const [outcome, setOutcome] = useState<{ result: BugHuntResult; xp: number; timedOut: boolean } | null>(null);
   const [attempt, setAttempt] = useState(0);
   const [failed, setFailed] = useState(false);
   const [isPending, startTransition] = useTransition();
@@ -47,36 +49,49 @@ export default function BugHuntWorkspace({ slug, data }: { slug: string; data: B
   const toggle = (id: string) =>
     draft.setState((current) => (current.includes(id) ? current.filter((item) => item !== id) : [...current, id]));
 
-  const submit = () => {
+  // Waktu habis: temuan yang sudah dicentang langsung dikirim.
+  const timer = useChallengeTimer({
+    slug,
+    type: "bug-hunt",
+    running: !outcome,
+    onExpire: () => {
+      if (!isPending) submit(true);
+    },
+  });
+
+  const submit = (timedOut = false) => {
     setFailed(false);
     startTransition(async () => {
       try {
         const result = await submitBugHunt(slug, selected);
         if (!result) return setFailed(true);
-        setOutcome({ result, xp: recordAttempt(slug, "bug-hunt", result) });
+        setOutcome({ result, xp: recordAttempt(slug, "bug-hunt", result), timedOut });
         draft.clear();
+        timer.stop();
       } catch {
         setFailed(true);
       }
     });
   };
 
-  const protectedSubmit = useProtectedSubmit(draft, submit);
+  const protectedSubmit = useProtectedSubmit(draft, () => submit());
 
   const retry = () => {
     setOutcome(null);
     draft.clear();
+    timer.restart();
     // Mengulang juga mengembalikan halaman latihan ke keadaan awal.
     setAttempt((value) => value + 1);
   };
 
   return (
     <div className="space-y-4">
+      {!outcome && <ChallengeTimer remaining={timer.remaining} limitMinutes={timer.limitMinutes} isPaused={timer.isPaused} />}
       {outcome && (
         <ResultSummary
           result={outcome.result}
           xp={outcome.xp}
-          detail={`${outcome.result.found.length} bug ditemukan, ${outcome.result.missed.length} terlewat, ${outcome.result.falsePositives.length} salah tandai.`}
+          detail={`${outcome.timedOut ? "Waktu habis, temuan dikirim otomatis. " : ""}${outcome.result.found.length} bug ditemukan, ${outcome.result.missed.length} terlewat, ${outcome.result.falsePositives.length} salah tandai.`}
           onRetry={retry}
         />
       )}

@@ -75,6 +75,11 @@ function updateAccount(account: string, change: (drafts: AccountDrafts) => Accou
   write({ ...all, [account]: change(all[account] ?? {}) });
 }
 
+// Dibaca langsung dari penyimpanan, mis. saat halaman baru dimuat dan hook belum menerima data.
+export function hasChallengeDraft(account: string, slug: string) {
+  return Boolean(getSnapshot()[account]?.[slug]);
+}
+
 export function useAccountKey() {
   return useSession()?.email ?? GUEST;
 }

@@ -9,9 +9,11 @@ import PracticePage from "@/components/practice/PracticePage";
 import { Input } from "@/components/ui/input";
 import { useRecordChallengeAttempt } from "@/lib/challengeAttempts";
 import { useChallengeDraft } from "@/lib/challengeDrafts";
+import { useChallengeTimer } from "@/lib/challengeTimer";
 import { runSelector } from "@/lib/runSelector";
 import { LocatorResult, PublicChallengeDetail, SelectorType } from "@/types/ChallengeDetail";
 
+import ChallengeTimer from "./ChallengeTimer";
 import ResultSummary from "./ResultSummary";
 import SubmitError from "./SubmitError";
 
@@ -39,7 +41,7 @@ export default function LocatorWorkspace({ slug, data }: { slug: string; data: L
   const setSelectorType = (value: SelectorType) => draft.setState((state) => ({ ...state, selectorType: value }));
   const setSelector = (value: string) => draft.setState((state) => ({ ...state, selector: value }));
   const [message, setMessage] = useState<{ text: string; isError: boolean } | null>(null);
-  const [outcome, setOutcome] = useState<{ result: LocatorResult; xp: number } | null>(null);
+  const [outcome, setOutcome] = useState<{ result: LocatorResult; xp: number; timedOut: boolean } | null>(null);
   const [attempt, setAttempt] = useState(0);
   const [failed, setFailed] = useState(false);
   const [isPending, startTransition] = useTransition();
@@ -67,41 +69,55 @@ export default function LocatorWorkspace({ slug, data }: { slug: string; data: L
     return run.elements;
   };
 
-  const submit = () => {
-    const elements = test();
-    if (!elements) return;
+  // Waktu habis: selector yang tertulis langsung dikirim; selector kosong atau tidak valid
+  // dinilai tidak mengenai elemen apa pun.
+  const timer = useChallengeTimer({
+    slug,
+    type: "locator",
+    running: !outcome,
+    onExpire: () => {
+      if (!isPending) submit(true);
+    },
+  });
+
+  const submit = (timedOut = false) => {
+    const elements = selector.trim() ? test() : null;
+    if (!elements && !timedOut) return;
 
     setFailed(false);
     startTransition(async () => {
       try {
-        const matchedIds = elements.map((element) => element.getAttribute("data-practice-id") ?? "");
+        const matchedIds = (elements ?? []).map((element) => element.getAttribute("data-practice-id") ?? "");
         const result = await submitLocator(slug, matchedIds);
         if (!result) return setFailed(true);
-        setOutcome({ result, xp: recordAttempt(slug, "locator", result) });
+        setOutcome({ result, xp: recordAttempt(slug, "locator", result), timedOut });
         draft.clear();
+        timer.stop();
       } catch {
         setFailed(true);
       }
     });
   };
 
-  const protectedSubmit = useProtectedSubmit(draft, submit);
+  const protectedSubmit = useProtectedSubmit(draft, () => submit());
 
   const retry = () => {
     clearHighlight();
     setOutcome(null);
     setMessage(null);
     draft.clear();
+    timer.restart();
     setAttempt((value) => value + 1);
   };
 
   return (
     <div className="space-y-4">
+      {!outcome && <ChallengeTimer remaining={timer.remaining} limitMinutes={timer.limitMinutes} isPaused={timer.isPaused} />}
       {outcome && (
         <ResultSummary
           result={outcome.result}
           xp={outcome.xp}
-          detail={OUTCOME_MESSAGES[outcome.result.outcome](outcome.result.matchCount)}
+          detail={`${outcome.timedOut ? "Waktu habis, selector dikirim otomatis. " : ""}${OUTCOME_MESSAGES[outcome.result.outcome](outcome.result.matchCount)}`}
           onRetry={retry}
         />
       )}
