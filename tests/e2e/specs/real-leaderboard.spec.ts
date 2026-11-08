@@ -32,7 +32,7 @@ test.describe("Leaderboard akun Supabase", () => {
     await leaderboard.goto();
     await leaderboard.globalTab.click();
 
-    await leaderboard.topList.getByRole("link", { name: /^Lihat profil Sari Wulandari/ }).click();
+    await leaderboard.topList.getByRole("link", { name: /Sari Wulandari.*lihat profil$/ }).click();
 
     await expect(page).toHaveURL("/u/sari_qa");
     const profile = new PublicProfilePage(page, "sari_qa");

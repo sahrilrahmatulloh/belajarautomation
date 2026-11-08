@@ -81,10 +81,11 @@ export default function LeaderboardRowItem({ row, id, isHighlighted = false }: L
         // Baris dapat diklik untuk melihat profil publik pengguna (PRD FR-06, FR-13).
         <Link
           href={`/u/${row.username}`}
-          aria-label={`Lihat profil ${name}, peringkat ${row.position}, ${formatNumber(row.totalXp)} XP`}
           className={`${ROW_CLASS} transition-colors hover:bg-accent focus-visible:bg-accent focus-visible:outline-none`}
         >
           {content}
+          {/* Nama tautan memakai teks yang terlihat (bisa disebut lewat perintah suara), ditambah keterangan tujuannya. */}
+          <span className="sr-only">, lihat profil</span>
         </Link>
       ) : (
         <div className={ROW_CLASS}>{content}</div>
