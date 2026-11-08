@@ -1,9 +1,12 @@
 # BELAJARAUTOMATION.COM
 ## Product Requirements Document (PRD)
-**Versi:** 2.35  
+**Versi:** 2.36  
 **Status:** Draft — Acuan Pengembangan Produk  
 **Platform:** Web Application  
 **Target Pengguna:** Pemula hingga praktisi QA, Software Testing, dan Programming
+
+### Perubahan di Versi 2.36
+- Lesson ditandai selesai saat pengguna mengklik "Berikutnya", menggantikan tombol "Tandai selesai". Lesson terakhir diselesaikan dengan tombol "Selesaikan course" yang kembali ke halaman course (FR-05).
 
 ### Perubahan di Versi 2.35
 - Batas waktu pengerjaan latihan: Kuis 15 menit, Bug Hunt, Test Case Writing, dan Locator Challenge 30 menit, dengan teks sisa waktu. Saat waktu habis, jawaban dikirim otomatis (FR-04).
@@ -736,8 +739,8 @@ XP hanya diberikan saat aktivitas tersebut diselesaikan pertama kali. Pengguna b
 
 | Aktivitas | Dianggap selesai saat | XP | Catatan |
 |---|---|---|---|
-| Lesson | Pengguna menekan "Tandai selesai" | 10 | Tombol baru aktif setelah isi lesson digulir sampai akhir. Lesson yang belum punya isi tidak bisa ditandai selesai. |
-| Course | Seluruh lesson dalam course selesai | 50 (bonus) | Diberikan otomatis bersama lesson terakhir yang diselesaikan. |
+| Lesson | Pengguna mengklik "Berikutnya" ke lesson selanjutnya. Pada lesson terakhir course, pengguna menekan "Selesaikan course" | 10 | Hanya tercatat bila isi lesson sudah digulir sampai akhir; navigasi tetap bisa dipakai kapan saja, dengan keterangan bila lesson belum tercatat. Lesson yang belum punya isi tidak bisa diselesaikan. |
+| Course | Seluruh lesson dalam course selesai | 50 (bonus) | Diberikan otomatis bersama lesson terakhir yang diselesaikan. Pengguna melihat pemberitahuan "Course [nama] tuntas!", lalu kembali ke halaman course. |
 | Kuis | Lulus dengan skor minimal 70% | 30 | Percobaan tidak dibatasi. |
 | Bug Hunt dan Locator Challenge | Lulus penilaian otomatis | 75 | Percobaan tidak dibatasi. |
 | Test Case Writing | Semua poin wajib checklist tercentang | 0 | Dinilai sendiri oleh pengguna sehingga tidak tervalidasi; tetap terhitung sebagai challenge selesai. |
