@@ -1,0 +1,36 @@
+---
+status: draft
+author: "Tim BelajarAutomation"
+---
+
+{/* DATA DUMMY — hapus sebelum rilis. Draf contoh untuk pengujian di DEV; isi aslinya ditulis dan ditinjau Creator. */}
+
+Pengguna tidak selalu memakai aplikasi dengan benar. Karena itu, pengujian perlu mencakup kondisi benar dan salah.
+
+## Positive testing
+
+Menguji dengan **input yang valid** untuk memastikan aplikasi bekerja sesuai harapan.
+
+Contoh: login dengan email terdaftar dan password yang benar.
+
+## Negative testing
+
+Menguji dengan **input yang tidak valid** untuk memastikan aplikasi menolaknya dengan benar.
+
+Contoh: login dengan password salah harus menampilkan pesan error dan tidak masuk.
+
+## Contoh untuk kolom umur (18–60 tahun)
+
+| Jenis | Input | Expected result |
+|---|---|---|
+| Positive | 25 | Diterima |
+| Positive (batas) | 18 dan 60 | Diterima |
+| Negative (batas) | 17 dan 61 | Ditolak dengan pesan |
+| Negative | Huruf "abc" | Ditolak dengan pesan |
+| Negative | Kosong | Ditolak dengan pesan |
+
+<Tips>Nilai di sekitar batas paling sering menyimpan bug. Teknik ini disebut boundary value analysis.</Tips>
+
+## Ringkasan
+
+Positive testing memastikan input valid diterima, negative testing memastikan input tidak valid ditolak dengan pesan yang jelas. Keduanya wajib ada.

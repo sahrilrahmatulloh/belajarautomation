@@ -1,0 +1,36 @@
+---
+status: draft
+author: "Tim BelajarAutomation"
+---
+
+{/* DATA DUMMY — hapus sebelum rilis. Draf contoh untuk pengujian di DEV; isi aslinya ditulis dan ditinjau Creator. */}
+
+Setiap bug melewati beberapa status dari ditemukan sampai selesai. Alur ini disebut **bug life cycle**.
+
+## Status umum
+
+| Status | Arti |
+|---|---|
+| New | Bug baru dilaporkan |
+| Assigned | Bug diberikan ke developer |
+| In Progress | Developer sedang memperbaiki |
+| Fixed | Perbaikan selesai, siap diuji ulang |
+| Retest | QA menguji ulang |
+| Closed | Bug terbukti sudah diperbaiki |
+| Reopened | Bug masih muncul setelah diuji ulang |
+
+## Status lain
+
+- **Rejected:** bukan bug, misalnya perilaku memang sesuai kebutuhan.
+- **Duplicate:** bug yang sama sudah pernah dilaporkan.
+- **Deferred:** perbaikan ditunda ke rilis berikutnya.
+
+## Alur singkat
+
+New → Assigned → In Progress → Fixed → Retest → Closed. Jika saat retest bug masih muncul, statusnya menjadi Reopened dan kembali ke developer.
+
+<Peringatan>Jangan menutup bug sebelum menguji ulang di build yang berisi perbaikannya.</Peringatan>
+
+## Ringkasan
+
+Bug life cycle membantu tim melacak status setiap bug. QA berperan di awal (melaporkan) dan di akhir (menguji ulang dan menutup).

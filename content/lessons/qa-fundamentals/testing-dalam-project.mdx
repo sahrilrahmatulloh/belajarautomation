@@ -1,0 +1,38 @@
+---
+status: draft
+author: "Tim BelajarAutomation"
+---
+
+{/* DATA DUMMY — hapus sebelum rilis. Draf contoh untuk pengujian di DEV; isi aslinya ditulis dan ditinjau Creator. */}
+
+Bagaimana semua konsep tadi dipakai di project sungguhan? Berikut gambaran alur kerja QA dalam satu sprint.
+
+## Alur dalam satu sprint
+
+1. **Sprint planning.** QA ikut membahas user story dan memperkirakan usaha pengujian.
+2. **Analisis user story.** QA memastikan acceptance criteria jelas dan bisa diuji.
+3. **Menulis test scenario dan test case.** Dikerjakan sambil developer membuat fitur.
+4. **Pengujian di lingkungan DEV atau staging.** Setelah fitur siap, QA menjalankan test case.
+5. **Melaporkan dan memverifikasi bug.** Bug dilaporkan di tool seperti Jira, lalu diuji ulang setelah diperbaiki.
+6. **Regression testing.** Memastikan fitur lama tetap berjalan sebelum rilis.
+7. **Rilis dan smoke test.** Pengecekan cepat setelah rilis ke production.
+
+## Lingkungan yang umum
+
+| Lingkungan | Fungsi |
+|---|---|
+| DEV | Tempat developer menggabungkan pekerjaan |
+| UAT atau staging | Pengujian sebelum rilis, mirip production |
+| Production | Dipakai pengguna sungguhan |
+
+## Tool yang sering dipakai
+
+- Manajemen tugas dan bug: Jira, Trello, Linear.
+- Pengelolaan test case: spreadsheet, TestRail, Qase.
+- Automation: Playwright, Selenium, Postman.
+
+<Peringatan>Jangan menguji dengan data pengguna sungguhan di production kecuali ada izin dan prosedur yang jelas.</Peringatan>
+
+## Ringkasan
+
+Di project nyata, QA bekerja bersama tim sepanjang sprint: dari membahas kebutuhan, menguji di DEV dan UAT, sampai memastikan rilis aman.

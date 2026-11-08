@@ -1,0 +1,44 @@
+---
+status: draft
+author: "Tim BelajarAutomation"
+---
+
+{/* DATA DUMMY — hapus sebelum rilis. Draf contoh untuk pengujian di DEV; isi aslinya ditulis dan ditinjau Creator. */}
+
+Dari setiap test scenario, QA menulis satu atau beberapa **test case**: langkah pengujian yang detail dan bisa diulang orang lain.
+
+## Bagian test case
+
+| Bagian | Isi |
+|---|---|
+| ID | Penanda unik, misalnya TC-LOGIN-01 |
+| Judul | Skenario yang diuji |
+| Prasyarat | Kondisi sebelum test, misalnya akun sudah terdaftar |
+| Test data | Data yang dipakai |
+| Langkah | Urutan tindakan |
+| Expected result | Hasil yang seharusnya terjadi |
+| Actual result | Hasil yang benar-benar terjadi |
+| Status | Lulus atau gagal |
+
+## Contoh
+
+**TC-LOGIN-01 — Login berhasil dengan data yang benar**
+
+- Prasyarat: akun pelajar@contoh.id sudah terdaftar.
+- Langkah:
+  1. Buka halaman login.
+  2. Isi email dan password yang benar.
+  3. Klik tombol Masuk.
+- Expected result: pengguna masuk ke dashboard dan melihat namanya.
+
+## Ciri test case yang baik
+
+- Satu test case menguji satu hal.
+- Langkah jelas dan bisa diikuti orang yang baru bergabung.
+- Expected result spesifik, bukan "aplikasi berjalan normal".
+
+<Peringatan>Expected result yang samar membuat orang berbeda menilai hasil yang sama secara berbeda.</Peringatan>
+
+## Ringkasan
+
+Test case berisi langkah dan expected result yang spesifik. Hasil aktual dibandingkan dengan expected result untuk menentukan test lulus atau gagal.

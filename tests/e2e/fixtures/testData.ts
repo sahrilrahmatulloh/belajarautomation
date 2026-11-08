@@ -279,6 +279,29 @@ export const LEARNER_PAGES = [
 ];
 
 // Contoh lesson berisi (content/lessons/dasar-web-api/client-server.mdx), course tanpa progres dummy.
+// Course QA Fundamental: seluruh lesson sudah punya isi draf, jadi bisa diselesaikan di DEV.
+export const QA_FUNDAMENTAL = {
+  courseSlug: "qa-fundamentals",
+  lessons: [
+    "apa-itu-quality-assurance",
+    "qa-vs-qc",
+    "peran-qa-engineer",
+    "sdlc",
+    "stlc",
+    "agile-scrum",
+    "jenis-software-testing",
+    "test-scenario",
+    "test-case",
+    "positive-negative-testing",
+    "apa-itu-bug",
+    "bug-report",
+    "severity-priority",
+    "bug-life-cycle",
+    "testing-dalam-project",
+    "qa-career-next-step",
+  ],
+} as const;
+
 export const LESSON_CONTENT = {
   courseSlug: "dasar-web-api",
   courseTitle: "Dasar Web & API untuk QA",
