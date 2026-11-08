@@ -1,6 +1,7 @@
 import AxeBuilder from "@axe-core/playwright";
 import { Page } from "@playwright/test";
 
+import { waitForEntranceAnimations } from "../fixtures/animations";
 import { expect, test } from "../fixtures/auth";
 import { MockAccount, SUPABASE_TEST_URL, mockSupabase, signInWithMock, uniqueMockAccount } from "../fixtures/supabaseMock";
 import { CHALLENGE_KEYS, LESSON_CONTENT, QA_FUNDAMENTAL } from "../fixtures/testData";
@@ -122,6 +123,7 @@ test.describe("XP akun Supabase", () => {
     await expect(celebration).toBeVisible();
     await expect(celebration).toContainText("Apprentice");
 
+    await waitForEntranceAnimations(page);
     const { violations } = await new AxeBuilder({ page }).include("[role=dialog]").analyze();
     expect(violations.filter((item) => ["critical", "serious"].includes(item.impact ?? "")).map((item) => item.id)).toEqual([]);
 

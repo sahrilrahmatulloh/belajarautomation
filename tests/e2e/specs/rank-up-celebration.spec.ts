@@ -1,6 +1,7 @@
 import AxeBuilder from "@axe-core/playwright";
 import { Page } from "@playwright/test";
 
+import { waitForEntranceAnimations } from "../fixtures/animations";
 import { expect, test } from "../fixtures/auth";
 import { MockAccount, SUPABASE_TEST_URL, mockSupabase, signInWithMock, uniqueMockAccount } from "../fixtures/supabaseMock";
 import { DashboardPage } from "../pages/DashboardPage";
@@ -85,6 +86,7 @@ test.describe("Popup naik rank", () => {
     await expect(share.getByRole("link", { name: "WhatsApp" })).toHaveAttribute("href", new RegExp(`u%2F${account.username}|u/${account.username}`));
     await expect(share.getByRole("button", { name: "Salin tautan" })).toBeVisible();
 
+    await waitForEntranceAnimations(page);
     const { violations } = await new AxeBuilder({ page }).include("[role=dialog]").analyze();
     expect(violations.filter((item) => ["critical", "serious"].includes(item.impact ?? "")).map((item) => item.id)).toEqual([]);
 

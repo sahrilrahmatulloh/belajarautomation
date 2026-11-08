@@ -118,7 +118,7 @@ export default function RankUpShare({ rank, xp, displayName, username, image, on
           <a
             href={card.url}
             download={card.file.name}
-            className="inline-flex min-h-11 flex-1 items-center justify-center gap-2 rounded-full bg-blue-600 px-4 text-sm font-semibold text-white transition-colors hover:bg-blue-500"
+            className="inline-flex min-h-11 flex-1 items-center justify-center gap-2 rounded-full bg-blue-600 px-4 text-sm font-semibold text-white transition-colors hover:bg-blue-700"
           >
             <Download className="h-4 w-4" aria-hidden="true" />
             Unduh PNG

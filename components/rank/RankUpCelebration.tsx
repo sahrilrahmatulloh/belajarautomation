@@ -199,7 +199,7 @@ export default function RankUpCelebration() {
                     <TrendingUp className="h-4 w-4" aria-hidden="true" />
                     Lihat Progress Rank
                   </Link>
-                  <Dialog.Close className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-blue-600 px-4 text-sm font-semibold shadow-lg shadow-blue-600/40 transition-colors hover:bg-blue-500">
+                  <Dialog.Close className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-blue-600 px-4 text-sm font-semibold shadow-lg shadow-blue-600/40 transition-colors hover:bg-blue-700">
                     Lanjut Belajar
                     <ArrowRight className="h-4 w-4" aria-hidden="true" />
                   </Dialog.Close>
