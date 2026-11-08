@@ -1,15 +1,16 @@
 import { BannerTheme } from "@/types/Appearance";
 
-// Tema banner untuk Welcome Banner dan banner profil (PRD FR-12). Menambah tema
-// baru cukup dengan menaruh PNG di public/banner, menjalankan
-// npm run optimize:images (membuat gambar dan thumbnail), lalu menambah satu entri.
+// Tema banner untuk Welcome Banner dan banner profil (PRD FR-12). Satu folder per tema:
+// public/banner/<id-tema>/ berisi PNG (mis. banner.png) dan video banner.mp4 bila bergerak.
+// Jalankan npm run optimize:images -- themes (membuat banner.webp dan thumb.webp), tambah
+// satu entri di sini, lalu tambah barisnya di private.cosmetic_items lewat migrasi baru.
 export const THEMES: BannerTheme[] = [
   {
     id: "kucing-fuji",
     name: "Penerbangan Fuji",
-    image: "/banner/kucing-fuji.webp",
-    thumbnail: "/banner/kucing-fuji-thumb.webp",
-    video: "/banner/kucing-fuji.mp4",
+    image: "/banner/kucing-fuji/banner.webp",
+    thumbnail: "/banner/kucing-fuji/thumb.webp",
+    video: "/banner/kucing-fuji/banner.mp4",
     access: "free",
     includedIn: [],
     // Ilustrasi memuat maskot kucing putih di kursi pesawat, jadi avatar aktif tidak

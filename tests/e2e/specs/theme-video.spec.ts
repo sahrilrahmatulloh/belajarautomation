@@ -14,18 +14,18 @@ test.describe("Banner tema bergerak", () => {
     await dashboard.goto();
 
     const video = themeVideo(page).first();
-    await expect(video).toHaveAttribute("src", "/banner/kucing-fuji.mp4");
+    await expect(video).toHaveAttribute("src", "/banner/kucing-fuji/banner.mp4");
     await expect(video).toHaveJSProperty("muted", true);
     await expect(video).toHaveJSProperty("loop", true);
     await expect(video).toHaveAttribute("aria-hidden", "true");
-    await expect(page.locator('img[src*="kucing-fuji.webp"]').first()).toBeAttached();
+    await expect(page.locator('img[src*="kucing-fuji%2Fbanner.webp"]').first()).toBeAttached();
   });
 
   test("header profil memakai video tema yang sama", async ({ page }) => {
     const profile = new ProfilePage(page);
     await profile.goto();
 
-    await expect(profile.header.locator("video[data-theme-video]")).toHaveAttribute("src", "/banner/kucing-fuji.mp4");
+    await expect(profile.header.locator("video[data-theme-video]")).toHaveAttribute("src", "/banner/kucing-fuji/banner.mp4");
   });
 });
 
@@ -38,6 +38,6 @@ test.describe("Banner tema dengan pengaturan kurangi gerakan", () => {
     await expect(dashboard.greeting).toBeVisible();
 
     await expect(themeVideo(page)).toHaveCount(0);
-    await expect(page.locator('img[src*="kucing-fuji.webp"]').first()).toBeVisible();
+    await expect(page.locator('img[src*="kucing-fuji%2Fbanner.webp"]').first()).toBeVisible();
   });
 });
