@@ -41,6 +41,23 @@ test.describe("Kustomisasi akun Supabase", () => {
     await expect(profile.profileMenuButton.locator("img")).toHaveAttribute("src", /kucing-oren/);
   });
 
+  test("menyimpan tema Neon Night lalu dipakai di header profil", async ({ page }) => {
+    const supabase = await mockSupabase(page);
+    await signInWithMock(page, MOCK_STUDENT);
+    const profile = new ProfilePage(page);
+    await profile.gotoTab("kustomisasi");
+
+    await page.getByRole("button", { name: "Tema Banner" }).click();
+    await page.getByRole("button", { name: /^Neon Night/ }).click();
+    await profile.saveAppearanceButton.click();
+
+    await expect(profile.preview.getByRole("status").filter({ hasText: "Pilihan tersimpan." })).toBeVisible();
+    expect(supabase.find("/rest/v1/rpc/set_appearance")?.postDataJSON()).toMatchObject({ new_theme_id: "kucing-cyberpunk" });
+
+    await profile.goto();
+    await expect(profile.header.locator("video[data-theme-video]")).toHaveAttribute("src", "/banner/kucing-cyberpunk/banner.mp4");
+  });
+
   test("avatar berbayar tetap terkunci untuk akun Basic", async ({ page }) => {
     await mockSupabase(page);
     await signInWithMock(page, MOCK_STUDENT);
