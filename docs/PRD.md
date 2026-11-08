@@ -9,6 +9,7 @@
 - Email verifikasi pendaftaran berbahasa Indonesia dengan tampilan belajarautomation.com (Bagian 4.5).
 - Leaderboard akun sungguhan: setiap baris dapat diklik untuk membuka profil publik pengguna tersebut (FR-06, FR-13).
 - Profil publik akun sungguhan diambil dari database; username yang tidak ada menampilkan "Profil tidak ditemukan" (FR-13).
+- Avatar di kartu Bagikan profil memakai bingkai bulat, sama dengan header profil (FR-13).
 
 ### Perubahan di Versi 2.32
 - Sertifikat kelulusan dicatat sebagai fitur yang direncanakan (Bagian 12).

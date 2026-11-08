@@ -98,12 +98,19 @@ export async function createShareCard(data: ShareCardData): Promise<Blob> {
   ctx.fillStyle = shade;
   ctx.fillRect(0, 0, SHARE_CARD_WIDTH, SHARE_CARD_HEIGHT);
 
-  // Avatar
+  // Avatar dalam bingkai bulat, sama dengan header profil (PRD FR-13).
+  const avatarCenterX = CONTENT_LEFT + 80;
+  const avatarCenterY = 136;
   ctx.fillStyle = "#FFFFFF";
   ctx.beginPath();
-  ctx.roundRect(CONTENT_LEFT, 56, 160, 160, 28);
+  ctx.arc(avatarCenterX, avatarCenterY, 80, 0, Math.PI * 2);
   ctx.fill();
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(avatarCenterX, avatarCenterY, 72, 0, Math.PI * 2);
+  ctx.clip();
   drawContained(ctx, avatar, CONTENT_LEFT + 8, 64, 144);
+  ctx.restore();
 
   // Nama dan username
   ctx.textBaseline = "alphabetic";
