@@ -20,6 +20,7 @@ const STATIC_ROUTES = new Set([
   "/playground",
   "/profile",
   "/projects",
+  "/rank",
   "/reviewer",
   "/roadmap",
   "/settings",

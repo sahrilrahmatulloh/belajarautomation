@@ -2,7 +2,6 @@ import { Suspense } from "react";
 import { Info, Trophy } from "lucide-react";
 
 import LeaderboardBoard from "./LeaderboardBoard";
-import RankTiers from "./RankTiers";
 
 export default function LeaderboardPage() {
   return (
@@ -27,8 +26,6 @@ export default function LeaderboardPage() {
       <Suspense fallback={<p className="text-sm text-muted-foreground">Memuat leaderboard...</p>}>
         <LeaderboardBoard />
       </Suspense>
-
-      <RankTiers />
 
       <p className="flex items-start gap-2 text-sm text-muted-foreground">
         <Info className="mt-0.5 h-4 w-4 shrink-0" />
