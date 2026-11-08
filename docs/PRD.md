@@ -1,9 +1,14 @@
 # BELAJARAUTOMATION.COM
 ## Product Requirements Document (PRD)
-**Versi:** 2.36  
+**Versi:** 2.37  
 **Status:** Draft — Acuan Pengembangan Produk  
 **Platform:** Web Application  
 **Target Pengguna:** Pemula hingga praktisi QA, Software Testing, dan Programming
+
+### Perubahan di Versi 2.37
+- Popup naik rank dibuat meriah (confetti, sinar, animasi emblem) dan tampil di halaman mana pun, sekali per rank (FR-05).
+- Pencapaian naik rank dapat dibagikan dari popup: kartu gambar persegi yang bisa diunduh atau dibagikan, serta tautan profil ke media sosial (FR-05).
+- Ilustrasi perayaan kucing dengan tameng per rank ditetapkan terpisah dari emblem rank; emblem di tempat lain tetap tanpa maskot (FR-05).
 
 ### Perubahan di Versi 2.36
 - Lesson ditandai selesai saat pengguna mengklik "Berikutnya", menggantikan tombol "Tandai selesai". Lesson terakhir diselesaikan dengan tombol "Selesaikan course" yang kembali ke halaman course (FR-05).
@@ -751,7 +756,12 @@ Ketentuan perhitungan:
 - **Challenge selesai** adalah jumlah kuis dan challenge yang pernah lulus, masing-masing dihitung sekali.
 - **Rank** ditentukan dari total XP sesuai tabel batas XP rank di bawah.
 - XP dihitung dan dicatat oleh server setelah jawaban dinilai. Browser tidak menentukan jumlah XP.
-- Saat total XP melewati batas rank berikutnya, aplikasi menampilkan popup perayaan berisi emblem rank baru, dengan tombol "Lihat detail rank" dan "Lanjut belajar", serta menambah notifikasi "Naik rank ke [nama rank]" di kelompok Progres.
+- Saat total XP melewati batas rank yang belum pernah dirayakan, aplikasi menampilkan popup perayaan di halaman mana pun yang sedang dibuka, termasuk bila XP bertambah dari perangkat lain atau koreksi Admin. Popup tampil sekali per rank dan menambah notifikasi "Naik rank ke [nama rank]" di kelompok Progres.
+  - Isi: logo, ilustrasi perayaan, label "Rank Up!", "Selamat! Kamu telah naik ke rank", nama rank, rank berikutnya beserta batas XP-nya (rank tertinggi memakai pesan khusus), tombol "Lihat Progress Rank" (halaman Rank & XP) dan "Lanjut Belajar" (menutup popup).
+  - Tampilan meriah: confetti, sinar berputar dan cahaya berwarna identitas rank, emblem yang muncul memantul, dan bintang berkelip. Seluruh animasi nonaktif bila pengguna memilih mengurangi animasi di perangkatnya.
+  - Ilustrasi perayaan berupa kucing dengan tameng rank, dibuat pemilik produk per rank di `public/rank-up/<rank>.webp` (Apprentice sampai Master), persegi, latar transparan, tanpa teks. Ilustrasi ini khusus popup perayaan dan terpisah dari emblem rank; emblem di dashboard, profil, dan leaderboard tetap tameng tanpa maskot. Selama ilustrasi belum tersedia, popup memakai emblem rank.
+  - Perangkat yang baru pertama kali dibuka mencatat rank saat ini tanpa menampilkan popup.
+  - Tombol bagikan di pojok kanan atas membuka tampilan "Bagikan Pencapaian": kartu PNG 1080×1080 berisi logo, ilustrasi, "Rank Up!", nama tampilan, rank baru, username, dan total XP. Kartu dapat diunduh, dibagikan lewat menu bawaan perangkat bila didukung, dan tautan profil dapat dibagikan ke WhatsApp, X, Facebook, LinkedIn, Telegram, atau disalin. Kartu hanya memuat data publik.
 - Hingga hak akses membership tersambung ke backend, XP dari course premium belum dicatat untuk akun sungguhan.
 
 ### Batas XP rank

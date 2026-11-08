@@ -118,7 +118,7 @@ test.describe("XP akun Supabase", () => {
     const lesson = await openLesson(page);
     await completeAndNext(page, lesson);
 
-    const celebration = page.getByRole("dialog", { name: "Selamat, kamu naik rank!" });
+    const celebration = page.getByRole("dialog", { name: /^Selamat!/ });
     await expect(celebration).toBeVisible();
     await expect(celebration).toContainText("Apprentice");
 

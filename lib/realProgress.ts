@@ -2,7 +2,6 @@
 
 import { useEffect, useSyncExternalStore } from "react";
 
-import { getRank, Rank } from "@/data/ranks";
 import { useSession } from "@/lib/session";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 
@@ -42,7 +41,6 @@ interface State {
 let state: State = { userId: null, data: null };
 let loadingFor: string | null = null;
 const listeners = new Set<() => void>();
-const rankUpListeners = new Set<(rank: Rank) => void>();
 
 function emit() {
   listeners.forEach((listener) => listener());
@@ -67,14 +65,6 @@ function toProgress(row: ProgressDbRow): RealProgress {
   };
 }
 
-// Naik rank diumumkan sekali, saat total XP melewati batas rank berikutnya setelah sebuah aksi.
-function announceRankUp(previousXp: number | undefined, nextXp: number) {
-  if (previousXp === undefined) return;
-  const before = getRank(previousXp);
-  const after = getRank(nextXp);
-  if (after.minXp > before.minXp) rankUpListeners.forEach((listener) => listener(after));
-}
-
 async function load(userId: string) {
   const client = getSupabaseBrowserClient();
   if (!client) return;
@@ -83,23 +73,14 @@ async function load(userId: string) {
   if (loadingFor !== userId) return;
   loadingFor = null;
   if (error || !data) return;
-  const previousXp = state.userId === userId ? state.data?.totalXp : undefined;
   const next = toProgress(data as ProgressDbRow);
   state = { userId, data: next };
   emit();
-  announceRankUp(previousXp, next.totalXp);
 }
 
 // Dipanggil setelah aksi yang mungkin menambah XP (lesson selesai, kuis atau challenge dinilai).
 export async function refreshRealProgress() {
   if (state.userId) await load(state.userId);
-}
-
-export function onRankUp(listener: (rank: Rank) => void) {
-  rankUpListeners.add(listener);
-  return () => {
-    rankUpListeners.delete(listener);
-  };
 }
 
 function subscribe(listener: () => void) {
