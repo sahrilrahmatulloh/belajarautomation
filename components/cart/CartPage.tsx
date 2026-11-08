@@ -5,6 +5,7 @@ import { ArrowRight, Library, ShoppingCart, Trash2 } from "lucide-react";
 
 import EmptyState from "@/components/common/EmptyState";
 import { cartActions, useCart } from "@/lib/cart";
+import { notify } from "@/lib/notify";
 import { formatRupiah } from "@/lib/format";
 
 import CartItemRow from "./CartItemRow";
@@ -67,7 +68,10 @@ export default function CartPage() {
                     action={
                       <button
                         type="button"
-                        onClick={() => cartActions.remove(product.id)}
+                        onClick={() => {
+                          cartActions.remove(product.id);
+                          notify.info(`${product.title} dihapus dari keranjang.`);
+                        }}
                         className="inline-flex items-center gap-1 rounded-md px-1.5 py-1 text-xs text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
                         aria-label={`Hapus ${product.title} dari keranjang`}
                       >

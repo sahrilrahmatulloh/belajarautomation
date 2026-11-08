@@ -1,4 +1,5 @@
 import { expect, test } from "../fixtures/auth";
+import { notification } from "../fixtures/notify";
 import { MOCK_STUDENT, mockSupabase, signInWithMock } from "../fixtures/supabaseMock";
 import { ProfilePage } from "../pages/ProfilePage";
 import { SettingsPage } from "../pages/SettingsPage";
@@ -19,7 +20,7 @@ test.describe("Informasi Profil akun Supabase", () => {
     await expect(settings.profileSection.getByText(/^\d+\/160$/)).toBeVisible();
     await settings.saveProfileButton.click();
 
-    await expect(settings.profileSection.getByRole("status").filter({ hasText: "Profil tersimpan." })).toBeVisible();
+    await expect(notification(page, "Profil tersimpan.")).toBeVisible();
     expect(supabase.find("/rest/v1/rpc/update_profile")?.postDataJSON()).toMatchObject({ new_display_name: "Pelajar Baru" });
 
     const profile = new ProfilePage(page);
@@ -57,7 +58,7 @@ test.describe("Informasi Profil akun Supabase", () => {
     await settings.usernameInput.fill("Pelajar_Hebat");
     await settings.changeUsernameButton.click();
 
-    await expect(settings.profileSection.getByRole("status").filter({ hasText: /^Username diganti\. Bisa diganti lagi mulai / })).toBeVisible();
+    await expect(notification(page, /^Username diganti\. Bisa diganti lagi mulai /)).toBeVisible();
     expect(supabase.find("/rest/v1/rpc/change_username")?.postDataJSON()).toEqual({ new_username: "pelajar_hebat" });
     await expect(settings.usernameInput).toBeDisabled();
     await expect(settings.profileSection.getByText(/^Username bisa diganti lagi mulai /)).toBeVisible();
@@ -98,7 +99,7 @@ test.describe("Informasi Profil akun Supabase", () => {
     await settings.changeEmailButton.click();
 
     await expect(
-      settings.profileSection.getByRole("status").filter({ hasText: `${MOCK_STUDENT.email} dan baru@contoh.id` })
+      notification(page, `${MOCK_STUDENT.email} dan baru@contoh.id`)
     ).toBeVisible();
     await expect(settings.profileSection.getByText("Menunggu konfirmasi ke baru@contoh.id.", { exact: false })).toBeVisible();
     const update = supabase.requests.find((request) => request.method() === "PUT" && request.url().includes("/auth/v1/user"));
@@ -114,7 +115,7 @@ test.describe("Informasi Profil akun Supabase", () => {
 
     await page.goto("/settings?email=dikonfirmasi");
 
-    await expect(page.getByRole("status").filter({ hasText: "Konfirmasi diterima." })).toBeVisible();
+    await expect(notification(page, "Konfirmasi diterima.")).toBeVisible();
   });
 });
 
