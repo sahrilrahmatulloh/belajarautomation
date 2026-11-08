@@ -17,6 +17,20 @@ test.describe("Halaman login di luar DEV", () => {
   });
 });
 
+test.describe("Panel promosi halaman login di luar DEV", () => {
+  test('slide eBook berlabel "Segera hadir" karena eBook belum tersedia', async ({ page }) => {
+    const loginPage = new LoginPage(page);
+    await loginPage.goto();
+    const panel = page.getByRole("region", { name: "Promosi belajarautomation.com" });
+
+    await panel.getByRole("button", { name: /^Slide 3:/ }).click();
+
+    const slide = panel.getByRole("group", { name: /^3 dari 3:/ });
+    await expect(slide).toContainText("Segera hadir");
+    await expect(slide).not.toContainText("Baru");
+  });
+});
+
 test.describe("Dashboard peran di luar DEV", () => {
   test.use({ role: "creator" });
 

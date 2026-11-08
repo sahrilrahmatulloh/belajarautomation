@@ -1,9 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import ThemeBackdrop from "@/components/common/ThemeBackdrop";
 import MaintenanceBanner from "@/components/maintenance/MaintenanceBanner";
-import { DEFAULT_THEME_ID, getTheme } from "@/data/themes";
+
+import AuthShowcase from "./AuthShowcase";
 
 interface AuthShellProps {
   title: string;
@@ -12,8 +12,6 @@ interface AuthShellProps {
 }
 
 // Tampilan bersama untuk halaman masuk dan daftar (semua role).
-const defaultTheme = getTheme(DEFAULT_THEME_ID)!;
-
 export default function AuthShell({
   title,
   description,
@@ -21,27 +19,9 @@ export default function AuthShell({
 }: AuthShellProps) {
   return (
     <div className="grid min-h-dvh bg-background text-foreground lg:grid-cols-2">
-      {/* Panel ilustrasi (desktop), memakai tema banner bawaan */}
+      {/* Panel promosi bergeser (desktop), PRD 4.5 */}
       <aside className="relative hidden overflow-hidden lg:block">
-        <ThemeBackdrop
-          image={defaultTheme.image}
-          video={defaultTheme.video}
-          priority
-          sizes="50vw"
-          className="object-cover object-[78%_50%]"
-        />
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/30 to-transparent"
-        />
-        <div className="absolute inset-x-0 bottom-0 p-10 text-white">
-          <p className="text-sm font-semibold text-sky-300">
-            Learn · Practice · Build · Grow
-          </p>
-          <p className="mt-3 max-w-md text-2xl font-bold leading-snug">
-            Belajar QA Automation dari nol hingga siap kerja.
-          </p>
-        </div>
+        <AuthShowcase />
       </aside>
 
       {/* Form */}
