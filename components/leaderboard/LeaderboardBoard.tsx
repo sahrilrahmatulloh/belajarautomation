@@ -11,7 +11,9 @@ import { useAppearance } from "@/lib/useAppearance";
 import { getRankProgress } from "@/data/ranks";
 import { DEMO_LEARNER_ID, useLeaderboardOverlay } from "@/lib/content";
 import { formatNumber } from "@/lib/format";
-import { getLeaderboard, LEADERBOARD_LIMIT, LeaderboardTab } from "@/lib/leaderboard";
+import { CURRENT_USER_ID, getLeaderboard, LEADERBOARD_LIMIT, LeaderboardTab, Participant } from "@/lib/leaderboard";
+import { useRealLeaderboard } from "@/lib/realLeaderboard";
+import { useSession } from "@/lib/session";
 import { useUrlFilters } from "@/lib/useUrlFilters";
 
 import LeaderboardRowItem from "./LeaderboardRowItem";
@@ -27,12 +29,31 @@ export default function LeaderboardBoard() {
   // Tab rank pengguna aktif lebih dulu; nilai URL lain dianggap tab rank.
   const tab: LeaderboardTab = values.tab === "global" ? "global" : "rank";
 
+  // Akun Supabase memakai leaderboard dari database; akun demo dan tamu memakai data dummy.
+  const session = useSession();
+  const real = useRealLeaderboard();
+  const isLoading = real?.status === "loading";
+  const isError = real?.status === "error";
+  const realCurrentUser: Participant | null = real
+    ? (real.currentUser ?? {
+        id: CURRENT_USER_ID,
+        username: session?.username ?? undefined,
+        displayName: session?.name ?? "",
+        avatarId: avatar.id,
+        totalXp: 0,
+      })
+    : null;
+
   // Label dan isi tab rank mengikuti XP pengguna, jadi otomatis berubah saat naik rank.
-  const { rank, nextRank, xpToNext } = getRankProgress(DUMMY_ACCOUNT.xp);
-  const isHidden = !DUMMY_ACCOUNT.showOnLeaderboard;
+  const { rank, nextRank, xpToNext } = getRankProgress(realCurrentUser ? realCurrentUser.totalXp : DUMMY_ACCOUNT.xp);
   const { excludedIds, xpOverrides } = useLeaderboardOverlay();
-  const isCurrentUserVisible = DUMMY_ACCOUNT.showOnLeaderboard && !excludedIds.includes(DEMO_LEARNER_ID);
-  const { top, total, currentUser, isCurrentUserInTop } = getLeaderboard(tab, undefined, isCurrentUserVisible, excludedIds, xpOverrides);
+  const isHidden = real ? !real.showCurrentUser : !DUMMY_ACCOUNT.showOnLeaderboard;
+  const isCurrentUserVisible = real
+    ? real.showCurrentUser
+    : DUMMY_ACCOUNT.showOnLeaderboard && !excludedIds.includes(DEMO_LEARNER_ID);
+  const { top, total, currentUser, isCurrentUserInTop } = realCurrentUser
+    ? getLeaderboard(tab, realCurrentUser, isCurrentUserVisible, [], {}, real?.pool ?? [])
+    : getLeaderboard(tab, undefined, isCurrentUserVisible, excludedIds, xpOverrides);
 
   const pageCount = Math.max(1, Math.ceil(top.length / LEADERBOARD_PAGE_SIZE));
   const requestedPage = Number.parseInt(values.halaman, 10);
@@ -209,6 +230,11 @@ export default function LeaderboardBoard() {
           </p>
 
           <div className="overflow-hidden rounded-2xl border border-border bg-card">
+            {(isLoading || isError) && (
+              <p role="status" className="px-5 py-6 text-center text-sm text-muted-foreground">
+                {isLoading ? "Memuat leaderboard..." : "Leaderboard belum bisa dimuat. Coba muat ulang halaman."}
+              </p>
+            )}
             <ol className="divide-y divide-border">
               {pageRows.map((row) => (
                 <LeaderboardRowItem

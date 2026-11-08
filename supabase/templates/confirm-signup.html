@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <meta name="supported-color-schemes" content="light" />
+    <title>Verifikasi email akun belajarautomation.com</title>
+  </head>
+  <!--
+    Template email verifikasi pendaftaran (Supabase Auth: Confirm signup). PRD 4.5.
+    Subjek: Verifikasi email akun belajarautomation.com
+    Tempel isi file ini di Supabase Dashboard > Authentication > Emails > Confirm signup.
+
+    Variabel Supabase: {{ .ConfirmationURL }}, {{ .Email }}, {{ .SiteURL }}.
+    Gambar diambil dari {{ .SiteURL }}/email/ (public/email di repo), berformat PNG karena
+    sebagian aplikasi email tidak mendukung WebP. Gambar hanya tampil bila Site URL project
+    berupa alamat publik (Vercel atau domain), bukan localhost. Tanpa gambar, isi email tetap
+    terbaca karena semua gambar memiliki teks alternatif.
+
+    Masa berlaku tautan mengikuti pengaturan "Email OTP Expiration" (saat ini 1 jam). Ubah
+    teks "1 jam" bila pengaturan itu diubah.
+
+    Gaya ditulis inline dan memakai tabel agar tampil sama di Gmail, Outlook, dan aplikasi email HP.
+  -->
+  <body style="margin:0;padding:0;background-color:#eef3fb;font-family:Arial,Helvetica,sans-serif;color:#0f172a;">
+    <div style="display:none;max-height:0;overflow:hidden;">
+      Satu langkah lagi: verifikasi email Anda untuk mengaktifkan akun belajarautomation.com.
+    </div>
+
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#eef3fb;padding:24px 12px;">
+      <tr>
+        <td align="center">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;border-collapse:separate;border-radius:20px;overflow:hidden;background-color:#0a1d33;">
+            <!-- Header -->
+            <tr>
+              <td style="padding:20px 28px;background-color:#0a1d33;">
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td valign="middle" style="width:48px;padding-right:12px;">
+                      <img src="{{ .SiteURL }}/email/logo-kucing.png" width="48" height="40" alt="" style="display:block;border:0;" />
+                    </td>
+                    <td valign="middle" style="font-size:20px;font-weight:bold;color:#ffffff;white-space:nowrap;">
+                      belajar<span style="color:#60a5fa;">a</span>utomation<span style="color:#60a5fa;">.</span>com
+                    </td>
+                    <td valign="middle" align="right" style="font-size:12px;line-height:1.5;color:#cbd5e1;padding-left:16px;">
+                      Platform Belajar Automation<br />Secara Praktis &amp; Terstruktur
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+            <!-- Isi -->
+            <tr>
+              <td style="background-color:#f6f9ff;border-radius:20px 20px 0 0;padding:28px 32px 32px;" align="center">
+                <img
+                  src="{{ .SiteURL }}/email/verifikasi-hero.png"
+                  width="420"
+                  alt="Kucing putih belajarautomation.com di depan laptop dengan perisai centang"
+                  style="display:block;width:100%;max-width:420px;height:auto;border:0;margin:0 auto 8px;"
+                />
+
+                <h1 style="margin:8px 0 16px;font-size:32px;line-height:1.2;font-weight:800;color:#0f172a;">
+                  Verifikasi <span style="color:#2563eb;">Email Anda</span>
+                </h1>
+                <p style="margin:0 0 28px;font-size:16px;line-height:1.6;color:#1e293b;">
+                  Terima kasih telah mendaftar di <strong>belajarautomation.com</strong>! Untuk mengaktifkan akun
+                  Anda, silakan verifikasi alamat email <strong>{{ .Email }}</strong> dengan menekan tombol di bawah ini.
+                </p>
+
+                <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 auto;">
+                  <tr>
+                    <td align="center" style="border-radius:14px;background-color:#2563eb;">
+                      <a
+                        href="{{ .ConfirmationURL }}"
+                        style="display:inline-block;padding:16px 36px;font-size:17px;font-weight:bold;color:#ffffff;text-decoration:none;border-radius:14px;"
+                        >&#9993;&nbsp;&nbsp;Verifikasi Akun Sekarang&nbsp;&nbsp;&rarr;</a
+                      >
+                    </td>
+                  </tr>
+                </table>
+
+                <p style="margin:18px 0 0;font-size:15px;color:#1e293b;">
+                  Tautan ini akan kedaluwarsa dalam <strong style="color:#2563eb;">1 jam</strong>.
+                </p>
+                <p style="margin:10px 0 0;font-size:12px;line-height:1.5;color:#64748b;word-break:break-all;">
+                  Tombol tidak berfungsi? Buka tautan ini di browser:<br />
+                  <a href="{{ .ConfirmationURL }}" style="color:#2563eb;">{{ .ConfirmationURL }}</a>
+                </p>
+
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:28px;border-top:1px solid #dbe3ef;">
+                  <tr>
+                    <td style="padding-top:24px;">
+                      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#e8effb;border-radius:14px;">
+                        <tr>
+                          <td valign="top" style="width:40px;padding:18px 0 18px 20px;font-size:22px;line-height:1;color:#2563eb;">&#9432;</td>
+                          <td style="padding:16px 20px 16px 12px;text-align:left;">
+                            <p style="margin:0 0 4px;font-size:16px;font-weight:bold;color:#0f172a;">Tidak merasa mendaftar?</p>
+                            <p style="margin:0;font-size:14px;line-height:1.6;color:#334155;">
+                              Jika Anda tidak membuat akun di belajarautomation.com, Anda dapat mengabaikan email ini dengan aman.
+                            </p>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+            <!-- Footer: blok merek dan blok ikon bersisian di layar lebar, ikon turun ke bawah di layar sempit. -->
+            <tr>
+              <td style="background-color:#0e223b;padding:20px 24px;font-size:0;" align="center">
+                <div style="display:inline-block;vertical-align:middle;width:100%;max-width:300px;font-size:14px;margin:4px 0;">
+                  <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                    <tr>
+                      <td valign="middle" style="width:52px;padding-right:12px;">
+                        <img src="{{ .SiteURL }}/email/logo-kucing.png" width="52" height="43" alt="" style="display:block;border:0;" />
+                      </td>
+                      <td valign="middle" style="text-align:left;">
+                        <p style="margin:0;font-size:17px;font-weight:bold;color:#ffffff;">belajar<span style="color:#60a5fa;">a</span>utomation<span style="color:#60a5fa;">.</span>com</p>
+                        <p style="margin:4px 0 0;font-size:12px;line-height:1.5;color:#cbd5e1;">Platform Belajar Automation<br />Secara Praktis &amp; Terstruktur</p>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+                <div style="display:inline-block;vertical-align:middle;width:100%;max-width:240px;font-size:14px;margin:4px 0;">
+                  <table role="presentation" align="center" cellpadding="0" cellspacing="0">
+                    <tr>
+                      <td align="center" valign="top" style="width:76px;font-size:11px;line-height:1.4;color:#cbd5e1;">
+                        <img src="{{ .SiteURL }}/email/ikon-materi.png" width="30" height="23" alt="" style="display:block;margin:0 auto 4px;border:0;" />
+                        Materi<br />Terstruktur
+                      </td>
+                      <td align="center" valign="top" style="width:76px;font-size:11px;line-height:1.4;color:#cbd5e1;">
+                        <img src="{{ .SiteURL }}/email/ikon-proyek.png" width="30" height="23" alt="" style="display:block;margin:0 auto 4px;border:0;" />
+                        Proyek<br />Praktis
+                      </td>
+                      <td align="center" valign="top" style="width:76px;font-size:11px;line-height:1.4;color:#cbd5e1;">
+                        <img src="{{ .SiteURL }}/email/ikon-sertifikat.png" width="30" height="25" alt="" style="display:block;margin:0 auto 4px;border:0;" />
+                        Sertifikat<br />Kelulusan
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+                <p style="margin:14px 0 0;font-size:11px;line-height:1.5;color:#94a3b8;text-align:left;">
+                  Email ini dikirim otomatis oleh belajarautomation.com. Mohon tidak membalas email ini.
+                </p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

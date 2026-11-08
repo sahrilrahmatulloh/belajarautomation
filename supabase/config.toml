@@ -245,6 +245,12 @@ otp_expiry = 3600
 # admin_email = "admin@email.com"
 # sender_name = "Admin"
 
+# Email verifikasi pendaftaran berbahasa Indonesia (PRD 4.5). Untuk project DEV/UAT/Production,
+# isi template ini juga ditempel di Dashboard > Authentication > Emails > Confirm signup.
+[auth.email.template.confirmation]
+subject = "Verifikasi email akun belajarautomation.com"
+content_path = "./supabase/templates/confirm-signup.html"
+
 # Uncomment to customize email template
 # [auth.email.template.invite]
 # subject = "You have been invited"

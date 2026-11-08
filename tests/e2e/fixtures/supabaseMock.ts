@@ -43,6 +43,17 @@ interface MockOptions {
   accounts?: MockAccount[];
   // Jawaban check_username per username; selain yang tercantum dianggap tersedia.
   usernames?: Record<string, "tersedia" | "format" | "cadangan" | "dipakai">;
+  // Pengguna lain di leaderboard dan profil publik (selain akun yang login).
+  others?: MockPublicUser[];
+}
+
+export interface MockPublicUser {
+  id: string;
+  username: string;
+  name: string;
+  bio?: string;
+  avatarId?: string;
+  totalXp?: number;
 }
 
 function dbError(message: string, details: string | null = null) {
@@ -162,6 +173,45 @@ export async function mockSupabase(page: Page, options: MockOptions = {}) {
       signedIn.username = candidate;
       signedIn.usernameChangedAt = new Date().toISOString();
       return route.fulfill(json(new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()));
+    }
+
+    if (path === "/rest/v1/rpc/get_leaderboard") {
+      if (!signedIn) return route.fulfill(dbError("tidak_login"));
+      const me = signedIn;
+      const rows = [
+        ...(options.others ?? []).map((user) => ({
+          user_id: user.id,
+          username: user.username,
+          display_name: user.name,
+          avatar_id: user.avatarId ?? null,
+          total_xp: user.totalXp ?? 0,
+          show_on_leaderboard: true,
+          is_current_user: false,
+        })),
+        {
+          user_id: me.id,
+          username: me.username,
+          display_name: me.name,
+          avatar_id: me.avatarId ?? null,
+          total_xp: 0,
+          show_on_leaderboard: true,
+          is_current_user: true,
+        },
+      ];
+      return route.fulfill(json(rows));
+    }
+
+    if (path === "/rest/v1/rpc/get_public_profile") {
+      if (!signedIn) return route.fulfill(dbError("tidak_login"));
+      const candidate = String(body?.candidate ?? "").toLowerCase();
+      const me = signedIn;
+      const user = (options.others ?? []).find((item) => item.username.toLowerCase() === candidate);
+      const row = user
+        ? { username: user.username, display_name: user.name, bio: user.bio ?? "", avatar_id: user.avatarId ?? null, theme_id: null, total_xp: user.totalXp ?? 0, is_current_user: false }
+        : me.username?.toLowerCase() === candidate
+          ? { username: me.username, display_name: me.name, bio: me.bio ?? "", avatar_id: me.avatarId ?? null, theme_id: me.themeId ?? null, total_xp: 0, is_current_user: true }
+          : null;
+      return route.fulfill(json(row ? [{ ...row, lessons_completed: 0, challenges_completed: 0, profile_public: true }] : []));
     }
 
     if (path === "/rest/v1/rpc/check_username") {

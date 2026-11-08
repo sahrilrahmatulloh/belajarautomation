@@ -1,9 +1,15 @@
 # BELAJARAUTOMATION.COM
 ## Product Requirements Document (PRD)
-**Versi:** 2.32  
+**Versi:** 2.33  
 **Status:** Draft — Acuan Pengembangan Produk  
 **Platform:** Web Application  
 **Target Pengguna:** Pemula hingga praktisi QA, Software Testing, dan Programming
+
+### Perubahan di Versi 2.33
+- Email verifikasi pendaftaran berbahasa Indonesia dengan tampilan belajarautomation.com (Bagian 4.5).
+- Leaderboard akun sungguhan: setiap baris dapat diklik untuk membuka profil publik pengguna tersebut (FR-06, FR-13).
+- Profil publik akun sungguhan diambil dari database; username yang tidak ada menampilkan "Profil tidak ditemukan" (FR-13).
+- Avatar di kartu Bagikan profil memakai bingkai bulat, sama dengan header profil (FR-13).
 
 ### Perubahan di Versi 2.32
 - Sertifikat kelulusan dicatat sebagai fitur yang direncanakan (Bagian 12).
@@ -791,6 +797,7 @@ Ketentuan:
   - Tab rank: posisi di antara sesama rank.
 - Tab rank menampilkan informasi rank berikutnya, mis. "Butuh 320 XP lagi untuk naik ke Practitioner". Pengguna Master melihat keterangan bahwa rank tertinggi telah tercapai.
 - Setiap baris menampilkan posisi, avatar kucing aktif, nama tampilan, emblem tameng rank, dan total XP.
+- Setiap baris dapat diklik untuk membuka profil publik pengguna tersebut (FR-13). Hanya pengguna yang sudah memiliki username yang tampil.
 - Tiga posisi teratas di setiap tab boleh diberi penekanan visual.
 - Halaman leaderboard hanya memuat peringkat. Tingkatan rank dan cara mendapatkan XP ada di halaman Rank & XP (FR-05); kartu posisi memberi tautan "Lihat tingkatan rank".
 
@@ -1295,7 +1302,8 @@ Ketentuan:
 - Aturan panjang, jeda username, dan status akun ditegakkan di database.
 
 ### Profil publik
-- Profil dapat dilihat oleh pengguna lain.
+- Profil dapat dilihat oleh pengguna lain yang sudah login, di alamat `/u/username`.
+- Username yang tidak ada atau milik akun nonaktif menampilkan "Profil tidak ditemukan".
 - Yang terlihat publik: banner, avatar, nama tampilan, username, bio, rank, total XP, ringkasan statistik, dan achievement.
 - Yang tidak terlihat publik: tab Kustomisasi, email, data pembelian, dan membership.
 - Riwayat aktivitas detail hanya terlihat oleh pemilik profil, kecuali pengguna memilih membukanya.
@@ -1746,6 +1754,7 @@ Klik notifikasi menandainya sebagai dibaca dan langsung membuka halaman terkait:
 - Setelah mendaftar, pengguna diminta membuka tautan verifikasi di email. Akun baru dapat dipakai untuk masuk setelah email terverifikasi.
 - Untuk email yang sudah terdaftar, tampilan tetap sama seperti pendaftaran berhasil, agar keberadaan akun tidak dapat ditebak.
 - Email verifikasi dapat dikirim ulang dari halaman daftar dan dari halaman masuk jika email belum terverifikasi.
+- Email verifikasi berbahasa Indonesia dengan identitas belajarautomation.com, subjek "Verifikasi email akun belajarautomation.com". Desain mengikuti mockup pemilik: header gelap dengan logo, ilustrasi kucing dengan perisai centang, judul "Verifikasi Email Anda", tombol "Verifikasi Akun Sekarang", masa berlaku tautan, kotak "Tidak merasa mendaftar?", dan footer dengan logo serta fitur utama, ditambah tautan cadangan bila tombol tidak berfungsi. Template disimpan di `supabase/templates/confirm-signup.html`; gambarnya PNG di `public/email/` karena sebagian aplikasi email tidak mendukung WebP. Teks masa berlaku mengikuti pengaturan Email OTP Expiration. Template hanya dapat dipasang setelah SMTP kustom (Resend) tersedia; sebelum itu Supabase memakai template bawaan.
 
 ### Lupa password
 - Tautan "Lupa password?" di halaman masuk membuka halaman permintaan reset.
