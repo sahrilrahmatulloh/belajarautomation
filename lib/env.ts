@@ -15,3 +15,8 @@ export const APP_ENV: AppEnv = APP_ENVS.includes(rawAppEnv as AppEnv) ? (rawAppE
 export const isDev = APP_ENV === "dev";
 export const isUat = APP_ENV === "uat";
 export const isProduction = APP_ENV === "production";
+
+// Isi belajar berstatus draf (lesson dan course) tampil di DEV dan UAT agar alur belajar dan XP
+// bisa diuji pemilik produk saat UAT, dan tetap tersembunyi di Production (keputusan pemilik,
+// PRD Bagian 13.3). Artikel blog draf tetap hanya di DEV.
+export const showsDraftLearning = !isProduction;

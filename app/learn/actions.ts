@@ -2,7 +2,7 @@
 
 import { XP_PER_COURSE_COMPLETION, XP_PER_LESSON } from "@/data/xp";
 import { getLessonPageData } from "@/lib/courseLessons";
-import { isDev } from "@/lib/env";
+import { showsDraftLearning } from "@/lib/env";
 import { getSupabaseAdminClient } from "@/lib/supabase/admin";
 import { getAuthenticatedUserId } from "@/lib/xp/record";
 import { LessonCompletionResult } from "@/types/Xp";
@@ -19,8 +19,8 @@ interface LessonRecordRow {
 export async function completeLessonAction(courseSlug: string, lessonSlug: string): Promise<LessonCompletionResult> {
   const data = typeof courseSlug === "string" && typeof lessonSlug === "string" ? getLessonPageData(courseSlug, lessonSlug) : null;
   if (!data) return { ok: false, message: "Lesson tidak ditemukan." };
-  // Course draf hanya bisa dibuka di DEV.
-  if (data.course.contentStatus === "draft" && !isDev) return { ok: false, message: "Lesson ini belum terbit." };
+  // Course draf hanya bisa diselesaikan di DEV dan UAT (lib/env.ts).
+  if (data.course.contentStatus === "draft" && !showsDraftLearning) return { ok: false, message: "Lesson ini belum terbit." };
   // Hak akses membership belum tersambung ke backend (Fase 5), jadi XP course premium belum bisa dicatat.
   if (data.course.access === "premium") {
     return { ok: false, message: "XP course premium tersedia setelah hak akses membership aktif." };

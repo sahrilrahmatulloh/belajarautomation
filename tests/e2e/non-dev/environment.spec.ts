@@ -3,6 +3,7 @@ import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "../fixtures/auth";
 import { BLOG, ROLE_MODE } from "../fixtures/testData";
 import { BlogPage } from "../pages/BlogPage";
+import { LessonPage } from "../pages/LessonPage";
 import { LoginPage } from "../pages/LoginPage";
 import { RoleDashboardPage } from "../pages/RoleDashboardPage";
 
@@ -156,15 +157,22 @@ test.describe("eBook dan Project di luar DEV", () => {
   }
 });
 
-test.describe("Lesson draf di luar DEV", () => {
+// Lesson draf tampil dan bisa diselesaikan di UAT agar alur belajar bisa diuji pemilik produk
+// (PRD 13.3); di Production tetap tersembunyi.
+test.describe("Lesson draf di UAT", () => {
   test.use({ role: "user" });
 
-  test("isi draf tidak tampil dan tidak ada tombol selesai", async ({ page }) => {
-    await page.goto("/learn/dasar-web-api/client-server");
+  test("isi draf tampil berlabel Draf dan Berikutnya memberi XP", async ({ page }) => {
+    const lesson = new LessonPage(page, "dasar-web-api", "client-server");
+    await lesson.goto();
+    await expect(lesson.writingNotice).toBeHidden();
+    await expect(page.getByRole("main").getByRole("heading", { level: 2, name: "Apa itu client dan server?" })).toBeVisible();
+    await expect(page.getByRole("main").getByText("Draf", { exact: true })).toBeVisible();
 
-    await expect(page.getByRole("heading", { name: "Materi sedang ditulis" })).toBeVisible();
-    await expect(page.getByRole("button", { name: /^Tandai selesai/ })).toHaveCount(0);
-    await expect(page.getByRole("main")).not.toContainText("Contoh struktur lesson");
+    await lesson.completeAndNext();
+
+    await expect(page).toHaveURL("/learn/dasar-web-api/apa-itu-http");
+    await expect(page.getByText("Lesson selesai, +10 XP.")).toBeVisible();
   });
 });
 

@@ -1,9 +1,12 @@
 # BELAJARAUTOMATION.COM
 ## Product Requirements Document (PRD)
-**Versi:** 2.37  
+**Versi:** 2.38  
 **Status:** Draft — Acuan Pengembangan Produk  
 **Platform:** Web Application  
 **Target Pengguna:** Pemula hingga praktisi QA, Software Testing, dan Programming
+
+### Perubahan di Versi 2.38
+- Lesson dan course berstatus draf tampil dan dapat diselesaikan di DEV dan UAT, dengan label "Draf", agar alur belajar dan XP dapat diuji saat UAT. Di Production tetap tersembunyi (Bagian 13.3).
 
 ### Perubahan di Versi 2.37
 - Popup naik rank dibuat meriah (confetti, sinar, animasi emblem) dan tampil di halaman mana pun, sekali per rank (FR-05).
@@ -2459,6 +2462,7 @@ Aturan:
 - Tidak ada perbaikan langsung di `uat` maupun `main`; semua perbaikan dimulai dari `develop`.
 - Hanya pemilik produk yang menaikkan perubahan ke `uat` dan `main`.
 - Lingkungan ditentukan oleh variabel `NEXT_PUBLIC_APP_ENV` (`dev`, `uat`, `production`). Fitur bantu pengembangan hanya aktif di `dev`, dan label lingkungan tidak tampil di `production`.
+- Lesson dan course berstatus draf tampil dan dapat diselesaikan (termasuk mendapat XP) di `dev` dan `uat`, dengan label "Draf", agar pemilik produk dapat menguji alur belajar saat UAT. Di `production` isi draf tidak tampil dan tidak dapat diselesaikan. Artikel blog draf tetap hanya tampil di `dev`.
 - Selama domain belum tersedia, setiap lingkungan memakai alamat bawaan Vercel.
 
 ## 13.4 Test otomatis dan quality gate

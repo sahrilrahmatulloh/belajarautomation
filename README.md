@@ -41,7 +41,8 @@ Aturan alur:
 Pengaturan lingkungan:
 
 - Salin `.env.example` menjadi `.env.local`. Jika `NEXT_PUBLIC_APP_ENV` kosong, aplikasi memakai `dev`.
-- Fitur bantu pengembangan (mis. badge "Draf" pada course) hanya aktif di `dev`; cek lewat `isDev` dari `lib/env.ts`, bukan `NODE_ENV`.
+- Fitur bantu pengembangan hanya aktif di `dev`; cek lewat `isDev` dari `lib/env.ts`, bukan `NODE_ENV`.
+- Lesson dan course draf (beserta badge "Draf") tampil di `dev` dan `uat`, tetap tersembunyi di `production`; cek lewat `showsDraftLearning` dari `lib/env.ts`.
 - Label lingkungan tampil di pojok kiri bawah: "DEV" (oranye) dan "UAT" (ungu). Tidak tampil di `production`.
 - `NEXT_PUBLIC_SITE_URL` berisi alamat situs untuk Open Graph dan sitemap. Isi di Production saat domain sudah pasti; jika kosong, memakai alamat dari Vercel.
 - Di Vercel, isi `NEXT_PUBLIC_APP_ENV` per lingkungan (mis. per branch `develop` dan `uat`). Nilainya disisipkan saat build, jadi perubahan baru berlaku setelah deploy ulang.
@@ -128,7 +129,7 @@ npm run test:e2e:report           # membuka laporan HTML test terakhir
 - `npm run test:e2e` menjalankan `npm run build && npm run start` di port 3000, kecuali sudah ada server di port itu.
 - Bila server dev sedang berjalan, test akan memakai server dev tersebut. Untuk menguji hasil build, pakai port lain: `PORT=3100 npm run test:e2e` (Git Bash) atau `$env:PORT=3100; npm run test:e2e` (PowerShell).
 - Test label "DEV" mengharapkan `NEXT_PUBLIC_APP_ENV` bernilai `dev`.
-- Perilaku yang berbeda di luar DEV, mis. akun demo dan artikel draf, ditulis di `tests/e2e/non-dev/`.
+- Perilaku yang berbeda di luar DEV, mis. akun demo, artikel draf, dan lesson draf di UAT, ditulis di `tests/e2e/non-dev/`.
 - Build test diarahkan ke Supabase tiruan di `http://127.0.0.1:54399`, bukan project dari `.env.local`. Panggilan dari browser dijawab `mockSupabase(page)` di `fixtures/supabaseMock.ts`; panggilan dari server Next.js (Server Action pencatat XP) dijawab `tests/e2e/mock-supabase-server.mjs`, yang dijalankan otomatis oleh Playwright. Tidak ada data atau email sungguhan yang tersentuh. Test XP memakai `uniqueMockAccount()` agar progres tiap test terpisah. Build non-DEV dijalankan tanpa Supabase agar akun demo tetap dapat dipakai.
 - Bila test memakai server dev yang sudah berjalan, server itu membaca `.env.local` dan memakai Supabase DEV sungguhan. Untuk hasil yang konsisten, jalankan test di port lain.
 

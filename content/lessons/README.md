@@ -6,7 +6,7 @@ Panduan lengkap untuk Admin ada di [docs/CONTENT_GUIDE.md](../../docs/CONTENT_GU
 
 ```yaml
 ---
-status: draft # draft atau published. Draf hanya tampil di DEV.
+status: draft # draft atau published. Draf tampil di DEV dan UAT, tidak di Production.
 author: "Nama Creator" # Opsional; bawaannya "Tim BelajarAutomation".
 sources: # Opsional.
   - title: "Judul sumber"
