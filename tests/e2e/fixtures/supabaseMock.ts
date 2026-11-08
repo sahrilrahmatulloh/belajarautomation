@@ -1,9 +1,14 @@
 import { Page, Request } from "@playwright/test";
 
-// Supabase tiruan untuk test. Build test diarahkan ke alamat ini lewat
-// playwright.config.ts, jadi test tidak menyentuh project Supabase sungguhan
-// dan tidak mengirim email. Alamat .invalid tidak pernah ada di internet.
-export const SUPABASE_TEST_URL = "https://supabase-uji.invalid";
+// Supabase tiruan untuk test. Build test diarahkan ke alamat ini lewat playwright.config.ts,
+// jadi test tidak menyentuh project Supabase sungguhan dan tidak mengirim email.
+// - Panggilan dari browser dijawab mockSupabase(page) di bawah.
+// - Panggilan dari server Next.js (Server Action, proxy) dijawab tests/e2e/mock-supabase-server.mjs
+//   yang berjalan di alamat yang sama.
+export const SUPABASE_TEST_PORT = 54399;
+export const SUPABASE_TEST_URL = `http://127.0.0.1:${SUPABASE_TEST_PORT}`;
+// Kunci service role tiruan, sama dengan yang diterima mock-supabase-server.mjs.
+export const SUPABASE_TEST_SERVICE_ROLE_KEY = "service-role-uji";
 export const SUPABASE_TEST_KEY = "sb_publishable_uji";
 
 // Masuk lewat halaman login dengan Supabase tiruan yang sudah dipasang.
@@ -175,6 +180,9 @@ export async function mockSupabase(page: Page, options: MockOptions = {}) {
       return route.fulfill(json(new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()));
     }
 
+    // Progres dan XP dicatat server Next.js di server tiruan; browser membacanya dari sana.
+    if (path === "/rest/v1/rpc/get_my_progress") return route.continue();
+
     if (path === "/rest/v1/rpc/get_leaderboard") {
       if (!signedIn) return route.fulfill(dbError("tidak_login"));
       const me = signedIn;
@@ -247,4 +255,10 @@ export async function mockSupabase(page: Page, options: MockOptions = {}) {
       return requests.find((request) => new URL(request.url()).pathname === path);
     },
   };
+}
+
+// Akun uji dengan id unik, agar progres XP tidak bercampur antar test yang berjalan paralel.
+// Email tetap sama agar popup promosi tetap dimatikan oleh fixture.
+export function uniqueMockAccount(overrides: Partial<MockAccount> = {}): MockAccount {
+  return { ...MOCK_STUDENT, id: crypto.randomUUID(), ...overrides };
 }

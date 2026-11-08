@@ -1,3 +1,5 @@
+import { XpOutcome } from "./Xp";
+
 import { PracticePageId } from "@/data/practicePages";
 
 export interface QuizQuestion {
@@ -81,6 +83,8 @@ export type PublicChallengeDetail =
     };
 
 export interface ChallengeScore {
+  // XP yang dicatat server untuk akun Supabase; tidak ada untuk akun demo dan tamu (PRD FR-05).
+  xp?: XpOutcome | null;
   score: number;
   passed: boolean;
 }

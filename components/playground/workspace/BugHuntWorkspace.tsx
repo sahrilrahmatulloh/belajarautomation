@@ -6,7 +6,7 @@ import { submitBugHunt } from "@/app/playground/[slug]/actions";
 import PendingSubmitNotice from "@/components/maintenance/PendingSubmitNotice";
 import { useProtectedSubmit } from "@/components/maintenance/useProtectedSubmit";
 import PracticePage from "@/components/practice/PracticePage";
-import { recordChallengeAttempt } from "@/lib/challengeAttempts";
+import { useRecordChallengeAttempt } from "@/lib/challengeAttempts";
 import { useChallengeDraft } from "@/lib/challengeDrafts";
 import { BugFinding, BugHuntResult, PublicChallengeDetail } from "@/types/ChallengeDetail";
 
@@ -36,6 +36,7 @@ function FindingGroup({ title, items }: { title: string; items: BugFinding[] }) 
 }
 
 export default function BugHuntWorkspace({ slug, data }: { slug: string; data: BugHuntData }) {
+  const recordAttempt = useRecordChallengeAttempt();
   const draft = useChallengeDraft<string[]>(slug, [], (state) => `${state.length} temuan ditandai`);
   const selected = draft.state;
   const [outcome, setOutcome] = useState<{ result: BugHuntResult; xp: number } | null>(null);
@@ -52,7 +53,7 @@ export default function BugHuntWorkspace({ slug, data }: { slug: string; data: B
       try {
         const result = await submitBugHunt(slug, selected);
         if (!result) return setFailed(true);
-        setOutcome({ result, xp: recordChallengeAttempt(slug, "bug-hunt", result) });
+        setOutcome({ result, xp: recordAttempt(slug, "bug-hunt", result) });
         draft.clear();
       } catch {
         setFailed(true);

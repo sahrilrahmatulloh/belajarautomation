@@ -8,6 +8,7 @@ import { announcementsToNotifications } from "@/lib/content/announcements";
 import { buildRoleNotifications } from "@/lib/content/roleNotifications";
 import { isDev } from "@/lib/env";
 import { useNotificationPreferences } from "@/lib/notificationPreferences";
+import { useRankUpNotifications } from "@/lib/rankUpNotifications";
 import { useSession } from "@/lib/session";
 import { getVisibleNotificationGroups, useViewMode } from "@/lib/viewMode";
 import { Notification } from "@/types/Notification";
@@ -83,14 +84,17 @@ export function useNotifications() {
     return announcementsToNotifications(items, users.find((user) => user.id === accountId));
   });
 
+  // Notifikasi naik rank milik akun ini (PRD FR-05).
+  const rankUps = useRankUpNotifications(accountId);
+
   return useMemo<Notification[]>(() => {
     const readSet = new Set(readIdList);
-    return [...DUMMY_NOTIFICATIONS, ...(roleNotifications ?? []), ...(announcements ?? [])]
+    return [...DUMMY_NOTIFICATIONS, ...rankUps, ...(roleNotifications ?? []), ...(announcements ?? [])]
       .filter((item) => getVisibleNotificationGroups(isRoleMode).includes(item.group))
       .filter((item) => !mutedGroups.includes(item.group))
       .map((item) => ({ ...item, read: item.read || readSet.has(item.id) }))
       .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
-  }, [readIdList, roleNotifications, announcements, mutedGroups, isRoleMode]);
+  }, [readIdList, rankUps, roleNotifications, announcements, mutedGroups, isRoleMode]);
 }
 
 export const notificationActions = {

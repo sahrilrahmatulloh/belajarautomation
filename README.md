@@ -79,6 +79,7 @@ Struktur kode:
 Mengisi `.env.local`:
 
 - Isi `NEXT_PUBLIC_SUPABASE_URL` dan `NEXT_PUBLIC_SUPABASE_ANON_KEY` (publishable key) dari project DEV.
+- Agar XP tercatat, isi juga `SUPABASE_SERVICE_ROLE_KEY` (secret key) di `.env.local` dan Vercel. Kunci ini rahasia: tanpa awalan `NEXT_PUBLIC_` dan hanya dipakai di server.
 - Tanpa kedua variabel itu, aplikasi tetap berjalan dengan data dummy.
 
 Menjalankan migrasi (oleh pemilik akses Supabase):
@@ -128,7 +129,7 @@ npm run test:e2e:report           # membuka laporan HTML test terakhir
 - Bila server dev sedang berjalan, test akan memakai server dev tersebut. Untuk menguji hasil build, pakai port lain: `PORT=3100 npm run test:e2e` (Git Bash) atau `$env:PORT=3100; npm run test:e2e` (PowerShell).
 - Test label "DEV" mengharapkan `NEXT_PUBLIC_APP_ENV` bernilai `dev`.
 - Perilaku yang berbeda di luar DEV, mis. akun demo dan artikel draf, ditulis di `tests/e2e/non-dev/`.
-- Build test diarahkan ke Supabase tiruan (`https://supabase-uji.invalid`), bukan project dari `.env.local`. Test yang memakai Supabase memanggil `mockSupabase(page)` dari `fixtures/supabaseMock.ts`, jadi tidak ada data atau email sungguhan yang tersentuh. Build non-DEV dijalankan tanpa Supabase agar akun demo tetap dapat dipakai.
+- Build test diarahkan ke Supabase tiruan di `http://127.0.0.1:54399`, bukan project dari `.env.local`. Panggilan dari browser dijawab `mockSupabase(page)` di `fixtures/supabaseMock.ts`; panggilan dari server Next.js (Server Action pencatat XP) dijawab `tests/e2e/mock-supabase-server.mjs`, yang dijalankan otomatis oleh Playwright. Tidak ada data atau email sungguhan yang tersentuh. Test XP memakai `uniqueMockAccount()` agar progres tiap test terpisah. Build non-DEV dijalankan tanpa Supabase agar akun demo tetap dapat dipakai.
 - Bila test memakai server dev yang sudah berjalan, server itu membaca `.env.local` dan memakai Supabase DEV sungguhan. Untuk hasil yang konsisten, jalankan test di port lain.
 
 Struktur folder:

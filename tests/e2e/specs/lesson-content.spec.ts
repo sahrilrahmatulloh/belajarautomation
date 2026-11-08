@@ -40,8 +40,18 @@ test.describe("Lesson yang sudah punya isi", () => {
     await expect(main.getByText("Draf", { exact: true })).toBeVisible();
   });
 
+  test("tombol selesai baru aktif setelah menggulir sampai akhir materi", async () => {
+    await expect(lesson.completeButton).toBeDisabled();
+    await expect(lesson.completeHint).toBeVisible();
+
+    await lesson.completeButton.scrollIntoViewIfNeeded();
+
+    await expect(lesson.completeButton).toBeEnabled();
+    await expect(lesson.completeHint).toBeHidden();
+  });
+
   test("tandai selesai memperbarui progres dan bertahan setelah dimuat ulang", async ({ page }) => {
-    await lesson.completeButton.click();
+    await lesson.complete();
     await expect(lesson.completedStatus).toContainText("Lesson selesai.");
     await expect(lesson.completeButton).toBeHidden();
 
@@ -62,7 +72,7 @@ test.describe("Lesson yang sudah punya isi", () => {
     const expected = (Number((await xp.innerText()).replace(/\D/g, "")) + 10).toLocaleString("id-ID");
 
     await lesson.goto();
-    await lesson.completeButton.click();
+    await lesson.complete();
     await expect(lesson.completedStatus).toBeVisible();
 
     await dashboard.goto();
@@ -83,7 +93,7 @@ test.describe("Lesson yang sudah punya isi", () => {
     const before = Number((await lessons.innerText()).replace(/\D/g, ""));
 
     await lesson.goto();
-    await lesson.completeButton.click();
+    await lesson.complete();
     await expect(lesson.completedStatus).toBeVisible();
     await profile.goto();
 
@@ -114,7 +124,7 @@ test.describe("Lesson yang sudah punya isi", () => {
       test.use({ colorScheme });
 
       test("tanpa pelanggaran critical dan serious", async ({ page }) => {
-        await lesson.completeButton.click();
+        await lesson.complete();
         await expect(lesson.completedStatus).toBeVisible();
 
         const { violations } = await new AxeBuilder({ page }).analyze();

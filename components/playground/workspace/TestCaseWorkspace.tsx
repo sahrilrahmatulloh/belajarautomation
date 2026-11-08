@@ -5,7 +5,7 @@ import { useState, useTransition } from "react";
 import { revealTestCase, submitTestCaseCheck } from "@/app/playground/[slug]/actions";
 import PendingSubmitNotice from "@/components/maintenance/PendingSubmitNotice";
 import { useProtectedSubmit } from "@/components/maintenance/useProtectedSubmit";
-import { recordChallengeAttempt } from "@/lib/challengeAttempts";
+import { useRecordChallengeAttempt } from "@/lib/challengeAttempts";
 import { useChallengeDraft } from "@/lib/challengeDrafts";
 import { ChallengeScore, PublicChallengeDetail, TestCaseReveal } from "@/types/ChallengeDetail";
 
@@ -26,6 +26,7 @@ const primaryButton =
   "min-h-11 w-full rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground transition-colors enabled:hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50";
 
 export default function TestCaseWorkspace({ slug, data }: { slug: string; data: TestCaseData }) {
+  const recordAttempt = useRecordChallengeAttempt();
   const draft = useChallengeDraft(slug, "", () => "jawaban test case tertulis");
   const answer = draft.state;
   const setAnswer = draft.setState;
@@ -57,7 +58,7 @@ export default function TestCaseWorkspace({ slug, data }: { slug: string; data: 
     run(async () => {
       const result = await submitTestCaseCheck(slug, checked);
       if (!result) return false;
-      setOutcome({ result, xp: recordChallengeAttempt(slug, "test-case", result) });
+      setOutcome({ result, xp: recordAttempt(slug, "test-case", result) });
       draft.clear();
       return true;
     });
@@ -75,6 +76,7 @@ export default function TestCaseWorkspace({ slug, data }: { slug: string; data: 
     <div className="space-y-4">
       {outcome && reveal && (
         <ResultSummary
+          givesXp={false}
           result={outcome.result}
           xp={outcome.xp}
           detail={`${checked.length} dari ${reveal.checklist.length} poin kamu centang. Lulus jika semua poin wajib tercentang.`}

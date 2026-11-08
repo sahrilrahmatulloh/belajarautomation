@@ -7,7 +7,7 @@ import { submitQuiz } from "@/app/playground/[slug]/actions";
 import PendingSubmitNotice from "@/components/maintenance/PendingSubmitNotice";
 import { useProtectedSubmit } from "@/components/maintenance/useProtectedSubmit";
 import { Progress } from "@/components/ui/progress";
-import { recordChallengeAttempt } from "@/lib/challengeAttempts";
+import { useRecordChallengeAttempt } from "@/lib/challengeAttempts";
 import { useChallengeDraft } from "@/lib/challengeDrafts";
 import { PublicChallengeDetail, QuizResult } from "@/types/ChallengeDetail";
 
@@ -60,6 +60,7 @@ function QuizReview({ result }: { result: QuizResult }) {
 }
 
 export default function QuizWorkspace({ slug, data }: { slug: string; data: QuizData }) {
+  const recordAttempt = useRecordChallengeAttempt();
   const { questions } = data;
   // Jawaban dan posisi soal tersimpan setiap kali berubah, agar bisa dilanjutkan (PRD FR-16 K).
   const draft = useChallengeDraft(
@@ -83,7 +84,7 @@ export default function QuizWorkspace({ slug, data }: { slug: string; data: Quiz
       try {
         const result = await submitQuiz(slug, answers as number[]);
         if (!result) return setFailed(true);
-        setOutcome({ result, xp: recordChallengeAttempt(slug, "quiz", result) });
+        setOutcome({ result, xp: recordAttempt(slug, "quiz", result) });
         draft.clear();
       } catch {
         setFailed(true);

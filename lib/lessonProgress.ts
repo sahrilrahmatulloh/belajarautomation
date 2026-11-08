@@ -7,12 +7,14 @@ import { DUMMY_ACCOUNT } from "@/data/dummy/account";
 import { XP_PER_COURSE_COMPLETION, XP_PER_LESSON } from "@/data/xp";
 import { getCompletedLessonSlugs } from "@/lib/activity";
 import { useXpCorrection } from "@/lib/content";
-import { CourseInProgress, getStudiedCourses } from "@/lib/learningProgress";
+import { CourseInProgress, getCompletedLessonCount, getStudiedCourses } from "@/lib/learningProgress";
+import { useIsRealAccount, useRealProgress } from "@/lib/realProgress";
 import { useSession } from "@/lib/session";
 import { COURSES } from "@/data/courses";
 
-// Lesson yang diselesaikan pengguna, per akun. Sementara di localStorage; nantinya progres dan
-// XP wajib dicatat dan divalidasi di backend (PRD FR-05).
+// Progres lesson dan XP (PRD FR-05).
+// - Akun Supabase: dari database (lib/realProgress.ts); lesson ditandai selesai lewat Server Action.
+// - Akun demo: localStorage di atas riwayat aktivitas dummy.
 const STORAGE_KEY = "belajarautomation-lesson-progress";
 const EMPTY: Record<string, string[]> = {};
 
@@ -102,10 +104,29 @@ function summarize(keys: string[]) {
 export function useLessonProgress() {
   const session = useSession();
   const all = useSyncExternalStore(subscribe, getSnapshot, () => EMPTY);
-  const keys = (session && all[session.email]) || [];
-  const summary = summarize(keys);
   // Koreksi XP dari Admin ikut menentukan total XP dan rank (PRD FR-16 D).
   const correction = useXpCorrection(session?.userId);
+  const isReal = useIsRealAccount();
+  const real = useRealProgress();
+
+  if (isReal) {
+    // Akun Supabase: hanya progres yang tercatat di database, tanpa riwayat dummy.
+    const byCourse = new Map<string, string[]>();
+    for (const item of real?.lessons ?? []) {
+      byCourse.set(item.courseSlug, [...(byCourse.get(item.courseSlug) ?? []), item.lessonSlug]);
+    }
+    return {
+      newByCourse: byCourse,
+      extraXp: 0,
+      extraLessons: 0,
+      finishedCourses: [] as string[],
+      isCompleted: (courseSlug: string, lessonSlug: string) => Boolean(byCourse.get(courseSlug)?.includes(lessonSlug)),
+      completedSlugs: (courseSlug: string) => new Set(byCourse.get(courseSlug) ?? []),
+    };
+  }
+
+  const keys = (session && all[session.email]) || [];
+  const summary = summarize(keys);
 
   return {
     ...summary,
@@ -116,14 +137,36 @@ export function useLessonProgress() {
   };
 }
 
+// Total XP, lesson selesai, dan challenge selesai akun saat ini (PRD FR-05).
+export function useAccountStats() {
+  const progress = useLessonProgress();
+  const isReal = useIsRealAccount();
+  const real = useRealProgress();
+  if (isReal) {
+    return {
+      xp: real?.totalXp ?? 0,
+      lessons: real?.lessonsCompleted ?? 0,
+      challenges: real?.challengesCompleted ?? 0,
+      isLoaded: real !== null,
+    };
+  }
+  return {
+    xp: DUMMY_ACCOUNT.xp + progress.extraXp,
+    lessons: getCompletedLessonCount() + progress.extraLessons,
+    challenges: DUMMY_ACCOUNT.completedChallenges,
+    isLoaded: true,
+  };
+}
+
 export function useAccountXp() {
-  return DUMMY_ACCOUNT.xp + useLessonProgress().extraXp;
+  return useAccountStats().xp;
 }
 
 // Course yang masih berjalan, termasuk yang baru mulai dipelajari. Yang baru dikerjakan lebih dulu.
 export function useCoursesInProgress(): CourseInProgress[] {
   const { newByCourse } = useLessonProgress();
-  const studied = getStudiedCourses();
+  // Akun Supabase hanya memakai progres dari database.
+  const studied = useIsRealAccount() ? [] : getStudiedCourses();
 
   const touched = [...newByCourse].flatMap(([courseSlug, lessons]): CourseInProgress[] => {
     const course = COURSES.find((item) => item.slug === courseSlug);

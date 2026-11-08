@@ -13,9 +13,11 @@ interface ResultSummaryProps {
   // Rincian singkat, mis. "8 dari 10 jawaban benar".
   detail: string;
   onRetry: () => void;
+  // Latihan yang dinilai sendiri (Test Case) tidak memberi XP (PRD FR-05).
+  givesXp?: boolean;
 }
 
-export default function ResultSummary({ result, xp, detail, onRetry }: ResultSummaryProps) {
+export default function ResultSummary({ result, xp, detail, onRetry, givesXp = true }: ResultSummaryProps) {
   const { avatar } = useAppearance();
   const Icon = result.passed ? CheckCircle2 : XCircle;
 
@@ -40,7 +42,9 @@ export default function ResultSummary({ result, xp, detail, onRetry }: ResultSum
         <p className="mt-1 text-sm font-semibold">Skor {result.score}%</p>
         <p className="mt-0.5 text-sm text-muted-foreground">{detail}</p>
         <p className="mt-0.5 text-sm text-muted-foreground">
-          {xp > 0
+          {!givesXp
+            ? "Test Case dinilai sendiri, jadi tidak memberi XP. Hasilnya tetap tercatat sebagai latihan selesai."
+            : xp > 0
             ? `Kamu mendapat +${xp} XP.`
             : result.passed
               ? "Tidak ada XP tambahan karena kamu sudah pernah lulus."

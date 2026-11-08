@@ -1,9 +1,14 @@
 # BELAJARAUTOMATION.COM
 ## Product Requirements Document (PRD)
-**Versi:** 2.33  
+**Versi:** 2.34  
 **Status:** Draft — Acuan Pengembangan Produk  
 **Platform:** Web Application  
 **Target Pengguna:** Pemula hingga praktisi QA, Software Testing, dan Programming
+
+### Perubahan di Versi 2.34
+- Aturan penyelesaian aktivitas ditetapkan: lesson ditandai selesai setelah isinya digulir sampai akhir, kuis dan challenge boleh diulang tanpa batas, dan Test Case Writing tercatat selesai tanpa XP karena dinilai sendiri (FR-05).
+- Naik rank menampilkan popup perayaan dan menambah notifikasi di kelompok Progres (FR-05).
+- Total XP, materi selesai, dan challenge selesai akun sungguhan dihitung dari database dan dicatat oleh server (FR-05).
 
 ### Perubahan di Versi 2.33
 - Email verifikasi pendaftaran berbahasa Indonesia dengan tampilan belajarautomation.com (Bagian 4.5).
@@ -703,6 +708,25 @@ Nilai XP dan batas rank dikelola melalui konfigurasi sistem. Nilai awal yang dis
 | Menyelesaikan challenge yang tervalidasi | 75 |
 
 XP hanya diberikan saat aktivitas tersebut diselesaikan pertama kali. Pengguna boleh mengulang lesson, kuis, atau challenge tanpa memperoleh XP lagi.
+
+### Aturan penyelesaian aktivitas
+
+| Aktivitas | Dianggap selesai saat | XP | Catatan |
+|---|---|---|---|
+| Lesson | Pengguna menekan "Tandai selesai" | 10 | Tombol baru aktif setelah isi lesson digulir sampai akhir. Lesson yang belum punya isi tidak bisa ditandai selesai. |
+| Course | Seluruh lesson dalam course selesai | 50 (bonus) | Diberikan otomatis bersama lesson terakhir yang diselesaikan. |
+| Kuis | Lulus dengan skor minimal 70% | 30 | Percobaan tidak dibatasi. |
+| Bug Hunt dan Locator Challenge | Lulus penilaian otomatis | 75 | Percobaan tidak dibatasi. |
+| Test Case Writing | Semua poin wajib checklist tercentang | 0 | Dinilai sendiri oleh pengguna sehingga tidak tervalidasi; tetap terhitung sebagai challenge selesai. |
+
+Ketentuan perhitungan:
+- **Total XP** adalah jumlah seluruh XP yang pernah diperoleh. Setiap aktivitas hanya dapat memberi XP satu kali, termasuk bila jawaban dikirim berulang.
+- **Materi selesai** adalah jumlah lesson yang sudah ditandai selesai.
+- **Challenge selesai** adalah jumlah kuis dan challenge yang pernah lulus, masing-masing dihitung sekali.
+- **Rank** ditentukan dari total XP sesuai tabel batas XP rank di bawah.
+- XP dihitung dan dicatat oleh server setelah jawaban dinilai. Browser tidak menentukan jumlah XP.
+- Saat total XP melewati batas rank berikutnya, aplikasi menampilkan popup perayaan berisi emblem rank baru, dengan tombol "Lihat detail rank" dan "Lanjut belajar", serta menambah notifikasi "Naik rank ke [nama rank]" di kelompok Progres.
+- Hingga hak akses membership tersambung ke backend, XP dari course premium belum dicatat untuk akun sungguhan.
 
 ### Batas XP rank
 | Rank | Minimal XP | Gambaran pencapaian |

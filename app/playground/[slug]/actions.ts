@@ -3,6 +3,7 @@
 import { CHALLENGE_DETAILS } from "@/data/challengeDetails";
 import { CHALLENGES } from "@/data/challenges";
 import { canAccessChallengeCourse } from "@/lib/challengeAccess";
+import { recordChallengeAttempt } from "@/lib/xp/record";
 import {
   BugHuntDetail,
   BugHuntResult,
@@ -44,10 +45,12 @@ export async function submitQuiz(slug: string, answers: number[]): Promise<QuizR
     ({ correctIndex }, index) => answers[index] === correctIndex
   ).length;
   const score = Math.round((correctCount / detail.questions.length) * 100);
+  const passed = score >= detail.passingScore;
 
   return {
     score,
-    passed: score >= detail.passingScore,
+    passed,
+    xp: await recordChallengeAttempt(detail.slug, "quiz", score, passed),
     correctCount,
     passingScore: detail.passingScore,
     review: detail.questions.map((question, index) => ({
@@ -70,10 +73,14 @@ export async function submitBugHunt(slug: string, selectedIds: string[]): Promis
   const missed = detail.findings.filter(({ id }) => isBug(id) && !selected.has(id));
   const falsePositives = detail.findings.filter(({ id }) => !isBug(id) && selected.has(id));
 
+  // Setiap salah tandai mengurangi satu temuan yang benar.
+  const score = Math.round((Math.max(found.length - falsePositives.length, 0) / detail.bugIds.length) * 100);
+  const passed = missed.length === 0 && falsePositives.length <= detail.maxFalsePositives;
+
   return {
-    // Setiap salah tandai mengurangi satu temuan yang benar.
-    score: Math.round((Math.max(found.length - falsePositives.length, 0) / detail.bugIds.length) * 100),
-    passed: missed.length === 0 && falsePositives.length <= detail.maxFalsePositives,
+    score,
+    passed,
+    xp: await recordChallengeAttempt(detail.slug, "bug-hunt", score, passed),
     found,
     missed,
     falsePositives,
@@ -97,10 +104,11 @@ export async function submitTestCaseCheck(slug: string, checkedIds: string[]): P
   const checked = new Set(uniqueStrings(checkedIds));
   const met = detail.checklist.filter(({ id }) => checked.has(id)).length;
 
-  return {
-    score: Math.round((met / detail.checklist.length) * 100),
-    passed: detail.checklist.every(({ id, required }) => !required || checked.has(id)),
-  };
+  const score = Math.round((met / detail.checklist.length) * 100);
+  const passed = detail.checklist.every(({ id, required }) => !required || checked.has(id));
+
+  // Tercatat selesai tanpa XP: dinilai sendiri oleh pengguna (PRD FR-05).
+  return { score, passed, xp: await recordChallengeAttempt(detail.slug, "test-case", score, passed) };
 }
 
 // matchedIds: nilai data-practice-id tiap elemen yang cocok; string kosong untuk
@@ -119,9 +127,12 @@ export async function submitLocator(slug: string, matchedIds: string[]): Promise
           ? "target"
           : "wrong";
 
+  const passed = outcome === "target";
+
   return {
-    score: outcome === "target" ? 100 : 0,
-    passed: outcome === "target",
+    score: passed ? 100 : 0,
+    passed,
+    xp: await recordChallengeAttempt(detail.slug, "locator", passed ? 100 : 0, passed),
     outcome,
     matchCount: matchedIds.length,
   };

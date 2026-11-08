@@ -136,6 +136,7 @@ Catatan:
 - Profil publik hanya menampilkan kolom publik (FR-13), lewat view khusus, dan hanya untuk pengguna yang login.
 - Isi lesson premium hanya dapat dibaca pengguna yang punya hak akses. Halaman statis lesson premium hanya berisi cuplikan; isi lengkap diambil setelah hak akses diperiksa.
 - Penulisan penting hanya lewat fungsi database (RPC) yang memeriksa aturan dalam satu transaksi, misalnya `complete_lesson`, `submit_quiz`, `submit_challenge`, `claim_benefit`, aksi Admin beserta audit log, dan perubahan status konten. Pengguna tidak punya izin `insert` langsung ke `xp_transactions`, `payments`, atau `user_entitlements`.
+- Tahap saat ini (migrasi `20261109090000_xp_progress.sql`): `lesson_progress`, `challenge_attempts`, dan `xp_transactions` memakai slug course, lesson, dan latihan karena konten belum diimpor ke database, dan `xp_transactions` belum dipartisi. XP dicatat Server Action Next.js setelah menilai jawaban, lewat `record_lesson_completion` dan `record_challenge_attempt` yang hanya dapat dijalankan `service_role`. Browser membaca progres lewat `get_my_progress`. Kolom slug diganti id konten dan partisi ditambahkan saat konten pindah ke database.
 - Status pembayaran hanya ditulis webhook Midtrans lewat service role. Admin tidak bisa mengubahnya (FR-16 E).
 - `audit_logs` tidak punya izin ubah atau hapus untuk siapa pun.
 - Creator hanya mengubah konten miliknya pada status yang diizinkan. Reviewer hanya mengakses konten yang ditugaskan kepadanya (FR-15).

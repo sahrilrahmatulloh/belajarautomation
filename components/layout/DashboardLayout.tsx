@@ -7,6 +7,7 @@ import RequireAuth from "@/components/auth/RequireAuth";
 import MaintenanceBanner from "@/components/maintenance/MaintenanceBanner";
 import MaintenancePopup from "@/components/maintenance/MaintenancePopup";
 import PromoPopup from "@/components/promo/PromoPopup";
+import RankUpCelebration from "@/components/rank/RankUpCelebration";
 import { isLearnerPath, useViewMode } from "@/lib/viewMode";
 
 import Sidebar from "./Sidebar";
@@ -66,6 +67,7 @@ export default function DashboardLayout({
           <MaintenanceBanner />
           <MaintenancePopup />
           <PromoPopup />
+          <RankUpCelebration />
 
           {/* relative: elemen absolute di dalam isi (mis. teks sr-only) tidak memperpanjang
               dokumen, yang membuat seluruh layout bergeser saat lompat ke heading.
