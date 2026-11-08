@@ -1,9 +1,12 @@
 # BELAJARAUTOMATION.COM
 ## Product Requirements Document (PRD)
-**Versi:** 2.29  
+**Versi:** 2.30  
 **Status:** Draft — Acuan Pengembangan Produk  
 **Platform:** Web Application  
 **Target Pengguna:** Pemula hingga praktisi QA, Software Testing, dan Programming
+
+### Perubahan di Versi 2.30
+- Menambahkan alert singkat di atas layar untuk hasil aksi (simpan, buat, ubah, hapus) dan status koneksi internet, berlaku di semua halaman (Bagian 4.6).
 
 ### Perubahan di Versi 2.29
 - Menambahkan halaman **Rank & XP** (`/rank`) berisi Tingkatan Rank dan Cara Mendapatkan XP; keduanya dipindah dari halaman Leaderboard (FR-05, FR-06).
@@ -1752,6 +1755,31 @@ Klik notifikasi menandainya sebagai dibaca dan langsung membuka halaman terkait:
 ### Tahap
 - Sebelum backend: tombol tampil dengan keterangan "Segera hadir" dan tidak dapat dipakai.
 - Setelah backend: memakai login Google dari Supabase Auth. Pemilik menyiapkan project Google Cloud, layar persetujuan OAuth (nama aplikasi, logo, tautan kebijakan privasi), Client ID dan Secret, serta alamat redirect untuk DEV, UAT, dan Production.
+
+## 4.6 Pemberitahuan Aksi dan Koneksi
+Alert singkat di atas tengah layar memberi tahu hasil aksi pengguna dan perubahan koneksi internet. Berlaku di semua halaman dan semua mode (Belajar, Creator, Reviewer, Admin).
+
+### Kapan tampil
+| Kejadian | Jenis | Contoh |
+|---|---|---|
+| Simpan, buat, atau ubah berhasil | Sukses | "Profil tersimpan." |
+| Hapus berhasil | Info | "Membership Pro Lifetime dihapus dari keranjang." |
+| Simpan gagal karena server atau aturan | Error | "Username sudah dipakai. Pilih yang lain." |
+| Koneksi internet terputus | Peringatan | "Koneksi internet terputus. Perubahan belum bisa disimpan sampai koneksi kembali." |
+| Koneksi internet kembali | Sukses | "Koneksi internet kembali." |
+
+### Aturan
+- Posisi atas tengah; di layar kecil selebar layar dengan jarak tepi 16px. Paling banyak 3 alert bertumpuk, yang terbaru di atas.
+- Sukses dan info tampil 4 detik, error dan peringatan 8 detik. Semua alert dapat ditutup dengan tombol tutup.
+- Alert koneksi terputus tetap tampil sampai koneksi kembali, lalu diganti alert koneksi kembali.
+- Kesalahan pada isian tertentu (mis. format username) tetap ditampilkan di bawah isiannya, bukan sebagai alert, agar dekat dengan yang perlu diperbaiki.
+- Status yang menetap di halaman (mis. "Lesson selesai") tetap di halaman, bukan alert.
+- Pesan di halaman latihan Playground adalah bagian dari soal dan tidak diubah menjadi alert.
+- Pembaca layar mengumumkan error dan peringatan segera, serta sukses dan info tanpa memotong.
+
+### Tahap penerapan
+- Tahap 1: sistem alert, alert koneksi, dan fitur Pelajar (Pengaturan profil, Kustomisasi, keranjang).
+- Tahap 2: aksi Creator, Reviewer, dan Admin (buat, ubah, hapus konten, review, kelola pengguna, dan lainnya).
 
 ---
 

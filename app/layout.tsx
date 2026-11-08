@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 import EnvironmentBadge from "@/components/common/EnvironmentBadge";
+import NetworkStatus from "@/components/common/NetworkStatus";
 import SplashScreen from "@/components/common/SplashScreen";
+import Toaster from "@/components/common/Toaster";
 import MaintenanceGate from "@/components/maintenance/MaintenanceGate";
 import { isProduction } from "@/lib/env";
 import { SITE_URL } from "@/lib/siteUrl";
@@ -34,6 +36,9 @@ export default function RootLayout({
           <TooltipProvider>
             <MaintenanceGate>{children}</MaintenanceGate>
           </TooltipProvider>
+          {/* Alert hasil aksi dan status koneksi, di semua halaman (PRD 4.6). */}
+          <Toaster />
+          <NetworkStatus />
         </ThemeProvider>
         <EnvironmentBadge />
       </body>

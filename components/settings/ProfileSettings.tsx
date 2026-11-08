@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { AlertCircle, AtSign, CheckCircle2, Mail, UserRound } from "lucide-react";
+import { AtSign, Mail, UserRound } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
@@ -18,27 +18,9 @@ import {
   USERNAME_COOLDOWN_DAYS,
 } from "@/lib/auth/profileActions";
 import { normalizeUsername, USERNAME_MAX, USERNAME_MIN, usernameFormatError } from "@/lib/auth/username";
+import { notify } from "@/lib/notify";
 import { useSession } from "@/lib/session";
 import { isValidEmail } from "@/lib/validation";
-
-type Status = { tone: "success" | "error"; text: string } | null;
-
-function StatusMessage({ status }: { status: Status }) {
-  if (!status) return null;
-  const isError = status.tone === "error";
-  const Icon = isError ? AlertCircle : CheckCircle2;
-  return (
-    <p
-      role={isError ? "alert" : "status"}
-      className={`flex items-start gap-2 text-sm font-medium ${
-        isError ? "text-destructive" : "text-emerald-700 dark:text-emerald-300"
-      }`}
-    >
-      <Icon className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
-      {status.text}
-    </p>
-  );
-}
 
 function FieldMessage({ id, error, hint }: { id: string; error?: string; hint?: React.ReactNode }) {
   if (error) {
@@ -74,9 +56,6 @@ export default function ProfileSettings() {
   const [profileErrors, setProfileErrors] = useState<{ name?: string; bio?: string }>({});
   const [usernameError, setUsernameError] = useState<string | undefined>();
   const [emailError, setEmailError] = useState<string | undefined>();
-  const [profileStatus, setProfileStatus] = useState<Status>(null);
-  const [usernameStatus, setUsernameStatus] = useState<Status>(null);
-  const [emailStatus, setEmailStatus] = useState<Status>(null);
   const [saving, setSaving] = useState<"profile" | "username" | "email" | null>(null);
 
   // Isian mengikuti akun setelah sesi termuat atau berganti.
@@ -94,13 +73,12 @@ export default function ProfileSettings() {
   // Kembali dari tautan konfirmasi ganti email (/auth/callback).
   useEffect(() => {
     const result = new URLSearchParams(window.location.search).get("email");
-    /* eslint-disable react-hooks/set-state-in-effect -- pesan dibaca sekali dari alamat setelah hidrasi */
+    // id tetap agar pesan tidak muncul dua kali.
     if (result === "dikonfirmasi") {
-      setEmailStatus({ tone: "success", text: "Konfirmasi diterima. Jika diminta, buka juga tautan di email lainnya." });
+      notify.success("Konfirmasi diterima. Jika diminta, buka juga tautan di email lainnya.", { id: "konfirmasi-email" });
     } else if (result === "gagal") {
-      setEmailStatus({ tone: "error", text: "Tautan konfirmasi email tidak valid atau sudah kedaluwarsa. Coba ganti email lagi." });
+      notify.error("Tautan konfirmasi email tidak valid atau sudah kedaluwarsa. Coba ganti email lagi.", { id: "konfirmasi-email" });
     }
-    /* eslint-enable react-hooks/set-state-in-effect */
   }, []);
 
   const nextChange = nextUsernameChange(session?.usernameChangedAt);
@@ -114,18 +92,17 @@ export default function ProfileSettings() {
     else if (name.trim().length > DISPLAY_NAME_MAX) errors.name = `Nama tampilan maksimal ${DISPLAY_NAME_MAX} karakter.`;
     if (bio.trim().length > BIO_MAX) errors.bio = `Tentang saya maksimal ${BIO_MAX} karakter.`;
     setProfileErrors(errors);
-    setProfileStatus(null);
     if (Object.keys(errors).length > 0) return;
 
     setSaving("profile");
     const result = await saveProfile(name, bio);
     setSaving(null);
-    setProfileStatus(result.ok ? { tone: "success", text: "Profil tersimpan." } : { tone: "error", text: result.message });
+    if (result.ok) notify.success("Profil tersimpan.");
+    else notify.error(result.message);
   };
 
   const handleUsername = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setUsernameStatus(null);
     const formatError = usernameFormatError(username);
     if (formatError) return setUsernameError(formatError);
     if (normalizeUsername(username) === session?.username) return setUsernameError("Username baru sama dengan username sekarang.");
@@ -136,18 +113,14 @@ export default function ProfileSettings() {
     setSaving(null);
     if (!result.ok) {
       if (result.code.startsWith("username_") && result.code !== "username_jeda") setUsernameError(result.message);
-      else setUsernameStatus({ tone: "error", text: result.message });
+      else notify.error(result.message);
       return;
     }
-    setUsernameStatus({
-      tone: "success",
-      text: `Username diganti. Bisa diganti lagi mulai ${formatDate(result.data)}.`,
-    });
+    notify.success(`Username diganti. Bisa diganti lagi mulai ${formatDate(result.data)}.`);
   };
 
   const handleEmail = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setEmailStatus(null);
     const normalized = email.trim().toLowerCase();
     if (!isValidEmail(normalized)) return setEmailError("Format email belum benar.");
     if (normalized === session?.email) return setEmailError("Email baru sama dengan email sekarang.");
@@ -156,11 +129,11 @@ export default function ProfileSettings() {
     setSaving("email");
     const result = await changeEmail(normalized);
     setSaving(null);
-    setEmailStatus(
-      result.ok
-        ? { tone: "success", text: `Tautan konfirmasi dikirim ke ${session?.email} dan ${normalized}. Buka keduanya untuk menyelesaikan.` }
-        : { tone: "error", text: result.message }
-    );
+    if (result.ok) {
+      notify.success(`Tautan konfirmasi dikirim ke ${session?.email} dan ${normalized}. Buka keduanya untuk menyelesaikan.`);
+    } else {
+      notify.error(result.message);
+    }
   };
 
   const profileChanged = name.trim() !== (session?.name ?? "") || bio.trim() !== (session?.bio ?? "");
@@ -238,9 +211,8 @@ export default function ProfileSettings() {
           />
         </div>
 
-        <div className="flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <StatusMessage status={profileStatus} />
-          <button type="submit" disabled={!isRealAccount || !profileChanged || saving === "profile"} className={`${SAVE_BUTTON} sm:ml-auto`}>
+        <div className="flex justify-end">
+          <button type="submit" disabled={!isRealAccount || !profileChanged || saving === "profile"} className={`${SAVE_BUTTON} w-full sm:w-auto`}>
             {saving === "profile" ? "Menyimpan..." : "Simpan Profil"}
           </button>
         </div>
@@ -279,9 +251,6 @@ export default function ProfileSettings() {
               : `${USERNAME_MIN}–${USERNAME_MAX} karakter: huruf kecil, angka, dan garis bawah (_). Bisa diganti ${USERNAME_COOLDOWN_DAYS} hari sekali.`
           }
         />
-        <div className="mt-2">
-          <StatusMessage status={usernameStatus} />
-        </div>
       </form>
 
       {/* Email */}
@@ -320,9 +289,6 @@ export default function ProfileSettings() {
             Menunggu konfirmasi ke {session.pendingEmail}. Email akun tetap {session.email} sampai dikonfirmasi.
           </p>
         )}
-        <div className="mt-2">
-          <StatusMessage status={emailStatus} />
-        </div>
       </form>
     </section>
   );

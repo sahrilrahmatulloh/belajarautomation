@@ -19,6 +19,7 @@ import { AVATAR_STYLES, AVATARS, getAvatar } from "@/data/avatars";
 import { DUMMY_ACCOUNT } from "@/data/dummy/account";
 import { useAccountXp } from "@/lib/lessonProgress";
 import { saveAppearance } from "@/lib/auth/profileActions";
+import { notify } from "@/lib/notify";
 import { useSession } from "@/lib/session";
 import { useAppearance } from "@/lib/useAppearance";
 import { getMembershipPlan } from "@/data/membership";
@@ -176,7 +177,6 @@ export default function ProfileCustomization() {
   const [style, setStyle] = useState<string>(activeAvatar.style);
   const [themeId, setThemeId] = useState(activeTheme.id);
   const [isSaving, setIsSaving] = useState(false);
-  const [saveStatus, setSaveStatus] = useState<{ tone: "success" | "error"; text: string } | null>(null);
 
   // Pilihan di pratinjau mengikuti akun setelah sesi termuat atau setelah disimpan.
   useEffect(() => {
@@ -195,10 +195,10 @@ export default function ProfileCustomization() {
 
   const handleSave = async () => {
     setIsSaving(true);
-    setSaveStatus(null);
     const result = await saveAppearance(avatar.id, theme.id);
     setIsSaving(false);
-    setSaveStatus(result.ok ? { tone: "success", text: "Pilihan tersimpan." } : { tone: "error", text: result.message });
+    if (result.ok) notify.success("Pilihan avatar dan tema tersimpan.");
+    else notify.error(result.message);
   };
 
   const matchesOwnership = (isOwned: boolean) =>
@@ -255,24 +255,13 @@ export default function ProfileCustomization() {
             >
               {isSaving ? "Menyimpan..." : "Simpan Pilihan"}
             </button>
-            {saveStatus ? (
-              <p
-                role={saveStatus.tone === "error" ? "alert" : "status"}
-                className={`mt-2 text-xs font-medium leading-5 ${
-                  saveStatus.tone === "error" ? "text-destructive" : "text-emerald-700 dark:text-emerald-300"
-                }`}
-              >
-                {saveStatus.text}
-              </p>
-            ) : (
-              <p className="mt-2 text-xs leading-5 text-muted-foreground">
-                {canSave
-                  ? hasChanges
-                    ? "Pilihan baru tampil di pratinjau. Simpan untuk memakainya di semua halaman."
-                    : "Pilih avatar atau tema dari koleksi."
-                  : "Akun demo tidak dapat menyimpan pilihan."}
-              </p>
-            )}
+            <p className="mt-2 text-xs leading-5 text-muted-foreground">
+              {canSave
+                ? hasChanges
+                  ? "Pilihan baru tampil di pratinjau. Simpan untuk memakainya di semua halaman."
+                  : "Pilih avatar atau tema dari koleksi."
+                : "Akun demo tidak dapat menyimpan pilihan."}
+            </p>
           </div>
         </section>
       </aside>
@@ -352,7 +341,6 @@ export default function ProfileCustomization() {
                   lockNote={unlockNote(item)}
                   onSelect={() => {
                     setAvatarId(item.id);
-                    setSaveStatus(null);
                   }}
                 />
               ))}
@@ -372,7 +360,6 @@ export default function ProfileCustomization() {
                   lockNote={unlockNote(item)}
                   onSelect={() => {
                     setThemeId(item.id);
-                    setSaveStatus(null);
                   }}
                 />
               ))}
