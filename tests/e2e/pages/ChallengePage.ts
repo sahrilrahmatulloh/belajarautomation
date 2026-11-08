@@ -9,6 +9,8 @@ export class ChallengePage extends BasePage {
   readonly courseLink: Locator;
   readonly backLink: Locator;
   readonly result: Locator;
+  readonly timer: Locator;
+  readonly retryButton: Locator;
 
   // Kuis
   readonly quiz: Locator;
@@ -43,6 +45,8 @@ export class ChallengePage extends BasePage {
     this.courseLink = main.getByRole("link", { name: /^Course: / });
     this.backLink = main.getByRole("link", { name: "Kembali ke Playground" });
     this.result = page.getByRole("region", { name: "Hasil latihan" });
+    this.timer = page.getByRole("timer");
+    this.retryButton = page.getByRole("button", { name: "Ulangi latihan" });
 
     this.quiz = page.getByRole("region", { name: "Pengerjaan kuis" });
     this.options = this.quiz.getByRole("radio");

@@ -7,8 +7,10 @@ import PendingSubmitNotice from "@/components/maintenance/PendingSubmitNotice";
 import { useProtectedSubmit } from "@/components/maintenance/useProtectedSubmit";
 import { useRecordChallengeAttempt } from "@/lib/challengeAttempts";
 import { useChallengeDraft } from "@/lib/challengeDrafts";
+import { useChallengeTimer } from "@/lib/challengeTimer";
 import { ChallengeScore, PublicChallengeDetail, TestCaseReveal } from "@/types/ChallengeDetail";
 
+import ChallengeTimer from "./ChallengeTimer";
 import ResultSummary from "./ResultSummary";
 import SubmitError from "./SubmitError";
 
@@ -47,10 +49,22 @@ export default function TestCaseWorkspace({ slug, data }: { slug: string; data: 
     });
   };
 
-  const submitAnswer = () =>
+  // Waktu hanya untuk menulis jawaban. Saat habis, jawaban yang tertulis langsung dikirim dan
+  // penilaian mandiri dengan checklist dikerjakan tanpa batas waktu.
+  const timer = useChallengeTimer({
+    slug,
+    type: "test-case",
+    running: !reveal,
+    onExpire: () => {
+      if (!isPending) submitAnswer(true);
+    },
+  });
+
+  const submitAnswer = (timedOut = false) =>
     run(async () => {
-      const revealed = await revealTestCase(slug, answer);
+      const revealed = await revealTestCase(slug, answer, timedOut);
       setReveal(revealed);
+      if (revealed) timer.stop();
       return Boolean(revealed);
     });
 
@@ -63,17 +77,19 @@ export default function TestCaseWorkspace({ slug, data }: { slug: string; data: 
       return true;
     });
 
-  const protectedSubmitAnswer = useProtectedSubmit(draft, submitAnswer);
+  const protectedSubmitAnswer = useProtectedSubmit(draft, () => submitAnswer());
 
   const retry = () => {
     draft.clear();
     setReveal(null);
     setChecked([]);
     setOutcome(null);
+    timer.restart();
   };
 
   return (
     <div className="space-y-4">
+      {!reveal && <ChallengeTimer remaining={timer.remaining} limitMinutes={timer.limitMinutes} isPaused={timer.isPaused} />}
       {outcome && reveal && (
         <ResultSummary
           givesXp={false}
@@ -98,7 +114,9 @@ export default function TestCaseWorkspace({ slug, data }: { slug: string; data: 
           <div className="grid gap-4 md:grid-cols-2">
             <section aria-label="Jawaban kamu" className="min-w-0 rounded-2xl border border-border bg-card p-4 sm:p-5">
               <h2 className="font-semibold">Jawaban kamu</h2>
-              <p className="mt-2 whitespace-pre-wrap break-words text-sm leading-6">{answer}</p>
+              <p className="mt-2 whitespace-pre-wrap break-words text-sm leading-6">
+                {answer.trim() ? answer : <span className="text-muted-foreground">Tidak ada jawaban sampai waktu habis.</span>}
+              </p>
             </section>
             <section aria-label="Contoh jawaban" className="min-w-0 rounded-2xl border border-border bg-card p-4 sm:p-5">
               <h2 className="font-semibold">Contoh jawaban</h2>

@@ -31,14 +31,15 @@ function findDetail<T extends ChallengeDetail>(slug: unknown, type: T["type"]) {
 const uniqueStrings = (value: unknown) =>
   Array.isArray(value) ? [...new Set(value.filter((item): item is string => typeof item === "string"))] : [];
 
-export async function submitQuiz(slug: string, answers: number[]): Promise<QuizResult | null> {
+// Soal yang tidak dijawab (null) dihitung salah; hanya terjadi saat waktu habis (PRD FR-04).
+export async function submitQuiz(slug: string, answers: (number | null)[]): Promise<QuizResult | null> {
   const detail = findDetail<QuizDetail>(slug, "quiz");
   if (!detail || !Array.isArray(answers) || answers.length !== detail.questions.length) return null;
 
-  const isValid = detail.questions.every(
-    ({ options }, index) =>
-      Number.isInteger(answers[index]) && answers[index] >= 0 && answers[index] < options.length
-  );
+  const isValid = detail.questions.every(({ options }, index) => {
+    const answer = answers[index];
+    return answer === null || (Number.isInteger(answer) && answer >= 0 && answer < options.length);
+  });
   if (!isValid) return null;
 
   const correctCount = detail.questions.filter(
@@ -88,11 +89,12 @@ export async function submitBugHunt(slug: string, selectedIds: string[]): Promis
   };
 }
 
-// Contoh jawaban dan checklist baru dikirim setelah pengguna mengirim jawabannya.
-export async function revealTestCase(slug: string, answer: string): Promise<TestCaseReveal | null> {
+// Contoh jawaban dan checklist baru dikirim setelah pengguna mengirim jawabannya. Jawaban kosong
+// hanya diterima saat waktu habis (PRD FR-04).
+export async function revealTestCase(slug: string, answer: string, timedOut = false): Promise<TestCaseReveal | null> {
   const detail = findDetail<TestCaseDetail>(slug, "test-case");
   if (!detail || typeof answer !== "string") return null;
-  if (!answer.slice(0, MAX_ANSWER_LENGTH).trim()) return null;
+  if (!timedOut && !answer.slice(0, MAX_ANSWER_LENGTH).trim()) return null;
 
   return { sampleAnswer: detail.sampleAnswer, checklist: detail.checklist };
 }
