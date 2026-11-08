@@ -1,4 +1,5 @@
 import { expect, test } from "../fixtures/auth";
+import { notification } from "../fixtures/notify";
 import { PAID_AVATAR_NAMES } from "../fixtures/testData";
 import { MOCK_STUDENT, mockSupabase, signInWithMock } from "../fixtures/supabaseMock";
 import { DashboardPage } from "../pages/DashboardPage";
@@ -28,7 +29,7 @@ test.describe("Kustomisasi akun Supabase", () => {
     await expect(profile.saveAppearanceButton).toBeEnabled();
     await profile.saveAppearanceButton.click();
 
-    await expect(profile.preview.getByRole("status").filter({ hasText: "Pilihan tersimpan." })).toBeVisible();
+    await expect(notification(page, "Pilihan avatar dan tema tersimpan.")).toBeVisible();
     expect(supabase.find("/rest/v1/rpc/set_appearance")?.postDataJSON()).toEqual({
       new_avatar_id: "kucing-oren",
       new_theme_id: "kucing-fuji",
@@ -51,7 +52,7 @@ test.describe("Kustomisasi akun Supabase", () => {
     await page.getByRole("button", { name: /^Neon Night/ }).click();
     await profile.saveAppearanceButton.click();
 
-    await expect(profile.preview.getByRole("status").filter({ hasText: "Pilihan tersimpan." })).toBeVisible();
+    await expect(notification(page, "Pilihan avatar dan tema tersimpan.")).toBeVisible();
     expect(supabase.find("/rest/v1/rpc/set_appearance")?.postDataJSON()).toMatchObject({ new_theme_id: "kucing-cyberpunk" });
 
     await profile.goto();
