@@ -11,6 +11,7 @@ export class DashboardPage extends BasePage {
   readonly continueCover: Locator;
   readonly continueButton: Locator;
   readonly calendar: Locator;
+  readonly stats: Locator;
   readonly previousMonthButton: Locator;
   readonly calendarActivityLink: Locator;
 
@@ -24,6 +25,7 @@ export class DashboardPage extends BasePage {
     this.continueCover = this.continueLearning.getByRole("img", { name: /^Sampul course / }).first();
     this.continueButton = this.continueLearning.getByRole("link", { name: "Lanjutkan", exact: true });
     this.calendar = page.getByRole("region", { name: "Kalender Belajar" });
+    this.stats = page.getByRole("region", { name: "Statistik belajar" });
     this.previousMonthButton = this.calendar.getByRole("button", { name: "Bulan sebelumnya" });
     this.calendarActivityLink = this.calendar.getByRole("link", { name: "Aktivitas" });
   }
