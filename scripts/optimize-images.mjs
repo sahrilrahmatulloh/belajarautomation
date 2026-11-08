@@ -2,8 +2,10 @@
 // - ranks:   emblem rank, latar transparan, tepi dipangkas, lebar maks 320px, < 60 KB.
 // - avatars: avatar kucing (public/profile), latar transparan, lebar maks 512px, < 60 KB.
 //            PNG tanpa alpha dipotong mengikuti bingkai lingkarannya.
-// - themes:  tema banner (public/banner), lebar maks 2400px, < 250 KB, ditambah
-//            thumbnail <nama>-thumb.webp selebar 480px untuk koleksi tema.
+// - themes:  tema banner, satu folder per tema: public/banner/<id-tema>/. PNG di folder itu
+//            (nama bebas, mis. banner.png) menjadi banner.webp (lebar maks 2400px, < 250 KB)
+//            dan thumb.webp selebar 480px untuk koleksi tema. Video banner.mp4 ditaruh
+//            langsung di folder yang sama.
 // - mockups: mockup yang disetujui (docs/desain), lebar maks 2400px, < 500 KB, agar teksnya tetap
 //            terbaca. Nama file mengikuti fitur (PRD 13.2).
 // - blog:    gambar artikel (public/covers/blog), lebar maks 1600px, < 200 KB.
@@ -16,7 +18,7 @@ import sharp from "sharp";
 const GROUPS = {
   ranks: { dir: "public/ranks", maxWidth: 320, limitKb: 60, transparent: true, trim: true },
   avatars: { dir: "public/profile", maxWidth: 512, limitKb: 60, transparent: true },
-  themes: { dir: "public/banner", maxWidth: 2400, limitKb: 250, thumbnailWidth: 480 },
+  themes: { dir: "public/banner", maxWidth: 2400, limitKb: 250, thumbnailWidth: 480, perFolder: true },
   mockups: { dir: "docs/desain", maxWidth: 2400, limitKb: 500 },
   blog: { dir: "public/covers/blog", maxWidth: 1600, limitKb: 200 },
 };
@@ -110,10 +112,27 @@ const rows = [];
 for (const name of groupNames) {
   const group = GROUPS[name];
   const dir = path.join(process.cwd(), group.dir);
-  const sources = (await readdir(dir)).filter((file) => /\.png$/i.test(file));
+  // Kelompok per folder (tema): setiap subfolder berisi satu tema.
+  const sources = [];
+  if (group.perFolder) {
+    for (const entry of await readdir(dir, { withFileTypes: true })) {
+      if (entry.isFile() && /\.png$/i.test(entry.name)) {
+        console.warn(`Lewati ${group.dir}/${entry.name}: taruh PNG tema di ${group.dir}/<id-tema>/.`);
+      }
+      if (!entry.isDirectory()) continue;
+      const folder = path.join(dir, entry.name);
+      for (const file of (await readdir(folder)).filter((item) => /\.png$/i.test(item))) {
+        sources.push({ folder, file, label: `${entry.name}/` });
+      }
+    }
+  } else {
+    for (const file of (await readdir(dir)).filter((item) => /\.png$/i.test(item))) {
+      sources.push({ folder: dir, file, label: "" });
+    }
+  }
 
-  for (const file of sources) {
-    const input = path.join(dir, file);
+  for (const { folder, file, label } of sources) {
+    const input = path.join(folder, file);
     const before = (await stat(input)).size;
     const source = await prepare(input, group);
 
@@ -124,11 +143,13 @@ for (const name of groupNames) {
 
     for (const output of outputs) {
       const result = await encodeUnderLimit(source, output.width, output.limitKb, group.transparent);
-      const outputName = file.replace(/\.png$/i, `${output.suffix}.webp`);
-      await writeFile(path.join(dir, outputName), result.data);
+      // Tema memakai nama tetap di foldernya: banner.webp dan thumb.webp.
+      const folderName = output.suffix ? "thumb.webp" : "banner.webp";
+      const outputName = group.perFolder ? folderName : file.replace(/\.png$/i, `${output.suffix}.webp`);
+      await writeFile(path.join(folder, outputName), result.data);
       rows.push({
         kelompok: name,
-        file: outputName,
+        file: `${label}${outputName}`,
         sebelum: output.suffix ? "-" : `${toKb(before)} KB`,
         sesudah: `${toKb(result.data.length)} KB`,
         dimensi: `${result.info.width}x${result.info.height}`,

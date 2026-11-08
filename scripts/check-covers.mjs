@@ -33,6 +33,15 @@ for (const block of courseBlocks) {
   }
 }
 
+// Tema banner: gambar, thumbnail, dan video (bila ada) di folder public/banner/<id-tema>/.
+const themesSource = readFileSync("data/themes.ts", "utf8");
+for (const [, field, assetPath] of themesSource.matchAll(/(image|thumbnail|video):\s*"([^"]+)"/g)) {
+  checked += 1;
+  if (!assetPath.startsWith("/banner/") || !existsSync(path.join("public", assetPath))) {
+    missing.push(`data/themes.ts: ${field} ${assetPath}`);
+  }
+}
+
 if (missing.length > 0) {
   console.error(`Masalah path gambar (${missing.length}):`);
   missing.forEach((item) => console.error(`  - ${item}`));
