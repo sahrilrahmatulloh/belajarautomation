@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Settings2 } from "lucide-react";
 
+import ThemeBackdrop from "@/components/common/ThemeBackdrop";
 import LinkifiedText from "@/components/common/LinkifiedText";
 import RankEmblem from "@/components/common/RankEmblem";
 import { getRankProgress } from "@/data/ranks";
@@ -15,6 +16,7 @@ interface ProfileHeaderProps {
   avatarImage: string;
   avatarName: string;
   themeImage: string;
+  themeVideo?: string;
   xp: number;
   // Pemilik melihat progres rank dan tombol pengaturan; publik hanya rank dan total XP.
   isOwner: boolean;
@@ -31,6 +33,7 @@ export default function ProfileHeader({
   avatarImage,
   avatarName,
   themeImage,
+  themeVideo,
   xp,
   isOwner,
   shareAction,
@@ -39,10 +42,9 @@ export default function ProfileHeader({
 
   return (
     <section className="@container relative isolate overflow-hidden rounded-3xl border border-border bg-slate-900 text-white">
-      <Image
-        src={themeImage}
-        alt=""
-        fill
+      <ThemeBackdrop
+        image={themeImage}
+        video={themeVideo}
         priority
         sizes="(min-width: 1152px) 1152px, 100vw"
         className="-z-20 object-cover object-[75%_50%]"

@@ -23,6 +23,9 @@ export interface CatAvatar extends AppearanceItem {
 export interface BannerTheme extends AppearanceItem {
   image: string;
   thumbnail: string;
+  // Video tema bergerak (MP4, tanpa suara, berulang). Gambar tetap wajib sebagai poster dan
+  // untuk pengguna yang mengaktifkan "kurangi gerakan".
+  video?: string;
   // true bila ilustrasi tema sudah memuat karakter kucing sendiri.
   hasCharacter?: boolean;
 }

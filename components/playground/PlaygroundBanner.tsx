@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { FlaskConical } from "lucide-react";
 
+import ThemeBackdrop from "@/components/common/ThemeBackdrop";
 import { useAppearance } from "@/lib/useAppearance";
 
 // Mengikuti pola Welcome Banner: latar tema aktif dengan gradasi warna kartu agar
@@ -14,10 +15,9 @@ export default function PlaygroundBanner() {
       {/* Mulai tablet gambar hanya mengisi sisi kanan: bila memenuhi banner yang
           pendek dan lebar, ilustrasinya terpotong. */}
       <div className="relative -z-20 h-24 w-full sm:absolute sm:inset-y-0 sm:right-0 sm:h-auto sm:w-[30rem] lg:w-[36rem]">
-        <Image
-          src={theme.image}
-          alt=""
-          fill
+        <ThemeBackdrop
+          image={theme.image}
+          video={theme.video}
           priority
           sizes="(min-width: 1024px) 576px, (min-width: 640px) 480px, 100vw"
           className="object-cover object-[75%_50%]"

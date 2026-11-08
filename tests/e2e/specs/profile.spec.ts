@@ -82,7 +82,7 @@ test.describe("Profil", () => {
     await expect.poll(() => isRound(profile.header.getByRole("img", { name: /^Avatar / }).locator(".."))).toBe(true);
 
     await profile.gotoTab("kustomisasi");
-    await expect.poll(() => isRound(profile.preview.locator("img[src*=kucing]").locator(".."))).toBe(true);
+    await expect.poll(() => isRound(profile.preview.locator("img[src*=\"profile%2Fkucing\"]").locator(".."))).toBe(true);
   });
 
   test("filter kepemilikan berupa tombol ikon dengan dropdown", async ({ page }) => {

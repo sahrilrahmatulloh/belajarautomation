@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 
+import ThemeBackdrop from "@/components/common/ThemeBackdrop";
 import { useAppearance } from "@/lib/useAppearance";
 import { useSession } from "@/lib/session";
 
@@ -16,10 +17,9 @@ export default function WelcomeBanner() {
     <section className="relative isolate flex flex-col overflow-hidden rounded-xl border border-border bg-card text-foreground shadow-sm sm:min-h-48 sm:flex-row sm:items-center lg:min-h-56">
       {/* Latar tema: strip di atas teks pada mobile, memenuhi banner mulai tablet */}
       <div className="relative -z-20 h-36 w-full sm:absolute sm:inset-0 sm:h-auto">
-        <Image
-          src={theme.image}
-          alt=""
-          fill
+        <ThemeBackdrop
+          image={theme.image}
+          video={theme.video}
           priority
           sizes="(min-width: 1024px) 75vw, 100vw"
           className="object-cover object-[75%_50%]"

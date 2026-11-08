@@ -31,7 +31,7 @@ test.describe("Kustomisasi akun Supabase", () => {
     await expect(profile.preview.getByRole("status").filter({ hasText: "Pilihan tersimpan." })).toBeVisible();
     expect(supabase.find("/rest/v1/rpc/set_appearance")?.postDataJSON()).toEqual({
       new_avatar_id: "kucing-oren",
-      new_theme_id: "mountain-workspace",
+      new_theme_id: "kucing-fuji",
     });
     await expect(page.getByRole("button", { name: /^Kucing Oren/ })).toContainText("Digunakan");
     await expect(profile.saveAppearanceButton).toBeDisabled();

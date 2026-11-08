@@ -36,6 +36,7 @@ export default function ProfilePage() {
   const avatarImage = isRealAccount ? appearance.avatar.image : profile.avatarImage;
   const avatarName = isRealAccount ? appearance.avatar.name : profile.avatarName;
   const themeImage = isRealAccount ? appearance.theme.image : profile.themeImage;
+  const themeVideo = isRealAccount ? appearance.theme.video : profile.themeVideo;
   const { extraXp, extraLessons } = useLessonProgress();
   const xp = profile.xp + extraXp;
   const lessons = profile.lessons + extraLessons;
@@ -69,6 +70,7 @@ export default function ProfilePage() {
         avatarImage={avatarImage}
         avatarName={avatarName}
         themeImage={themeImage}
+        themeVideo={themeVideo}
         xp={xp}
         isOwner
         shareAction={

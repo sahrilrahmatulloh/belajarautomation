@@ -32,7 +32,7 @@ export const PAID_AVATAR_NAMES = [
   "Kucing Corak Tiga",
   "Kucing Siam",
 ];
-export const ACTIVE_THEME_NAME = "Mountain Workspace";
+export const ACTIVE_THEME_NAME = "Penerbangan Fuji";
 
 export const OWN_USERNAME = "sobatqa";
 export const PUBLIC_USER = { username: "rina-kartika-1", displayName: "Rina Kartika" };
