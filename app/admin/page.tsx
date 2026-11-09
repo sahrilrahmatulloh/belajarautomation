@@ -1,26 +1,31 @@
 import { LayoutDashboard } from "lucide-react";
 
 import AdminSummary from "@/components/admin/AdminSummary";
+import AdminRealSwitch from "@/components/admin/real/AdminRealSwitch";
+import RealAdminDashboard from "@/components/admin/real/RealAdminDashboard";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import RoleGuidePage from "@/components/roles/RoleGuidePage";
 import { isDev } from "@/lib/env";
 
-// Antarmuka dengan data dummy hanya di DEV. Di luar DEV tetap halaman informasi (PRD FR-16).
-// PENTING: route ini WAJIB dilindungi otorisasi role "admin" di backend sebelum rilis (PRD 8.3).
-// Saat ini sengaja tanpa proteksi karena belum ada autentikasi; jangan menambahkan proteksi palsu di frontend.
+// Dashboard Admin (PRD FR-16 A).
+// - Akun sungguhan: data asli dari database (dijaga peran Admin dan verifikasi dua langkah di
+//   database), ditambah angka contoh berlabel untuk bagian yang belum punya backend.
+// - Akun demo: data dummy hanya di DEV, di luar DEV halaman informasi.
 export default function Page() {
   return (
     <DashboardLayout>
-      {isDev ? (
-        <AdminSummary />
-      ) : (
-        <RoleGuidePage
-          role="admin"
-          title="Ringkasan"
-          description="Pantau konten yang menunggu diterbitkan."
-          icon={LayoutDashboard}
-        />
-      )}
+      <AdminRealSwitch real={<RealAdminDashboard />}>
+        {isDev ? (
+          <AdminSummary />
+        ) : (
+          <RoleGuidePage
+            role="admin"
+            title="Dashboard"
+            description="Pantau pengguna, membership, dan alur konten."
+            icon={LayoutDashboard}
+          />
+        )}
+      </AdminRealSwitch>
     </DashboardLayout>
   );
 }

@@ -37,6 +37,17 @@ export interface AdminUserDetail extends Omit<AdminUserRow, "roles"> {
   memberships: AdminMembershipGrant[];
 }
 
+export interface AdminDashboardStats {
+  total_users: number;
+  new_users_7d: number;
+  active_users: number;
+  memberships: { pro: number; premium: number };
+  total_xp: number;
+  // Jumlah pengguna per rank, urut sama dengan RANKS di data/ranks.ts.
+  rank_counts: number[];
+  recent_actions: { action: string; reason: string | null; created_at: string; target_name: string | null; admin_name: string | null }[];
+}
+
 const MESSAGES: Record<string, string> = {
   bukan_admin: "Sesi Admin belum terverifikasi. Muat ulang halaman lalu masukkan kode authenticator.",
   alasan_wajib: "Alasan wajib diisi, minimal 5 karakter.",
@@ -61,6 +72,7 @@ async function call<T>(fn: string, args: Record<string, unknown>): Promise<Admin
 }
 
 export const adminApi = {
+  dashboardStats: (rankThresholds: number[]) => call<AdminDashboardStats>("admin_dashboard_stats", { p_rank_thresholds: rankThresholds }),
   searchUsers: (query: string) => call<AdminUserRow[]>("admin_search_users", { p_query: query }),
   getUser: (userId: string) => call<AdminUserDetail>("admin_get_user", { p_user: userId }),
   adjustXp: (userId: string, amount: number, reason: string) =>
@@ -68,6 +80,12 @@ export const adminApi = {
   grantMembership: (userId: string, tier: "pro" | "premium", days: number | null, reason: string) =>
     call<{ tier: MembershipTier; ends_at: string | null }>("admin_grant_membership", { p_user: userId, p_tier: tier, p_days: days, p_reason: reason }),
   revokeMembership: (userId: string, reason: string) => call<MembershipTier>("admin_revoke_membership", { p_user: userId, p_reason: reason }),
+};
+
+export const ADMIN_ACTION_LABEL: Record<string, string> = {
+  xp_correction: "Koreksi XP",
+  membership_grant: "Beri membership",
+  membership_revoke: "Cabut membership",
 };
 
 export const TIER_LABEL: Record<MembershipTier, string> = { basic: "Basic", pro: "Pro", premium: "Premium" };
