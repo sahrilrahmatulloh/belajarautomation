@@ -69,6 +69,22 @@ test.describe("Kustomisasi akun Supabase", () => {
       await expect(page.getByRole("button", { name: new RegExp(`^${name}`) })).toBeDisabled();
     }
   });
+
+  test("akun Premium dari database bisa memakai avatar berbayar dan melihat paketnya", async ({ page }) => {
+    const premium = { ...MOCK_STUDENT, membership: "premium" as const };
+    await mockSupabase(page, { accounts: [premium] });
+    await signInWithMock(page, premium);
+    const profile = new ProfilePage(page);
+    await profile.gotoTab("kustomisasi");
+
+    for (const name of PAID_AVATAR_NAMES) {
+      await expect(page.getByRole("button", { name: new RegExp(`^${name}`) })).toBeEnabled();
+    }
+
+    await page.goto("/membership");
+    const premiumCard = page.getByRole("article").filter({ has: page.getByRole("heading", { name: "Premium", exact: true }) });
+    await expect(premiumCard).toContainText("Paket kamu saat ini");
+  });
 });
 
 test.describe("Kustomisasi akun demo", () => {

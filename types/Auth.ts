@@ -1,3 +1,4 @@
+import { MembershipTier } from "./Membership";
 import { UserRole } from "./Role";
 
 export interface DummyAccount {
@@ -25,6 +26,8 @@ export interface Session {
   // Hanya akun Supabase: avatar dan tema pilihan; kosong berarti bawaan (PRD FR-12).
   avatarId?: string | null;
   themeId?: string | null;
+  // Hanya akun Supabase: membership yang berlaku dari database (PRD FR-10, FR-16 E).
+  membership?: MembershipTier;
   name: string;
   email: string;
   // Peran utama: menentukan halaman awal setelah login.

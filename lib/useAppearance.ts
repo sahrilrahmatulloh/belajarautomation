@@ -20,12 +20,12 @@ export interface Appearance {
 
 // Avatar dan tema yang sedang dipakai (PRD FR-12).
 // - Akun Supabase: pilihan tersimpan di akun; kosong berarti Kucing Putih dan tema bawaan.
-//   Membership belum tersambung ke backend (Fase 5), jadi tingkatnya Basic.
+//   Tingkat membership dari database (pemberian manual Admin atau pembayaran).
 // - Akun demo dan tamu: data dummy.
 export function useAppearance(): Appearance {
   const session = useSession();
   if (session?.source === "supabase") {
-    const tier: MembershipTier = "basic";
+    const tier: MembershipTier = session.membership ?? "basic";
     return {
       avatar: resolveAvatar(session.avatarId ?? DEFAULT_AVATAR_ID, tier),
       theme: resolveTheme(session.themeId ?? DEFAULT_THEME_ID, tier),

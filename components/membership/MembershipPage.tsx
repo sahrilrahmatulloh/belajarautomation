@@ -33,7 +33,9 @@ function ComparisonValue({ value }: { value: string | boolean }) {
 
 export default function MembershipPage() {
   const session = useSession();
-  const currentTier: MembershipTier = useAccountMembership(session?.userId, DUMMY_ACCOUNT.membership);
+  const demoTier: MembershipTier = useAccountMembership(session?.userId, DUMMY_ACCOUNT.membership);
+  // Akun sungguhan memakai membership dari database; akun demo memakai data dummy.
+  const currentTier: MembershipTier = session?.source === "supabase" ? (session.membership ?? "basic") : demoTier;
   const tiers = MEMBERSHIP_PLANS.map((plan) => plan.tier);
 
   return (

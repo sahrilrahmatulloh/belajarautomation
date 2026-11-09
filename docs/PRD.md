@@ -1,9 +1,13 @@
 # BELAJARAUTOMATION.COM
 ## Product Requirements Document (PRD)
-**Versi:** 2.39  
+**Versi:** 2.40  
 **Status:** Draft — Acuan Pengembangan Produk  
 **Platform:** Web Application  
 **Target Pengguna:** Pemula hingga praktisi QA, Software Testing, dan Programming
+
+### Perubahan di Versi 2.40
+- Koreksi XP dan pemberian membership manual untuk akun sungguhan tersedia di halaman Admin Pengguna, dengan alasan wajib dan riwayat (FR-16 D dan E).
+- Avatar dan tema berbayar terbuka sesuai membership yang tercatat di database (FR-12).
 
 ### Perubahan di Versi 2.39
 - Verifikasi dua langkah Admin untuk akun sungguhan: pendaftaran aplikasi authenticator lewat kode QR, lalu kode 6 digit setiap sesi sebelum halaman Admin terbuka (Bagian 8.3).
@@ -1626,6 +1630,7 @@ Menyediakan alat bagi Admin untuk mengelola konten, pengguna, transaksi, katalog
 ### D. Moderasi
 - Daftar akun yang ditandai otomatis karena pola XP tidak wajar, misalnya lonjakan XP harian di atas batas atau penyelesaian lesson yang terlalu cepat. Batas ditetapkan di Bagian 12.
 - Tindakan: **Abaikan**, **Koreksi XP** (alasan wajib; dicatat sebagai transaksi XP koreksi, bukan mengubah riwayat), atau **Sembunyikan dari leaderboard**.
+- Koreksi XP juga tersedia di detail pengguna (Pengguna dan Peran): jumlah positif menambah, negatif mengurangi, maksimal 100.000 per koreksi, dan total XP tidak boleh kurang dari 0. Rank, leaderboard, dan profil mengikuti total baru; naik rank karena koreksi tetap memunculkan popup perayaan (FR-05).
 - Riwayat tindakan moderasi per akun.
 
 ### E. Transaksi dan Hak Akses
@@ -1634,7 +1639,9 @@ Menyediakan alat bagi Admin untuk mengelola konten, pengguna, transaksi, katalog
 - Detail transaksi dengan timeline status. Status pembayaran hanya berubah dari payment gateway.
 - **Refund** dengan alasan wajib: transaksi berstatus Refund dan hak akses dari transaksi tersebut dicabut. Kebijakan refund ditetapkan di Bagian 12.
 - **Berikan hak akses manual** (membership, eBook, atau project) dengan alasan wajib, mis. kompensasi atau hadiah. Tercatat sebagai sumber "Pemberian manual" tanpa transaksi pembayaran.
-- **Cabut hak akses manual** dengan alasan wajib.
+  - Membership manual: paket Pro atau Premium dengan durasi 30 hari, 90 hari, 1 tahun, atau tanpa batas. Pemberian manual baru menggantikan pemberian manual yang masih berlaku. Alasan minimal 5 karakter.
+- **Cabut hak akses manual** dengan alasan wajib. Membership dari pembayaran tidak dicabut lewat aksi ini, melainkan lewat refund.
+- Membership yang berlaku langsung menentukan akses avatar dan tema berbayar, diperiksa di database saat pengguna menyimpan pilihan (FR-12).
 - Riwayat klaim kredit eBook dan project per pengguna.
 
 ### F. Produk Digital

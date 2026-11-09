@@ -96,6 +96,7 @@ interface AccountRow {
   theme_id?: string | null;
   status: "active" | "deactivated";
   roles: ("student" | "creator" | "reviewer" | "admin")[];
+  membership?: "basic" | "pro" | "premium";
 }
 
 // Peran tambahan yang dipakai sebagai mode awal, jika punya lebih dari satu.
@@ -116,6 +117,7 @@ function toSession(user: User, row: AccountRow): Session {
     pendingEmail: user.new_email ?? null,
     avatarId: row.avatar_id ?? null,
     themeId: row.theme_id ?? null,
+    membership: row.membership ?? "basic",
     role: extraRoles[0] ?? "user",
     roles,
   };
