@@ -5,7 +5,7 @@ import { resolveAvatar, resolveTheme } from "@/lib/appearance";
 
 export const DUMMY_APPEARANCE = {
   avatarId: "kucing-oren",
-  themeId: "mountain-workspace",
+  themeId: "kucing-fuji",
 };
 
 export const ACTIVE_AVATAR = resolveAvatar(DUMMY_APPEARANCE.avatarId, DUMMY_ACCOUNT.membership);

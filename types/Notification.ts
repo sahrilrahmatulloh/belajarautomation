@@ -1,15 +1,17 @@
-export type NotificationType =
-  | "course"
-  | "playground"
-  | "book"
-  | "system";
+import { UserRole } from "./Role";
+
+export type NotificationGroup = "progress" | "content" | "transaction" | "system" | "role";
 
 export interface Notification {
-  id: number;
+  id: string;
+  group: NotificationGroup;
+  // Hanya untuk notifikasi khusus role.
+  role?: UserRole;
   title: string;
-  description: string;
-  type: NotificationType;
-  time: string;
-  read: boolean;
+  body: string;
+  // Kosong berarti pengumuman yang dibuka di modal.
   href?: string;
+  // Format ISO.
+  createdAt: string;
+  read: boolean;
 }

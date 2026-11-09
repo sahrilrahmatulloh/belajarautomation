@@ -27,7 +27,7 @@ export default function CareerResourceCard({
         {isComingSoon && (
           <span className="flex items-center gap-1.5 rounded-full bg-muted px-3 py-1.5 text-xs font-medium text-muted-foreground">
             <Clock3 className="h-3.5 w-3.5" />
-            Coming Soon
+            Segera hadir
           </span>
         )}
       </div>

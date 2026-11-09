@@ -1,19 +1,25 @@
+"use client";
+
 import Image from "next/image";
 
-import { ACTIVE_AVATAR, ACTIVE_THEME } from "@/data/dummy/appearance";
+import ThemeBackdrop from "@/components/common/ThemeBackdrop";
+import { useAppearance } from "@/lib/useAppearance";
+import { useSession } from "@/lib/session";
 
 // Welcome Banner (PRD FR-01 bagian B): latar mengikuti tema banner aktif dan
 // avatar aktif tampil besar di kanan bawah, kecuali bila ilustrasi tema sudah
 // memuat karakter kucing sendiri.
 export default function WelcomeBanner() {
+  const { avatar, theme } = useAppearance();
+  const session = useSession();
+
   return (
     <section className="relative isolate flex flex-col overflow-hidden rounded-xl border border-border bg-card text-foreground shadow-sm sm:min-h-48 sm:flex-row sm:items-center lg:min-h-56">
       {/* Latar tema: strip di atas teks pada mobile, memenuhi banner mulai tablet */}
       <div className="relative -z-20 h-36 w-full sm:absolute sm:inset-0 sm:h-auto">
-        <Image
-          src={ACTIVE_THEME.image}
-          alt=""
-          fill
+        <ThemeBackdrop
+          image={theme.image}
+          video={theme.video}
           priority
           sizes="(min-width: 1024px) 75vw, 100vw"
           className="object-cover object-[75%_50%]"
@@ -31,9 +37,9 @@ export default function WelcomeBanner() {
         className="absolute inset-0 -z-10 hidden bg-gradient-to-r from-card from-20% via-card/80 via-45% to-transparent to-75% sm:block"
       />
 
-      {!ACTIVE_THEME.hasCharacter && (
+      {!theme.hasCharacter && (
         <Image
-          src={ACTIVE_AVATAR.image}
+          src={avatar.image}
           alt=""
           width={192}
           height={192}
@@ -48,7 +54,7 @@ export default function WelcomeBanner() {
         </p>
 
         <h1 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">
-          Halo, <span className="text-primary">Sobat QA!</span>
+          Halo, <span className="text-primary-accent">{session?.name}!</span>
         </h1>
 
         <p className="mt-2 text-sm leading-5 text-muted-foreground sm:text-base sm:leading-6">

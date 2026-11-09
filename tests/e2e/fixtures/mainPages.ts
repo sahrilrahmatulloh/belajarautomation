@@ -1,16 +1,22 @@
 import { expect, Locator, Page } from "@playwright/test";
 
+import { ArticlePage } from "../pages/ArticlePage";
 import { BasePage } from "../pages/BasePage";
+import { BlogPage } from "../pages/BlogPage";
 import { ChallengePage } from "../pages/ChallengePage";
 import { DashboardPage } from "../pages/DashboardPage";
 import { LeaderboardPage } from "../pages/LeaderboardPage";
+import { RankPage } from "../pages/RankPage";
 import { LearnPage } from "../pages/LearnPage";
 import { LessonPage } from "../pages/LessonPage";
+import { NotificationsPage } from "../pages/NotificationsPage";
 import { PlaygroundPage } from "../pages/PlaygroundPage";
 import { ProfilePage } from "../pages/ProfilePage";
 import { PublicProfilePage } from "../pages/PublicProfilePage";
 import { RoadmapPage } from "../pages/RoadmapPage";
-import { OWN_USERNAME } from "./testData";
+import { RoleDashboardPage } from "../pages/RoleDashboardPage";
+import { SettingsPage } from "../pages/SettingsPage";
+import { BLOG, OWN_USERNAME, Role } from "./testData";
 
 // Halaman memuat isinya di browser setelah sesi terbaca, jadi pemeriksaan
 // seluruh halaman (layout, aksesibilitas) harus menunggu isinya tampil dulu.
@@ -35,6 +41,7 @@ export const MAIN_PAGES: { name: string; open: (page: Page) => Promise<BasePage>
   { name: "Pengerjaan Test Case", open: (page) => open(new ChallengePage(page, "login-test-case"), (p) => p.answerInput) },
   { name: "Pengerjaan Locator", open: (page) => open(new ChallengePage(page, "locator-form-registrasi"), (p) => p.selectorPanel) },
   { name: "Leaderboard", open: (page) => open(new LeaderboardPage(page), (p) => p.topList.first()) },
+  { name: "Rank & XP", open: (page) => open(new RankPage(page), (p) => p.currentTier) },
   { name: "Profil", open: (page) => open(new ProfilePage(page), (p) => p.featuredAchievements) },
   {
     name: "Profil tab Aktivitas",
@@ -48,4 +55,41 @@ export const MAIN_PAGES: { name: string; open: (page: Page) => Promise<BasePage>
     name: "Profil publik",
     open: (page) => open(new PublicProfilePage(page, OWN_USERNAME), (p) => p.stats),
   },
+  { name: "Blog", open: (page) => open(new BlogPage(page), (p) => p.featuredLink) },
+  { name: "Artikel blog", open: (page) => open(new ArticlePage(page, BLOG.article.slug), (p) => p.heading) },
+  { name: "Notifikasi", open: (page) => open(new NotificationsPage(page), (p) => p.list) },
+  { name: "Pengaturan", open: (page) => open(new SettingsPage(page), (p) => p.notificationSection) },
 ];
+
+// Halaman yang dibuka dalam mode peran.
+export const ROLE_PAGES: { role: Exclude<Role, "user">; name: string; path: string }[] = [
+  { role: "creator", name: "Dashboard Creator", path: "/creator" },
+  { role: "creator", name: "Konten Saya", path: "/creator/konten" },
+  { role: "creator", name: "Buat Konten", path: "/creator/buat" },
+  { role: "creator", name: "Catatan Revisi", path: "/creator/revisi" },
+  { role: "creator", name: "Editor Artikel", path: "/creator/buat/artikel" },
+  { role: "creator", name: "Detail Catatan Revisi", path: "/creator/revisi/konten-bug-report" },
+  { role: "creator", name: "Profil Creator", path: "/profile" },
+  { role: "creator", name: "Ajakan Mode Belajar", path: "/membership" },
+  { role: "reviewer", name: "Dashboard Reviewer", path: "/reviewer" },
+  { role: "reviewer", name: "Antrean Review", path: "/reviewer/antrean" },
+  { role: "reviewer", name: "Halaman Review", path: "/reviewer/review/konten-pemula" },
+  { role: "reviewer", name: "Profil Reviewer", path: "/profile" },
+  { role: "admin", name: "Dashboard Admin", path: "/admin" },
+  { role: "admin", name: "Konten Admin", path: "/admin/konten" },
+  { role: "admin", name: "Pengguna dan Peran", path: "/admin/pengguna" },
+  { role: "admin", name: "Log Aktivitas Admin", path: "/admin/log" },
+  { role: "admin", name: "Transaksi", path: "/admin/transaksi" },
+  { role: "admin", name: "Produk Digital", path: "/admin/produk" },
+  { role: "admin", name: "Katalog Belajar", path: "/admin/katalog" },
+  { role: "admin", name: "Moderasi", path: "/admin/moderasi" },
+  { role: "admin", name: "Pengumuman", path: "/admin/pengumuman" },
+  { role: "admin", name: "Laporan", path: "/admin/laporan" },
+  { role: "admin", name: "Profil Admin", path: "/profile" },
+];
+
+export async function openRolePage(page: Page, role: Exclude<Role, "user">, path: string) {
+  await page.goto(path);
+  await expect(page.getByRole("main").getByRole("heading", { level: 1 })).toBeVisible();
+  return new RoleDashboardPage(page, role);
+}

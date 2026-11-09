@@ -9,7 +9,7 @@ export default function CareerHeader() {
 
       <div>
         <h1 className="text-3xl font-bold tracking-tight">
-          Career
+          Karier
         </h1>
 
         <p className="mt-1 text-muted-foreground">

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowLeft, Clock3, Crown, GraduationCap, ListChecks } from "lucide-react";
 
+import MaintenanceStartGuard from "@/components/maintenance/MaintenanceStartGuard";
 import { COURSES } from "@/data/courses";
 import { Challenge } from "@/types/Challenge";
 import { PublicChallengeDetail } from "@/types/ChallengeDetail";
@@ -47,7 +48,7 @@ export default function ChallengeWorkspace({ challenge, detail, locked }: Challe
       </Link>
 
       <header>
-        <span className="inline-flex items-center gap-1 rounded-full border border-primary/20 bg-card px-2.5 py-1 text-xs font-medium text-primary">
+        <span className="inline-flex items-center gap-1 rounded-full border border-primary/20 bg-card px-2.5 py-1 text-xs font-medium text-primary-accent">
           <TypeIcon className="h-3.5 w-3.5" aria-hidden="true" />
           {type.label}
         </span>
@@ -59,7 +60,7 @@ export default function ChallengeWorkspace({ challenge, detail, locked }: Challe
             <Link
               href={`/learn/${course.slug}`}
               aria-label={`Course: ${course.title}`}
-              className="inline-flex items-center gap-1.5 hover:text-primary"
+              className="inline-flex items-center gap-1.5 hover:text-primary-accent"
             >
               <GraduationCap className="h-4 w-4 shrink-0" aria-hidden="true" />
               {course.title}
@@ -92,13 +93,15 @@ export default function ChallengeWorkspace({ challenge, detail, locked }: Challe
           </p>
           <Link
             href="/membership"
-            className="inline-flex min-h-10 shrink-0 items-center justify-center rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground hover:bg-primary/90"
+            className="inline-flex min-h-10 shrink-0 items-center justify-center rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground hover:bg-primary-hover"
           >
             Lihat Membership
           </Link>
         </section>
       ) : (
-        <Body slug={challenge.slug} detail={detail} />
+        <MaintenanceStartGuard slug={challenge.slug}>
+          <Body slug={challenge.slug} detail={detail} />
+        </MaintenanceStartGuard>
       )}
     </div>
   );

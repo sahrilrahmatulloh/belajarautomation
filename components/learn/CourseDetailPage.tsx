@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 
 import {
@@ -13,23 +15,27 @@ import {
 } from "lucide-react";
 
 import ContentCover from "@/components/common/ContentCover";
-import { getCompletedLessonSlugs } from "@/lib/activity";
+import { COURSES } from "@/data/courses";
+import { useLessonProgress } from "@/lib/lessonProgress";
 import { AvailableCourse } from "@/types/Course";
 import { CourseDetail } from "@/types/CourseDetail";
 
 interface CourseDetailPageProps {
-  course: AvailableCourse;
+  // Slug, bukan objek course: ikonnya tidak bisa dioper dari Server Component.
+  courseSlug: string;
   detail: CourseDetail;
 }
 
 export default function CourseDetailPage({
-  course,
+  courseSlug,
   detail,
 }: CourseDetailPageProps) {
+  const course = COURSES.find((item) => item.slug === courseSlug) as AvailableCourse;
   const Icon = course.icon;
+  const { completedSlugs: completedSlugsIn } = useLessonProgress();
 
-  // Status selesai berasal dari riwayat aktivitas, sama dengan dashboard dan profil.
-  const completedSlugs = getCompletedLessonSlugs(course.slug);
+  // Status selesai berasal dari riwayat aktivitas dan progres pengguna, sama dengan dashboard dan profil.
+  const completedSlugs = completedSlugsIn(course.slug);
 
   const completedLessons = detail.modules
     .flatMap((module) => module.lessons)
@@ -127,7 +133,7 @@ export default function CourseDetailPage({
             </p>
             <Link
               href="/membership"
-              className="inline-flex min-h-10 shrink-0 items-center justify-center rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground hover:bg-primary/90"
+              className="inline-flex min-h-10 shrink-0 items-center justify-center rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground hover:bg-primary-hover"
             >
               Lihat Membership
             </Link>
@@ -137,7 +143,7 @@ export default function CourseDetailPage({
         <div className="mt-8">
           <div className="flex items-center justify-between text-sm">
             <span className="font-medium">
-              Progress Course
+              Progres Course
             </span>
 
             <span className="text-muted-foreground">
@@ -164,7 +170,7 @@ export default function CourseDetailPage({
       <section className="grid gap-4 md:grid-cols-2">
         <div className="rounded-3xl border border-border bg-card p-6">
           <h2 className="flex items-center gap-2 font-semibold">
-            <Target className="h-5 w-5 text-primary" />
+            <Target className="h-5 w-5 text-primary-accent" />
             Tujuan Pembelajaran
           </h2>
 
@@ -174,7 +180,7 @@ export default function CourseDetailPage({
                 key={objective}
                 className="flex items-start gap-3 text-sm leading-6 text-muted-foreground"
               >
-                <CheckCircle2 className="mt-1 h-4 w-4 shrink-0 text-primary" />
+                <CheckCircle2 className="mt-1 h-4 w-4 shrink-0 text-primary-accent" />
                 {objective}
               </li>
             ))}
@@ -183,7 +189,7 @@ export default function CourseDetailPage({
 
         <div className="rounded-3xl border border-border bg-card p-6">
           <h2 className="flex items-center gap-2 font-semibold">
-            <ListChecks className="h-5 w-5 text-primary" />
+            <ListChecks className="h-5 w-5 text-primary-accent" />
             Prasyarat
           </h2>
 
@@ -205,7 +211,7 @@ export default function CourseDetailPage({
       <section className="space-y-5">
         <div>
           <h2 className="text-2xl font-bold">
-            Course Content
+            Isi Course
           </h2>
 
           <p className="mt-1 text-muted-foreground">
@@ -255,7 +261,7 @@ export default function CourseDetailPage({
                   <div className="flex items-center gap-4 px-5 py-4 transition-colors hover:bg-accent">
                     <div className="shrink-0">
                       {completedSlugs.has(lesson.slug) ? (
-                        <CheckCircle2 role="img" aria-label="Selesai" className="h-5 w-5 text-primary" />
+                        <CheckCircle2 role="img" aria-label="Selesai" className="h-5 w-5 text-primary-accent" />
                       ) : (
                         <PlayCircle className="h-5 w-5 text-muted-foreground" />
                       )}

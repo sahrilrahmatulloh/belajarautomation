@@ -44,10 +44,10 @@ export default function PublicProfilePage({ profile }: { profile: PublicProfile 
       {profile.isCurrentUser && (
         <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-primary/30 bg-primary/[0.06] px-4 py-3 text-sm">
           <p className="flex items-center gap-2 font-medium">
-            <Eye className="h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
+            <Eye className="h-4 w-4 shrink-0 text-primary-accent" aria-hidden="true" />
             Ini tampilan profilmu bagi pengguna lain.
           </p>
-          <Link href="/profile" className="inline-flex items-center gap-1.5 font-medium text-primary hover:underline">
+          <Link href="/profile" className="inline-flex items-center gap-1.5 font-medium text-primary-accent hover:underline">
             <ArrowLeft className="h-4 w-4" aria-hidden="true" />
             Kembali ke profil
           </Link>
@@ -61,6 +61,7 @@ export default function PublicProfilePage({ profile }: { profile: PublicProfile 
         avatarImage={profile.avatarImage}
         avatarName={profile.avatarName}
         themeImage={profile.themeImage}
+        themeVideo={profile.themeVideo}
         xp={profile.xp}
         isOwner={false}
       />

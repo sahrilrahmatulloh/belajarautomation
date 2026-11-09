@@ -1,108 +1,95 @@
 import Link from "next/link";
-import ContentCover from "@/components/common/ContentCover";
+import { ChevronRight } from "lucide-react";
 
-import {
-  ArrowLeft,
-  Clock3,
-  CalendarDays,
-} from "lucide-react";
+import { toFilterSlug } from "@/lib/filters";
+import { Article, ArticleHeading } from "@/types/Article";
 
-import { Article } from "@/types/Article";
+import ArticleCard from "./ArticleCard";
+import ArticleDraftBadge from "./ArticleDraftBadge";
+import { ArticleCoverImage, ArticleCtaSection, ArticleHeader, ArticleSources } from "./ArticleParts";
+import { ArticleShareButton, ArticleShareSection } from "./ArticleShare";
+import { ArticleTocPanel, ArticleTocSidebar } from "./ArticleToc";
+import ArticleContent from "./mdx/ArticleContent";
 
 interface ArticleDetailPageProps {
   article: Article;
+  content: string;
+  headings: ArticleHeading[];
+  related: Article[];
 }
 
-export default function ArticleDetailPage({
-  article,
-}: ArticleDetailPageProps) {
+export default function ArticleDetailPage({ article, content, headings, related }: ArticleDetailPageProps) {
   return (
-    <article className="mx-auto max-w-4xl">
-      {/* Back */}
-      <Link
-        href="/blog"
-        className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
-      >
-        <ArrowLeft className="h-4 w-4" />
-        Kembali ke Blog
-      </Link>
+    <div className="mx-auto max-w-6xl">
+      <article>
+        <nav aria-label="Breadcrumb">
+          <ol className="flex flex-wrap items-center gap-1.5 text-sm text-muted-foreground">
+            <li>
+              <Link href="/blog" className="hover:text-foreground hover:underline">
+                Blog
+              </Link>
+            </li>
+            <li aria-hidden="true">
+              <ChevronRight className="h-3.5 w-3.5" />
+            </li>
+            <li>
+              <Link
+                href={`/blog?kategori=${toFilterSlug(article.category)}`}
+                className="hover:text-foreground hover:underline"
+              >
+                {article.category}
+              </Link>
+            </li>
+          </ol>
+        </nav>
 
-      {/* Header */}
-      <header className="mt-8">
-        <span className="inline-flex rounded-full bg-muted px-3 py-1.5 text-sm font-medium">
-          {article.category}
-        </span>
-
-        <h1 className="mt-5 text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">
-          {article.title}
-        </h1>
-
-        <p className="mt-5 text-lg leading-8 text-muted-foreground">
-          {article.excerpt}
-        </p>
-
-        <div className="mt-6 flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
-          <span>
-            Oleh {article.author}
-          </span>
-
-          <span className="flex items-center gap-1.5">
-            <CalendarDays className="h-4 w-4" />
-            {article.publishedAt}
-          </span>
-
-          <span className="flex items-center gap-1.5">
-            <Clock3 className="h-4 w-4" />
-            {article.readTime}
-          </span>
-        </div>
-      </header>
-
-      {/* Cover */}
-      <div className="relative mt-10 aspect-video overflow-hidden rounded-3xl border border-border bg-muted">
-        <ContentCover
-          src={article.cover}
-          title={article.title}
+        <ArticleHeader
           category={article.category}
-          kind="article"
-          className="object-cover"
+          title={article.title}
+          excerpt={article.excerpt}
+          author={article.author}
+          publishedAt={article.publishedAt}
+          updatedAt={article.updatedAt}
+          readingMinutes={article.readingMinutes}
+          badge={article.status === "draft" ? <ArticleDraftBadge /> : undefined}
+          action={<ArticleShareButton title={article.title} slug={article.slug} />}
         />
-      </div>
 
-      {/* Content */}
-      <div className="mt-12 space-y-10">
-        {article.content.map((section) => (
-          <section key={section.heading}>
-            <h2 className="text-2xl font-bold tracking-tight">
-              {section.heading}
-            </h2>
+        <div className="mt-6 grid gap-8 xl:grid-cols-[minmax(0,1fr)_15rem]">
+          <div className="min-w-0">
+            <ArticleCoverImage src={article.cover} title={article.title} category={article.category} />
 
-            <div className="mt-4 space-y-5">
-              {section.paragraphs.map(
-                (paragraph, index) => (
-                  <p
-                    key={index}
-                    className="text-base leading-8 text-muted-foreground"
-                  >
-                    {paragraph}
-                  </p>
-                )
-              )}
+            <ArticleTocPanel headings={headings} />
+
+            <div className="mt-8 min-w-0">
+              <ArticleContent content={content} />
             </div>
-          </section>
-        ))}
-      </div>
 
-      {/* Footer */}
-      <div className="mt-14 border-t border-border pt-8">
-        <Link
-          href="/blog"
-          className="inline-flex items-center gap-2 text-sm font-medium hover:underline"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          Lihat artikel lainnya
-        </Link>
-      </div>
-    </article>
+            <ArticleCtaSection cta={article.cta} />
+
+            <ArticleSources sources={article.sources} />
+
+            <ArticleShareSection title={article.title} slug={article.slug} />
+          </div>
+
+          <ArticleTocSidebar headings={headings} />
+        </div>
+      </article>
+
+      {related.length > 0 && (
+        <section aria-labelledby="artikel-terkait" className="mt-12 border-t border-border pt-8">
+          <h2 id="artikel-terkait" className="text-2xl font-bold tracking-tight">
+            Artikel Terkait
+          </h2>
+          <ul className="mt-4 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {related.map((item) => (
+              <li key={item.slug} className="min-w-0">
+                <ArticleCard article={item} />
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+    </div>
   );
 }

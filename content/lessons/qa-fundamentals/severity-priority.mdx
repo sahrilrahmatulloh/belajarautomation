@@ -1,0 +1,38 @@
+---
+status: draft
+author: "Tim BelajarAutomation"
+---
+
+{/* DATA DUMMY — hapus sebelum rilis. Draf contoh untuk pengujian di DEV; isi aslinya ditulis dan ditinjau Creator. */}
+
+Tidak semua bug sama pentingnya. Tim memakai **severity** dan **priority** untuk menentukan urutan perbaikan.
+
+## Severity
+
+Severity menunjukkan **seberapa besar dampak bug terhadap sistem**. Biasanya ditentukan QA.
+
+| Tingkat | Contoh |
+|---|---|
+| Critical | Aplikasi tidak bisa dibuka, data hilang |
+| Major | Fitur utama tidak berfungsi, misalnya checkout gagal |
+| Minor | Fitur berjalan tetapi ada gangguan kecil |
+| Trivial | Salah ketik, warna kurang sesuai |
+
+## Priority
+
+Priority menunjukkan **seberapa cepat bug harus diperbaiki**. Biasanya ditentukan product owner bersama tim.
+
+## Kombinasi
+
+| Kombinasi | Contoh |
+|---|---|
+| Severity tinggi, priority tinggi | Pembayaran gagal untuk semua pengguna |
+| Severity tinggi, priority rendah | Aplikasi crash di fitur yang jarang dipakai dan akan dihapus |
+| Severity rendah, priority tinggi | Salah ketik nama perusahaan di halaman utama |
+| Severity rendah, priority rendah | Jarak teks kurang rapi di halaman bantuan |
+
+<Tips>Severity menilai dampak teknis, priority menilai kepentingan bisnis. Keduanya tidak selalu sama.</Tips>
+
+## Ringkasan
+
+Severity mengukur dampak, priority mengukur urgensi. Gabungan keduanya menentukan bug mana yang diperbaiki lebih dulu.

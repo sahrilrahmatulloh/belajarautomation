@@ -5,6 +5,7 @@ import { ArrowRight, Library, ShoppingCart, Trash2 } from "lucide-react";
 
 import EmptyState from "@/components/common/EmptyState";
 import { cartActions, useCart } from "@/lib/cart";
+import { notify } from "@/lib/notify";
 import { formatRupiah } from "@/lib/format";
 
 import CartItemRow from "./CartItemRow";
@@ -67,7 +68,10 @@ export default function CartPage() {
                     action={
                       <button
                         type="button"
-                        onClick={() => cartActions.remove(product.id)}
+                        onClick={() => {
+                          cartActions.remove(product.id);
+                          notify.info(`${product.title} dihapus dari keranjang.`);
+                        }}
                         className="inline-flex items-center gap-1 rounded-md px-1.5 py-1 text-xs text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
                         aria-label={`Hapus ${product.title} dari keranjang`}
                       >
@@ -99,7 +103,7 @@ export default function CartPage() {
 
             <Link
               href="/checkout"
-              className="mt-5 flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
+              className="mt-5 flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary-hover"
             >
               Lanjut ke Pembayaran
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
@@ -107,7 +111,7 @@ export default function CartPage() {
 
             <Link
               href="/ebooks"
-              className="mt-2 flex min-h-10 w-full items-center justify-center text-sm font-medium text-primary hover:underline"
+              className="mt-2 flex min-h-10 w-full items-center justify-center text-sm font-medium text-primary-accent hover:underline"
             >
               Lanjut belanja
             </Link>

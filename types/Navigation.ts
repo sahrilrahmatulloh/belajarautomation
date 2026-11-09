@@ -6,4 +6,6 @@ export interface NavItem {
   // Kosong untuk menu yang belum tersedia.
   href?: string;
   comingSoon?: boolean;
+  // Judul kelompok; item pertama sebuah kelompok menampilkannya di atas menu.
+  group?: string;
 }

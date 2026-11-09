@@ -16,7 +16,7 @@ export default function BooksSection() {
           </p>
         </div>
 
-        <Link href="/ebooks" className="text-sm font-medium text-primary hover:underline">
+        <Link href="/ebooks" className="text-sm font-medium text-primary-accent hover:underline">
           Lihat semua eBook
         </Link>
       </div>

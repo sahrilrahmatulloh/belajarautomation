@@ -56,10 +56,12 @@ test.describe("Profil publik setelah login", () => {
     await expect(profile.stats).toBeHidden();
   });
 
-  test("username yang tidak ada menghasilkan 404", async ({ page }) => {
-    const response = await new PublicProfilePage(page, "pengguna-tidak-ada").goto();
+  test("username yang tidak ada menampilkan Profil tidak ditemukan", async ({ page }) => {
+    // Username di luar data dummy dicari di database akun sungguhan; bila tidak ada, tampil pesan ini.
+    await new PublicProfilePage(page, "pengguna-tidak-ada").goto();
 
-    expect(response?.status()).toBe(404);
+    await expect(page.getByRole("heading", { level: 1, name: "Profil tidak ditemukan" })).toBeVisible();
+    await expect(page.getByRole("link", { name: "Kembali ke Leaderboard" })).toHaveAttribute("href", "/leaderboard");
   });
 
   test('"Lihat sebagai publik" membuka profil sendiri dengan keterangan pemilik', async ({ page }) => {

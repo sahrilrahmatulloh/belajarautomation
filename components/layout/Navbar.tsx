@@ -1,11 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { Bell, Menu, SunMoon } from "lucide-react";
+import { Menu, SunMoon } from "lucide-react";
 import { useTheme } from "next-themes";
 
 import CartButton from "@/components/cart/CartButton";
+import NotificationBell from "@/components/notifications/NotificationBell";
 import ProfileDropdown from "@/components/profile/ProfileDropdown";
+import { useSession } from "@/lib/session";
+import { useHydrated } from "@/lib/useHydrated";
+import { useViewMode } from "@/lib/viewMode";
 
 interface NavbarProps {
   onToggleSidebar: () => void;
@@ -15,6 +19,9 @@ export default function Navbar({
   onToggleSidebar,
 }: NavbarProps) {
   const { resolvedTheme, setTheme } = useTheme();
+  const session = useSession();
+  const isHydrated = useHydrated();
+  const { isRoleMode } = useViewMode();
 
   const toggleTheme = () => {
     setTheme(
@@ -50,23 +57,37 @@ export default function Navbar({
           <SunMoon size={20} aria-hidden="true" />
         </button>
 
-        {/* Cart */}
-        <CartButton />
+        {session ? (
+          <>
+            {/* Cart, hanya di Mode Belajar (PRD FR-15) */}
+            {!isRoleMode && <CartButton />}
 
-        {/* Notifications */}
-        <Link
-          href="/notifications"
-          className="relative inline-flex h-11 w-11 items-center justify-center rounded-lg transition-colors duration-150 hover:bg-accent active:scale-95"
-          aria-label="Notifikasi"
-        >
-          <Bell size={20} />
+            {/* Notifications */}
+            <NotificationBell />
 
-          {/* Unread Badge */}
-          <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-primary ring-2 ring-background" />
-        </Link>
-
-        {/* User Profile Dropdown */}
-        <ProfileDropdown />
+            {/* User Profile Dropdown */}
+            <ProfileDropdown />
+          </>
+        ) : (
+          // Sesi baru terbaca di browser; ditunda agar pengguna yang sudah login tidak
+          // sekilas melihat tombol ini saat halaman dimuat.
+          isHydrated && (
+            <>
+              <Link
+                href="/login"
+                className="inline-flex min-h-10 items-center rounded-xl px-3 text-sm font-semibold transition-colors hover:bg-accent"
+              >
+                Masuk
+              </Link>
+              <Link
+                href="/register"
+                className="inline-flex min-h-10 items-center rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary-hover"
+              >
+                Daftar
+              </Link>
+            </>
+          )
+        )}
       </div>
     </header>
   );

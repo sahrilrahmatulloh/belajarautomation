@@ -14,7 +14,7 @@ export default function RecentActivity() {
     <section className="rounded-3xl border border-border bg-card p-6">
       <div className="flex items-baseline justify-between gap-3">
         <h2 className="text-xl font-bold">Aktivitas Terbaru</h2>
-        <Link href="/profile?tab=aktivitas" className="shrink-0 text-sm font-medium text-primary hover:underline">
+        <Link href="/profile?tab=aktivitas" className="shrink-0 text-sm font-medium text-primary-accent hover:underline">
           Lihat semua
         </Link>
       </div>

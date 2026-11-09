@@ -1,15 +1,27 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
-import { Cat, Check, ChevronRight, Eye, ImageIcon, Lock, Sparkles } from "lucide-react";
+import { Cat, Check, Eye, ImageIcon, ListFilter, Lock, Sparkles } from "lucide-react";
 
 import RankEmblem from "@/components/common/RankEmblem";
 import FilterChips from "@/components/filters/FilterChips";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import FilterEmptyState from "@/components/filters/FilterEmptyState";
-import { AVATARS, getAvatar } from "@/data/avatars";
+import { AVATAR_STYLES, AVATARS, getAvatar } from "@/data/avatars";
 import { DUMMY_ACCOUNT } from "@/data/dummy/account";
-import { ACTIVE_AVATAR, ACTIVE_THEME } from "@/data/dummy/appearance";
+import { useAccountXp } from "@/lib/lessonProgress";
+import { saveAppearance } from "@/lib/auth/profileActions";
+import { notify } from "@/lib/notify";
+import { useSession } from "@/lib/session";
+import { useAppearance } from "@/lib/useAppearance";
 import { getMembershipPlan } from "@/data/membership";
 import { getRank } from "@/data/ranks";
 import { getTheme, THEMES } from "@/data/themes";
@@ -21,20 +33,46 @@ import { BannerTheme, CatAvatar } from "@/types/Appearance";
 // dan pilihan yang sedang digunakan. Pilihan baru hanya mengubah pratinjau;
 // penyimpanan menunggu data akun tersedia di backend.
 type Section = "avatar" | "tema";
-type Ownership = "" | "dimiliki" | "terkunci";
+type Ownership = "semua" | "dimiliki" | "terkunci";
 
 const SECTIONS = [
   { value: "avatar" as const, label: "Avatar Kucing", icon: Cat },
   { value: "tema" as const, label: "Tema Banner", icon: ImageIcon },
 ];
 
-const OWNERSHIP_OPTIONS = [
-  { value: "", label: "Semua" },
+const OWNERSHIP_OPTIONS: { value: Ownership; label: string }[] = [
+  { value: "semua", label: "Semua" },
   { value: "dimiliki", label: "Dimiliki" },
   { value: "terkunci", label: "Terkunci" },
 ];
 
-const tier = DUMMY_ACCOUNT.membership;
+// Filter kepemilikan sebagai tombol ikon dengan dropdown (PRD FR-13). Titik biru menandai
+// filter yang sedang aktif selain Semua.
+function OwnershipFilter({ value, onChange }: { value: Ownership; onChange: (value: Ownership) => void }) {
+  const label = OWNERSHIP_OPTIONS.find((option) => option.value === value)?.label ?? "Semua";
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger className="relative inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-border bg-background text-muted-foreground transition-colors hover:bg-accent hover:text-foreground">
+        <span className="sr-only">Filter kepemilikan: {label}</span>
+        <ListFilter className="h-4 w-4" aria-hidden="true" />
+        {value !== "semua" && (
+          <span aria-hidden="true" className="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full bg-primary ring-2 ring-card" />
+        )}
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="w-44">
+        <DropdownMenuRadioGroup value={value} onValueChange={(next) => onChange(next as Ownership)}>
+          <DropdownMenuLabel>Kepemilikan</DropdownMenuLabel>
+          {OWNERSHIP_OPTIONS.map((option) => (
+            <DropdownMenuRadioItem key={option.value} value={option.value} closeOnClick>
+              {option.label}
+            </DropdownMenuRadioItem>
+          ))}
+        </DropdownMenuRadioGroup>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
+
 
 function unlockNote(item: CatAvatar | BannerTheme) {
   const plans = item.includedIn.map((planTier) => getMembershipPlan(planTier).name);
@@ -44,7 +82,7 @@ function unlockNote(item: CatAvatar | BannerTheme) {
 function StatusBadge({ isActive, isOwned }: { isActive: boolean; isOwned: boolean }) {
   if (isActive) {
     return (
-      <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
+      <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary-accent">
         <Check className="h-3 w-3" aria-hidden="true" />
         Digunakan
       </span>
@@ -94,7 +132,6 @@ function CollectionCard({
       onClick={onSelect}
       disabled={!isOwned}
       aria-pressed={isSelected}
-      aria-label={`${name}${isOwned ? "" : `, terkunci. ${lockNote}`}`}
       className={`relative flex flex-col overflow-hidden rounded-2xl border bg-card text-left transition-shadow disabled:cursor-not-allowed ${
         isSelected
           ? "border-primary ring-2 ring-primary/30"
@@ -130,108 +167,102 @@ function UpcomingCard({ label }: { label: string }) {
 }
 
 export default function ProfileCustomization() {
+  const session = useSession();
+  // Pilihan yang sedang dipakai: dari akun Supabase, atau data dummy untuk akun demo.
+  const { avatar: activeAvatar, theme: activeTheme, tier, canSave } = useAppearance();
   const [section, setSection] = useState<Section>("avatar");
-  const [ownership, setOwnership] = useState<Ownership>("");
-  const [avatarId, setAvatarId] = useState(ACTIVE_AVATAR.id);
-  const [themeId, setThemeId] = useState(ACTIVE_THEME.id);
+  const [ownership, setOwnership] = useState<Ownership>("semua");
+  const [avatarId, setAvatarId] = useState(activeAvatar.id);
+  // Gaya yang sedang dilihat di koleksi; awalnya gaya avatar yang sedang dipakai.
+  const [style, setStyle] = useState<string>(activeAvatar.style);
+  const [themeId, setThemeId] = useState(activeTheme.id);
+  const [isSaving, setIsSaving] = useState(false);
 
-  const avatar = getAvatar(avatarId) ?? ACTIVE_AVATAR;
-  const theme = getTheme(themeId) ?? ACTIVE_THEME;
-  const rank = getRank(DUMMY_ACCOUNT.xp);
-  const hasChanges = avatar.id !== ACTIVE_AVATAR.id || theme.id !== ACTIVE_THEME.id;
+  // Pilihan di pratinjau mengikuti akun setelah sesi termuat atau setelah disimpan.
+  useEffect(() => {
+    /* eslint-disable react-hooks/set-state-in-effect -- menyalin pilihan akun ke pratinjau saat akun berubah */
+    setAvatarId(activeAvatar.id);
+    setThemeId(activeTheme.id);
+    setStyle(activeAvatar.style);
+    /* eslint-enable react-hooks/set-state-in-effect */
+  }, [activeAvatar.id, activeAvatar.style, activeTheme.id]);
+
+  const avatar = getAvatar(avatarId) ?? activeAvatar;
+  const theme = getTheme(themeId) ?? activeTheme;
+  const xp = useAccountXp();
+  const rank = getRank(xp);
+  const hasChanges = avatar.id !== activeAvatar.id || theme.id !== activeTheme.id;
+
+  const handleSave = async () => {
+    setIsSaving(true);
+    const result = await saveAppearance(avatar.id, theme.id);
+    setIsSaving(false);
+    if (result.ok) notify.success("Pilihan avatar dan tema tersimpan.");
+    else notify.error(result.message);
+  };
 
   const matchesOwnership = (isOwned: boolean) =>
-    ownership === "" || (ownership === "dimiliki" ? isOwned : !isOwned);
+    ownership === "semua" || (ownership === "dimiliki" ? isOwned : !isOwned);
 
-  const avatars = AVATARS.filter((item) => matchesOwnership(canUseAvatar(item.id, tier)));
+  // Koleksi avatar dikelompokkan per gaya (PRD FR-13). Gaya yang belum punya gambar tetap
+  // tampil sebagai chip dengan keterangan "Segera hadir".
+  const styleAvatars = AVATARS.filter((item) => item.style === style);
+  const isStyleUpcoming = styleAvatars.length === 0;
+  const avatars = styleAvatars.filter((item) => matchesOwnership(canUseAvatar(item.id, tier)));
   const themes = THEMES.filter((item) => matchesOwnership(canUseTheme(item.id, tier)));
-  const avatarGroups = [...new Set(avatars.map((item) => item.catType))].map((catType) => ({
-    catType,
-    items: avatars.filter((item) => item.catType === catType),
+  const styleOptions = AVATAR_STYLES.map((name) => ({
+    value: name,
+    label: name,
+    note: AVATARS.some((item) => item.style === name) ? undefined : "Segera hadir",
   }));
-  const isEmpty = section === "avatar" ? avatars.length === 0 : themes.length === 0;
+  const isEmpty = section === "avatar" ? !isStyleUpcoming && avatars.length === 0 : themes.length === 0;
 
   return (
     <div className="grid gap-6 lg:grid-cols-[18rem_minmax(0,1fr)]">
       {/* Pratinjau dan pilihan aktif: di bawah koleksi pada mobile, dua kolom di tablet */}
-      <aside className="order-last grid gap-4 sm:order-none sm:grid-cols-2 lg:sticky lg:top-24 lg:grid-cols-1 lg:self-start">
+      <aside aria-label="Pratinjau profil" className="order-last lg:sticky lg:top-24 lg:order-none lg:self-start">
         <section aria-labelledby="pratinjau-profil" className="overflow-hidden rounded-2xl border border-border bg-card">
           <h2 id="pratinjau-profil" className="flex items-center gap-2 px-4 pb-3 pt-4 font-semibold">
-            <Eye className="h-4 w-4 text-primary" aria-hidden="true" />
+            <Eye className="h-4 w-4 text-primary-accent" aria-hidden="true" />
             Pratinjau Profil
           </h2>
           <div className="relative mx-4 h-24 overflow-hidden rounded-xl">
             <Image src={theme.thumbnail} alt="" fill sizes="288px" className="object-cover object-[75%_50%]" />
           </div>
           <div className="-mt-10 flex flex-col items-center px-4 pb-4 text-center">
-            <div className="relative rounded-2xl bg-white p-1 shadow-md">
-              <Image src={avatar.image} alt="" width={72} height={72} className="h-[72px] w-[72px]" />
+            <div className="relative rounded-full bg-white p-1 shadow-md">
+              <Image src={avatar.image} alt="" width={72} height={72} className="h-[72px] w-[72px] rounded-full" />
             </div>
-            <p className="mt-2 font-semibold">{DUMMY_ACCOUNT.name}</p>
+            <p className="mt-2 font-semibold">{session?.name ?? DUMMY_ACCOUNT.name}</p>
             <div className="mt-2 flex flex-wrap justify-center gap-2 text-xs">
               <span className="inline-flex items-center gap-1.5 rounded-full border border-border px-2.5 py-1">
                 <RankEmblem rank={rank} variant="compact" size={18} />
                 {rank.name}
               </span>
               <span className="rounded-full border border-border px-2.5 py-1 tabular-nums">
-                {formatNumber(DUMMY_ACCOUNT.xp)} XP
+                {formatNumber(xp)} XP
               </span>
             </div>
           </div>
-        </section>
 
-        <section aria-labelledby="digunakan-saat-ini" className="rounded-2xl border border-border bg-card p-4">
-          <h2 id="digunakan-saat-ini" className="text-sm font-semibold">Digunakan Saat Ini</h2>
-          <ul className="mt-3 space-y-2">
-            <li>
-              <button
-                type="button"
-                onClick={() => setSection("avatar")}
-                className="flex w-full items-center gap-3 rounded-xl border border-border p-2 text-left transition-colors hover:bg-accent"
-              >
-                <Image src={ACTIVE_AVATAR.image} alt="" width={40} height={40} className="h-10 w-10 shrink-0" />
-                <span className="min-w-0 flex-1">
-                  <span className="block text-sm font-medium">Avatar</span>
-                  <span className="block truncate text-xs text-muted-foreground">
-                    {ACTIVE_AVATAR.name} · {ACTIVE_AVATAR.style}
-                  </span>
-                </span>
-                <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden="true" />
-              </button>
-            </li>
-            <li>
-              <button
-                type="button"
-                onClick={() => setSection("tema")}
-                className="flex w-full items-center gap-3 rounded-xl border border-border p-2 text-left transition-colors hover:bg-accent"
-              >
-                <Image
-                  src={ACTIVE_THEME.thumbnail}
-                  alt=""
-                  width={60}
-                  height={40}
-                  className="h-10 w-[60px] shrink-0 rounded-md object-cover object-[75%_50%]"
-                />
-                <span className="min-w-0 flex-1">
-                  <span className="block text-sm font-medium">Tema</span>
-                  <span className="block truncate text-xs text-muted-foreground">{ACTIVE_THEME.name}</span>
-                </span>
-                <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden="true" />
-              </button>
-            </li>
-          </ul>
-
-          <button
-            type="button"
-            disabled
-            className="mt-4 w-full rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            Simpan Pilihan
-          </button>
-          <p className="mt-2 text-xs leading-5 text-muted-foreground">
-            {hasChanges ? "Pilihan baru baru tampil di pratinjau. " : ""}
-            Penyimpanan aktif setelah data akun dapat disimpan.
-          </p>
+          {/* Pilihan aktif ditandai "Digunakan" pada kartu koleksi (PRD FR-13). */}
+          <div className="border-t border-border p-4">
+            <button
+              type="button"
+              onClick={handleSave}
+              disabled={!canSave || !hasChanges || isSaving}
+              className="w-full rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {isSaving ? "Menyimpan..." : "Simpan Pilihan"}
+            </button>
+            <p className="mt-2 text-xs leading-5 text-muted-foreground">
+              {canSave
+                ? hasChanges
+                  ? "Pilihan baru tampil di pratinjau. Simpan untuk memakainya di semua halaman."
+                  : "Pilih avatar atau tema dari koleksi."
+                : "Akun demo tidak dapat menyimpan pilihan."}
+            </p>
+          </div>
         </section>
       </aside>
 
@@ -258,8 +289,8 @@ export default function ProfileCustomization() {
           })}
         </div>
 
-        <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-          <div>
+        <div className="mt-5 flex items-start justify-between gap-3">
+          <div className="min-w-0">
             <h2 id="judul-koleksi" className="text-lg font-bold">
               {section === "avatar" ? "Koleksi Avatar" : "Koleksi Tema"}
             </h2>
@@ -269,48 +300,51 @@ export default function ProfileCustomization() {
                 : "Pilih tema untuk banner profil dan Welcome Banner."}
             </p>
           </div>
-          <FilterChips
-            label="Kepemilikan"
-            layout="scroll"
-            options={OWNERSHIP_OPTIONS}
-            active={ownership}
-            onChange={(value) => setOwnership(value as Ownership)}
-          />
+          <OwnershipFilter value={ownership} onChange={setOwnership} />
         </div>
 
+        {section === "avatar" && (
+          <div className="mt-4">
+            <FilterChips label="Gaya avatar" layout="scroll" options={styleOptions} active={style} onChange={setStyle} />
+          </div>
+        )}
+
         <div className="mt-5">
-          {isEmpty ? (
+          {section === "avatar" && isStyleUpcoming ? (
+            <div className="flex flex-col items-center rounded-2xl border border-dashed border-border bg-card px-6 py-12 text-center">
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-primary-accent">
+                <Sparkles className="h-5 w-5" aria-hidden="true" />
+              </div>
+              <h3 className="mt-3 font-semibold">Gaya {style} segera hadir</h3>
+              <p className="mt-1 max-w-sm text-sm text-muted-foreground">
+                Kostum ini akan tersedia untuk semua jenis kucing di paket Pro dan Premium.
+              </p>
+            </div>
+          ) : isEmpty ? (
             <FilterEmptyState
               title={ownership === "terkunci" ? "Tidak ada item terkunci" : "Belum ada item"}
               description="Coba tampilkan semua item di koleksi ini."
-              onReset={() => setOwnership("")}
+              onReset={() => setOwnership("semua")}
             />
           ) : section === "avatar" ? (
-            <div className="space-y-5">
-              {avatarGroups.map((group) => (
-                <div key={group.catType}>
-                  <h3 className="mb-2 text-sm font-semibold capitalize text-muted-foreground">
-                    Kucing {group.catType}
-                  </h3>
-                  <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-4">
-                    {group.items.map((item) => (
-                      <CollectionCard
-                        key={item.id}
-                        name={item.name}
-                        detail={item.style}
-                        image={item.image}
-                        imageClassName="mx-auto aspect-square h-auto w-3/4 p-3"
-                        isOwned={canUseAvatar(item.id, tier)}
-                        isActive={item.id === ACTIVE_AVATAR.id}
-                        isSelected={item.id === avatar.id}
-                        lockNote={unlockNote(item)}
-                        onSelect={() => setAvatarId(item.id)}
-                      />
-                    ))}
-                    {ownership !== "terkunci" && <UpcomingCard label="Avatar lain segera hadir" />}
-                  </div>
-                </div>
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-4">
+              {avatars.map((item) => (
+                <CollectionCard
+                  key={item.id}
+                  name={item.name}
+                  detail={item.style}
+                  image={item.image}
+                  imageClassName="mx-auto aspect-square h-auto w-3/4 p-3"
+                  isOwned={canUseAvatar(item.id, tier)}
+                  isActive={item.id === activeAvatar.id}
+                  isSelected={item.id === avatar.id}
+                  lockNote={unlockNote(item)}
+                  onSelect={() => {
+                    setAvatarId(item.id);
+                  }}
+                />
               ))}
+              {ownership !== "terkunci" && <UpcomingCard label="Jenis kucing lain segera hadir" />}
             </div>
           ) : (
             <div className="grid grid-cols-1 gap-3 min-[480px]:grid-cols-2 xl:grid-cols-3">
@@ -321,10 +355,12 @@ export default function ProfileCustomization() {
                   image={item.thumbnail}
                   imageClassName="aspect-[3/1] h-auto w-full object-cover"
                   isOwned={canUseTheme(item.id, tier)}
-                  isActive={item.id === ACTIVE_THEME.id}
+                  isActive={item.id === activeTheme.id}
                   isSelected={item.id === theme.id}
                   lockNote={unlockNote(item)}
-                  onSelect={() => setThemeId(item.id)}
+                  onSelect={() => {
+                    setThemeId(item.id);
+                  }}
                 />
               ))}
               {ownership !== "terkunci" && <UpcomingCard label="Tema lain segera hadir" />}

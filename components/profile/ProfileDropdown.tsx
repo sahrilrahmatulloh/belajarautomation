@@ -16,21 +16,46 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { ROLE_LABELS } from "@/data/navigation";
-import { ACTIVE_AVATAR } from "@/data/dummy/appearance";
+import { ROLE_HOME, ROLE_LABELS } from "@/data/navigation";
+import { useAppearance } from "@/lib/useAppearance";
 import { sessionActions, useSession } from "@/lib/session";
+import { UserRole } from "@/types/Role";
+import { useViewMode, viewModeActions } from "@/lib/viewMode";
+
+const LEARNING_MODE = "belajar";
 
 export default function ProfileDropdown() {
+  const { avatar } = useAppearance();
   const router = useRouter();
   const session = useSession();
 
   const displayName = session?.name ?? "Tamu";
-  const displayStatus = session ? ROLE_LABELS[session.role] : "Belum masuk";
+  const { activeRole, extraRoles, hasRole, isRoleMode } = useViewMode();
+  const displayStatus = !session
+    ? "Belum masuk"
+    : hasRole && !isRoleMode
+      ? `${ROLE_LABELS[session.role]} · Mode Belajar`
+      : ROLE_LABELS[isRoleMode ? activeRole : session.role];
+
+  const switchMode = (mode: string) => {
+    if (!session) return;
+    if (mode === LEARNING_MODE) {
+      viewModeActions.switchToLearning(session.email);
+      router.push(ROLE_HOME.user);
+    } else {
+      const role = mode as UserRole;
+      viewModeActions.switchToRole(session.email, role);
+      router.push(ROLE_HOME[role]);
+    }
+  };
 
   const handleSignOut = () => {
     sessionActions.signOut();
@@ -41,10 +66,12 @@ export default function ProfileDropdown() {
     <DropdownMenu>
       <DropdownMenuTrigger
         className="flex min-h-11 min-w-11 items-center gap-3 rounded-xl p-1 transition-colors hover:bg-accent"
-        aria-label="Buka menu profil"
       >
-        <Avatar className="h-8 w-8 sm:h-10 sm:w-10">
-          <AvatarImage src={ACTIVE_AVATAR.image} alt="Foto profil" />
+        {/* Nama tombol memuat teks yang terlihat, agar pengguna perintah suara bisa menyebutnya. */}
+        <span className="sr-only">Buka menu profil</span>
+
+        <Avatar aria-hidden="true" className="h-8 w-8 sm:h-10 sm:w-10">
+          <AvatarImage src={avatar.image} alt="" />
           <AvatarFallback>
             BA
           </AvatarFallback>
@@ -62,6 +89,8 @@ export default function ProfileDropdown() {
       </DropdownMenuTrigger>
 
       <DropdownMenuContent
+        // Menu dirender di luar struktur halaman, jadi diberi landmark sendiri.
+        positionerProps={{ role: "navigation", "aria-label": "Menu profil" }}
         align="end"
         sideOffset={10}
         className="w-64"
@@ -84,7 +113,7 @@ export default function ProfileDropdown() {
             <DropdownMenuItem className="p-0">
               <Link
                 href="/login"
-                className="flex w-full items-center gap-2 px-2 py-1.5 font-medium text-primary"
+                className="flex w-full items-center gap-2 px-2 py-1.5 font-medium text-primary-accent"
               >
                 <LogIn className="h-4 w-4" />
                 Masuk
@@ -100,6 +129,25 @@ export default function ProfileDropdown() {
                 Daftar
               </Link>
             </DropdownMenuItem>
+
+            <DropdownMenuSeparator />
+          </>
+        )}
+
+        {/* Pengalih mode (PRD FR-15) */}
+        {session && hasRole && (
+          <>
+            <DropdownMenuRadioGroup value={isRoleMode ? activeRole : LEARNING_MODE} onValueChange={switchMode}>
+              <DropdownMenuLabel>Mode tampilan</DropdownMenuLabel>
+              <DropdownMenuRadioItem value={LEARNING_MODE} closeOnClick>
+                Mode Belajar
+              </DropdownMenuRadioItem>
+              {extraRoles.map((role) => (
+                <DropdownMenuRadioItem key={role} value={role} closeOnClick>
+                  Mode {ROLE_LABELS[role]}
+                </DropdownMenuRadioItem>
+              ))}
+            </DropdownMenuRadioGroup>
 
             <DropdownMenuSeparator />
           </>
@@ -127,16 +175,18 @@ export default function ProfileDropdown() {
           </Link>
         </DropdownMenuItem>
 
-        {/* Membership */}
-        <DropdownMenuItem className="p-0">
-          <Link
-            href="/membership"
-            className="flex w-full items-center gap-2 px-2 py-1.5"
-          >
-            <Crown className="h-4 w-4" />
-            Lihat Membership
-          </Link>
-        </DropdownMenuItem>
+        {/* Membership, hanya di Mode Belajar (PRD FR-15) */}
+        {!isRoleMode && (
+          <DropdownMenuItem className="p-0">
+            <Link
+              href="/membership"
+              className="flex w-full items-center gap-2 px-2 py-1.5"
+            >
+              <Crown className="h-4 w-4" />
+              Lihat Membership
+            </Link>
+          </DropdownMenuItem>
+        )}
 
         {session && (
           <>

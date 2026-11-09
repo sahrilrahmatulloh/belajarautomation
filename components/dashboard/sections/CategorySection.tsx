@@ -8,7 +8,7 @@ export default function CategorySection() {
       <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h2 className="text-2xl font-bold text-foreground">
-            Explore Categories
+            Jelajahi Kategori
           </h2>
 
           <p className="text-muted-foreground">
@@ -16,7 +16,7 @@ export default function CategorySection() {
           </p>
         </div>
 
-        <Link href="/learn" className="self-start text-sm font-medium text-primary hover:underline">
+        <Link href="/learn" className="self-start text-sm font-medium text-primary-accent hover:underline">
           Lihat semua materi
         </Link>
       </div>

@@ -4,17 +4,28 @@ import { expect, Locator, Page } from "@playwright/test";
 export abstract class BasePage {
   readonly environmentBadge: Locator;
   readonly profileMenuButton: Locator;
+  readonly cartLink: Locator;
 
   constructor(
     readonly page: Page,
     protected readonly path: string
   ) {
     this.environmentBadge = page.getByRole("status", { name: /^Lingkungan / });
-    this.profileMenuButton = page.getByRole("button", { name: "Buka menu profil" });
+    this.profileMenuButton = page.getByRole("button", { name: /^Buka menu profil/ });
+    this.cartLink = page.getByRole("banner").getByRole("link", { name: /^Keranjang/ });
   }
 
   async goto() {
     return this.page.goto(this.path);
+  }
+
+  modeOption(name: string) {
+    return this.page.getByRole("menuitemradio", { name });
+  }
+
+  async switchMode(name: string) {
+    await this.profileMenuButton.click();
+    await this.modeOption(name).click();
   }
 
   async logout() {

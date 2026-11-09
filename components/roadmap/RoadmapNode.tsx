@@ -86,7 +86,7 @@ export default function RoadmapNode({
         className={`relative z-10 flex h-10 w-10 items-center justify-center rounded-full border-2 bg-background ${
           isComingSoon || optional
             ? "border-dashed border-muted-foreground/50 text-muted-foreground"
-            : "border-primary text-primary"
+            : "border-primary text-primary-accent"
         }`}
       >
         <Icon className="h-5 w-5" aria-hidden="true" />
@@ -94,7 +94,7 @@ export default function RoadmapNode({
 
       <div className="min-w-0 rounded-2xl border border-border bg-card p-4">
         <div className="flex flex-wrap items-center gap-2">
-          <span className="text-xs font-semibold uppercase tracking-wider text-primary">
+          <span className="text-xs font-semibold uppercase tracking-wider text-primary-accent">
             Langkah {step}
           </span>
           <RoadmapCourseBadges course={course} optional={optional} />

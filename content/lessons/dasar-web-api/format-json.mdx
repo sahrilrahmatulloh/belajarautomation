@@ -1,0 +1,56 @@
+---
+status: draft
+author: "Tim BelajarAutomation"
+---
+
+{/* DATA DUMMY — hapus sebelum rilis. Draf contoh untuk pengujian di DEV; isi aslinya ditulis dan ditinjau Creator. */}
+
+Sebagian besar API modern mengirim data dalam format **JSON**. Saat menguji API, kamu akan membaca JSON setiap hari.
+
+## Pengertian
+
+**JSON (JavaScript Object Notation)** adalah format teks untuk menyimpan dan bertukar data. Strukturnya mudah dibaca manusia dan mudah diproses program.
+
+## Contoh JSON
+
+```json
+{
+  "id": 12,
+  "nama": "Sari",
+  "aktif": true,
+  "kelas": ["Playwright", "API Testing"],
+  "alamat": {
+    "kota": "Bandung"
+  },
+  "telepon": null
+}
+```
+
+## Aturan penulisan
+
+- Data dibungkus kurung kurawal dan berisi pasangan **nama: nilai**.
+- Nama properti dan nilai teks **wajib memakai tanda kutip ganda**.
+- Antarpasangan dipisah koma, tanpa koma setelah pasangan terakhir.
+
+## Tipe nilai
+
+| Tipe | Contoh |
+|---|---|
+| Teks (string) | "Sari" |
+| Angka | 12 |
+| Boolean | true atau false |
+| Array | ["Playwright", "API Testing"] |
+| Objek | Pasangan nama dan nilai di dalam kurung kurawal |
+| Kosong | null |
+
+<Peringatan>Tanda kutip tunggal dan nama properti tanpa kutip membuat JSON tidak valid, walaupun diterima di JavaScript biasa.</Peringatan>
+
+## Yang diperiksa QA
+
+- Nama properti sesuai dokumentasi API.
+- Tipe nilai benar, misalnya harga berupa angka, bukan teks.
+- Data wajib tidak bernilai null.
+
+## Ringkasan
+
+JSON memakai pasangan nama dan nilai dengan tanda kutip ganda. Pahami tipe nilainya agar mudah memeriksa response API.

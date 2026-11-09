@@ -41,19 +41,87 @@ Aturan alur:
 Pengaturan lingkungan:
 
 - Salin `.env.example` menjadi `.env.local`. Jika `NEXT_PUBLIC_APP_ENV` kosong, aplikasi memakai `dev`.
-- Fitur bantu pengembangan (mis. badge "Draf" pada course) hanya aktif di `dev`; cek lewat `isDev` dari `lib/env.ts`, bukan `NODE_ENV`.
+- Fitur bantu pengembangan hanya aktif di `dev`; cek lewat `isDev` dari `lib/env.ts`, bukan `NODE_ENV`.
+- Lesson dan course draf (beserta badge "Draf") tampil di `dev` dan `uat`, tetap tersembunyi di `production`; cek lewat `showsDraftLearning` dari `lib/env.ts`.
 - Label lingkungan tampil di pojok kiri bawah: "DEV" (oranye) dan "UAT" (ungu). Tidak tampil di `production`.
+- `NEXT_PUBLIC_SITE_URL` berisi alamat situs untuk Open Graph dan sitemap. Isi di Production saat domain sudah pasti; jika kosong, memakai alamat dari Vercel.
 - Di Vercel, isi `NEXT_PUBLIC_APP_ENV` per lingkungan (mis. per branch `develop` dan `uat`). Nilainya disisipkan saat build, jadi perubahan baru berlaku setelah deploy ulang.
+
+## Akun demo (DEV)
+
+Untuk mencoba setiap peran di lingkungan DEV, masuk di `/login` dengan akun berikut. Akun demo tidak ditampilkan di halaman masuk agar form tetap ringkas, dan tidak dapat dipakai di UAT maupun Production yang sudah memasang Supabase (PRD 4.5).
+
+| Peran | Email | Password |
+|---|---|---|
+| User (Pelajar) | `user@demo.belajarautomation.com` | `demo1234` |
+| Creator | `creator@demo.belajarautomation.com` | `demo1234` |
+| Reviewer | `reviewer@demo.belajarautomation.com` | `demo1234` |
+| Admin | `admin@demo.belajarautomation.com` | `demo1234` |
+
+Sumber datanya `data/dummy/accounts.ts`.
+
+## Database (Supabase)
+
+Rancangan dan tahapan ada di [`docs/DATABASE.md`](docs/DATABASE.md).
+
+| Lingkungan | Project Supabase |
+|---|---|
+| DEV | `belajarautomation-dev` |
+| UAT | `belajarautomation-uat` |
+| Production | Dibuat menjelang rilis |
+
+Struktur kode:
+
+- `lib/supabase/client.ts`: klien untuk komponen klien.
+- `lib/supabase/server.ts`: klien untuk Server Component, Server Action, dan Route Handler (`server-only`).
+- `proxy.ts`: menyegarkan sesi. Tamu tanpa cookie sesi tidak memicu panggilan ke Supabase.
+- `supabase/migrations/`: seluruh perubahan skema. Tabel tidak dibuat atau diubah lewat dashboard.
+
+Mengisi `.env.local`:
+
+- Isi `NEXT_PUBLIC_SUPABASE_URL` dan `NEXT_PUBLIC_SUPABASE_ANON_KEY` (publishable key) dari project DEV.
+- Agar XP tercatat, isi juga `SUPABASE_SERVICE_ROLE_KEY` (secret key) di `.env.local` dan Vercel. Kunci ini rahasia: tanpa awalan `NEXT_PUBLIC_` dan hanya dipakai di server.
+- Tanpa kedua variabel itu, aplikasi tetap berjalan dengan data dummy.
+
+Menjalankan migrasi (oleh pemilik akses Supabase):
+
+```bash
+npx supabase login          # sekali, token tersimpan di komputer sendiri
+npm run db:link             # pilih project yang dituju (DEV atau UAT)
+npm run db:push:dry         # melihat migrasi yang akan diterapkan, tanpa menerapkan
+npm run db:push             # menerapkan migrasi ke project yang di-link
+npm run db:types            # memperbarui types/supabase.ts dari skema
+```
+
+Aturan:
+
+- Kunci rahasia (secret key atau service_role) tidak pernah ditulis di repository, `.env.example`, atau variabel berawalan `NEXT_PUBLIC_`.
+- Migrasi yang sudah diterapkan tidak diubah. Perubahan berikutnya ditulis sebagai file migrasi baru.
+- Migrasi diterapkan ke DEV lebih dulu, lalu UAT, lalu Production.
+- Katalog avatar dan tema di database (`private.cosmetic_items`) harus sama dengan `data/avatars.ts` dan `data/themes.ts`. Menambah atau mengubah avatar/tema berarti juga menambah migrasi baru; `npm run check:cosmetics` (otomatis saat build) gagal bila keduanya berbeda.
+
+## Blog
+
+Artikel disimpan sebagai file MDX di `content/blog/`, dan menambah artikel tidak perlu mengubah kode aplikasi. Panduannya ada di [`docs/CONTENT_GUIDE.md`](docs/CONTENT_GUIDE.md).
 
 ## Testing
 
 Test end-to-end memakai [Playwright](https://playwright.dev) dan berjalan di dua project: `desktop-chromium` dan `mobile-chromium` (Pixel 7). CI GitHub Actions menjalankan lint, build, dan test ini pada setiap pull request dan push ke `develop`.
 
+Kapan menjalankan apa (PRD 13.4):
+
+| Tahap | Di lokal | Otomatis |
+|---|---|---|
+| Development (PR ke `develop`) | `npm run lint`, `npm run build`, dan spec yang berhubungan dengan perubahan | CI menjalankan lint, build, seluruh e2e, dan non-DEV di setiap PR |
+| Sebelum naik ke UAT dan regresi | `npm run test:e2e` dan `npm run test:e2e:non-dev` | — |
+
 Menjalankan di lokal:
 
 ```bash
 npx playwright install chromium   # sekali saja, setelah npm install
-npm run test:e2e                  # semua test
+npm run test:e2e                  # semua test (sebelum UAT dan regresi)
+npx playwright test tests/e2e/specs/profile.spec.ts   # satu spec, untuk development
+npm run test:e2e:non-dev          # perilaku di luar DEV, dengan build UAT sendiri
 npm run test:e2e:ui               # mode UI untuk men-debug test
 npm run test:e2e:report           # membuka laporan HTML test terakhir
 ```
@@ -61,12 +129,15 @@ npm run test:e2e:report           # membuka laporan HTML test terakhir
 - `npm run test:e2e` menjalankan `npm run build && npm run start` di port 3000, kecuali sudah ada server di port itu.
 - Bila server dev sedang berjalan, test akan memakai server dev tersebut. Untuk menguji hasil build, pakai port lain: `PORT=3100 npm run test:e2e` (Git Bash) atau `$env:PORT=3100; npm run test:e2e` (PowerShell).
 - Test label "DEV" mengharapkan `NEXT_PUBLIC_APP_ENV` bernilai `dev`.
+- Perilaku yang berbeda di luar DEV, mis. akun demo, artikel draf, dan lesson draf di UAT, ditulis di `tests/e2e/non-dev/`.
+- Build test diarahkan ke Supabase tiruan di `http://127.0.0.1:54399`, bukan project dari `.env.local`. Panggilan dari browser dijawab `mockSupabase(page)` di `fixtures/supabaseMock.ts`; panggilan dari server Next.js (Server Action pencatat XP) dijawab `tests/e2e/mock-supabase-server.mjs`, yang dijalankan otomatis oleh Playwright. Tidak ada data atau email sungguhan yang tersentuh. Test XP memakai `uniqueMockAccount()` agar progres tiap test terpisah. Build non-DEV dijalankan tanpa Supabase agar akun demo tetap dapat dipakai.
+- Bila test memakai server dev yang sudah berjalan, server itu membaca `.env.local` dan memakai Supabase DEV sungguhan. Untuk hasil yang konsisten, jalankan test di port lain.
 
 Struktur folder:
 
 ```text
 tests/e2e/
-├── fixtures/   # auth.ts (login per role), testData.ts (data test), mainPages.ts (halaman utama)
+├── fixtures/   # auth.ts (login per role), testData.ts (data test), mainPages.ts (halaman utama), supabaseMock.ts (Supabase tiruan)
 ├── pages/      # Page Object, satu kelas per halaman
 └── specs/      # skenario test per fitur
 ```

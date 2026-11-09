@@ -22,6 +22,25 @@ test.describe("Bagikan profil", () => {
     await expect(share.card).toHaveJSProperty("naturalHeight", 630);
   });
 
+  test("avatar di kartu memakai bingkai bulat, bukan kotak", async () => {
+    await expect(share.card).toHaveJSProperty("naturalWidth", 1200);
+
+    // Bingkai putih berpusat di (144, 136) dengan jari-jari 80. Titik di dalam lingkaran
+    // berwarna putih; sudut kotak pembungkusnya (68, 60) tidak, karena bingkainya bulat.
+    const pixels = await share.card.evaluate((img: HTMLImageElement) => {
+      const canvas = document.createElement("canvas");
+      canvas.width = img.naturalWidth;
+      canvas.height = img.naturalHeight;
+      const ctx = canvas.getContext("2d")!;
+      ctx.drawImage(img, 0, 0);
+      const at = (x: number, y: number) => Array.from(ctx.getImageData(x, y, 1, 1).data.slice(0, 3));
+      return { ring: at(144, 60), corner: at(68, 60) };
+    });
+
+    expect(pixels.ring).toEqual([255, 255, 255]);
+    expect(pixels.corner).not.toEqual([255, 255, 255]);
+  });
+
   test("mengunduh kartu sebagai file PNG", async ({ page }) => {
     await expect(share.card).toBeVisible();
 

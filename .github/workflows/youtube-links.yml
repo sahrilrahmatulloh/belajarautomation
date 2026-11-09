@@ -1,0 +1,24 @@
+name: Cek Video YouTube
+
+# Melaporkan video referensi yang dihapus, dijadikan privat, atau tidak bisa di-embed
+# (PRD FR-02 bagian G). Terpisah dari CI dan bukan required check.
+on:
+  schedule:
+    # Setiap Senin pukul 09.00 WIB.
+    - cron: "0 2 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+
+      - run: npm run check:youtube

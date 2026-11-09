@@ -14,6 +14,11 @@ interface CoursePageProps {
   }>;
 }
 
+// Disiapkan saat build dan disajikan dari CDN, bukan dirender ulang di server setiap kali dibuka.
+export function generateStaticParams() {
+  return COURSES.map((course) => ({ slug: course.slug }));
+}
+
 export default async function CoursePage({
   params,
 }: CoursePageProps) {
@@ -50,7 +55,7 @@ export default async function CoursePage({
   return (
     <DashboardLayout>
       <CourseDetailPage
-        course={course}
+        courseSlug={course.slug}
         detail={detail}
       />
     </DashboardLayout>

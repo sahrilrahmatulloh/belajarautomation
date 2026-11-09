@@ -15,13 +15,29 @@ export const ACCOUNTS: Record<Role, { name: string; email: string; home: string 
 
 export const ROLES = Object.keys(ACCOUNTS) as Role[];
 
-// Penanda sessionStorage bahwa splash sudah tampil (lib/splash.ts).
+// Penanda localStorage bahwa splash sudah tampil (lib/splash.ts).
 export const SPLASH_SEEN_KEY = "belajarautomation-splash-seen";
+
+// Popup promosi setelah login (data/promoPopups.ts, PRD 4.7).
+export const PROMO_DISMISSED_KEY = "belajarautomation-promo-dismissed";
+export const ACTIVE_PROMO_ID = "tema-neon-night-2026-11";
+export const ACTIVE_PROMO_TITLE = "Tema bergerak Neon Night";
 
 export const USER_RANK = "Apprentice";
 
 export const ACTIVE_AVATAR_NAME = "Kucing Oren";
-export const ACTIVE_THEME_NAME = "Mountain Workspace";
+
+// Koleksi avatar rilis awal (PRD FR-12).
+export const FREE_AVATAR_NAMES = ["Kucing Putih", "Kucing Oren"];
+export const PAID_AVATAR_NAMES = [
+  "Kucing Hitam",
+  "Kucing Tuxedo",
+  "Kucing Abu-abu",
+  "Kucing Coklat",
+  "Kucing Corak Tiga",
+  "Kucing Siam",
+];
+export const ACTIVE_THEME_NAME = "Penerbangan Fuji";
 
 export const OWN_USERNAME = "sobatqa";
 export const PUBLIC_USER = { username: "rina-kartika-1", displayName: "Rina Kartika" };
@@ -103,4 +119,325 @@ export const CHALLENGE_KEYS = {
       secrets: [],
     },
   ],
+} as const;
+
+// Notifikasi akun demo pada jam tetap: 16 November 2026 pukul 12.00 WIB (data/dummy/notifications.ts).
+export const NOTIFICATIONS = {
+  now: "2026-11-16T05:00:00Z",
+  timezone: "Asia/Jakarta",
+  preferencesKey: "belajarautomation-notification-preferences",
+  unreadLabel: "9+",
+  unreadWithoutContent: 5,
+  entryCount: 11,
+  transactionCount: 3,
+  newestTitle: "Latihan baru tersedia",
+  unavailableTitle: "Materi baru tersedia",
+  announcement: { title: "Jadwal maintenance", bodyPart: "Progres belajarmu tetap aman" },
+  merged: {
+    title: "3 course baru tersedia",
+    body: "Tersedia Playwright, Git & GitHub untuk QA, dan TypeScript untuk Tester.",
+    item: "Git & GitHub untuk QA",
+    href: "/learn/git-github",
+  },
+  targets: [
+    { title: "Latihan baru tersedia", href: "/playground/kuis-playwright" },
+    { title: "Pembayaran tertunda", href: "/membership" },
+    { title: "Membership aktif", href: "/membership" },
+    { title: "Lulus latihan", href: "/playground/playwright-locator" },
+    { title: "Naik rank", href: "/profile" },
+    { title: "Achievement diperoleh", href: "/profile?tab=pencapaian" },
+    { title: "Selamat datang", href: "/learn" },
+  ],
+  times: [
+    { title: "Latihan baru tersedia", time: "5 menit lalu" },
+    { title: "Membership aktif", time: "2 jam lalu" },
+    { title: "Lulus latihan", time: "16 jam lalu" },
+    { title: "3 course baru tersedia", time: "Kemarin, 10.15" },
+    { title: "Materi baru tersedia", time: "13 Nov, 14.22" },
+    { title: "Selamat datang", time: "19 Okt, 19.00" },
+  ],
+  dayHeadings: ["Hari ini", "Kemarin", /13 November 2026/, /10 November 2026/, /9 November 2026/, /19 Oktober 2026/],
+  roles: [
+    { role: "creator", title: "Cara Menulis Bug Report", href: "/creator/revisi/konten-bug-report", count: 7 },
+    { role: "reviewer", title: "Manual Testing vs Automation Testing", href: "/reviewer/review/konten-manual", count: 4 },
+    { role: "admin", title: "Konten siap diterbitkan", href: "/admin/konten?status=disetujui", count: 1 },
+  ],
+} as const;
+
+// Artikel di content/blog. Saat lingkungan DEV semua artikel tampil, termasuk draf.
+export const BLOG = {
+  articleCount: 10,
+  featuredTitle: "Roadmap Jadi QA Automation Engineer dari Nol (2026)",
+  newestCardTitle: "Apa Itu QA Engineer? Tugas, Skill, dan Gaji di Indonesia",
+  oldestTitle: "Manual Testing vs Automation Testing: Kapan Pakai yang Mana?",
+  outlineSlug: "severity-vs-priority",
+  search: { keyword: "bug report", title: "Cara Menulis Bug Report yang Disukai Developer" },
+  category: { name: "Manual Testing", slug: "manual-testing", count: 2 },
+  visibleCategories: ["Semua", "QA Fundamentals", "Manual Testing", "Automation Testing", "Career", "Tools dan teknologi"],
+  emptyCategories: ["API Testing", "Programming"],
+  article: {
+    slug: "locator-playwright-best-practice",
+    title: "Best Practice Locator di Playwright",
+    excerpt: "Panduan memilih locator Playwright agar test stabil, mudah dibaca, dan tidak mudah gagal saat tampilan berubah.",
+    category: "Automation Testing",
+    categorySlug: "automation-testing",
+    date: "28 Okt 2026",
+    cover: "/covers/courses/playwright.webp",
+    bodyText: "Mengapa Locator Penting?",
+    headings: [
+      "Pendahuluan",
+      "Mengapa Locator Penting?",
+      "Jenis-Jenis Locator",
+      "Best Practice Locator",
+      "Contoh Implementasi",
+      "Kesalahan Umum",
+      "Kesimpulan",
+    ],
+    tocTarget: { title: "Kesalahan Umum", id: "kesalahan-umum" },
+    firstCode: 'await page.getByLabel("Email").fill("qa@contoh.com");\nawait page.getByRole("button", { name: "Masuk" }).click();',
+    courseHref: "/learn/playwright",
+    practiceHref: "/playground/playwright-locator",
+    sourceCount: 2,
+    relatedFirst: "Playwright vs Selenium di 2026: Pilih yang Mana?",
+  },
+} as const;
+
+// Konten dummy akun Creator (data/dummy/contents.ts).
+export const CREATOR_DASHBOARD = {
+  statLabels: ["Draf", "Menunggu Review", "Perlu Revisi", "Disetujui", "Terbit"],
+  needsRevisionTitle: "Cara Menulis Bug Report",
+  draftTitle: "Apa Itu Quality Assurance?",
+  openRevisionCount: 2,
+} as const;
+
+// Pengalih mode dan tampilan per mode (PRD FR-15).
+export const ROLE_MODE = {
+  modes: [
+    { role: "creator", modeLabel: "Mode Creator" },
+    { role: "reviewer", modeLabel: "Mode Reviewer" },
+    { role: "admin", modeLabel: "Mode Admin" },
+  ],
+  learnerPaths: ["/cart", "/membership", "/leaderboard", "/rank", "/learn", "/playground", "/roadmap"],
+  promptTitle: "Halaman ini untuk Mode Belajar",
+  creatorStatLabels: ["Draf", "Menunggu Review", "Perlu Revisi", "Disetujui", "Terbit"],
+  publishedTitle: "Best Practice Locator di Playwright",
+  reviewerStats: [
+    { label: "Direview", value: "4" },
+    { label: "Disetujui", value: "2" },
+    { label: "Diminta Revisi", value: "2" },
+  ],
+  adminTasks: ["Menerbitkan konten yang sudah disetujui", "Mengelola peran pengguna"],
+  publicUsername: "sobatqa",
+  notifications: {
+    revision: { title: "Konten perlu revisi", href: "/creator/revisi/konten-bug-report", contentTitle: "Cara Menulis Bug Report" },
+    approved: { title: "Konten disetujui", href: "/creator/konten/konten-login", contentTitle: "Contoh Test Case Login yang Lengkap" },
+  },
+  googleDocsStages: ["Draf", "Menunggu Review", "Perlu Revisi", "Disetujui", "Terbit"],
+  writingStepCount: 7,
+  templateDisabledLabel: "Template sedang disiapkan. Hubungi Admin.",
+  creatorPages: [
+    { menu: "Konten Saya", path: "/creator/konten", title: "Konten Saya" },
+    { menu: "Buat Konten", path: "/creator/buat", title: "Buat Konten" },
+    { menu: "Catatan Revisi", path: "/creator/revisi", title: "Catatan Revisi" },
+  ],
+  guidePages: [
+    { role: "reviewer", menuName: "Menu Reviewer", menu: "Panduan Review", path: "/reviewer/panduan", heading: "Sementara, review dilakukan di Google Docs" },
+  ],
+} as const;
+
+// Data dummy pada halaman pratinjau video (data/dummy/videoReferensi.ts).
+export const VIDEO_REFERENSI = {
+  embedded: { id: "dummyVideo1", judul: "Video Contoh Berbahasa Indonesia", channel: "Channel Contoh", durasi: "12:34" },
+  english: { id: "dummyVideo2", judul: "Video Contoh Berbahasa Inggris" },
+  linkOnly: { id: "dummyVideo3", judul: "Video Contoh Tanpa Embed", channel: "Channel Tanpa Embed" },
+} as const;
+// Warna tombol utama berteks putih (PRD 15.2).
+export const COLORS = {
+  primaryButton: "rgb(37, 99, 235)",
+  white: "rgb(255, 255, 255)",
+};
+
+// Halaman yang diperiksa axe di luar MAIN_PAGES.
+export const GUEST_PAGES = [
+  { name: "Login", path: "/login" },
+  { name: "Daftar", path: "/register" },
+  { name: "Lupa password", path: "/forgot-password" },
+  { name: "Reset password", path: "/reset-password" },
+  { name: "Login dengan pesan verifikasi", path: "/login?auth=verified" },
+  { name: "Blog tamu", path: "/blog" },
+  { name: "Artikel tamu", path: "/blog/locator-playwright-best-practice" },
+  { name: "Artikel tidak ditemukan", path: "/blog/tidak-ada" },
+];
+
+export const LEARNER_PAGES = [
+  { name: "Detail Course", path: "/learn/playwright" },
+  { name: "Detail Roadmap", path: "/roadmap/qa-automation-web" },
+  { name: "Membership", path: "/membership" },
+  { name: "Keranjang", path: "/cart" },
+  { name: "Pembayaran", path: "/checkout" },
+  { name: "Profil kustomisasi", path: "/profile?tab=kustomisasi" },
+];
+
+// Contoh lesson berisi (content/lessons/dasar-web-api/client-server.mdx), course tanpa progres dummy.
+// Course QA Fundamental: seluruh lesson sudah punya isi draf, jadi bisa diselesaikan di DEV.
+export const QA_FUNDAMENTAL = {
+  courseSlug: "qa-fundamentals",
+  lessons: [
+    "apa-itu-quality-assurance",
+    "qa-vs-qc",
+    "peran-qa-engineer",
+    "sdlc",
+    "stlc",
+    "agile-scrum",
+    "jenis-software-testing",
+    "test-scenario",
+    "test-case",
+    "positive-negative-testing",
+    "apa-itu-bug",
+    "bug-report",
+    "severity-priority",
+    "bug-life-cycle",
+    "testing-dalam-project",
+    "qa-career-next-step",
+  ],
+} as const;
+
+// Course Dasar Web & API: seluruh lesson sudah punya isi draf.
+export const DASAR_WEB_API = {
+  courseSlug: "dasar-web-api",
+  lessons: [
+    "client-server",
+    "apa-itu-http",
+    "http-method",
+    "status-code",
+    "browser-dan-dom",
+    "format-json",
+    "mengenal-devtools",
+    "membaca-request-di-tab-network",
+  ],
+} as const;
+
+// Lesson yang belum punya isi ("Materi sedang ditulis").
+export const UNWRITTEN_LESSON = { courseSlug: "playwright", lessonSlug: "apa-itu-playwright" } as const;
+
+export const LESSON_CONTENT = {
+  courseSlug: "dasar-web-api",
+  courseTitle: "Dasar Web & API untuk QA",
+  moduleTitle: "Cara Kerja Web",
+  lessonSlug: "client-server",
+  lessonTitle: "Client & Server",
+  nextLessonSlug: "apa-itu-http",
+  totalLessons: 8,
+} as const;
+
+// Panel Admin (data/dummy/contents.ts dan users.ts, akun admin@).
+export const ADMIN_WORKSPACE = {
+  counts: { all: 12, approved: 1, byGalih: 4, byRahma: 5, newUsers: 2, reviewers: 2, creatorsWithoutAgreement: 1 },
+  summaryLinks: [
+    { label: "Draf", value: 3, url: "/admin/konten?status=draf", rows: 3 },
+    { label: "Menunggu Review", value: 4, url: "/admin/konten?status=menunggu-review", rows: 4 },
+    { label: "Perlu Revisi", value: 2, url: "/admin/konten?status=perlu-revisi", rows: 2 },
+    { label: "Disetujui", value: 1, url: "/admin/konten?status=disetujui", rows: 1 },
+    { label: "Terbit", value: 2, url: "/admin/konten?status=terbit", rows: 2 },
+    { label: "Belum Ditugaskan", value: 2, url: "/admin/konten?status=menunggu-review&reviewer=belum", rows: 2 },
+    { label: "Menunggu Lebih dari 3 Hari", value: 2, url: "/admin/konten?status=menunggu-review&lama=1", rows: 2 },
+    { label: "Pengguna Baru 7 Hari", value: 2, url: "/admin/pengguna?baru=1", rows: 2 },
+    { label: "Ditandai Moderasi", value: 3, url: "/admin/moderasi?status=terbuka", rows: 3 },
+    { label: "Transaksi Hari Ini", value: 2, url: "/admin/transaksi?hari=ini", rows: 2 },
+    { label: "Menunggu Pembayaran", value: 2, url: "/admin/transaksi?status=menunggu", rows: 2 },
+  ],
+  placeholderCards: ["Permintaan Refund"],
+  waitingTitle: "Pengenalan API Testing dengan Postman",
+  authorMultiRoleTitle: "Strategi Regression Testing",
+  approvedTitle: "Contoh Test Case Login yang Lengkap",
+  approvedAuthorId: "user-andi",
+  approvedAuthorName: "Andi Pratama",
+  publishedId: "konten-locator",
+  publishedTitle: "Best Practice Locator di Playwright",
+  adminId: "user-admin",
+  adminName: "Admin Belajar",
+  learnerId: "user-sobat",
+  learnerName: "Sobat QA",
+  // Peserta leaderboard pertama (data/dummy/leaderboard.ts).
+  leaderboardUserId: "user-1",
+  leaderboardUserName: "Rina Kartika",
+  axePaths: ["/admin", "/admin/konten", "/admin/pengguna", "/admin/pengguna/user-rahma", "/admin/log", "/admin/transaksi", "/admin/transaksi/trx-sobat-ebook", "/admin/transaksi/trx-sobat-pro", "/admin/produk", "/admin/katalog", "/admin/moderasi", "/admin/pengumuman", "/admin/laporan"],
+} as const;
+
+// Katalog dan Moderasi (data/catalogRules.json dan data/dummy/moderation.ts).
+export const ADMIN_PLATFORM = {
+  freeXp: "3.880",
+  masterXp: "5.500",
+  foundationCourse: "QA Fundamental",
+  studiedFreeCourse: "JavaScript",
+  unstudiedFreeCourse: "Cypress",
+  comingSoonDraftCourse: "Cypress",
+  readyTargetCourse: "Selenium",
+  flaggedUser: "Rina Kartika",
+  flaggedUserId: "user-1",
+  flaggedUserXp: "6.400",
+  correctedXp: "4.400",
+  rankBefore: "Master",
+  rankAfter: "Expert",
+  otherFlaggedUser: "Dimas Permana",
+} as const;
+
+// Transaksi dan produk (data/dummy/commerce.ts).
+export const ADMIN_COMMERCE = {
+  ownedTransactionId: "trx-sobat-ebook",
+  ownedEbookTitle: "Playwright from Zero to Hero",
+  ownedEbookSlug: "playwright-from-zero-to-hero",
+  pendingTransactionId: "trx-sobat-pro",
+  pendingTitle: "Membership Pro",
+  failedTransactionId: "trx-dewi-gagal",
+  refundedTransactionId: "trx-bima-project",
+  draftProductTitle: "Panduan Menyiapkan Test Data",
+  draftProductSlug: "panduan-test-data",
+  learnerId: "user-sobat",
+  allStatuses: ["Menunggu Pembayaran", "Berhasil", "Gagal", "Kedaluwarsa", "Refund"],
+} as const;
+
+// Ruang kerja Reviewer (data/dummy/contents.ts, akun reviewer@).
+export const REVIEWER_WORKSPACE = {
+  columns: ["Judul", "Jenis", "Creator", "Tanggal dikirim", "Kiriman", "Lama menunggu", "Aksi"],
+  counts: { assigned: 2, unassigned: 2, history: 4 },
+  assignedTitle: "Manual Testing vs Automation Testing",
+  firstRoundId: "konten-manual",
+  resubmittedId: "konten-pemula",
+  resubmittedTitle: "Mengenal Playwright untuk Pemula",
+  unassignedId: "konten-api",
+  unassignedTitle: "Pengenalan API Testing dengan Postman",
+  ownTitle: "Konten Tulisan Reviewer",
+  approvedId: "konten-login",
+  approvedTitle: "Contoh Test Case Login yang Lengkap",
+  draftId: "konten-qa",
+  axePaths: ["/reviewer", "/reviewer/antrean", "/reviewer/riwayat", "/reviewer/review/konten-pemula", "/reviewer/review/konten-login"],
+} as const;
+
+// Ruang kerja Creator (data/dummy/contents.ts, akun creator@).
+export const CREATOR_STUDIO = {
+  contentCount: 7,
+  pageSize: 5,
+  columns: ["Judul", "Jenis", "Kategori", "Status", "Terakhir diubah", "Reviewer", "Aksi"],
+  draftTitle: "Apa Itu Quality Assurance?",
+  reviewTitle: "Mengenal Playwright untuk Pemula",
+  revisionTitle: "Cara Menulis Bug Report",
+  revisionId: "konten-bug-report",
+  noteCount: 3,
+  noteAnchorLabel: "Bagian: Pembahasan",
+  noteAnchorHeading: "Pembahasan",
+  approvedTitle: "Contoh Test Case Login yang Lengkap",
+  publishedTitle: "Best Practice Locator di Playwright",
+  actionsByStatus: [
+    { title: "Apa Itu Quality Assurance?", actions: ["Kirim untuk Review", "Edit", "Hapus"] },
+    { title: "Mengenal Playwright untuk Pemula", actions: ["Lihat", "Tarik kembali"] },
+    { title: "Cara Menulis Bug Report", actions: ["Lihat catatan", "Edit"] },
+    { title: "Contoh Test Case Login yang Lengkap", actions: ["Lihat"] },
+    { title: "Best Practice Locator di Playwright", actions: ["Buat revisi", "Lihat di website"] },
+  ],
+  newArticle: { title: "Artikel Uji Ruang Kerja", excerpt: "Ringkasan uji.", category: "Career" },
+  // Gambar PNG 1x1 yang valid.
+  pngBase64: "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==",
+  videoIds: ["abcdefghij1", "abcdefghij2", "abcdefghij3"],
+  axePaths: ["/creator/konten", "/creator/buat", "/creator/buat/artikel", "/creator/buat/artikel?konten=konten-qa", "/creator/revisi", "/creator/revisi/konten-bug-report", "/creator/konten/konten-pemula"],
 } as const;

@@ -1,7 +1,7 @@
 # Kurikulum BelajarAutomation
 
-**Versi:** 2.1
-**Acuan:** `docs/PRD.md` v2.1 — FR-02 (Learning Center), FR-03 (Roadmap), FR-05 (XP dan Rank), FR-10 (Membership)
+**Versi:** 2.3
+**Acuan:** `docs/PRD.md` v2.13 — FR-02 (Learning Center), FR-03 (Roadmap), FR-05 (XP dan Rank), FR-07 (Blog), FR-10 (Membership)
 
 Dokumen ini adalah sumber acuan konten Learning Center dan Roadmap. Data di `data/` wajib mengikuti dokumen ini. Jika kurikulum berubah, perbarui dokumen ini lebih dulu, lalu sesuaikan data. Jika dokumen ini bertentangan dengan PRD, PRD yang berlaku.
 
@@ -58,6 +58,12 @@ Beginner, Intermediate, atau Advanced, sesuai kesiapan yang dibutuhkan untuk mem
 - Total target sekitar 206 lesson. Angka ini menjadi dasar perhitungan batas XP rank di PRD FR-05 (10 XP per lesson, 50 XP bonus course tuntas, ditambah XP kuis dan challenge).
 - Jika total lesson aktual berubah signifikan, batas XP rank wajib ditinjau ulang agar rank Master tetap dapat dicapai.
 
+### Format lesson
+- Teks adalah format utama; Creator hanya menulis teks (PRD FR-02 bagian F).
+- Isi lesson: teks dengan heading, blok kode, gambar/screenshot/GIF, kotak Tips dan Peringatan, tabel, dan kuis singkat opsional.
+- Referensi video YouTube opsional, maksimal 3 per lesson, mengikuti aturan PRD FR-02 bagian G. Lesson wajib lengkap tanpa video.
+- Prioritaskan referensi video untuk lesson yang butuh demo visual: instalasi tool, demo antarmuka (misalnya Katalon), dan debugging.
+
 ### Sampul
 - Course: `public/covers/courses/<slug>.webp`
 - Roadmap: `public/covers/roadmaps/<slug>.webp`
@@ -69,7 +75,7 @@ Beginner, Intermediate, atau Advanced, sesuai kesiapan yang dibutuhkan untuk mem
 
 | # | Slug | Judul | Kategori | Bahasa | Level | Target lesson | Status | Konten |
 |---|---|---|---|---|---|---|---|---|
-| 1 | qa-fundamentals | QA Fundamental | Fundamental | – | Beginner | 16 | available | draft |
+| 1 | qa-fundamentals | QA Fundamental | Fundamental | – | Beginner | 16 | available | ready |
 | 2 | dasar-web-api | Dasar Web & API untuk QA | Fundamental | – | Beginner | 8 | available | draft |
 | 3 | test-design | Test Design & Test Case | Manual Testing | – | Beginner | 8 | available | draft |
 | 4 | bug-reporting | Bug Reporting & Defect Management | Manual Testing | – | Beginner | 6 | available | draft |
@@ -80,7 +86,7 @@ Beginner, Intermediate, atau Advanced, sesuai kesiapan yang dibutuhkan untuk mem
 | 9 | typescript | TypeScript untuk Tester | Programming | TypeScript | Beginner | 8 | available | draft |
 | 10 | java | Java untuk Tester | Programming | Java | Beginner | 10 | coming-soon | draft |
 | 11 | python | Python untuk Tester | Programming | Python | Beginner | 10 | coming-soon | draft |
-| 12 | playwright | Playwright | Web Automation | TypeScript | Intermediate | 10 | available | draft |
+| 12 | playwright | Playwright | Web Automation | TypeScript | Intermediate | 10 | available | ready |
 | 13 | cypress | Cypress | Web Automation | JavaScript | Intermediate | 8 | coming-soon | draft |
 | 14 | selenium | Selenium WebDriver + TestNG | Web Automation | Java | Intermediate | 10 | coming-soon | draft |
 | 15 | cucumber | BDD dengan Cucumber | Web Automation | Java | Intermediate | 6 | coming-soon | draft |
@@ -95,9 +101,9 @@ Beginner, Intermediate, atau Advanced, sesuai kesiapan yang dibutuhkan untuk mem
 | 24 | dasar-ai-llm | Dasar AI & LLM | AI | – | Beginner | 6 | coming-soon | draft |
 | 25 | ai-for-testing | AI for Testing | AI | – | Intermediate | 8 | coming-soon | draft |
 
-**Ringkasan:** 8 course `available` (semuanya `draft`), 17 course `coming-soon`, total target 206 lesson.
+**Ringkasan:** 8 course `available` (2 `ready`, 6 `draft`), 17 course `coming-soon`, total target 206 lesson.
 
-> Isi lesson belum ditulis di course mana pun; data lesson baru berisi judul, slug, dan durasi. Halaman lesson menampilkan keterangan "Materi sedang ditulis" sampai isinya tersedia. Playwright saat ini memiliki 8 lesson dari target 10.
+> Status konten `ready` untuk QA Fundamental dan Playwright perlu diverifikasi: pastikan seluruh lesson benar-benar berisi materi, bukan placeholder. Playwright saat ini memiliki 8 lesson dari target 10.
 
 ---
 
@@ -196,3 +202,29 @@ Roadmap yang dapat dituntaskan saat rilis, jika ke-8 course `available` sudah `r
 3. postman dan sql-untuk-qa — melengkapi roadmap API Test Engineer dan QA Manual Engineer.
 4. test-management.
 5. Course lainnya sesuai kapasitas penulisan.
+
+---
+
+## 6. Blog rilis awal
+
+Artikel blog berfungsi sebagai pintu masuk dari mesin pencari menuju course, roadmap, dan latihan. Setiap artikel wajib mengarah ke course atau latihan yang **tersedia**, bukan yang berstatus Segera hadir.
+
+| # | Judul | Kategori | Ajakan menuju |
+|---|---|---|---|
+| 1 | Roadmap Jadi QA Automation Engineer dari Nol (2026) | Career | Halaman Roadmap |
+| 2 | Apa Itu QA Engineer? Tugas, Skill, dan Gaji di Indonesia | Career | Course qa-fundamentals |
+| 3 | Contoh Test Case Login yang Lengkap (Positif dan Negatif) | Manual Testing | Course test-design, latihan login-test-case |
+| 4 | Cara Menulis Bug Report yang Disukai Developer | Manual Testing | Course bug-reporting, latihan Bug Hunt |
+| 5 | Severity vs Priority: Bedanya dan Contoh Kasusnya | QA Fundamentals | Course bug-reporting |
+| 6 | Playwright vs Selenium di 2026: Pilih yang Mana? | Automation Testing | Course playwright |
+| 7 | Best Practice Locator di Playwright | Automation Testing | Course playwright, latihan Locator Challenge |
+| 8 | Memakai ChatGPT untuk Membuat Test Case: Bisa, tapi Ini Batasannya | Tools dan teknologi | Course test-design |
+| 9 | Cara Membangun Portfolio QA Automation | Career | Roadmap qa-automation-web |
+| 10 | Manual Testing vs Automation Testing: Kapan Pakai yang Mana? | QA Fundamentals | Roadmap qa-manual-engineer dan qa-automation-web |
+
+Ketentuan:
+- Urutan penulisan dan penerbitan mengikuti nomor. Prioritas tertinggi: 1, 3, 4, 6, dan 7.
+- Artikel yang mengarah ke course Segera hadir (mis. Appium, API Testing dengan Postman) ditunda sampai course tersebut tersedia.
+- Artikel dummy lama "Memulai Mobile Automation dengan Appium", "Kenapa QA Engineer Harus Memahami API Testing?", dan "Masa Depan QA Automation di 2026" tidak termasuk rilis awal.
+- Konten mengikuti prinsip kualitas PRD Bagian 16: boleh dibantu AI, wajib ditinjau, contoh kode diuji, dan klaim realistis (termasuk informasi gaji yang menyebutkan sumber dan tahun data).
+- Setelah rilis, target realistis 2 artikel per bulan.

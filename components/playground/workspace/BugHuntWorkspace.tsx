@@ -3,10 +3,15 @@
 import { useState, useTransition } from "react";
 
 import { submitBugHunt } from "@/app/playground/[slug]/actions";
+import PendingSubmitNotice from "@/components/maintenance/PendingSubmitNotice";
+import { useProtectedSubmit } from "@/components/maintenance/useProtectedSubmit";
 import PracticePage from "@/components/practice/PracticePage";
-import { recordChallengeAttempt } from "@/lib/challengeAttempts";
+import { useRecordChallengeAttempt } from "@/lib/challengeAttempts";
+import { useChallengeDraft } from "@/lib/challengeDrafts";
+import { useChallengeTimer } from "@/lib/challengeTimer";
 import { BugFinding, BugHuntResult, PublicChallengeDetail } from "@/types/ChallengeDetail";
 
+import ChallengeTimer from "./ChallengeTimer";
 import ResultSummary from "./ResultSummary";
 import SubmitError from "./SubmitError";
 
@@ -33,42 +38,60 @@ function FindingGroup({ title, items }: { title: string; items: BugFinding[] }) 
 }
 
 export default function BugHuntWorkspace({ slug, data }: { slug: string; data: BugHuntData }) {
-  const [selected, setSelected] = useState<string[]>([]);
-  const [outcome, setOutcome] = useState<{ result: BugHuntResult; xp: number } | null>(null);
+  const recordAttempt = useRecordChallengeAttempt();
+  const draft = useChallengeDraft<string[]>(slug, [], (state) => `${state.length} temuan ditandai`);
+  const selected = draft.state;
+  const [outcome, setOutcome] = useState<{ result: BugHuntResult; xp: number; timedOut: boolean } | null>(null);
   const [attempt, setAttempt] = useState(0);
   const [failed, setFailed] = useState(false);
   const [isPending, startTransition] = useTransition();
 
   const toggle = (id: string) =>
-    setSelected((current) => (current.includes(id) ? current.filter((item) => item !== id) : [...current, id]));
+    draft.setState((current) => (current.includes(id) ? current.filter((item) => item !== id) : [...current, id]));
 
-  const submit = () => {
+  // Waktu habis: temuan yang sudah dicentang langsung dikirim.
+  const timer = useChallengeTimer({
+    slug,
+    type: "bug-hunt",
+    running: !outcome,
+    onExpire: () => {
+      if (!isPending) submit(true);
+    },
+  });
+
+  const submit = (timedOut = false) => {
     setFailed(false);
     startTransition(async () => {
       try {
         const result = await submitBugHunt(slug, selected);
         if (!result) return setFailed(true);
-        setOutcome({ result, xp: recordChallengeAttempt(slug, "bug-hunt", result) });
+        setOutcome({ result, xp: recordAttempt(slug, "bug-hunt", result), timedOut });
+        draft.clear();
+        timer.stop();
       } catch {
         setFailed(true);
       }
     });
   };
 
+  const protectedSubmit = useProtectedSubmit(draft, () => submit());
+
   const retry = () => {
     setOutcome(null);
-    setSelected([]);
+    draft.clear();
+    timer.restart();
     // Mengulang juga mengembalikan halaman latihan ke keadaan awal.
     setAttempt((value) => value + 1);
   };
 
   return (
     <div className="space-y-4">
+      {!outcome && <ChallengeTimer remaining={timer.remaining} limitMinutes={timer.limitMinutes} isPaused={timer.isPaused} />}
       {outcome && (
         <ResultSummary
           result={outcome.result}
           xp={outcome.xp}
-          detail={`${outcome.result.found.length} bug ditemukan, ${outcome.result.missed.length} terlewat, ${outcome.result.falsePositives.length} salah tandai.`}
+          detail={`${outcome.timedOut ? "Waktu habis, temuan dikirim otomatis. " : ""}${outcome.result.found.length} bug ditemukan, ${outcome.result.missed.length} terlewat, ${outcome.result.falsePositives.length} salah tandai.`}
           onRetry={retry}
         />
       )}
@@ -109,11 +132,12 @@ export default function BugHuntWorkspace({ slug, data }: { slug: string; data: B
             </div>
 
             {failed && <SubmitError />}
+            {draft.isPendingSubmit && <PendingSubmitNotice />}
             <button
               type="button"
-              disabled={selected.length === 0 || isPending}
-              onClick={submit}
-              className="min-h-11 w-full rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground transition-colors enabled:hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50"
+              disabled={selected.length === 0 || isPending || draft.isPendingSubmit}
+              onClick={protectedSubmit}
+              className="min-h-11 w-full rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground transition-colors enabled:hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50"
             >
               {isPending ? "Mengirim..." : "Kirim temuan"}
             </button>

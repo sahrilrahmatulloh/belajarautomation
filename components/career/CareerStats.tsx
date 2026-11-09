@@ -8,12 +8,12 @@ import { CAREER_RESOURCES } from "@/data/careerResources";
 
 const stats = [
   {
-    label: "Career Resources",
+    label: "Sumber Karier",
     value: String(CAREER_RESOURCES.length),
     icon: BookOpenCheck,
   },
   {
-    label: "Available Resources",
+    label: "Sumber Tersedia",
     value: String(
       CAREER_RESOURCES.filter(
         (resource) => resource.status === "available"
@@ -22,8 +22,8 @@ const stats = [
     icon: BriefcaseBusiness,
   },
   {
-    label: "Career Goal",
-    value: "Job Ready",
+    label: "Tujuan Karier",
+    value: "Siap Kerja",
     icon: Target,
   },
 ];

@@ -3,9 +3,14 @@
 import { useState, useTransition } from "react";
 
 import { revealTestCase, submitTestCaseCheck } from "@/app/playground/[slug]/actions";
-import { recordChallengeAttempt } from "@/lib/challengeAttempts";
+import PendingSubmitNotice from "@/components/maintenance/PendingSubmitNotice";
+import { useProtectedSubmit } from "@/components/maintenance/useProtectedSubmit";
+import { useRecordChallengeAttempt } from "@/lib/challengeAttempts";
+import { useChallengeDraft } from "@/lib/challengeDrafts";
+import { useChallengeTimer } from "@/lib/challengeTimer";
 import { ChallengeScore, PublicChallengeDetail, TestCaseReveal } from "@/types/ChallengeDetail";
 
+import ChallengeTimer from "./ChallengeTimer";
 import ResultSummary from "./ResultSummary";
 import SubmitError from "./SubmitError";
 
@@ -20,10 +25,13 @@ Langkah:
 Hasil yang diharapkan: ...`;
 
 const primaryButton =
-  "min-h-11 w-full rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground transition-colors enabled:hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50";
+  "min-h-11 w-full rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground transition-colors enabled:hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50";
 
 export default function TestCaseWorkspace({ slug, data }: { slug: string; data: TestCaseData }) {
-  const [answer, setAnswer] = useState("");
+  const recordAttempt = useRecordChallengeAttempt();
+  const draft = useChallengeDraft(slug, "", () => "jawaban test case tertulis");
+  const answer = draft.state;
+  const setAnswer = draft.setState;
   const [reveal, setReveal] = useState<TestCaseReveal | null>(null);
   const [checked, setChecked] = useState<string[]>([]);
   const [outcome, setOutcome] = useState<{ result: ChallengeScore; xp: number } | null>(null);
@@ -41,10 +49,22 @@ export default function TestCaseWorkspace({ slug, data }: { slug: string; data: 
     });
   };
 
-  const submitAnswer = () =>
+  // Waktu hanya untuk menulis jawaban. Saat habis, jawaban yang tertulis langsung dikirim dan
+  // penilaian mandiri dengan checklist dikerjakan tanpa batas waktu.
+  const timer = useChallengeTimer({
+    slug,
+    type: "test-case",
+    running: !reveal,
+    onExpire: () => {
+      if (!isPending) submitAnswer(true);
+    },
+  });
+
+  const submitAnswer = (timedOut = false) =>
     run(async () => {
-      const revealed = await revealTestCase(slug, answer);
+      const revealed = await revealTestCase(slug, answer, timedOut);
       setReveal(revealed);
+      if (revealed) timer.stop();
       return Boolean(revealed);
     });
 
@@ -52,21 +72,27 @@ export default function TestCaseWorkspace({ slug, data }: { slug: string; data: 
     run(async () => {
       const result = await submitTestCaseCheck(slug, checked);
       if (!result) return false;
-      setOutcome({ result, xp: recordChallengeAttempt(slug, "test-case", result) });
+      setOutcome({ result, xp: recordAttempt(slug, "test-case", result) });
+      draft.clear();
       return true;
     });
 
+  const protectedSubmitAnswer = useProtectedSubmit(draft, () => submitAnswer());
+
   const retry = () => {
-    setAnswer("");
+    draft.clear();
     setReveal(null);
     setChecked([]);
     setOutcome(null);
+    timer.restart();
   };
 
   return (
     <div className="space-y-4">
+      {!reveal && <ChallengeTimer remaining={timer.remaining} limitMinutes={timer.limitMinutes} isPaused={timer.isPaused} />}
       {outcome && reveal && (
         <ResultSummary
+          givesXp={false}
           result={outcome.result}
           xp={outcome.xp}
           detail={`${checked.length} dari ${reveal.checklist.length} poin kamu centang. Lulus jika semua poin wajib tercentang.`}
@@ -88,7 +114,9 @@ export default function TestCaseWorkspace({ slug, data }: { slug: string; data: 
           <div className="grid gap-4 md:grid-cols-2">
             <section aria-label="Jawaban kamu" className="min-w-0 rounded-2xl border border-border bg-card p-4 sm:p-5">
               <h2 className="font-semibold">Jawaban kamu</h2>
-              <p className="mt-2 whitespace-pre-wrap break-words text-sm leading-6">{answer}</p>
+              <p className="mt-2 whitespace-pre-wrap break-words text-sm leading-6">
+                {answer.trim() ? answer : <span className="text-muted-foreground">Tidak ada jawaban sampai waktu habis.</span>}
+              </p>
             </section>
             <section aria-label="Contoh jawaban" className="min-w-0 rounded-2xl border border-border bg-card p-4 sm:p-5">
               <h2 className="font-semibold">Contoh jawaban</h2>
@@ -146,7 +174,7 @@ export default function TestCaseWorkspace({ slug, data }: { slug: string; data: 
               Tulis test case kamu
             </label>
             <p className="mt-1 text-xs text-muted-foreground">Contoh format:</p>
-            <pre className="mt-1 overflow-x-auto rounded-xl bg-muted/60 p-3 text-xs leading-5 text-muted-foreground">
+            <pre tabIndex={0} className="mt-1 overflow-x-auto rounded-xl bg-muted/60 p-3 text-xs leading-5 text-muted-foreground">
               {FORMAT_EXAMPLE}
             </pre>
           </div>
@@ -161,7 +189,8 @@ export default function TestCaseWorkspace({ slug, data }: { slug: string; data: 
           />
 
           {failed && <SubmitError />}
-          <button type="button" disabled={!answer.trim() || isPending} onClick={submitAnswer} className={primaryButton}>
+          {draft.isPendingSubmit && <PendingSubmitNotice />}
+          <button type="button" disabled={!answer.trim() || isPending || draft.isPendingSubmit} onClick={protectedSubmitAnswer} className={primaryButton}>
             {isPending ? "Mengirim..." : "Kirim jawaban"}
           </button>
         </section>

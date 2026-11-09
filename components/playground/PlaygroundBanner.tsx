@@ -1,20 +1,23 @@
+"use client";
+
 import Image from "next/image";
 import { FlaskConical } from "lucide-react";
 
-import { ACTIVE_AVATAR, ACTIVE_THEME } from "@/data/dummy/appearance";
+import ThemeBackdrop from "@/components/common/ThemeBackdrop";
+import { useAppearance } from "@/lib/useAppearance";
 
 // Mengikuti pola Welcome Banner: latar tema aktif dengan gradasi warna kartu agar
 // teks terbaca di mode terang dan gelap, dan avatar aktif di kanan.
 export default function PlaygroundBanner() {
+  const { avatar, theme } = useAppearance();
   return (
     <section className="relative isolate flex flex-col overflow-hidden rounded-xl border border-border bg-card text-foreground shadow-sm sm:min-h-36 sm:flex-row sm:items-center">
       {/* Mulai tablet gambar hanya mengisi sisi kanan: bila memenuhi banner yang
           pendek dan lebar, ilustrasinya terpotong. */}
       <div className="relative -z-20 h-24 w-full sm:absolute sm:inset-y-0 sm:right-0 sm:h-auto sm:w-[30rem] lg:w-[36rem]">
-        <Image
-          src={ACTIVE_THEME.image}
-          alt=""
-          fill
+        <ThemeBackdrop
+          image={theme.image}
+          video={theme.video}
           priority
           sizes="(min-width: 1024px) 576px, (min-width: 640px) 480px, 100vw"
           className="object-cover object-[75%_50%]"
@@ -30,9 +33,9 @@ export default function PlaygroundBanner() {
         className="absolute inset-x-0 top-12 -z-10 h-12 bg-gradient-to-t from-card to-transparent sm:hidden"
       />
 
-      {!ACTIVE_THEME.hasCharacter && (
+      {!theme.hasCharacter && (
         <Image
-          src={ACTIVE_AVATAR.image}
+          src={avatar.image}
           alt=""
           width={144}
           height={144}

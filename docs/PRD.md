@@ -1,9 +1,164 @@
 # BELAJARAUTOMATION.COM
 ## Product Requirements Document (PRD)
-**Versi:** 2.5  
+**Versi:** 2.38  
 **Status:** Draft — Acuan Pengembangan Produk  
 **Platform:** Web Application  
 **Target Pengguna:** Pemula hingga praktisi QA, Software Testing, dan Programming
+
+### Perubahan di Versi 2.38
+- Lesson dan course berstatus draf tampil dan dapat diselesaikan di DEV dan UAT, dengan label "Draf", agar alur belajar dan XP dapat diuji saat UAT. Di Production tetap tersembunyi (Bagian 13.3).
+
+### Perubahan di Versi 2.37
+- Popup naik rank dibuat meriah (confetti, sinar, animasi emblem) dan tampil di halaman mana pun, sekali per rank (FR-05).
+- Pencapaian naik rank dapat dibagikan dari popup: kartu gambar persegi yang bisa diunduh atau dibagikan, serta tautan profil ke media sosial (FR-05).
+- Ilustrasi perayaan kucing dengan tameng per rank ditetapkan terpisah dari emblem rank; emblem di tempat lain tetap tanpa maskot (FR-05).
+
+### Perubahan di Versi 2.36
+- Lesson ditandai selesai saat pengguna mengklik "Berikutnya", menggantikan tombol "Tandai selesai". Lesson terakhir diselesaikan dengan tombol "Selesaikan course" yang kembali ke halaman course (FR-05).
+
+### Perubahan di Versi 2.35
+- Batas waktu pengerjaan latihan: Kuis 15 menit, Bug Hunt, Test Case Writing, dan Locator Challenge 30 menit, dengan teks sisa waktu. Saat waktu habis, jawaban dikirim otomatis (FR-04).
+
+### Perubahan di Versi 2.34
+- Aturan penyelesaian aktivitas ditetapkan: lesson ditandai selesai setelah isinya digulir sampai akhir, kuis dan challenge boleh diulang tanpa batas, dan Test Case Writing tercatat selesai tanpa XP karena dinilai sendiri (FR-05).
+- Naik rank menampilkan popup perayaan dan menambah notifikasi di kelompok Progres (FR-05).
+- Total XP, materi selesai, dan challenge selesai akun sungguhan dihitung dari database dan dicatat oleh server (FR-05).
+
+### Perubahan di Versi 2.33
+- Email verifikasi pendaftaran berbahasa Indonesia dengan tampilan belajarautomation.com (Bagian 4.5).
+- Leaderboard akun sungguhan: setiap baris dapat diklik untuk membuka profil publik pengguna tersebut (FR-06, FR-13).
+- Profil publik akun sungguhan diambil dari database; username yang tidak ada menampilkan "Profil tidak ditemukan" (FR-13).
+- Avatar di kartu Bagikan profil memakai bingkai bulat, sama dengan header profil (FR-13).
+
+### Perubahan di Versi 2.32
+- Sertifikat kelulusan dicatat sebagai fitur yang direncanakan (Bagian 12).
+- Slide pertama panel promosi berupa poster utuh; panel berbingkai potret 3:4 yang mengikuti tinggi layar (Bagian 4.5).
+- Daftar akun demo tidak lagi ditampilkan di halaman masuk; dipindah ke README (Bagian 4.5).
+- Menambahkan popup promosi di tengah layar setelah login, dengan pilihan "Nanti saja" dan "Jangan tampilkan lagi" (Bagian 4.7).
+
+### Perubahan di Versi 2.31
+- Halaman masuk dan daftar (desktop) menampilkan panel promosi berisi 3 slide yang bergeser otomatis atau digeser: sambutan, koleksi avatar kucing, dan eBook (Bagian 4.5).
+
+### Perubahan di Versi 2.30
+- Menambahkan alert singkat di atas layar untuk hasil aksi (simpan, buat, ubah, hapus) dan status koneksi internet, berlaku di semua halaman (Bagian 4.6).
+
+### Perubahan di Versi 2.29
+- Menambahkan halaman **Rank & XP** (`/rank`) berisi Tingkatan Rank dan Cara Mendapatkan XP; keduanya dipindah dari halaman Leaderboard (FR-05, FR-06).
+- Tombol di kartu Rank & XP dashboard menjadi "Lihat detail rank" yang membuka halaman Rank & XP (FR-01).
+
+### Perubahan di Versi 2.28
+- Leaderboard menampilkan 50 peringkat teratas dalam 5 halaman berisi 10 baris, dengan navigasi halaman dan tombol "Lompat ke posisiku" (FR-06).
+
+### Perubahan di Versi 2.27
+- Menambahkan tema **Neon Night** (gratis, bergerak): kota cyberpunk malam dengan kucing abu-abu di depan laptop (FR-12).
+- Aset tema disimpan satu folder per tema di `public/banner/<id-tema>/` (FR-12).
+
+### Perubahan di Versi 2.26
+- Tema bawaan diganti menjadi **Penerbangan Fuji** (gratis): kabin pesawat dengan jendela menghadap Gunung Fuji, dalam versi bergerak. Tema Mountain Workspace dihapus (FR-12).
+- Menambahkan aturan tema bergerak: video tanpa suara yang berulang di atas gambar diam, dan gambar diam untuk pengguna yang mengaktifkan "kurangi gerakan" (FR-12).
+
+### Perubahan di Versi 2.25
+- Tombol "Simpan Pilihan" di Kustomisasi menyimpan avatar dan tema ke akun; pilihan tampil di semua halaman. Akun baru memakai Kucing Putih dan tema bawaan (FR-12, FR-13).
+- Katalog avatar dan tema disimpan di database, dan hak pakainya diperiksa di server. Sampai hak akses paket tersedia (Fase 5), item berbayar tidak dapat dipakai akun sungguhan (FR-12).
+
+### Perubahan di Versi 2.24
+- Menambahkan pengaturan Informasi Profil: nama tampilan, Tentang saya (maksimal 160 karakter, tautan http/https dapat diklik), username dengan jeda 30 hari, dan ganti email dengan konfirmasi ke email lama dan baru (FR-13).
+- Foto profil diganti lewat tab Kustomisasi; isian "Role" teks bebas di Pengaturan dihapus (FR-13).
+
+### Perubahan di Versi 2.23
+- Rilis awal avatar menjadi 8 kucing gaya Basic: Kucing Putih dan Kucing Oren gratis; Hitam, Tuxedo, Abu-abu, Coklat, Corak Tiga, dan Siam terbuka di Pro dan Premium (FR-12).
+- Kucing Putih menjadi avatar bawaan pengguna baru (FR-12).
+- Koleksi avatar dikelompokkan per gaya dengan chip; gaya yang belum punya gambar tampil "Segera hadir" (FR-13).
+- Filter kepemilikan di Kustomisasi menjadi tombol ikon dengan dropdown (FR-13).
+- Bingkai avatar di header profil dan pratinjau berbentuk bulat (FR-13).
+- Saat development, pemeriksaan lokal cukup lint, build, dan test terkait; seluruh test end-to-end dijalankan CI, sebelum UAT, dan untuk regresi (Bagian 13.4).
+- Bagian "Digunakan saat ini" di Kustomisasi dihapus; pilihan aktif ditandai pada kartu koleksi dan tombol simpan berada di bawah pratinjau (FR-13).
+- Menetapkan 9 gaya avatar: Basic, Bug Hunter, Cyberpunk, Wizard, Driver Formula, Space Explorer, Ninja, Knight, dan Master Chef. Gaya kostum berlaku untuk semua jenis kucing dan terbuka di Pro dan Premium (FR-12).
+
+### Perubahan di Versi 2.22
+- Menetapkan aturan username: 3–20 karakter, huruf kecil, angka, dan garis bawah, tidak diawali angka, bukan nama cadangan, dan dapat diganti dengan jeda 30 hari (FR-13).
+- Pendaftar dengan email mengisi username di form daftar; akun aktif setelah email diverifikasi (Bagian 4.5).
+- Menambahkan lupa password dan reset password lewat tautan email (Bagian 4.5).
+- Akun demo hanya dapat dipakai di DEV, atau selama Supabase belum dipasang di lingkungan tersebut (Bagian 4.5).
+
+### Perubahan di Versi 2.21
+- Setelah backend tersedia, isi course, lesson, dan soal kuis disimpan di database dan menjadi sumber kebenaran katalog. Halamannya tetap statis dan diperbarui per halaman saat konten diterbitkan (Bagian 6.3, 8.2, FR-16 G).
+- Konten yang sudah ada dipindahkan ke database lewat skrip impor. Alur Creator, Reviewer, dan Admin di aplikasi sudah aktif di UAT dan Production saat rilis (FR-15).
+- Urutan pembangunan backend: semua aksi selain pembayaran dibangun lebih dulu, dan pembayaran dikerjakan paling akhir (`docs/DATABASE.md` Bagian 10).
+- Peran dasar setiap akun bernama `student` dengan label "Pelajar". Membership adalah hak akses, bukan peran (FR-15).
+- Progres course dihitung dari progres lesson, tanpa langkah "daftar course" (FR-02).
+- Pembayaran memakai Midtrans Snap dengan QRIS dan Virtual Account. Production baru dirilis setelah pembayaran Midtrans siap; simulasi pembayaran tidak pernah aktif di UAT maupun Production (FR-10).
+- Email dikirim lewat Resend: email akun dari Supabase Auth dan email transaksi dari antrean di database (Bagian 4.4).
+- Lingkungan Supabase: DEV dan UAT memakai paket Free, Production memakai Pro (Bagian 6.3).
+
+### Perubahan di Versi 2.20
+- Menetapkan PostgreSQL lewat Supabase di region Singapura, dengan rancangan tabel, indeks, Row Level Security, dan tahapan pembangunan di `docs/DATABASE.md` (Bagian 6.3).
+- Menambahkan target performa dan aturan agar situs tetap cepat untuk 1 juta pengguna terdaftar (Bagian 8.2).
+
+### Perubahan di Versi 2.19
+- Menambahkan masuk dan daftar dengan Google (Bagian 4.5). Tombol tampil sekarang dengan keterangan "Segera hadir" dan aktif setelah backend Supabase Auth tersedia.
+
+### Perubahan di Versi 2.18
+- Popup maintenance untuk pengguna selain Admin yang sudah login, pada tahap Terjadwal dan Persiapan (FR-16 K).
+- Mengubah dan membatalkan jadwal maintenance juga mengirim pengumuman ke semua pengguna (FR-16 K).
+
+### Perubahan di Versi 2.17
+- Menambahkan Mode Maintenance di Panel Admin: tahap Terjadwal, Persiapan, Aktif, dan Selesai, dengan lama Persiapan yang diatur Admin (FR-16 K).
+- Selama maintenance aktif, seluruh situs tertutup dan hanya Admin yang dapat login; Creator dan Reviewer ikut tertutup (FR-16 K).
+- Menetapkan perlindungan pekerjaan pengguna: jawaban tersimpan per soal, kiriman tertunda, waktu kuis dibekukan, percobaan tidak dihitung, dan dapat dilanjutkan (FR-16 K).
+- Menambahkan entitas MaintenanceWindow (7.27) dan pemeriksaan status maintenance di server (8.3).
+
+### Perubahan di Versi 2.16
+- Menambahkan FR-16 Panel Admin: Ringkasan, Konten, Pengguna dan Peran, Kesepakatan Creator, Transaksi dan Hak Akses, Produk Digital, Katalog Belajar, Moderasi, Pengumuman, Laporan, dan Log Aktivitas Admin.
+- Seluruh Panel Admin dibangun sekarang dengan data dummy dan hanya tampil di DEV, seperti mode Creator dan Reviewer.
+- Tombol Terbitkan terkunci untuk Creator yang belum memiliki kesepakatan tertulis tercatat (FR-15, FR-16).
+- Setiap aksi Admin wajib tercatat di Log Aktivitas Admin; akun Admin wajib memakai verifikasi dua langkah saat backend tersedia (8.3).
+
+### Perubahan di Versi 2.15
+- Antarmuka lengkap Creator, Reviewer, dan Admin dibangun sekarang dengan data dummy, hanya tampil di DEV; UAT dan Production tetap menampilkan alur Google Docs sampai backend tersedia (FR-15).
+- Menetapkan fitur Reviewer (Antrian Review dan Halaman Review) dan Admin (Ringkasan, Semua Konten, Tugaskan Reviewer, Terbitkan dan Tarik, Kelola Peran) (FR-15).
+- Reviewer tidak mengedit isi konten secara langsung; perbaikan selalu lewat catatan revisi (FR-15).
+- Catatan revisi dinyatakan selesai saat Reviewer menyetujui konten (FR-15).
+- Backend memakai Supabase (Auth, Postgres, Storage) (Bagian 6 dan 12).
+- Batas upload gambar editor: JPG, PNG, atau WebP, maksimal 2 MB (FR-15).
+
+### Perubahan di Versi 2.14
+- Menetapkan aturan penyimpanan mockup yang disetujui di `docs/desain/` (Bagian 13.2).
+- Mockup Mode Creator (Konten Saya, Buat Konten, Catatan Revisi) dan kartu video referensi disetujui sebagai acuan visual (FR-15).
+- Menegaskan bahwa "Sudah diperbaiki" adalah tanda dari Creator; catatan dinyatakan selesai setelah dikonfirmasi Reviewer (FR-15).
+
+### Perubahan di Versi 2.13
+- Menetapkan format isi lesson: teks sebagai format utama; Creator hanya menulis teks (FR-02).
+- Lesson dan artikel boleh menyertakan referensi video YouTube sebagai pelengkap, dengan aturan embed, kredit, dan pengecekan Reviewer (FR-02, FR-07, FR-15).
+- Video buatan sendiri tidak termasuk rilis awal (Bagian 12).
+
+### Perubahan di Versi 2.12
+- Tahap sebelum backend diubah: Creator menulis di Google Docs, bukan lewat GitHub, karena tidak semua Creator memahami GitHub (FR-15).
+- Menetapkan rancangan fitur Konten Saya, Buat Konten, dan Catatan Revisi untuk tahap setelah backend, termasuk upload gambar (FR-15).
+- Backend diprioritaskan agar Creator dapat menulis langsung di aplikasi.
+
+### Perubahan di Versi 2.11
+- Merinci perilaku mode peran: halaman yang menampilkan ajakan beralih mode, mode bawaan saat login, dan pengaturan di mode peran (FR-15).
+- Menetapkan standar kontras minimal 4,5:1 dan warna tombol utama di mode gelap (Bagian 8.6, 15.2).
+
+### Perubahan di Versi 2.10
+- Tampilan mengikuti mode: Mode Creator, Reviewer, dan Admin tanpa keranjang, membership, serta data pelajar; profil per mode; notifikasi per mode (FR-15, Bagian 4.4).
+- Admin juga memiliki Mode Belajar.
+
+### Perubahan di Versi 2.9
+- Menambahkan peran Creator, Reviewer, dan Admin beserta alur penerbitan konten (FR-15).
+- Sebelum backend tersedia, konten dikelola lewat GitHub (file MDX dan pull request).
+- Satu akun dapat memiliki beberapa peran, dengan pengalih mode Belajar dan Creator.
+
+### Perubahan di Versi 2.8
+- Menetapkan Blog: dapat dibaca tanpa login, format halaman daftar dan artikel, format konten, status draf, serta SEO (FR-07).
+- Daftar 10 artikel rilis awal ditetapkan di `docs/CURRICULUM.md` Bagian 6.
+
+### Perubahan di Versi 2.7
+- Menambahkan acuan tampilan notifikasi: ikon dan warna per kelompok, format waktu, dan teks notifikasi membership (Bagian 4.4).
+
+### Perubahan di Versi 2.6
+- Menetapkan sistem notifikasi: 5 kelompok, popover lonceng, halaman arsip, tujuan klik, dan preferensi (Bagian 4.4).
 
 ### Perubahan di Versi 2.5
 - Playground memiliki 4 jenis latihan: Kuis, Bug Hunt, Test Case Writing, dan Locator Challenge, beserta halaman latihan untuk Bug Hunt dan Locator Challenge (FR-04).
@@ -202,7 +357,7 @@ Memberikan gambaran ringkas mengenai aktivitas belajar dan perkembangan pengguna
 - Deskripsi singkat platform.
 - Avatar kucing aktif pengguna dalam ukuran besar.
 - Latar banner sesuai tema banner aktif pengguna (FR-12).
-- Pengguna baru melihat avatar Kucing Putih Basic dan tema gratis bawaan.
+- Pengguna baru melihat avatar Kucing Putih Basic dan tema gratis bawaan (Penerbangan Fuji).
 
 Ketentuan Welcome Banner:
 - Tema banner hanya berlaku di Welcome Banner dan banner profil; bagian website lainnya mengikuti brand guideline.
@@ -218,7 +373,7 @@ Ketentuan Welcome Banner:
 - Progress menuju rank berikutnya.
 - Persentase progress.
 - Informasi rank berikutnya.
-- Tombol menuju detail rank.
+- Tombol "Lihat detail rank" menuju halaman Rank & XP (FR-05).
 
 **D. Kalender Belajar**
 - Tampilan kalender bulanan.
@@ -325,6 +480,35 @@ Halaman detail dapat menampilkan:
 - Status penyelesaian modul disimpan.
 - Progress diperbarui berdasarkan aktivitas yang valid.
 
+**F. Format isi lesson**
+Teks adalah format utama lesson. Creator hanya menulis teks; platform tidak memproduksi video sendiri pada rilis awal.
+
+Isi lesson dapat memuat:
+- Teks dengan heading.
+- Blok kode yang dapat disalin.
+- Gambar, screenshot, atau GIF dengan teks alternatif dan keterangan.
+- Kotak Tips dan Peringatan.
+- Tabel.
+- Kuis singkat di akhir lesson (opsional).
+- Referensi video YouTube (opsional).
+
+**G. Referensi video YouTube**
+Video dari YouTube boleh disertakan sebagai bahan pelengkap, terutama untuk materi yang butuh demo visual (instalasi tool, demo antarmuka, debugging).
+
+Aturan:
+- Lesson wajib dapat dipelajari lengkap tanpa video. Jika video dihapus atau dijadikan privat, lesson tetap utuh.
+- Video hanya ditampilkan melalui embed resmi YouTube atau tautan. Video orang lain tidak boleh diunduh lalu diunggah ulang.
+- Video yang pemiliknya menonaktifkan embed hanya ditampilkan sebagai tautan.
+- Setiap video mencantumkan judul asli dan nama channel sebagai kredit.
+- Maksimal 3 video per lesson, ditempatkan di bagian "Referensi Video" atau tepat di bawah bagian yang dijelaskan.
+- Video berbahasa Indonesia diutamakan; video berbahasa lain diberi label bahasa.
+- Kartu video menampilkan judul, nama channel, durasi, dan bahasa.
+
+Ketentuan teknis:
+- Mode klik untuk memutar: awalnya hanya thumbnail yang tampil, dan player YouTube baru dimuat saat diklik.
+- Embed memakai domain `youtube-nocookie.com`.
+- Pengecekan link berkala mendeteksi video yang dihapus, dijadikan privat, atau tidak dapat di-embed, lalu melaporkannya ke Admin untuk diganti atau dihapus.
+
 ### Aturan akses
 Setiap course memiliki tingkat akses:
 - **Gratis:** dapat dipelajari semua pengguna, termasuk Basic.
@@ -337,6 +521,7 @@ Ketentuan:
 - Hak akses course premium mengikuti model Lifetime di FR-10: pengguna memperoleh akses permanen ke materi premium yang tersedia pada saat pembelian.
 - Course yang sudah dinyatakan gratis tidak boleh diubah menjadi premium bagi pengguna yang sudah mulai mempelajarinya.
 - Hak akses course premium diverifikasi oleh backend.
+- Tidak ada langkah "daftar course". Course dianggap dimulai saat pengguna membuka lesson pertamanya, dan progres course dihitung dari progres lesson.
 
 Pengguna Basic tidak harus membayar untuk:
 - Mempelajari course gratis.
@@ -463,6 +648,26 @@ Ketentuan:
 - Latihan yang terkait course gratis dapat diakses semua pengguna. Latihan yang terkait course premium mengikuti hak akses course tersebut.
 - Playground tidak memiliki forum diskusi.
 
+### Batas waktu
+
+| Jenis latihan | Batas waktu |
+|---|---|
+| Kuis (pilihan ganda) | 15 menit |
+| Bug Hunt | 30 menit |
+| Test Case Writing | 30 menit |
+| Locator Challenge | 30 menit |
+
+- Waktu mulai berjalan saat halaman latihan dibuka dan tetap berjalan bila halaman dimuat ulang atau ditinggalkan.
+- Sisa waktu ditampilkan dalam format menit:detik, menempel di bagian atas saat halaman digulir. Satu menit terakhir ditandai warna merah dan alert "Sisa waktu 1 menit."
+- Saat waktu habis, jawaban yang sudah diisi langsung dikirim dan dinilai seperti biasa, disertai alert "Waktu habis. Jawabanmu dikirim otomatis."
+  - Kuis: soal yang belum dijawab dihitung salah dan tampil "Tidak dijawab" di pembahasan.
+  - Bug Hunt: temuan yang sudah dicentang dikirim.
+  - Locator Challenge: selector yang tertulis dikirim; selector kosong atau tidak valid dinilai tidak mengenai elemen apa pun.
+  - Test Case Writing: batas waktu hanya untuk menulis jawaban. Jawaban yang tertulis dikirim, lalu penilaian mandiri dengan checklist dikerjakan tanpa batas waktu.
+- Mengulang latihan memulai waktu penuh dari awal.
+- Pengerjaan yang waktunya habis tanpa jawaban tersimpan dimulai ulang saat dibuka kembali, bukan dikirim kosong.
+- Waktu berhenti selama maintenance Aktif (FR-16 K).
+
 ### Konten awal
 - Tahap pengembangan memakai 10 latihan dummy: 4 Kuis, 2 Bug Hunt, 2 Test Case Writing, dan 2 Locator Challenge, yang terhubung ke course yang tersedia.
 - Target saat rilis: minimal satu Kuis untuk setiap course yang tersedia.
@@ -538,6 +743,30 @@ Nilai XP dan batas rank dikelola melalui konfigurasi sistem. Nilai awal yang dis
 
 XP hanya diberikan saat aktivitas tersebut diselesaikan pertama kali. Pengguna boleh mengulang lesson, kuis, atau challenge tanpa memperoleh XP lagi.
 
+### Aturan penyelesaian aktivitas
+
+| Aktivitas | Dianggap selesai saat | XP | Catatan |
+|---|---|---|---|
+| Lesson | Pengguna mengklik "Berikutnya" ke lesson selanjutnya. Pada lesson terakhir course, pengguna menekan "Selesaikan course" | 10 | Hanya tercatat bila isi lesson sudah digulir sampai akhir; navigasi tetap bisa dipakai kapan saja, dengan keterangan bila lesson belum tercatat. Lesson yang belum punya isi tidak bisa diselesaikan. |
+| Course | Seluruh lesson dalam course selesai | 50 (bonus) | Diberikan otomatis bersama lesson terakhir yang diselesaikan. Pengguna melihat pemberitahuan "Course [nama] tuntas!", lalu kembali ke halaman course. |
+| Kuis | Lulus dengan skor minimal 70% | 30 | Percobaan tidak dibatasi. |
+| Bug Hunt dan Locator Challenge | Lulus penilaian otomatis | 75 | Percobaan tidak dibatasi. |
+| Test Case Writing | Semua poin wajib checklist tercentang | 0 | Dinilai sendiri oleh pengguna sehingga tidak tervalidasi; tetap terhitung sebagai challenge selesai. |
+
+Ketentuan perhitungan:
+- **Total XP** adalah jumlah seluruh XP yang pernah diperoleh. Setiap aktivitas hanya dapat memberi XP satu kali, termasuk bila jawaban dikirim berulang.
+- **Materi selesai** adalah jumlah lesson yang sudah ditandai selesai.
+- **Challenge selesai** adalah jumlah kuis dan challenge yang pernah lulus, masing-masing dihitung sekali.
+- **Rank** ditentukan dari total XP sesuai tabel batas XP rank di bawah.
+- XP dihitung dan dicatat oleh server setelah jawaban dinilai. Browser tidak menentukan jumlah XP.
+- Saat total XP melewati batas rank yang belum pernah dirayakan, aplikasi menampilkan popup perayaan di halaman mana pun yang sedang dibuka, termasuk bila XP bertambah dari perangkat lain atau koreksi Admin. Popup tampil sekali per rank dan menambah notifikasi "Naik rank ke [nama rank]" di kelompok Progres.
+  - Isi: logo, ilustrasi perayaan, label "Rank Up!", "Selamat! Kamu telah naik ke rank", nama rank, rank berikutnya beserta batas XP-nya (rank tertinggi memakai pesan khusus), tombol "Lihat Progress Rank" (halaman Rank & XP) dan "Lanjut Belajar" (menutup popup).
+  - Tampilan meriah: confetti, sinar berputar dan cahaya berwarna identitas rank, emblem yang muncul memantul, dan bintang berkelip. Seluruh animasi nonaktif bila pengguna memilih mengurangi animasi di perangkatnya.
+  - Ilustrasi perayaan berupa kucing dengan tameng rank, dibuat pemilik produk per rank di `public/rank-up/<rank>.webp` (Apprentice sampai Master), persegi, latar transparan, tanpa teks. Ilustrasi ini khusus popup perayaan dan terpisah dari emblem rank; emblem di dashboard, profil, dan leaderboard tetap tameng tanpa maskot. Selama ilustrasi belum tersedia, popup memakai emblem rank.
+  - Perangkat yang baru pertama kali dibuka mencatat rank saat ini tanpa menampilkan popup.
+  - Tombol bagikan di pojok kanan atas membuka tampilan "Bagikan Pencapaian": kartu PNG 1080×1080 berisi logo, ilustrasi, "Rank Up!", nama tampilan, rank baru, username, dan total XP. Kartu dapat diunduh, dibagikan lewat menu bawaan perangkat bila didukung, dan tautan profil dapat dibagikan ke WhatsApp, X, Facebook, LinkedIn, Telegram, atau disalin. Kartu hanya memuat data publik.
+- Hingga hak akses membership tersambung ke backend, XP dari course premium belum dicatat untuk akun sungguhan.
+
 ### Batas XP rank
 | Rank | Minimal XP | Gambaran pencapaian |
 |---|---|---|
@@ -549,6 +778,13 @@ XP hanya diberikan saat aktivitas tersebut diselesaikan pertama kali. Pengguna b
 | Master | 5.500 | Menyelesaikan hampir seluruh konten dan challenge |
 
 Batas ini dihitung dari perkiraan total XP konten yang direncanakan (sekitar 6.600 XP) dan wajib ditinjau ulang setiap kali jumlah konten atau pembagian course gratis dan premium berubah, agar rank Master tetap dapat dicapai hanya dari konten gratis.
+
+### Halaman Rank & XP
+- Alamat `/rank`, dibuka dari kartu Rank & XP di dashboard dan dari tautan "Lihat tingkatan rank" di kartu posisi leaderboard.
+- Berisi **Tingkatan Rank**: enam rank berjajar dari Trainee ke Master dengan emblem, minimal XP, gambaran pencapaian, dan status (Rank kamu dengan progres, Tercapai, atau XP yang masih dibutuhkan).
+- Berisi **Cara Mendapatkan XP**: daftar aktivitas dan XP-nya, serta ketentuan XP hanya diberikan sekali per aktivitas.
+- Memiliki tombol "Lihat leaderboard".
+- Halaman khusus Mode Belajar; di mode peran menampilkan ajakan beralih mode (FR-15).
 
 ### Progress Rank
 Sistem menampilkan:
@@ -617,13 +853,16 @@ Ketentuan:
 
 ### Tampilan
 - Saat leaderboard dibuka, tab yang aktif pertama kali adalah tab rank pengguna.
-- Setiap tab menampilkan 50 peringkat teratas.
+- Setiap tab menampilkan 50 peringkat teratas, dibagi 10 baris per halaman (halaman 1–5) dengan navigasi nomor halaman, tombol sebelumnya, dan berikutnya. Nomor halaman tersimpan di URL; berpindah tab kembali ke halaman 1.
+- Bila posisi pengguna termasuk 50 teratas tetapi berada di halaman lain, kartu posisi menampilkan tombol "Lompat ke posisiku" yang membuka halaman itu dan menyorot barisnya.
 - Posisi pengguna yang sedang login selalu ditampilkan (disematkan) di kedua tab, termasuk jika berada di luar 50 besar:
   - Tab Global: posisi di antara seluruh pengguna.
   - Tab rank: posisi di antara sesama rank.
 - Tab rank menampilkan informasi rank berikutnya, mis. "Butuh 320 XP lagi untuk naik ke Practitioner". Pengguna Master melihat keterangan bahwa rank tertinggi telah tercapai.
 - Setiap baris menampilkan posisi, avatar kucing aktif, nama tampilan, emblem tameng rank, dan total XP.
+- Setiap baris dapat diklik untuk membuka profil publik pengguna tersebut (FR-13). Hanya pengguna yang sudah memiliki username yang tampil.
 - Tiga posisi teratas di setiap tab boleh diberi penekanan visual.
+- Halaman leaderboard hanya memuat peringkat. Tingkatan rank dan cara mendapatkan XP ada di halaman Rank & XP (FR-05); kartu posisi memberi tautan "Lihat tingkatan rank".
 
 ### Privasi
 - Pengguna dapat memilih untuk tidak ditampilkan di leaderboard melalui pengaturan.
@@ -635,30 +874,66 @@ Ketentuan:
 ## FR-07 — Blog
 
 ### Tujuan
-Menyediakan artikel edukasi dan informasi seputar QA, testing, automation, dan programming.
+Menyediakan artikel edukasi seputar QA, testing, automation, dan programming, sekaligus menjadi pintu masuk pengguna baru dari mesin pencari menuju course, roadmap, dan latihan.
 
-### Fitur
-- Daftar artikel.
-- Pencarian artikel jika diperlukan.
-- Filter kategori.
-- Halaman detail artikel.
-- Informasi penulis.
-- Tanggal publikasi.
-- Artikel terkait.
+### Akses
+- Blog (halaman daftar dan halaman artikel) **dapat dibaca tanpa login**, agar artikel dapat diindeks mesin pencari dan dibagikan.
+- Pengunjung yang belum login melihat header dengan tombol "Masuk" dan "Daftar".
+- Kotak ajakan di artikel tetap ditampilkan; jika tujuannya membutuhkan login, pengunjung diarahkan ke halaman login lalu kembali ke tujuan setelah berhasil masuk.
 
-### Kategori awal
-- QA Fundamentals.
-- Manual Testing.
-- Automation Testing.
-- API Testing.
-- Programming.
-- Career.
-- Tools dan teknologi.
+### Halaman daftar artikel (`/blog`)
+- Judul "Blog" dan deskripsi singkat.
+- Pencarian artikel (judul dan ringkasan).
+- Chip kategori; kategori tanpa artikel terbit disembunyikan otomatis.
+- Satu artikel unggulan dengan sampul besar dan tombol "Baca Artikel".
+- Daftar "Artikel Terbaru" dalam grid kartu: sampul, kategori, judul, ringkasan maksimal 2 baris, tanggal, dan waktu baca. Pengurutan bawaan: terbaru.
+- Pencarian dan filter tersimpan di URL.
+- Empty state jika tidak ada hasil.
+
+### Halaman artikel (`/blog/[slug]`)
+**Bagian atas**
+- Breadcrumb: Blog › Kategori.
+- Badge kategori, judul, dan ringkasan satu kalimat.
+- Penulis, tanggal terbit, tanggal diperbarui (jika ada), dan waktu baca.
+- Tombol "Bagikan".
+- Sampul artikel.
+
+**Isi**
+- Daftar isi dari heading artikel: menempel di samping saat scroll di desktop, dapat dilipat di mobile, dan menandai bagian yang sedang dibaca.
+- Format konten: heading, paragraf, daftar, blok kode dengan penanda bahasa, nomor baris, dan tombol "Salin" (font JetBrains Mono), kotak Tips, kotak Peringatan, gambar dengan keterangan, dan tabel.
+- Kotak ajakan menuju course atau latihan, dapat ditempatkan di tengah dan di akhir artikel.
+
+**Bagian bawah**
+- Sumber, untuk artikel yang memakai data atau rujukan.
+- Bagikan: salin tautan, WhatsApp, dan LinkedIn. Di mobile, tombol "Bagikan" membuka panel dari bawah layar.
+- Tiga artikel terkait, diutamakan dari kategori yang sama.
+
+### Penulis
+- Nama penulis bawaan: "Tim BelajarAutomation".
+- Setelah peran Creator aktif, artikel dapat menampilkan nama Creator yang menulisnya.
+
+### Format konten
+- Sebelum backend, setiap artikel disimpan sebagai satu file konten (mis. MDX); setelah backend, artikel disimpan di database (Bagian 6.3). Keduanya memakai metadata: slug, judul, ringkasan, kategori, penulis, tanggal terbit, tanggal diperbarui, sampul, status, artikel unggulan, ajakan (course atau latihan tujuan), dan sumber.
+- Waktu baca dihitung otomatis dari isi artikel.
+- Status artikel: `draft` atau `published`. Artikel `draft` hanya tampil di lingkungan DEV dengan badge "Draf"; UAT dan Production hanya menampilkan artikel `published`.
+- Ajakan hanya boleh menuju course atau latihan yang tersedia; pengecekan otomatis menggagalkan build jika tujuan tidak valid.
+- Menambah artikel baru cukup dengan menambah file konten, tanpa mengubah kode aplikasi.
+- Artikel boleh menyertakan referensi video YouTube dengan aturan yang sama seperti lesson (FR-02 bagian G).
+
+### SEO
+- Setiap artikel memiliki judul halaman, deskripsi, dan gambar pratinjau (Open Graph) dari metadata.
+- Tersedia sitemap untuk artikel yang terbit.
+- Lingkungan DEV dan UAT tidak boleh diindeks mesin pencari (`noindex`); hanya Production yang dapat diindeks.
+
+### Kategori
+QA Fundamentals, Manual Testing, Automation Testing, API Testing, Programming, Career, dan Tools dan teknologi.
 
 ### Aturan
-- Artikel yang ditetapkan sebagai publik dapat dibaca secara gratis.
-- Konten harus dapat dikelola tanpa mengubah struktur aplikasi setiap kali artikel baru diterbitkan.
-- Fitur komentar bukan prioritas awal.
+- Artikel yang terbit dapat dibaca gratis oleh siapa pun.
+- Tidak ada kolom komentar.
+- Tidak ada fitur menyimpan artikel (bookmark) pada tahap ini; dapat dipertimbangkan di fase berikutnya.
+- Konten mengikuti prinsip kualitas di Bagian 16; data seperti gaji wajib mencantumkan sumber dan tahun data.
+- Daftar artikel rilis awal ditetapkan di `docs/CURRICULUM.md` Bagian 6.
 
 ---
 
@@ -862,7 +1137,16 @@ Sistem pembayaran harus:
 - Memiliki kebijakan refund yang jelas sebelum peluncuran komersial.
 - Tidak menjanjikan hasil karier yang tidak dapat dijamin (lihat Bagian 16).
 
-Harga paket dan metode pembayaran final belum ditetapkan.
+Payment gateway: **Midtrans Snap**, dengan metode QRIS dan Virtual Account. DEV dan UAT memakai sandbox; Production memakai kunci produksi.
+- Production baru dirilis setelah pembayaran Midtrans siap: merchant terverifikasi dan alur pembayaran lulus pengujian di UAT. Jika verifikasi merchant terlambat, rilis ikut mundur.
+- Simulasi pembayaran hanya ada di DEV dan tidak pernah aktif di UAT maupun Production.
+- Harga dihitung di server dari database, bukan dari data yang dikirim browser.
+- Hak akses diberikan hanya setelah notifikasi Midtrans terverifikasi (signature dan nominal cocok). Halaman "pembayaran berhasil" bukan bukti pembayaran.
+- Notifikasi yang sama diproses sekali saja, dan transaksi tertunda dicek ulang berkala ke Midtrans.
+- Status pembayaran tidak dapat diubah manual oleh Admin (FR-16 E).
+- Refund lewat Refund API Midtrans untuk metode yang mendukungnya. Dukungan refund untuk QRIS dan Virtual Account perlu dikonfirmasi ke Midtrans sebelum peluncuran.
+
+Harga paket final belum ditetapkan.
 
 ---
 
@@ -918,11 +1202,33 @@ Memberikan identitas brand yang mudah dikenali dan sarana ekspresi diri pengguna
 
 ### Avatar kucing
 - Avatar adalah foto profil pengguna berupa ilustrasi kucing.
-- Tersedia beberapa **jenis kucing** agar pilihan tidak monoton, misalnya kucing putih, oren-putih, hitam-putih, dan abu-abu. Setiap jenis dapat memiliki beberapa **gaya** (mis. Basic, Developer, Scholar).
+- Tersedia beberapa **jenis kucing** agar pilihan tidak monoton (daftarnya di Rilis awal). Setiap jenis dapat memiliki beberapa **gaya**.
+- Avatar = satu jenis kucing dengan satu gaya, mis. "Kucing Tuxedo Ninja".
 - Kucing putih Basic menjadi avatar bawaan setiap pengguna baru.
 - Semua avatar memakai gaya ilustrasi yang sama dengan maskot resmi agar terasa satu keluarga.
 - Avatar tampil di header, halaman profil, leaderboard, dan Welcome Banner.
 - Avatar tidak menggantikan emblem rank.
+
+### Gaya avatar
+Sembilan gaya berikut berlaku untuk semua jenis kucing:
+
+| Gaya | Ciri kostum | Akses |
+|---|---|---|
+| Basic | Tanpa kostum | Mengikuti jenis kucing (lihat Rilis awal) |
+| Bug Hunter | Topi detektif, kaca pembesar, dan jaring serangga | Pro dan Premium |
+| Cyberpunk | Visor dan hoodie bercahaya neon | Pro dan Premium |
+| Wizard | Topi dan jubah penyihir berbintang | Pro dan Premium |
+| Driver Formula | Helm balap | Pro dan Premium |
+| Space Explorer | Helm dan baju astronot | Pro dan Premium |
+| Ninja | Ikat kepala, pakaian ninja, dan katana | Pro dan Premium |
+| Knight | Helm dan zirah ksatria | Pro dan Premium |
+| Master Chef | Topi dan seragam koki | Pro dan Premium |
+
+Ketentuan:
+- Semua gaya kostum berbayar, termasuk untuk Kucing Putih dan Kucing Oren yang gaya Basic-nya gratis.
+- Gambar ditambahkan bertahap. Koleksi hanya menampilkan kombinasi jenis dan gaya yang gambarnya sudah tersedia.
+- Kostum tetap mengikuti Aturan desain di bawah, termasuk tidak memakai kombinasi warna identitas rank (mis. crimson dengan gold milik Master).
+- Nama gaya ditulis dalam bentuk di atas di seluruh antarmuka.
 
 Setiap avatar memiliki:
 - ID unik, nama, jenis kucing, dan gaya.
@@ -938,11 +1244,36 @@ Setiap avatar memiliki:
 Setiap tema memiliki:
 - ID unik dan nama.
 - Aset latar (mode terang dan gelap bila diperlukan) dan thumbnail.
+- Opsional: video untuk tema bergerak.
 - Tingkat akses: gratis atau berbayar (Pro/Premium).
 
+### Tema bergerak
+- Tema dapat berupa video pendek tanpa suara yang diputar berulang (MP4), di atas gambar diam tema.
+- Gambar diam tampil lebih dulu dan menjadi patokan kecepatan halaman; video diputar setelah halaman siap.
+- Pengguna yang mengaktifkan "kurangi gerakan" di perangkatnya hanya melihat gambar diam.
+- Gerakan pelan dan halus, tanpa kedip atau goyangan kamera, agar tidak mengganggu belajar.
+- Video tidak memuat teks dan tidak menutupi area teks banner.
+- Ukuran video sebaiknya di bawah 1 MB, dengan resolusi yang cukup untuk banner lebar (minimal sekitar 1.600 piksel).
+- Tema yang ilustrasinya sudah memuat karakter kucing tidak menampilkan avatar pengguna di atasnya, agar tidak ada dua kucing.
+
 ### Rilis awal
-- **5 avatar** dan **5 tema banner**.
-- Komposisi gratis dan berbayar ditetapkan di Bagian 12. Minimal 1 avatar dan 1 tema tersedia gratis.
+- **8 avatar** dan 2 tema banner:
+
+| Tema | Akses | Catatan |
+|---|---|---|
+| Penerbangan Fuji (bawaan) | Gratis | Bergerak; kabin pesawat dengan jendela menghadap Gunung Fuji |
+| Neon Night | Gratis | Bergerak; kota cyberpunk malam |
+
+- Target rilis awal tetap 5 tema; tema lain menyusul.
+- Avatar, semuanya gaya Basic:
+
+| Avatar | Akses |
+|---|---|
+| Kucing Putih (bawaan) | Gratis |
+| Kucing Oren | Gratis |
+| Kucing Hitam, Kucing Tuxedo, Kucing Abu-abu, Kucing Coklat, Kucing Corak Tiga, Kucing Siam | Pro dan Premium |
+
+- Komposisi gratis dan berbayar untuk tema ditetapkan di Bagian 12. Minimal 1 avatar dan 1 tema tersedia gratis.
 - Jumlah ini adalah rilis awal, bukan batas permanen.
 
 ### Akses
@@ -1002,14 +1333,40 @@ Ketentuan:
 
 ### Kustomisasi
 - Dua bagian: **Avatar** dan **Tema Banner**.
-- Filter koleksi: Semua, Dimiliki, Terkunci.
-- Avatar dikelompokkan per jenis kucing.
+- Filter koleksi (Semua, Dimiliki, Terkunci) berupa tombol ikon filter di kanan judul koleksi, yang membuka dropdown. Tombol diberi penanda titik saat filter selain Semua aktif.
+- Avatar dikelompokkan per **gaya** (FR-12) dengan chip yang dapat digeser: Basic, Bug Hunter, Cyberpunk, Wizard, Driver Formula, Space Explorer, Ninja, Knight, dan Master Chef. Chip awal adalah gaya avatar yang sedang dipakai.
+- Setiap gaya menampilkan grid jenis kucing yang gambarnya sudah tersedia. Gaya yang belum punya gambar tetap tampil dengan keterangan "Segera hadir".
+- Filter Semua, Dimiliki, dan Terkunci berlaku di dalam gaya yang dipilih.
 - Preview profil memperlihatkan hasil pilihan sebelum disimpan.
-- Bagian "Digunakan saat ini" menampilkan avatar dan tema aktif.
+- "Simpan Pilihan" menyimpan avatar dan tema ke akun. Setelah disimpan, pilihan tampil di header profil, menu profil, Welcome Banner, Playground, dan kartu "Posisi kamu" di leaderboard. Akun demo di DEV hanya melihat pratinjau.
+- Avatar dan tema yang sedang dipakai ditandai "Digunakan" pada kartu koleksi. Tombol "Simpan Pilihan" berada di bawah pratinjau profil.
 - Item terkunci menampilkan cara memperolehnya (mis. "Tersedia di Pro dan Premium").
 
+### Username
+- 3–20 karakter: huruf kecil, angka, dan garis bawah (_). Tidak boleh diawali angka.
+- Unik tanpa membedakan huruf besar dan kecil.
+- Nama cadangan tidak dapat dipakai, mis. nama merek (belajarautomation), nama peran (admin, creator, reviewer), dan nama halaman aplikasi (login, settings, blog). Daftar lengkapnya dikelola di database.
+- Pendaftar dengan email mengisi username di form daftar; pendaftar dengan Google memilihnya sekali setelah login (4.5).
+- Username dapat diganti dengan jeda minimal 30 hari sejak penggantian terakhir. Tautan profil dengan username lama tidak lagi berlaku.
+- Aturan ini ditegakkan di database, bukan hanya di form.
+
+### Informasi Profil (Pengaturan)
+| Isian | Aturan |
+|---|---|
+| Nama tampilan | Wajib, maksimal 100 karakter |
+| Username | Mengikuti aturan Username di atas; menampilkan tanggal paling cepat untuk mengganti lagi |
+| Tentang saya | Opsional, maksimal 160 karakter dengan penghitung karakter. Tautan yang diawali http:// atau https:// dapat diklik di profil, dibuka di tab baru, dan diberi rel "nofollow ugc"; bentuk lain tetap teks biasa |
+| Email | Tautan konfirmasi dikirim ke email lama dan email baru. Email baru berlaku setelah keduanya dikonfirmasi; selama itu tampil keterangan "Menunggu konfirmasi" |
+
+Ketentuan:
+- Foto profil adalah avatar kucing dan diganti di tab Kustomisasi (FR-12); tidak ada unggah foto.
+- Perubahan langsung tampil di header profil, menu profil, dan bagian lain yang memakai nama atau username.
+- Akun demo di DEV dapat melihat isian tetapi tidak dapat menyimpan.
+- Aturan panjang, jeda username, dan status akun ditegakkan di database.
+
 ### Profil publik
-- Profil dapat dilihat oleh pengguna lain.
+- Profil dapat dilihat oleh pengguna lain yang sudah login, di alamat `/u/username`.
+- Username yang tidak ada atau milik akun nonaktif menampilkan "Profil tidak ditemukan".
 - Yang terlihat publik: banner, avatar, nama tampilan, username, bio, rank, total XP, ringkasan statistik, dan achievement.
 - Yang tidak terlihat publik: tab Kustomisasi, email, data pembelian, dan membership.
 - Riwayat aktivitas detail hanya terlihat oleh pemilik profil, kecuali pengguna memilih membukanya.
@@ -1051,6 +1408,307 @@ Daftar final achievement ditetapkan kemudian (Bagian 12).
 
 ---
 
+## FR-15 — Peran Konten dan Alur Penerbitan
+
+### Tujuan
+Memungkinkan konten ditulis oleh lebih dari satu orang dengan kualitas yang tetap terjaga melalui proses review.
+
+### Peran
+| Peran | Tugas | Batasan |
+|---|---|---|
+| **Creator** | Menulis dan merevisi konten | Tidak dapat menerbitkan sendiri dan tidak dapat me-review kontennya sendiri |
+| **Reviewer** | Memeriksa akurasi, kejelasan, contoh kode, referensi video, dan kunci jawaban; menyetujui atau meminta revisi | Tidak me-review konten yang ditulisnya sendiri dan tidak mengedit isi konten secara langsung |
+| **Admin** | Menugaskan reviewer, menerbitkan dan menarik konten, mengelola peran pengguna, dan tugas lain di Panel Admin (FR-16) | Tidak dapat mencabut peran Admin dari dirinya sendiri jika ia satu-satunya Admin |
+
+- Setiap akun memiliki peran dasar **Pelajar** (nilai di database: `student`). Creator, Reviewer, dan Admin adalah peran tambahan.
+- Membership (Basic, Pro, Premium) adalah hak akses, bukan peran.
+- Satu akun dapat memiliki beberapa peran. Selama tim masih kecil, pemilik produk dapat merangkap Reviewer dan Admin.
+- Creator, Reviewer, dan Admin tetap dapat belajar: XP, rank, profil pelajar, dan membership tetap berlaku di **Mode Belajar**.
+- Pengguna dengan peran tambahan memiliki pengalih **"Mode Belajar"** dan **"Mode Creator"**, **"Mode Reviewer"**, atau **"Mode Admin"** di menu profil. Mode tersimpan dan bertahan saat berpindah halaman.
+- Identitas (nama, avatar, dan email) sama di semua mode.
+
+### Tampilan per mode
+| Elemen | Mode Belajar | Mode Creator / Reviewer / Admin |
+|---|---|---|
+| Sidebar dan dashboard | Menu pelajar | Menu sesuai peran |
+| Keranjang | Ya | Tidak |
+| Membership (menu, halaman, dan info di profil) | Ya | Tidak |
+| XP, rank, achievement, leaderboard | Ya | Tidak ditampilkan |
+| Notifikasi | Progres belajar, Konten baru, Transaksi, Akun dan sistem | Khusus role, Akun dan sistem |
+
+Perilaku mode peran:
+- Halaman yang memuat XP, progres, atau pembelian menampilkan ajakan "Beralih ke Mode Belajar" saat dibuka di mode peran: Belajar, Roadmap, Playground, Leaderboard, eBook, Project, Karier, Membership, Keranjang, dan Checkout. Setelah beralih, halaman yang dituju langsung terbuka.
+- Blog dapat dibuka di semua mode.
+- Saat login, akun dengan peran tambahan mulai di mode perannya.
+- Membuka halaman peran (mis. `/creator`) dari Mode Belajar otomatis mengembalikan ke mode peran tersebut.
+- Di mode peran, pengaturan Privasi (leaderboard dan profil publik) disembunyikan.
+- Di Mode Belajar, label akun menunjukkan peran dan mode, mis. "Creator · Mode Belajar".
+
+### Profil per mode
+- **Mode Belajar:** profil pelajar sesuai FR-13.
+- **Mode peran:** nama, avatar, email, dan peran, tanpa XP, rank, achievement, maupun membership. Isi khusus:
+
+| Peran | Isi profil |
+|---|---|
+| Creator | Jumlah konten per status dan daftar konten yang sudah terbit |
+| Reviewer | Jumlah konten yang direview, disetujui, dan diminta revisi |
+| Admin | Peran dan tugas, tanpa statistik |
+
+- Profil publik (FR-13) tetap menampilkan profil pelajar.
+
+### Jenis konten yang dapat dibuat Creator (bertahap)
+1. **Artikel blog** — tahap pertama.
+2. **Isi lesson** — setelah sistem konten lesson tersedia.
+3. **Soal latihan** — terakhir, karena memuat kunci jawaban; kunci jawaban wajib diverifikasi Reviewer.
+
+### Alur penerbitan
+`Draf` → `Menunggu Review` → `Perlu Revisi` atau `Disetujui` → `Terbit`
+
+- Konten yang sudah terbit lalu diubah dibuat sebagai revisi baru yang kembali melewati review. Versi yang terbit tetap tayang sampai revisinya disetujui dan diterbitkan.
+- Setiap konten mencatat penulis, reviewer, dan tanggal setiap perubahan status.
+- Reviewer ikut memeriksa setiap referensi video: relevan, tidak bertentangan dengan isi konten, versi tool masih sesuai, dan bebas konten yang tidak pantas.
+
+### Tahap sebelum backend: menulis di Google Docs
+Karena tidak semua Creator memahami GitHub, selama backend belum tersedia:
+
+| Tahap alur | Bentuk |
+|---|---|
+| Draf | Creator menulis di Google Docs memakai template artikel resmi |
+| Menunggu Review | Creator membagikan dokumen ke Reviewer dengan akses komentar |
+| Perlu Revisi | Reviewer memberi komentar di dokumen; Creator memperbaiki dan menandai komentar selesai |
+| Disetujui | Reviewer menyatakan setuju di dokumen |
+| Terbit | Admin mengubah dokumen menjadi file MDX melalui pull request ke `develop`; setelah CI lulus dan di-merge, status artikel diubah menjadi `published` |
+
+Ketentuan:
+- Template Google Docs berisi kolom metadata (judul, ringkasan, kategori, sampul, ajakan, sumber) dan contoh format isi (heading, blok kode, Tips, Peringatan, gambar dengan keterangan, tabel).
+- Template juga berisi kolom opsional "Referensi Video": link YouTube, nama channel, posisi di dalam konten, dan alasan memilih video tersebut.
+- Panduan untuk Creator ditulis dalam bahasa sederhana tanpa istilah Git, dan dapat diakses dari halaman informasi di Mode Creator.
+- Panduan teknis konversi dan pull request (`docs/CONTENT_GUIDE.md`) ditujukan untuk Admin.
+- Gambar dari dokumen dioptimalkan dan disimpan di repository saat konversi.
+- Creator tidak memerlukan akun atau akses GitHub.
+- Halaman Konten Saya, Buat Konten, dan Catatan Revisi di aplikasi tetap berupa halaman informasi yang menautkan ke template dan panduan.
+
+### Peralihan ke database
+Isi course, lesson, soal kuis, dan artikel disimpan di database (Bagian 6.3). Alur Creator, Reviewer, dan Admin di aplikasi sudah aktif di UAT dan Production saat rilis.
+- Seluruh konten yang sudah ada dipindahkan ke database lewat skrip impor.
+- Skrip impor aman dijalankan berulang: konten dengan slug yang sama diperbarui, bukan diduplikasi, dan slug tidak pernah berubah.
+- Sampai alur di aplikasi aktif di suatu lingkungan, konten baru di lingkungan itu tetap ditulis lewat Google Docs dan dimasukkan dengan skrip impor.
+
+### Tahap antarmuka dengan data dummy
+Agar alur ketiga peran dapat dicoba dan diuji sebelum backend tersedia, seluruh antarmuka Creator, Reviewer, dan Admin dibangun sekarang dengan data dummy.
+
+- Antarmuka lengkap hanya tampil di lingkungan DEV. UAT dan Production tetap menampilkan halaman informasi alur Google Docs sampai backend tersedia.
+- Data dummy konten, catatan, dan riwayat status dipusatkan di `data/dummy/` dan dapat direset dari DEV.
+- Akses data melalui satu lapisan repository (antarmuka) agar implementasi dummy dapat diganti Supabase tanpa mengubah komponen halaman.
+- Aksi yang membutuhkan backend (menerbitkan ke blog publik, unggah gambar permanen) disimulasikan dan diberi keterangan "Simulasi" di DEV.
+- Aturan alur status dan batasan peran diterapkan di lapisan data, bukan hanya disembunyikan di tampilan.
+
+### Tahap setelah backend: menulis di aplikasi
+Backend diprioritaskan agar Creator dapat menulis langsung di aplikasi tanpa alat tambahan.
+
+**Konten Saya**
+- Tab status dengan jumlah: Semua, Draf, Menunggu Review, Perlu Revisi, Disetujui, Terbit.
+- Kolom: judul, jenis konten, kategori atau course terkait, status, terakhir diubah, dan reviewer.
+- Pencarian dan filter jenis konten.
+- Aksi mengikuti status:
+
+| Status | Aksi |
+|---|---|
+| Draf | Edit, Kirim untuk Review, Hapus |
+| Menunggu Review | Lihat, Tarik kembali (kembali menjadi Draf) |
+| Perlu Revisi | Lihat catatan, Edit |
+| Disetujui | Lihat (menunggu diterbitkan Admin) |
+| Terbit | Lihat di website, Buat revisi |
+
+- Empty state untuk Creator baru dengan ajakan menulis konten pertama.
+
+**Buat Konten**
+- Langkah 1, pilih jenis konten: Artikel blog (aktif); Isi lesson dan Soal latihan ditampilkan terkunci sampai tahapnya tiba.
+- Langkah 2, editor:
+  - Panel info: judul, ringkasan, kategori, sampul, ajakan ke course atau latihan, dan sumber.
+  - Editor isi dengan toolbar: heading, tebal, daftar, blok kode, kotak Tips, kotak Peringatan, gambar, dan tabel.
+  - **Upload gambar** langsung dari editor, dengan teks alternatif (wajib) dan keterangan (opsional); format JPG, PNG, atau WebP, maksimal 2 MB; gambar dioptimalkan otomatis.
+  - Sisipkan referensi video YouTube dengan menempelkan link; judul dan nama channel diisi otomatis bila tersedia, sedangkan durasi, bahasa, dan alasan memilih video diisi Creator.
+  - Pratinjau yang menampilkan konten persis seperti di halaman publik.
+  - Simpan otomatis sebagai draf, jumlah kata, dan perkiraan waktu baca.
+  - Checklist sebelum kirim sesuai Bagian 16: contoh kode diuji, data bersumber, bahasa diperiksa.
+  - Tombol "Simpan Draf" dan "Kirim untuk Review"; kirim hanya aktif jika kolom wajib terisi dan seluruh checklist dicentang.
+
+**Catatan Revisi**
+- Dikelompokkan per konten, dengan nama reviewer dan tanggal.
+- Dua jenis catatan: **catatan umum** untuk keseluruhan konten, dan **catatan per bagian** yang terhubung ke heading tertentu.
+- Creator dapat membalas singkat dan menandai catatan "Sudah diperbaiki".
+- Filter: Perlu ditangani dan Selesai.
+- Tombol "Kirim ulang untuk Review" nonaktif selama masih ada catatan yang belum ditandai, dengan teks bantuan jumlah catatan yang sudah selesai (mis. "2 dari 3 selesai").
+- "Sudah diperbaiki" adalah tanda dari Creator, bukan persetujuan. Seluruh catatan dinyatakan selesai saat Reviewer menyetujui konten. Jika perbaikan belum cukup, Reviewer meminta revisi lagi dengan catatan baru.
+- Acuan visual: `docs/desain/` (Bagian 13.2).
+
+**Antrian Review (Reviewer)**
+- Tab: Ditugaskan ke saya, Belum ditugaskan, dan Riwayat (konten yang pernah direview).
+- Kolom: judul, jenis konten, Creator, tanggal dikirim, kiriman ke berapa (pertama atau ulang), dan lama menunggu.
+- Konten "Belum ditugaskan" dapat diambil sendiri oleh Reviewer ("Ambil untuk review"), kecuali konten tulisannya sendiri.
+- Pencarian dan filter jenis konten.
+
+**Halaman Review (Reviewer)**
+- Pratinjau konten persis seperti halaman publik, beserta panel info (metadata, sumber, ajakan).
+- Panel catatan: tambah catatan umum, catatan per bagian (pilih heading), dan catatan per referensi video.
+- Untuk kiriman ulang: catatan sebelumnya tampil beserta balasan Creator dan tanda "Sudah diperbaiki".
+- Daftar referensi video beserta alasan Creator memilihnya.
+- Checklist Reviewer sesuai Bagian 16: akurasi, contoh kode, sumber data, bahasa, dan kelayakan referensi video.
+- Keputusan: **Minta Revisi** (wajib minimal satu catatan baru) atau **Setujui** (wajib seluruh checklist Reviewer dicentang).
+- Reviewer tidak mengedit isi konten secara langsung.
+
+**Tugas Admin**
+Ringkasan, Semua Konten (tugaskan reviewer, terbitkan, tarik), dan Kelola Peran diatur di FR-16.
+
+**Notifikasi peran (grup Khusus role, Bagian 4.4)**
+- Creator: konten diminta revisi, disetujui, diterbitkan, atau ditarik.
+- Reviewer: konten baru ditugaskan kepadanya, dan kiriman ulang dari konten yang pernah ia review.
+- Admin: konten baru Disetujui dan siap diterbitkan.
+
+**Fase berikutnya**
+- Riwayat versi dan perbandingan antarversi.
+- Catatan per paragraf bebas.
+
+### Penulis dan kepemilikan
+- Artikel menampilkan nama Creator yang menulisnya; "Tim BelajarAutomation" dipakai untuk tulisan pemilik produk atau tulisan bersama.
+- Sebelum Creator mulai menulis, wajib ada kesepakatan tertulis sederhana mengenai hak penggunaan konten oleh platform dan pencantuman nama penulis.
+- Kesepakatan dicatat Admin (FR-16). Konten dari Creator yang belum memiliki kesepakatan tercatat tidak dapat diterbitkan.
+- Apakah Creator mendapat imbalan masih belum ditentukan (Bagian 12).
+
+---
+
+## FR-16 — Panel Admin
+
+### Tujuan
+Menyediakan alat bagi Admin untuk mengelola konten, pengguna, transaksi, katalog, dan operasional platform secara aman dan tercatat.
+
+### Prinsip
+- Setiap aksi Admin tercatat di Log Aktivitas Admin: siapa, kapan, aksi, target, dan alasan.
+- Aksi yang mengubah hak akses, XP, status akun, atau uang wajib disertai alasan dan dialog konfirmasi.
+- Aturan ditegakkan di backend, bukan hanya dengan menyembunyikan tombol.
+- Admin tidak pernah melihat kata sandi pengguna dan tidak dapat mengubah status pembayaran yang berasal dari payment gateway.
+- Data historis (transaksi, XP, riwayat status) tidak dihapus; perubahan dilakukan dengan catatan koreksi.
+- Seluruh Panel Admin dibangun sekarang dengan data dummy dan hanya tampil di DEV (FR-15 "Tahap antarmuka dengan data dummy"). Aksi yang membutuhkan backend atau payment gateway diberi keterangan "Simulasi".
+
+### Navigasi
+| Kelompok | Menu |
+|---|---|
+| Konten | Ringkasan, Semua Konten |
+| Pengguna | Pengguna dan Peran, Moderasi |
+| Bisnis | Transaksi, Produk Digital |
+| Platform | Katalog Belajar, Pengumuman, Mode Maintenance |
+| Laporan | Laporan, Log Aktivitas Admin |
+
+### A. Ringkasan
+- Konten: jumlah per status, Menunggu Review yang belum ditugaskan, review yang menunggu lebih dari 3 hari, dan konten Disetujui yang siap diterbitkan.
+- Pengguna: pengguna baru 7 hari terakhir dan akun yang ditandai Moderasi.
+- Transaksi: transaksi hari ini, transaksi menunggu pembayaran, dan permintaan refund.
+- Setiap angka dapat diklik menuju daftar yang sudah terfilter.
+
+### B. Semua Konten
+- Seluruh konten dari semua Creator dengan tab status, pencarian, dan filter jenis, Creator, serta Reviewer.
+- **Tugaskan Reviewer** untuk konten Menunggu Review; penulis konten tidak dapat dipilih.
+- **Terbitkan** konten Disetujui. Terkunci jika Creator belum memiliki kesepakatan tercatat, dengan keterangan penyebabnya.
+- **Tarik dari website** konten Terbit dengan alasan wajib; konten kembali menjadi Draf milik Creator dan alasannya tampil sebagai catatan umum.
+- Riwayat status setiap konten.
+
+### C. Pengguna dan Peran
+- Daftar pengguna dengan pencarian (nama, username, email) dan filter peran, membership, dan status akun.
+- Detail pengguna: nama, username, email, tanggal daftar, terakhir aktif, peran, membership dan hak akses, ringkasan belajar (XP, rank, course), riwayat transaksi, dan status akun.
+- **Kelola peran:** menambah atau mencabut peran Creator, Reviewer, dan Admin. Admin tidak dapat mencabut peran Admin dari dirinya sendiri jika ia satu-satunya Admin.
+- **Nonaktifkan akun** dengan alasan wajib: akun tidak dapat login, tidak tampil di leaderboard maupun profil publik, dan datanya tidak dihapus. Akun dapat diaktifkan kembali. Admin tidak dapat menonaktifkan akunnya sendiri.
+- **Kesepakatan Creator:** untuk pengguna berperan Creator, Admin mencatat tanggal kesepakatan dan tautan atau keterangan dokumennya. Daftar pengguna dapat difilter "Creator tanpa kesepakatan".
+
+### D. Moderasi
+- Daftar akun yang ditandai otomatis karena pola XP tidak wajar, misalnya lonjakan XP harian di atas batas atau penyelesaian lesson yang terlalu cepat. Batas ditetapkan di Bagian 12.
+- Tindakan: **Abaikan**, **Koreksi XP** (alasan wajib; dicatat sebagai transaksi XP koreksi, bukan mengubah riwayat), atau **Sembunyikan dari leaderboard**.
+- Riwayat tindakan moderasi per akun.
+
+### E. Transaksi dan Hak Akses
+- Daftar transaksi: ID, pengguna, paket atau produk, nominal, metode, tanggal, dan status (Menunggu Pembayaran, Berhasil, Gagal, Kedaluwarsa, Refund).
+- Pencarian, filter status, dan rentang tanggal.
+- Detail transaksi dengan timeline status. Status pembayaran hanya berubah dari payment gateway.
+- **Refund** dengan alasan wajib: transaksi berstatus Refund dan hak akses dari transaksi tersebut dicabut. Kebijakan refund ditetapkan di Bagian 12.
+- **Berikan hak akses manual** (membership, eBook, atau project) dengan alasan wajib, mis. kompensasi atau hadiah. Tercatat sebagai sumber "Pemberian manual" tanpa transaksi pembayaran.
+- **Cabut hak akses manual** dengan alasan wajib.
+- Riwayat klaim kredit eBook dan project per pengguna.
+
+### F. Produk Digital
+- Daftar eBook dan project dengan status Draf atau Terbit.
+- Tambah dan ubah: judul, deskripsi, sampul, harga, file produk, dan status.
+- Perubahan harga tidak memengaruhi transaksi yang sudah terjadi.
+- File produk hanya dapat diunduh pengguna yang memiliki hak akses (8.3).
+
+### G. Katalog Belajar
+- Daftar course dengan status katalog (`available` atau `coming-soon`), status konten (`ready` atau `draft`), dan tingkat akses (`free` atau `premium`).
+- Mengubah status dan tingkat akses dengan aturan:
+  - Course tidak dapat dijadikan `available` di UAT dan Production jika belum `ready`.
+  - Course `free` tidak dapat diubah menjadi `premium` setelah ada pengguna yang mempelajarinya.
+  - Perubahan yang membuat total XP dari materi gratis kurang dari batas rank Master ditolak.
+- Indikator total XP dari materi gratis dibandingkan batas rank Master.
+- Daftar roadmap dan latihan Playground beserta statusnya.
+- Selama belum ada backend, sumber kebenaran katalog tetap file data di repository dan `docs/CURRICULUM.md`; perubahan di Panel Admin DEV bersifat simulasi.
+- Setelah backend tersedia, sumber kebenaran katalog, isi lesson, dan soal kuis adalah database. `docs/CURRICULUM.md` tetap menjadi acuan rencana kurikulum.
+
+### H. Pengumuman
+- Membuat notifikasi untuk pengguna: judul, isi, tautan tujuan, grup notifikasi (Konten baru atau Akun dan sistem), dan target (semua pengguna, pemilik membership tertentu, atau peran tertentu).
+- Kirim sekarang atau jadwalkan. Pengumuman terjadwal dapat dibatalkan sebelum terkirim.
+- Pratinjau sebelum dikirim dan riwayat pengumuman (Draf, Terjadwal, Terkirim, Dibatalkan).
+- Pengumuman tunduk pada preferensi notifikasi pengguna (Bagian 4.4).
+
+### I. Laporan
+- Pengguna baru, pengguna aktif 7 dan 30 hari, penjualan per paket dan produk, course yang paling banyak dimulai dan diselesaikan, serta konten terbit.
+- Filter rentang tanggal dan ekspor CSV.
+
+### J. Log Aktivitas Admin
+- Seluruh aksi Admin: waktu, Admin, aksi, target, dan alasan.
+- Pencarian dan filter Admin, jenis aksi, dan rentang tanggal.
+- Log tidak dapat diubah atau dihapus.
+
+### K. Mode Maintenance
+Menutup situs sementara untuk perbaikan tanpa membuat pengguna kehilangan pekerjaan. Maintenance tidak pernah dimulai mendadak: selalu didahului tahap Persiapan.
+
+**Tahap**
+
+| Tahap | Halaman login | Pengguna yang sedang login |
+|---|---|---|
+| Terjadwal | Banner berisi jadwal maintenance | Pengumuman grup Akun dan sistem terkirim otomatis saat maintenance dijadwalkan, dan banner jadwal tampil di atas halaman |
+| Persiapan | Login masih dapat dilakukan, dengan banner hitung mundur | Banner hitung mundur di semua halaman. Kuis dan latihan baru tidak dapat dimulai; yang sedang dikerjakan boleh diselesaikan. Satu menit sebelum Aktif, tampil peringatan yang lebih menonjol dan jawaban serta draf disimpan otomatis |
+| Aktif | Banner maintenance tampil otomatis. Hanya Admin yang dapat login; peran lain ditolak dengan pesan maintenance | Pengguna selain Admin diarahkan ke halaman maintenance |
+| Selesai | Banner hilang | Ajakan melanjutkan pekerjaan yang tertunda, mis. "Lanjutkan kuis" |
+
+- Pengguna selain Admin (User, Creator, Reviewer) yang sudah login juga melihat popup maintenance pada tahap Terjadwal dan Persiapan. Popup muncul sekali per tahap dan muncul lagi bila jadwal diubah. Admin hanya melihat banner.
+- Mengubah atau membatalkan jadwal juga mengirim pengumuman ke semua pengguna, agar jadwal yang sudah diumumkan tidak menyesatkan.
+
+**Pengaturan Admin**
+- Admin menentukan waktu mulai, perkiraan selesai, pesan untuk pengguna, dan lama tahap Persiapan: 5, 10, 20, 30, atau 60 menit (bawaan 30 menit).
+- Waktu mulai paling cepat adalah saat ini ditambah lama tahap Persiapan.
+- Jadwal dapat diubah atau dibatalkan sebelum maintenance Aktif.
+- Admin mengakhiri maintenance secara manual; perkiraan selesai hanya informasi bagi pengguna.
+- Menjadwalkan, mengubah, membatalkan, dan mengakhiri maintenance memakai dialog konfirmasi dengan alasan wajib dan tercatat di Log Aktivitas Admin.
+
+**Cakupan**
+- Selama Aktif, seluruh halaman tertutup, termasuk halaman publik seperti beranda, blog, dan katalog. Pengecualian: halaman login dan halaman maintenance.
+- Hanya Admin yang dapat login dan membuka seluruh situs untuk memeriksa perbaikan. Creator, Reviewer, dan User ikut tertutup.
+- Halaman yang tertutup dijawab server dengan kode 503 beserta perkiraan waktu kembali, agar mesin pencari menganggap penutupan bersifat sementara.
+
+**Perlindungan pekerjaan pengguna**
+- Jawaban kuis dan latihan tersimpan setiap kali satu soal dijawab, bukan hanya saat dikirim.
+- Jawaban yang dikirim saat maintenance Aktif disimpan di perangkat dan dikirim otomatis setelah maintenance selesai, dengan pesan "Jawabanmu aman dan akan dikirim setelah maintenance selesai."
+- Batas waktu kuis berhenti selama maintenance; sisa waktu tetap sama saat dilanjutkan.
+- Percobaan yang terpotong maintenance tidak dihitung sebagai percobaan, tidak tercatat gagal, dan tidak mengurangi XP.
+- Setelah maintenance selesai, pengguna melanjutkan dari soal terakhir, tidak mengulang dari awal.
+- Halaman maintenance menyebut pekerjaan yang tersimpan, mis. "Jawabanmu sampai soal 7 tersimpan."
+- Draf Creator disimpan otomatis sebelum maintenance Aktif; perubahan yang belum terkirim dikirim setelah situs kembali.
+
+**Tahap data dummy**
+- Dibangun sekarang sebagai simulasi DEV seperti bagian Panel Admin lainnya: status maintenance tersimpan per browser, sehingga Admin dan pengguna dicoba di browser yang sama.
+- Perlindungan kuis diterapkan saat format kuis dibangun; sebelum itu berlaku untuk latihan Playground dan draf Creator.
+- Pemeriksaan status di server, kode 503, dan antrean kiriman ke server menunggu backend.
+
+---
+
 # 4. Profil, Preferensi, dan Pengaturan
 
 ## 4.1 Profil
@@ -1075,9 +1733,156 @@ Perubahan mode tampilan, avatar, dan tema harus:
 - Tetap mempertahankan keterbacaan dan kontras antarmuka.
 
 ## 4.4 Notifikasi
-Notifikasi dapat digunakan untuk memberi informasi mengenai aktivitas atau perubahan yang relevan.
 
-Preferensi notifikasi dan jenis notifikasi yang akan didukung masih perlu ditentukan.
+### Kelompok notifikasi
+| Kelompok | Contoh | Dapat dimatikan |
+|---|---|---|
+| Progres belajar | Naik rank, course selesai, lulus latihan untuk pertama kali, achievement diperoleh | Ya |
+| Konten baru | Course "Segera hadir" menjadi tersedia, latihan baru, eBook atau project baru | Ya |
+| Transaksi | Pembayaran berhasil, gagal, atau tertunda; membership aktif; kredit eBook atau project terpakai | Tidak |
+| Akun dan sistem | Selamat datang, perubahan kebijakan, jadwal maintenance | Tidak |
+| Khusus role | Creator: konten disetujui atau perlu revisi. Reviewer: konten baru di antrean. Admin: transaksi tertunda | Ya |
+
+Tidak dibuat notifikasi untuk: setiap perolehan XP, setiap lesson selesai, perubahan posisi leaderboard, dan pengingat streak harian (dapat dipertimbangkan setelah ada penjadwal di server).
+
+Notifikasi mengikuti mode aktif (FR-15): di mode peran hanya tampil notifikasi Khusus role serta Akun dan sistem; kelompok lain tampil di Mode Belajar.
+
+Notifikasi achievement hanya berfungsi sebagai penunjuk ke tab Pencapaian di profil; badge achievement tetap hanya ditampilkan di profil (FR-14).
+
+### Tampilan
+- **Lonceng di header:** menampilkan jumlah belum dibaca, maksimal "9+".
+- **Desktop:** klik lonceng membuka popover di bawahnya berisi maksimal 5 notifikasi terbaru, tombol "Tandai semua dibaca", dan tautan "Lihat semua notifikasi". Klik lonceng tidak memindahkan halaman.
+- **Mobile:** klik lonceng membuka halaman notifikasi atau panel dari bawah layar.
+- **Halaman `/notifications`** berfungsi sebagai arsip: judul "Notifikasi", tab Semua dan Belum dibaca, filter per kelompok, tombol "Tandai semua dibaca", dan pengelompokan per tanggal (Hari ini, Kemarin, lalu tanggal lengkap).
+- Notifikasi belum dibaca dibedakan secara visual.
+- Notifikasi sejenis yang muncul berdekatan digabung, mis. "3 course baru tersedia".
+- Empty state saat tidak ada notifikasi.
+
+### Acuan tampilan
+| Kelompok | Warna aksen | Ikon |
+|---|---|---|
+| Konten baru | Biru | Buku |
+| Progres belajar | Ungu | Target atau piala |
+| Transaksi | Hijau | Kartu pembayaran |
+| Akun dan sistem | Kuning | Roda gigi |
+| Khusus role | Oranye | Pensil |
+
+- Ikon dan warna konsisten di popover, halaman, mobile, dan modal.
+- Format waktu: relatif untuk kurang dari 24 jam ("5 menit lalu", "2 jam lalu"); di atas itu "Kemarin, 20.14" atau "30 Okt, 14.22".
+- Popover: lebar sekitar 360px; setiap item berisi ikon kelompok dalam kotak membulat, judul tebal, isi maksimal 2 baris, dan waktu.
+- Halaman: tab berupa tombol pil, filter kelompok berupa dropdown "Semua kelompok", tombol "Tandai semua dibaca", dan setiap item memiliki penanda panah.
+- Mobile: halaman notifikasi dengan tombol kembali di kiri judul.
+- Modal pengumuman: ikon kelompok, judul, isi lengkap, dan tombol "Mengerti".
+- Teks notifikasi membership mengikuti model Lifetime (FR-10), mis. "Membership Premium aktif. Kamu dapat mengakses materi premium yang termasuk dalam paketmu." Notifikasi tidak boleh menjanjikan akses ke seluruh konten premium.
+
+### Tujuan klik
+Klik notifikasi menandainya sebagai dibaca dan langsung membuka halaman terkait:
+
+| Notifikasi | Tujuan |
+|---|---|
+| Naik rank, achievement diperoleh | Profil (tab Ringkasan atau Pencapaian) |
+| Course selesai, course baru tersedia | Halaman detail course |
+| Lulus latihan, latihan baru | Halaman latihan |
+| eBook atau project baru | Halaman detail produk |
+| Transaksi | Detail transaksi |
+| Membership aktif | Halaman membership |
+| Konten perlu revisi atau disetujui (Creator) | Konten terkait beserta catatan |
+| Konten baru di antrean (Reviewer) | Antrean review |
+
+- Pengumuman tanpa halaman tujuan (kebijakan, maintenance) dibuka dalam modal berisi teks lengkap.
+- Jika halaman tujuan sudah tidak tersedia, arahkan ke halaman notifikasi dengan pesan "Konten ini sudah tidak tersedia".
+
+### Saluran
+1. Di website (lonceng dan halaman notifikasi): tahap awal.
+2. Email: setelah backend tersedia; wajib untuk transaksi, opsional untuk kelompok lain. Dikirim lewat Resend: email akun (verifikasi, reset password) dari Supabase Auth, dan email transaksi dari antrean di database yang dicoba ulang bila gagal. Pengumuman massal lewat email menyusul setelah kuota dan reputasi pengirim siap.
+3. Push notification browser: fase berikutnya.
+
+### Preferensi
+- Halaman pengaturan menyediakan toggle per kelompok yang dapat dimatikan, serta toggle email terpisah.
+- Kelompok Transaksi dan Akun ditampilkan sebagai "Selalu aktif".
+
+### Penyimpanan
+- Notifikasi berusia lebih dari 90 hari dihapus otomatis.
+- Status dibaca tersimpan per pengguna di backend.
+
+## 4.5 Masuk dan Daftar
+
+### Metode
+- Email dan password.
+- Akun Google: tombol "Masuk dengan Google" di halaman masuk dan "Daftar dengan Google" di halaman daftar, di atas form email.
+
+### Daftar dengan email
+- Isian: nama lengkap, username (FR-13), email, password (minimal 8 karakter), konfirmasi password, dan persetujuan syarat dan ketentuan.
+- Ketersediaan username diperiksa sebelum akun dibuat.
+- Setelah mendaftar, pengguna diminta membuka tautan verifikasi di email. Akun baru dapat dipakai untuk masuk setelah email terverifikasi.
+- Untuk email yang sudah terdaftar, tampilan tetap sama seperti pendaftaran berhasil, agar keberadaan akun tidak dapat ditebak.
+- Email verifikasi dapat dikirim ulang dari halaman daftar dan dari halaman masuk jika email belum terverifikasi.
+- Email verifikasi berbahasa Indonesia dengan identitas belajarautomation.com, subjek "Verifikasi email akun belajarautomation.com". Desain mengikuti mockup pemilik: header gelap dengan logo, ilustrasi kucing dengan perisai centang, judul "Verifikasi Email Anda", tombol "Verifikasi Akun Sekarang", masa berlaku tautan, kotak "Tidak merasa mendaftar?", dan footer dengan logo serta fitur utama, ditambah tautan cadangan bila tombol tidak berfungsi. Template disimpan di `supabase/templates/confirm-signup.html`; gambarnya PNG di `public/email/` karena sebagian aplikasi email tidak mendukung WebP. Teks masa berlaku mengikuti pengaturan Email OTP Expiration. Template hanya dapat dipasang setelah SMTP kustom (Resend) tersedia; sebelum itu Supabase memakai template bawaan.
+
+### Lupa password
+- Tautan "Lupa password?" di halaman masuk membuka halaman permintaan reset.
+- Pesan setelah meminta reset selalu sama, terdaftar atau tidak emailnya.
+- Tautan di email membuka halaman "Buat password baru". Tautan kedaluwarsa atau tidak valid diarahkan ke halaman masuk dengan pesan untuk meminta tautan baru.
+
+### Akun demo
+- Akun demo per peran hanya dapat dipakai di DEV, atau di lingkungan yang belum memasang Supabase. Di UAT dan Production dengan Supabase, masuk hanya lewat akun sungguhan.
+- Daftar akun demo tidak ditampilkan di halaman masuk agar form tetap ringkas; daftarnya ada di README.
+
+### Panel promosi
+- Di desktop, sisi kiri halaman masuk dan daftar menampilkan 3 slide promosi; di layar kecil panel ini tidak ditampilkan agar form tetap di atas.
+- Slide awal: poster belajarautomation.com, koleksi avatar kucing, dan eBook.
+- Panel berupa bingkai potret 3:4 yang tingginya mengikuti layar; form mengisi sisa ruang. Titik navigasi dan tombol jeda berada di bawah bingkai.
+- Slide poster ditampilkan utuh tanpa teks tambahan, dengan teks alternatif yang menjelaskan isinya. Poster disimpan di `public/auth-slides/` (potret 3:4).
+- Slide bergeser otomatis setiap 6 detik dan berhenti saat diarahkan mouse atau difokuskan. Tersedia titik navigasi, tombol jeda, dan dapat digeser.
+- Pengguna yang mengaktifkan "kurangi gerakan" tidak melihat pergeseran otomatis.
+- Isi promosi harus sesuai kondisi nyata: fitur yang belum tersedia di lingkungan tersebut diberi label "Segera hadir".
+- Isi slide dikelola lewat file data sampai pengelolaannya tersedia di Panel Admin (Fase 6).
+
+### Aturan akun Google
+- Pengguna baru yang mendaftar dengan Google memilih username satu kali sebelum memakai aplikasi, karena username dipakai di profil publik (FR-13). Nama tampilan dan foto diambil dari akun Google dan dapat diubah.
+- Jika email Google sudah terdaftar dengan password dan email tersebut terverifikasi oleh Google, akun disambungkan; tidak dibuat akun baru.
+- Semua peran dapat masuk dengan Google. Admin tetap wajib verifikasi dua langkah di aplikasi (8.3).
+- Akun nonaktif tetap ditolak (FR-16 C), dan selama maintenance Aktif hanya Admin yang dapat masuk (FR-16 K).
+
+### Tahap
+- Sebelum backend: tombol tampil dengan keterangan "Segera hadir" dan tidak dapat dipakai.
+- Setelah backend: memakai login Google dari Supabase Auth. Pemilik menyiapkan project Google Cloud, layar persetujuan OAuth (nama aplikasi, logo, tautan kebijakan privasi), Client ID dan Secret, serta alamat redirect untuk DEV, UAT, dan Production.
+
+## 4.6 Pemberitahuan Aksi dan Koneksi
+Alert singkat di atas tengah layar memberi tahu hasil aksi pengguna dan perubahan koneksi internet. Berlaku di semua halaman dan semua mode (Belajar, Creator, Reviewer, Admin).
+
+### Kapan tampil
+| Kejadian | Jenis | Contoh |
+|---|---|---|
+| Simpan, buat, atau ubah berhasil | Sukses | "Profil tersimpan." |
+| Hapus berhasil | Info | "Membership Pro Lifetime dihapus dari keranjang." |
+| Simpan gagal karena server atau aturan | Error | "Username sudah dipakai. Pilih yang lain." |
+| Koneksi internet terputus | Peringatan | "Koneksi internet terputus. Perubahan belum bisa disimpan sampai koneksi kembali." |
+| Koneksi internet kembali | Sukses | "Koneksi internet kembali." |
+
+### Aturan
+- Posisi atas tengah; di layar kecil selebar layar dengan jarak tepi 16px. Paling banyak 3 alert bertumpuk, yang terbaru di atas.
+- Sukses dan info tampil 4 detik, error dan peringatan 8 detik. Semua alert dapat ditutup dengan tombol tutup.
+- Alert koneksi terputus tetap tampil sampai koneksi kembali, lalu diganti alert koneksi kembali.
+- Kesalahan pada isian tertentu (mis. format username) tetap ditampilkan di bawah isiannya, bukan sebagai alert, agar dekat dengan yang perlu diperbaiki.
+- Status yang menetap di halaman (mis. "Lesson selesai") tetap di halaman, bukan alert.
+- Pesan di halaman latihan Playground adalah bagian dari soal dan tidak diubah menjadi alert.
+- Pembaca layar mengumumkan error dan peringatan segera, serta sukses dan info tanpa memotong.
+
+### Tahap penerapan
+- Tahap 1: sistem alert, alert koneksi, dan fitur Pelajar (Pengaturan profil, Kustomisasi, keranjang).
+- Tahap 2: aksi Creator, Reviewer, dan Admin (buat, ubah, hapus konten, review, kelola pengguna, dan lainnya).
+
+## 4.7 Popup Promosi
+Popup di tengah layar yang memberi tahu promosi atau info terbaru (mis. eBook, project, avatar, atau tema baru).
+
+- Tampil satu kali setiap pengguna masuk lewat halaman masuk, di halaman pertama setelah masuk. Tidak tampil saat pengguna membuka situs dengan sesi yang masih aktif.
+- Hanya di Mode Belajar. Bila popup maintenance sedang berlaku, popup promosi tidak ditampilkan.
+- Berisi gambar, judul, deskripsi, tombol ajakan (opsional), "Nanti saja", dan "Jangan tampilkan lagi".
+- "Nanti saja" menutup popup; popup tampil lagi di login berikutnya.
+- "Jangan tampilkan lagi" menutup popup dan tidak menampilkan promosi itu lagi untuk akun tersebut. Promosi baru dengan id berbeda tetap tampil.
+- Isi promosi harus sesuai kondisi nyata.
+- Satu promosi aktif dalam satu waktu, dikelola lewat file data sampai tersedia di Panel Admin (Fase 6). Pilihan "Jangan tampilkan lagi" disimpan di browser sampai tersedia di backend.
 
 ---
 
@@ -1159,6 +1964,10 @@ Tanggung jawab:
 - Penyimpanan preferensi pengguna.
 
 ## 6.3 Database
+Backend memakai Supabase: Auth untuk autentikasi, Postgres untuk database dengan Row Level Security sebagai penegak hak akses, dan Storage untuk gambar konten serta file produk. Region Singapura (`ap-southeast-1`), yang paling dekat dengan pengguna Indonesia.
+
+Rancangan tabel, indeks, aturan akses, perkiraan beban, dan tahapan pembangunan ada di `docs/DATABASE.md`. Jika dokumen tersebut bertentangan dengan PRD, PRD yang berlaku.
+
 Database menjadi sumber data persisten untuk:
 - Pengguna.
 - Konten.
@@ -1170,6 +1979,19 @@ Database menjadi sumber data persisten untuk:
 - Paket membership.
 - Klaim benefit.
 - Preferensi pengguna.
+
+Isi konten:
+- Isi course, lesson, soal kuis, dan artikel disimpan di database.
+- Halaman publik tetap dibuat statis dari isi database saat build, lalu hanya halaman yang berubah yang diperbarui saat konten diterbitkan atau ditarik. Pembaca tidak memicu kueri database (Bagian 8.2).
+- Kunci jawaban kuis dan latihan tidak pernah dikirim ke browser. Penilaian tetap dilakukan di server.
+
+Lingkungan:
+
+| Lingkungan | Paket Supabase | Catatan |
+|---|---|---|
+| DEV | Free | Data uji dan data dummy |
+| UAT | Free | Berhenti otomatis bila tidak dipakai sekitar seminggu; diaktifkan kembali dari dashboard Supabase sebelum pengujian |
+| Production | Pro | Backup harian; compute ditambah berdasarkan metrik, bukan perkiraan |
 
 ## 6.4 Prinsip Arsitektur
 - Validasi penting dilakukan di backend.
@@ -1187,19 +2009,19 @@ Database menjadi sumber data persisten untuk:
 Entitas berikut adalah model konseptual awal. Nama tabel, tipe data, relasi, dan implementasi final harus mengikuti hasil audit kode dan desain database.
 
 ## 7.1 User
-Menyimpan identitas dan informasi dasar pengguna.
+Menyimpan identitas dan informasi dasar pengguna, beserta perannya: `student` (Pelajar, dimiliki setiap akun), `creator`, `reviewer`, dan `admin`.
 
 ## 7.2 UserPreferences
 Menyimpan preferensi tampilan dan pengaturan pengguna.
 
 ## 7.3 LearningContent
-Menyimpan informasi materi pembelajaran.
+Menyimpan informasi materi pembelajaran, termasuk isi teks lesson dan daftar referensi video (ID video YouTube, judul, nama channel, durasi, bahasa, posisi di dalam lesson, dan status ketersediaan terakhir).
 
 ## 7.4 LearningProgress
 Mencatat status dan progress materi pengguna.
 
 ## 7.5 QuizAttempt
-Mencatat sesi pengerjaan kuis dan hasilnya.
+Mencatat sesi pengerjaan kuis, jawaban yang tersimpan per soal, sisa waktu, dan hasilnya. Percobaan yang terpotong maintenance ditandai tertunda dan tidak dihitung (FR-16 K).
 
 ## 7.6 ChallengeSubmission
 Mencatat pengiriman jawaban challenge dan hasil validasinya.
@@ -1252,6 +2074,21 @@ Menyimpan definisi achievement: ID, nama, deskripsi syarat, kategori, ikon, dan 
 ## 7.22 UserAchievement
 Mencatat achievement yang diperoleh pengguna, tanggal diperoleh, dan progres achievement bertahap.
 
+## 7.23 AdminAuditLog
+Mencatat setiap aksi Admin: waktu, Admin, aksi, target, alasan, dan data sebelum serta sesudah perubahan.
+
+## 7.24 CreatorAgreement
+Mencatat kesepakatan tertulis Creator: pengguna, tanggal, tautan atau keterangan dokumen, dan Admin yang mencatat.
+
+## 7.25 ModerationFlag
+Mencatat penandaan akun oleh sistem moderasi, alasan penandaan, dan tindakan Admin.
+
+## 7.26 Announcement
+Menyimpan pengumuman: isi, tautan, grup notifikasi, target, jadwal, status, dan pembuat.
+
+## 7.27 MaintenanceWindow
+Menyimpan jadwal maintenance: waktu mulai, perkiraan selesai, lama tahap Persiapan, pesan, status (Terjadwal, Persiapan, Aktif, Selesai, Dibatalkan), Admin pembuat, serta waktu dan Admin yang mengakhirinya.
+
 ### Prinsip penting
 - Riwayat transaksi tidak boleh bergantung pada status tampilan frontend.
 - Kuota klaim harus dapat diaudit.
@@ -1270,7 +2107,25 @@ Aplikasi harus dapat digunakan pada desktop, tablet, dan perangkat mobile.
 - Halaman tidak boleh memuat data yang tidak diperlukan.
 - Daftar konten harus dapat dikembangkan tanpa membuat halaman semakin berat secara tidak terkendali.
 - Gambar produk dan materi perlu dioptimalkan.
+- Embed video pihak ketiga dimuat hanya saat pengguna mengklik putar.
 - Proses yang berat harus dipertimbangkan untuk dijalankan secara asinkron jika diperlukan.
+- Halaman publik (blog, katalog, detail course, lesson, roadmap, detail latihan) disiapkan saat build dan disajikan dari CDN. Data pribadi di halaman tersebut diambil terpisah agar halaman tetap bisa di-cache.
+- Walaupun isi konten disimpan di database, halaman publik tidak membaca database setiap kali dibuka. Halaman diperbarui per halaman saat konten diterbitkan atau ditarik.
+- Total XP, rank, dan jumlah materi selesai disimpan sebagai ringkasan yang diperbarui saat XP bertambah, bukan dihitung ulang dari seluruh riwayat setiap kali halaman dibuka.
+- Leaderboard dibaca dari snapshot yang diperbarui berkala (7.9), bukan mengurutkan seluruh pengguna setiap kali dibuka.
+- Daftar panjang memakai pagination dan tidak memuat seluruh data ke browser.
+- Splash screen tampil sekali per browser, bukan setiap kali membuka tab baru.
+
+### Target
+Diukur untuk 1 juta pengguna terdaftar, dengan perkiraan beban di `docs/DATABASE.md` Bagian 2.
+
+| Ukuran | Target |
+|---|---|
+| LCP halaman publik (HP kelas menengah, 4G) | ≤ 2,5 detik |
+| Waktu respons halaman statis | ≤ 100 ms dari CDN |
+| Respons API (p95) | ≤ 300 ms |
+| Kueri database (p95) | ≤ 50 ms |
+| JavaScript halaman publik (terkompres) | ≤ 250 KB |
 
 ## 8.3 Security
 - Autentikasi dan otorisasi harus diterapkan sesuai kebutuhan.
@@ -1280,6 +2135,9 @@ Aplikasi harus dapat digunakan pada desktop, tablet, dan perangkat mobile.
 - Kunci rahasia tidak boleh disimpan dalam kode frontend.
 - Operasi penting harus aman terhadap duplikasi permintaan.
 - Akses terhadap file produk berbayar harus mengikuti entitlement.
+- Akun Admin wajib memakai verifikasi dua langkah saat backend tersedia.
+- Halaman dan aksi Admin hanya dapat diakses pengguna berperan Admin, diperiksa di backend.
+- Status maintenance diperiksa di server; penolakan login dan penutupan halaman selama maintenance tidak hanya dilakukan di frontend (FR-16 K).
 
 ## 8.4 Data Integrity
 - Progress belajar harus konsisten.
@@ -1296,7 +2154,7 @@ Aplikasi harus dapat digunakan pada desktop, tablet, dan perangkat mobile.
 - Dokumentasi implementasi harus diperbarui saat arsitektur berubah.
 
 ## 8.6 Accessibility dan Usability
-- Kontras teks harus memadai.
+- Kontras teks minimal 4,5:1 untuk teks normal dan 3:1 untuk teks besar, di mode terang maupun gelap (setara WCAG 2.1 AA).
 - Kontrol interaktif harus jelas.
 - Navigasi keyboard perlu diperhatikan.
 - Status error, loading, empty state, dan success harus informatif.
@@ -1329,6 +2187,9 @@ Aplikasi harus dapat digunakan pada desktop, tablet, dan perangkat mobile.
 22. Avatar dan tema tidak boleh memakai kombinasi warna identitas rank.
 23. Rank tidak memiliki level maupun sub-tingkat.
 24. Achievement hanya ditampilkan di profil dan tidak memberikan XP.
+25. Setiap aksi Admin tercatat dan tidak dapat dihapus.
+26. Konten dari Creator tanpa kesepakatan tertulis tercatat tidak dapat diterbitkan.
+27. Koreksi XP dan hak akses dilakukan dengan catatan baru, bukan mengubah riwayat.
 
 ---
 
@@ -1444,6 +2305,8 @@ Pengembangan harus dilakukan secara bertahap agar perubahan tidak merusak fitur 
 - Filter dapat digunakan.
 - Materi dapat dibuka.
 - Progress tersimpan dan dapat dipulihkan.
+- Lesson dapat dipelajari lengkap tanpa memutar video referensi.
+- Video referensi baru memuat player YouTube setelah diklik dan menampilkan judul serta nama channel.
 
 ## Roadmap
 - Pengguna dapat melihat jalur belajar.
@@ -1514,19 +2377,21 @@ Pengembangan harus dilakukan secara bertahap agar perubahan tidak merusak fitur 
 Hal berikut harus diputuskan sebelum implementasi fitur terkait mencapai tahap produksi.
 
 ## Produk dan Konten
+- Fitur sertifikat kelulusan: direncanakan oleh pemilik produk dan sudah disebut di poster panel promosi halaman masuk. Bentuk, syarat, dan hubungannya dengan rank (rank bukan sertifikasi profesional, FR-05) belum ditetapkan.
 - Struktur final materi dan modul.
-- Pengelolaan konten dan peran Creator, Reviewer, serta Admin.
-- Mekanisme penerbitan dan peninjauan konten.
+- Imbalan untuk Creator dan bentuk kesepakatan kepemilikan konten.
+- Waktu peralihan dari menulis di Google Docs ke editor di aplikasi (setelah backend Supabase untuk alur konten siap).
+- Produksi video sendiri (misalnya untuk materi premium) beserta layanan hosting-nya; tidak termasuk rilis awal.
 
 ## Gamification
 - Penyesuaian nilai XP dan batas rank setelah konten bertambah.
 - Apakah perlu periode leaderboard (mingguan atau bulanan) di masa depan.
-- Mekanisme penanganan kecurangan.
+- Mekanisme penanganan kecurangan, termasuk batas yang memicu penandaan Moderasi (FR-16).
 
 ## Membership
 - Harga final Pro dan Premium.
 - Daftar course gratis dan premium.
-- Daftar avatar dan tema per paket.
+- Daftar tema per paket (daftar avatar sudah ditetapkan di FR-12).
 - Masa berlaku dan ketentuan penggunaan kredit.
 - Kebijakan akses untuk course premium baru dan produk yang dihentikan.
 - Kebijakan harga upgrade dari Pro ke Premium.
@@ -1539,8 +2404,7 @@ Hal berikut harus diputuskan sebelum implementasi fitur terkait mencapai tahap p
 ## Maskot, Avatar, Tema, dan Achievement
 - Nama maskot resmi.
 - Varian ringkas emblem untuk ukuran kecil.
-- Daftar 5 avatar dan 5 tema rilis awal, beserta komposisi gratis dan berbayar.
-- Jenis kucing yang tersedia sebagai avatar.
+- Daftar 5 tema rilis awal, beserta komposisi gratis dan berbayar (daftar avatar sudah ditetapkan di FR-12).
 - Apakah avatar atau tema dapat dibeli secara individual di luar membership.
 - Apakah avatar dan tema baru dirilis secara berkala.
 - Daftar final achievement.
@@ -1549,14 +2413,15 @@ Hal berikut harus diputuskan sebelum implementasi fitur terkait mencapai tahap p
 ## Pembayaran dan Operasional
 - Payment gateway.
 - Penanganan transaksi pending dan gagal.
-- Mekanisme refund.
+- Kebijakan refund: syarat, batas waktu, dan perlakuan untuk paket Lifetime (FR-16).
 - Proses administrasi dan rekonsiliasi transaksi.
 
 ## Teknologi
+- **Sudah diputuskan:** backend memakai Supabase (Auth untuk login, Postgres untuk database, Storage untuk gambar dan file).
 - Audit stack saat ini.
-- Strategi autentikasi.
+- Strategi autentikasi (detail implementasi di Supabase Auth).
 - Desain API.
-- Struktur database final.
+- Struktur database final: rancangan di `docs/DATABASE.md`, menunggu persetujuan pemilik.
 - Strategi penyimpanan dan pengamanan file.
 - Strategi deployment, logging, backup, dan monitoring.
 
@@ -1577,6 +2442,12 @@ Hal berikut harus diputuskan sebelum implementasi fitur terkait mencapai tahap p
 - Elemen di mockup hanya diimplementasikan setelah dimasukkan ke PRD atau disebutkan secara eksplisit dalam tugas pengembangan.
 - Jika mockup bertentangan dengan PRD, PRD yang berlaku.
 
+Penyimpanan mockup:
+- Hanya mockup yang sudah disetujui yang disimpan di repository, di folder `docs/desain/`. Mockup eksplorasi atau yang sudah digantikan revisi tidak disimpan.
+- Nama file per fitur (mis. `creator-mode.webp`, `playground.webp`) dalam format WebP terkompresi.
+- `docs/desain/README.md` mencatat setiap mockup: nama file, fitur, bagian PRD terkait, tanggal disetujui, dan perbedaan yang sudah diketahui terhadap PRD.
+- Jika desain berubah, mockup lama diganti atau dihapus agar tidak ada acuan usang.
+
 ## 13.3 Lingkungan dan alur rilis
 
 | Lingkungan | Branch | Fungsi |
@@ -1591,13 +2462,16 @@ Aturan:
 - Tidak ada perbaikan langsung di `uat` maupun `main`; semua perbaikan dimulai dari `develop`.
 - Hanya pemilik produk yang menaikkan perubahan ke `uat` dan `main`.
 - Lingkungan ditentukan oleh variabel `NEXT_PUBLIC_APP_ENV` (`dev`, `uat`, `production`). Fitur bantu pengembangan hanya aktif di `dev`, dan label lingkungan tidak tampil di `production`.
+- Lesson dan course berstatus draf tampil dan dapat diselesaikan (termasuk mendapat XP) di `dev` dan `uat`, dengan label "Draf", agar pemilik produk dapat menguji alur belajar saat UAT. Di `production` isi draf tidak tampil dan tidak dapat diselesaikan. Artikel blog draf tetap hanya tampil di `dev`.
 - Selama domain belum tersedia, setiap lingkungan memakai alamat bawaan Vercel.
 
 ## 13.4 Test otomatis dan quality gate
 - Repository memiliki test end-to-end menggunakan Playwright untuk alur utama aplikasi.
 - GitHub Actions menjalankan lint, build (termasuk script pengecekan data), dan test end-to-end pada setiap pull request ke `develop` dan setiap push ke `develop`.
 - Pull request hanya boleh di-merge jika seluruh pemeriksaan CI lulus.
-- Setiap fitur baru atau perubahan perilaku wajib menambah atau memperbarui test yang relevan.
+- Setiap fitur baru atau perubahan perilaku wajib menambah atau memperbarui test yang relevan; test ditulis bersama fiturnya.
+- Saat development, pemeriksaan lokal sebelum pull request cukup lint, build, dan test yang berhubungan dengan perubahan. Seluruh test end-to-end dijalankan oleh CI di setiap pull request.
+- Seluruh test end-to-end (termasuk build di luar DEV) dijalankan di lokal sebelum perubahan naik ke UAT dan sebagai uji regresi.
 - Test ditulis dengan pola Page Object Model, locator berbasis peran dan label yang dapat diakses, serta tanpa jeda waktu tetap (hard wait).
 - Test otomatis tidak menggantikan UAT; pemilik produk tetap melakukan UAT sebelum perubahan naik ke `main`.
 
@@ -1659,6 +2533,8 @@ Profesional, ramah, praktis, menyenangkan, dan berorientasi pada perkembangan ke
 
 Warna identitas rank (FR-05) terpisah dari palet brand dan tidak berubah.
 
+Tombol utama dengan teks putih memakai Primary Blue `#2563EB` di mode terang maupun gelap agar memenuhi kontras minimal 4,5:1. Accent Blue `#60A5FA` dipakai untuk teks, ikon, atau aksen di atas latar gelap, bukan sebagai latar tombol berteks putih.
+
 ## 15.3 Tipografi
 - **Inter:** heading dan teks utama.
 - **JetBrains Mono:** kode pemrograman.
@@ -1689,6 +2565,7 @@ BelajarAutomation adalah brand independen yang tetap memiliki hubungan visual de
 5. Koreksi dan perbaikan pada produk yang sama dikelola dan diberikan tanpa biaya tambahan.
 6. Klaim pemasaran harus realistis dan tidak menjanjikan hasil karier yang tidak dapat dijamin.
 7. Course hanya boleh berstatus `available` saat rilis jika status kontennya `ready` (FR-02).
+8. Video referensi adalah pelengkap; isi teks harus lengkap tanpa video, dan setiap video mencantumkan kredit pembuatnya.
 
 ---
 

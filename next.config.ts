@@ -1,6 +1,16 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  images: {
+    // Thumbnail video referensi YouTube.
+    remotePatterns: [{ protocol: "https", hostname: "i.ytimg.com", pathname: "/vi/**" }],
+  },
+  // Slug yang tidak dikenal dirender saat diminta untuk menampilkan halaman 404 blog,
+  // jadi file artikel harus ikut tersedia di server.
+  outputFileTracingIncludes: {
+    "/blog/[slug]": ["./content/blog/**"],
+    "/learn/[slug]/[lesson]": ["./content/lessons/**"],
+  },
   async redirects() {
     return [
       { source: "/books", destination: "/ebooks", permanent: true },

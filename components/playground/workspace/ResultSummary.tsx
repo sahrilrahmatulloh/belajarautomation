@@ -1,8 +1,10 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { CheckCircle2, RotateCcw, XCircle } from "lucide-react";
 
-import { ACTIVE_AVATAR } from "@/data/dummy/appearance";
+import { useAppearance } from "@/lib/useAppearance";
 import { ChallengeScore } from "@/types/ChallengeDetail";
 
 interface ResultSummaryProps {
@@ -11,9 +13,12 @@ interface ResultSummaryProps {
   // Rincian singkat, mis. "8 dari 10 jawaban benar".
   detail: string;
   onRetry: () => void;
+  // Latihan yang dinilai sendiri (Test Case) tidak memberi XP (PRD FR-05).
+  givesXp?: boolean;
 }
 
-export default function ResultSummary({ result, xp, detail, onRetry }: ResultSummaryProps) {
+export default function ResultSummary({ result, xp, detail, onRetry, givesXp = true }: ResultSummaryProps) {
+  const { avatar } = useAppearance();
   const Icon = result.passed ? CheckCircle2 : XCircle;
 
   return (
@@ -23,7 +28,7 @@ export default function ResultSummary({ result, xp, detail, onRetry }: ResultSum
         result.passed ? "border-emerald-500/30 bg-emerald-500/10" : "border-amber-500/30 bg-amber-500/10"
       }`}
     >
-      <Image src={ACTIVE_AVATAR.image} alt="" width={64} height={64} className="h-16 w-16 shrink-0" />
+      <Image src={avatar.image} alt="" width={64} height={64} className="h-16 w-16 shrink-0" />
 
       <div className="min-w-0 flex-1 basis-48">
         <h2
@@ -37,7 +42,9 @@ export default function ResultSummary({ result, xp, detail, onRetry }: ResultSum
         <p className="mt-1 text-sm font-semibold">Skor {result.score}%</p>
         <p className="mt-0.5 text-sm text-muted-foreground">{detail}</p>
         <p className="mt-0.5 text-sm text-muted-foreground">
-          {xp > 0
+          {!givesXp
+            ? "Test Case dinilai sendiri, jadi tidak memberi XP. Hasilnya tetap tercatat sebagai latihan selesai."
+            : xp > 0
             ? `Kamu mendapat +${xp} XP.`
             : result.passed
               ? "Tidak ada XP tambahan karena kamu sudah pernah lulus."
@@ -49,7 +56,7 @@ export default function ResultSummary({ result, xp, detail, onRetry }: ResultSum
         <button
           type="button"
           onClick={onRetry}
-          className="inline-flex min-h-10 flex-1 items-center justify-center gap-1.5 rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90 sm:flex-none"
+          className="inline-flex min-h-10 flex-1 items-center justify-center gap-1.5 rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary-hover sm:flex-none"
         >
           <RotateCcw className="h-4 w-4" aria-hidden="true" />
           Ulangi latihan

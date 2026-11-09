@@ -1,10 +1,14 @@
+"use client";
+
 import Image from "next/image";
+import Link from "next/link";
 
 import RankEmblem from "@/components/common/RankEmblem";
 import { getAvatar } from "@/data/avatars";
 import { DEFAULT_AVATAR } from "@/data/profile";
 import { formatNumber } from "@/lib/format";
 import { LeaderboardRow } from "@/lib/leaderboard";
+import { useSession } from "@/lib/session";
 
 // Penekanan visual untuk tiga posisi teratas.
 const podiumStyles = [
@@ -13,13 +17,22 @@ const podiumStyles = [
   "bg-orange-500/20 text-orange-700 ring-1 ring-orange-500/40 dark:text-orange-300",
 ];
 
-export default function LeaderboardRowItem({ row }: { row: LeaderboardRow }) {
-  return (
-    <li
-      className={`flex items-center gap-3 px-3 py-3 sm:gap-4 sm:px-5 ${
-        row.isCurrentUser ? "bg-primary/[0.06]" : ""
-      }`}
-    >
+const ROW_CLASS = "flex items-center gap-3 px-3 py-3 sm:gap-4 sm:px-5";
+
+interface LeaderboardRowItemProps {
+  row: LeaderboardRow;
+  // Id elemen untuk tujuan "Lompat ke posisiku".
+  id?: string;
+  // Disorot sebentar setelah pengguna melompat ke barisnya.
+  isHighlighted?: boolean;
+}
+
+export default function LeaderboardRowItem({ row, id, isHighlighted = false }: LeaderboardRowItemProps) {
+  const session = useSession();
+  const name = row.isCurrentUser && session ? session.name : row.displayName;
+
+  const content = (
+    <>
       <span
         className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold tabular-nums ${
           podiumStyles[row.position - 1] ?? "text-muted-foreground"
@@ -39,7 +52,7 @@ export default function LeaderboardRowItem({ row }: { row: LeaderboardRow }) {
 
       <div className="min-w-0 flex-1">
         <p className="flex min-w-0 items-center gap-2 text-sm font-semibold">
-          <span className="truncate">{row.displayName}</span>
+          <span className="truncate">{name}</span>
           {row.isCurrentUser && (
             <span className="shrink-0 rounded-full bg-primary px-2 py-0.5 text-[10px] font-semibold text-primary-foreground">
               Kamu
@@ -52,9 +65,31 @@ export default function LeaderboardRowItem({ row }: { row: LeaderboardRow }) {
         </p>
       </div>
 
-      <span className="shrink-0 text-sm font-bold tabular-nums">
-        {formatNumber(row.totalXp)} XP
-      </span>
+      <span className="shrink-0 text-sm font-bold tabular-nums">{formatNumber(row.totalXp)} XP</span>
+    </>
+  );
+
+  return (
+    <li
+      id={id}
+      tabIndex={id ? -1 : undefined}
+      className={`outline-none transition-shadow ${row.isCurrentUser ? "bg-primary/[0.06]" : ""} ${
+        isHighlighted ? "ring-2 ring-inset ring-primary" : ""
+      }`}
+    >
+      {row.username ? (
+        // Baris dapat diklik untuk melihat profil publik pengguna (PRD FR-06, FR-13).
+        <Link
+          href={`/u/${row.username}`}
+          className={`${ROW_CLASS} transition-colors hover:bg-accent focus-visible:bg-accent focus-visible:outline-none`}
+        >
+          {content}
+          {/* Nama tautan memakai teks yang terlihat (bisa disebut lewat perintah suara), ditambah keterangan tujuannya. */}
+          <span className="sr-only">, lihat profil</span>
+        </Link>
+      ) : (
+        <div className={ROW_CLASS}>{content}</div>
+      )}
     </li>
   );
 }

@@ -12,6 +12,15 @@ test.describe("Dashboard", () => {
     await dashboard.goto();
   });
 
+  test("statistik belajar tampil di atas kalender belajar", async () => {
+    await expect(dashboard.stats).toBeVisible();
+    await expect(dashboard.calendar).toBeVisible();
+
+    const statsBox = await dashboard.stats.boundingBox();
+    const calendarBox = await dashboard.calendar.boundingBox();
+    expect(statsBox!.y).toBeLessThan(calendarBox!.y);
+  });
+
   test("Welcome Banner menampilkan sapaan tanpa kutipan motivasi", async () => {
     await expect(dashboard.greeting).toContainText("Sobat QA");
     await expect(dashboard.welcomeBanner.locator("blockquote")).toHaveCount(0);

@@ -3,6 +3,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { Settings2 } from "lucide-react";
 
+import ThemeBackdrop from "@/components/common/ThemeBackdrop";
+import LinkifiedText from "@/components/common/LinkifiedText";
 import RankEmblem from "@/components/common/RankEmblem";
 import { getRankProgress } from "@/data/ranks";
 import { formatNumber } from "@/lib/format";
@@ -14,6 +16,7 @@ interface ProfileHeaderProps {
   avatarImage: string;
   avatarName: string;
   themeImage: string;
+  themeVideo?: string;
   xp: number;
   // Pemilik melihat progres rank dan tombol pengaturan; publik hanya rank dan total XP.
   isOwner: boolean;
@@ -30,6 +33,7 @@ export default function ProfileHeader({
   avatarImage,
   avatarName,
   themeImage,
+  themeVideo,
   xp,
   isOwner,
   shareAction,
@@ -38,10 +42,9 @@ export default function ProfileHeader({
 
   return (
     <section className="@container relative isolate overflow-hidden rounded-3xl border border-border bg-slate-900 text-white">
-      <Image
-        src={themeImage}
-        alt=""
-        fill
+      <ThemeBackdrop
+        image={themeImage}
+        video={themeVideo}
         priority
         sizes="(min-width: 1152px) 1152px, 100vw"
         className="-z-20 object-cover object-[75%_50%]"
@@ -70,19 +73,24 @@ export default function ProfileHeader({
           di kartu lebar dibatasi agar teks tidak menimpa ilustrasi di sisi kanan. */}
       <div className="flex flex-col gap-5 p-5 sm:p-6 @2xl:max-w-[68%]">
         <div className={`flex min-w-0 items-center gap-4 sm:gap-5 ${isOwner ? "pr-12 @2xl:pr-0" : ""}`}>
-          <div className="shrink-0 overflow-hidden rounded-2xl bg-white p-1 shadow-lg">
+          {/* Bingkai bulat mengikuti bentuk avatar kucing. */}
+          <div className="shrink-0 overflow-hidden rounded-full bg-white p-1 shadow-lg">
             <Image
               src={avatarImage}
               alt={`Avatar ${avatarName}`}
               width={112}
               height={112}
-              className="h-20 w-20 sm:h-24 sm:w-24"
+              className="h-20 w-20 rounded-full sm:h-24 sm:w-24"
             />
           </div>
           <div className="min-w-0">
             <h1 className="line-clamp-2 break-words text-2xl font-bold tracking-tight sm:text-3xl">{displayName}</h1>
-            <p className="truncate text-sm text-white/75">@{username}</p>
-            <p className="mt-1 line-clamp-3 text-sm leading-5 text-white/85 sm:line-clamp-2">{bio}</p>
+            {username && <p className="truncate text-sm text-white/75">@{username}</p>}
+            {bio && (
+              <p className="mt-1 line-clamp-3 break-words text-sm leading-5 text-white/85 sm:line-clamp-2">
+                <LinkifiedText text={bio} linkClassName="text-white hover:text-sky-200" />
+              </p>
+            )}
           </div>
         </div>
 

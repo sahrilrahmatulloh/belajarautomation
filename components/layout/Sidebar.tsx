@@ -1,8 +1,13 @@
 "use client";
 
+import { Fragment } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+
+import AuthLink from "@/components/auth/AuthLink";
+import { useSession } from "@/lib/session";
+import { useViewMode } from "@/lib/viewMode";
 
 import {
   getRoleFromPath,
@@ -20,7 +25,11 @@ export default function Sidebar({
   collapsed = false,
 }: SidebarProps) {
   const pathname = usePathname();
-  const role = getRoleFromPath(pathname);
+  const session = useSession();
+  const { activeRole } = useViewMode();
+  // Halaman peran selalu memakai menu perannya; halaman lain mengikuti mode aktif.
+  const pathRole = getRoleFromPath(pathname);
+  const role = pathRole === "user" ? activeRole : pathRole;
   const home = ROLE_HOME[role];
   const menuItems = NAVIGATION[role];
 
@@ -33,13 +42,14 @@ export default function Sidebar({
       {/* Brand */}
       <div className={collapsed ? "flex justify-center px-2 py-6" : "px-4 py-6"}>
         <Link
-          href={home}
+          // Halaman utama butuh login, jadi tamu kembali ke halaman publik.
+          href={session ? home : "/blog"}
           className="flex items-center gap-2.5"
           aria-label={collapsed ? "belajarautomation.com" : undefined}
         >
           <Image
             src="/logo.webp"
-            alt="belajarautomation.com logo"
+            alt="Logo belajarautomation.com"
             width={36}
             height={36}
             className="h-9 w-9 shrink-0 object-contain"
@@ -48,9 +58,9 @@ export default function Sidebar({
 
           {!collapsed && (
             <div className="min-w-0">
-              <h1 className="whitespace-nowrap text-base font-bold tracking-tight">
+              <p className="whitespace-nowrap text-base font-bold tracking-tight">
                 belajarautomation.com
-              </h1>
+              </p>
 
               <p className="mt-0.5 text-xs text-muted-foreground">
                 {role === "user"
@@ -67,8 +77,11 @@ export default function Sidebar({
         aria-label={`Menu ${ROLE_LABELS[role]}`}
         className={`flex-1 space-y-2 overflow-y-auto ${collapsed ? "px-3" : "px-4"}`}
       >
-        {menuItems.map((item) => {
+        {menuItems.map((item, index) => {
           const Icon = item.icon;
+          const groupTitle = !collapsed && item.group && item.group !== menuItems[index - 1]?.group ? (
+            <p className="px-3 pt-3 text-xs font-semibold text-muted-foreground first:pt-0">{item.group}</p>
+          ) : null;
           const layoutClass = `flex w-full items-center gap-3 rounded-lg py-2.5 text-sm ${
             collapsed ? "justify-center px-0" : "px-3"
           }`;
@@ -99,23 +112,25 @@ export default function Sidebar({
               : pathname.startsWith(item.href);
 
           return (
-            <Link
-              key={item.label}
-              href={item.href}
-              aria-current={isActive ? "page" : undefined}
-              title={collapsed ? item.label : undefined}
-              className={`${layoutClass} transition-colors duration-150 ${
-                isActive
-                  ? "bg-sidebar-primary text-sidebar-primary-foreground shadow-sm"
-                  : "text-muted-foreground hover:bg-accent hover:text-foreground"
-              }`}
-            >
-              <Icon size={collapsed ? 20 : 18} aria-hidden="true" />
+            <Fragment key={item.label}>
+              {groupTitle}
+              <AuthLink
+                href={item.href}
+                aria-current={isActive ? "page" : undefined}
+                title={collapsed ? item.label : undefined}
+                className={`${layoutClass} transition-colors duration-150 ${
+                  isActive
+                    ? "bg-sidebar-primary text-sidebar-primary-foreground shadow-sm"
+                    : "text-muted-foreground hover:bg-accent hover:text-foreground"
+                }`}
+              >
+                <Icon size={collapsed ? 20 : 18} aria-hidden="true" />
 
-              <span className={collapsed ? "sr-only" : "font-medium"}>
-                {item.label}
-              </span>
-            </Link>
+                <span className={collapsed ? "sr-only" : "font-medium"}>
+                  {item.label}
+                </span>
+              </AuthLink>
+            </Fragment>
           );
         })}
       </nav>

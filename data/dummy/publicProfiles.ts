@@ -21,6 +21,7 @@ export interface PublicProfile {
   avatarImage: string;
   avatarName: string;
   themeImage: string;
+  themeVideo?: string;
   xp: number;
   isProfilePublic: boolean;
   isCurrentUser: boolean;
@@ -78,6 +79,7 @@ function toPublicProfile(user: LeaderboardUser): PublicProfile {
     avatarImage: avatar.image,
     avatarName: avatar.name,
     themeImage: getTheme(DEFAULT_THEME_ID)!.image,
+    themeVideo: getTheme(DEFAULT_THEME_ID)!.video,
     xp,
     isProfilePublic: user.isProfilePublic,
     isCurrentUser: false,
@@ -96,6 +98,7 @@ function currentUserProfile(): PublicProfile {
     avatarImage: ACTIVE_AVATAR.image,
     avatarName: ACTIVE_AVATAR.name,
     themeImage: ACTIVE_THEME.image,
+    themeVideo: ACTIVE_THEME.video,
     xp: DUMMY_ACCOUNT.xp,
     isProfilePublic: DUMMY_PROFILE.isProfilePublic,
     isCurrentUser: true,

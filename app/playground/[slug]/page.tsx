@@ -12,6 +12,11 @@ interface ChallengePageProps {
   }>;
 }
 
+// Disiapkan saat build dan disajikan dari CDN, bukan dirender ulang di server setiap kali dibuka.
+export function generateStaticParams() {
+  return CHALLENGES.map((challenge) => ({ slug: challenge.slug }));
+}
+
 export default async function ChallengePage({ params }: ChallengePageProps) {
   const { slug } = await params;
   const challenge = CHALLENGES.find((item) => item.slug === slug);

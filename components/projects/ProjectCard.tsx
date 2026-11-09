@@ -1,16 +1,22 @@
 import {
+  CheckCircle2,
   Lock,
   Wrench,
 } from "lucide-react";
 
+import { formatRupiah } from "@/lib/format";
 import { Project } from "@/types/Project";
 
 interface ProjectCardProps {
   project: Project;
+  price: number;
+  isOwned: boolean;
 }
 
 export default function ProjectCard({
   project,
+  price,
+  isOwned,
 }: ProjectCardProps) {
   const Icon = project.icon;
 
@@ -22,8 +28,8 @@ export default function ProjectCard({
         </div>
 
         <span className="flex items-center gap-1.5 rounded-full bg-muted px-3 py-1.5 text-xs font-medium text-muted-foreground">
-          <Lock className="h-3.5 w-3.5" />
-          Locked
+          {isOwned ? <CheckCircle2 className="h-3.5 w-3.5" /> : <Lock className="h-3.5 w-3.5" />}
+          {isOwned ? "Dimiliki" : "Terkunci"}
         </span>
       </div>
 
@@ -59,7 +65,7 @@ export default function ProjectCard({
 
         <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
           <Wrench className="h-3.5 w-3.5" />
-          Project Lab
+          Lab Project
         </span>
       </div>
 
@@ -68,8 +74,8 @@ export default function ProjectCard({
         disabled
         className="mt-4 flex w-full cursor-not-allowed items-center justify-center gap-2 rounded-xl border border-border bg-muted/50 px-4 py-3 text-sm font-medium text-muted-foreground"
       >
-        <Lock className="h-4 w-4" />
-        Project Terkunci
+        {isOwned ? <CheckCircle2 className="h-4 w-4" /> : <Lock className="h-4 w-4" />}
+        {isOwned ? "Unduhan belum tersedia" : `Project Terkunci · ${formatRupiah(price)}`}
       </button>
     </article>
   );
