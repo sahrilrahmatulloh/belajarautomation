@@ -37,6 +37,20 @@ export interface MockAccount {
   themeId?: string | null;
   // Faktor MFA (authenticator) milik akun; kode yang diterima tiruan ini adalah MOCK_TOTP_CODE.
   factors?: MockFactor[];
+  // Membership yang berlaku dari database (PRD FR-16 E); bawaannya basic.
+  membership?: "basic" | "pro" | "premium";
+}
+
+// Pemberian membership yang disimpan Supabase tiruan untuk fungsi Admin.
+interface MockGrant {
+  id: number;
+  tier: "pro" | "premium";
+  source: "manual";
+  reason: string;
+  starts_at: string;
+  ends_at: string | null;
+  revoked_at: string | null;
+  revoke_reason: string | null;
 }
 
 export interface MockFactor {
@@ -134,6 +148,20 @@ export async function mockSupabase(page: Page, options: MockOptions = {}) {
   const accounts = options.accounts ?? [MOCK_STUDENT];
   const requests: Request[] = [];
   let signedIn: MockAccount | null = null;
+  // Tingkat sesi: aal2 setelah kode authenticator diverifikasi (PRD 8.3).
+  let aal: "aal1" | "aal2" = "aal1";
+  // Data fungsi Admin: total XP, riwayat koreksi, dan pemberian membership per pengguna.
+  const xpTotals = new Map<string, number>((options.others ?? []).map((user) => [user.id, user.totalXp ?? 0]));
+  const corrections = new Map<string, { amount: number; reason: string; created_at: string }[]>();
+  const grants = new Map<string, MockGrant[]>();
+  const activeGrants = (userId: string) =>
+    (grants.get(userId) ?? []).filter((grant) => !grant.revoked_at && (!grant.ends_at || new Date(grant.ends_at) > new Date()));
+  const tierOf = (userId: string, fallback: MockAccount["membership"] = "basic") => {
+    const active = activeGrants(userId);
+    if (active.some((grant) => grant.tier === "premium")) return "premium";
+    if (active.length > 0) return "pro";
+    return fallback ?? "basic";
+  };
 
   await page.route(`${SUPABASE_TEST_URL}/**`, async (route) => {
     const request = route.request();
@@ -152,6 +180,7 @@ export async function mockSupabase(page: Page, options: MockOptions = {}) {
       }
       // Salinan, agar perubahan profil di satu test tidak bocor ke test lain.
       signedIn = { ...account };
+      aal = "aal1";
       return route.fulfill(json(sessionJson(account)));
     }
 
@@ -167,8 +196,96 @@ export async function mockSupabase(page: Page, options: MockOptions = {}) {
           theme_id: signedIn.themeId ?? null,
           status: signedIn.status ?? "active",
           roles: signedIn.roles ?? ["student"],
+          membership: tierOf(signedIn.id, signedIn.membership),
         })
       );
+    }
+
+    // Fungsi Admin (PRD FR-16 C, D, E): hanya Admin dengan sesi aal2.
+    if (path.startsWith("/rest/v1/rpc/admin_")) {
+      if (!signedIn || !(signedIn.roles ?? []).includes("admin") || aal !== "aal2") {
+        return route.fulfill({ status: 400, contentType: "application/json", body: JSON.stringify({ code: "42501", message: "bukan_admin", details: null, hint: null }) });
+      }
+      const me = signedIn;
+      const people = [
+        { user_id: me.id, display_name: me.name, username: me.username, email: me.email, roles: me.roles ?? ["student"] },
+        ...(options.others ?? []).map((user) => ({ user_id: user.id, display_name: user.name, username: user.username, email: `${user.username}@contoh.id`, roles: ["student"] })),
+      ];
+      const rowOf = (person: (typeof people)[number]) => ({
+        ...person,
+        total_xp: xpTotals.get(person.user_id) ?? 0,
+        tier: tierOf(person.user_id),
+        status: "active",
+        created_at: "2026-11-01T00:00:00Z",
+      });
+      const find = (userId: unknown) => people.find((person) => person.user_id === userId);
+      const reason = String(body?.p_reason ?? "").trim();
+
+      if (path === "/rest/v1/rpc/admin_search_users") {
+        const query = String(body?.p_query ?? "").toLowerCase();
+        return route.fulfill(
+          json(people.filter((person) => [person.display_name, person.username ?? "", person.email].some((value) => value.toLowerCase().includes(query))).map(rowOf))
+        );
+      }
+
+      const person = find(body?.p_user);
+      if (!person) return route.fulfill(dbError("pengguna_tidak_ditemukan"));
+
+      if (path === "/rest/v1/rpc/admin_get_user") {
+        return route.fulfill(
+          json({
+            ...rowOf(person),
+            lessons_completed: 0,
+            challenges_completed: 0,
+            xp_corrections: [...(corrections.get(person.user_id) ?? [])].reverse(),
+            memberships: [...(grants.get(person.user_id) ?? [])].reverse(),
+          })
+        );
+      }
+
+      if (reason.length < 5) return route.fulfill(dbError("alasan_wajib"));
+
+      if (path === "/rest/v1/rpc/admin_adjust_xp") {
+        const amount = Number(body?.p_amount);
+        if (!Number.isInteger(amount) || amount === 0 || Math.abs(amount) > 100000) return route.fulfill(dbError("jumlah_tidak_valid"));
+        const total = (xpTotals.get(person.user_id) ?? 0) + amount;
+        if (total < 0) return route.fulfill(dbError("xp_negatif"));
+        xpTotals.set(person.user_id, total);
+        corrections.set(person.user_id, [...(corrections.get(person.user_id) ?? []), { amount, reason, created_at: new Date().toISOString() }]);
+        return route.fulfill(json(total));
+      }
+
+      if (path === "/rest/v1/rpc/admin_grant_membership") {
+        const now = new Date();
+        const days = body?.p_days === null || body?.p_days === undefined ? null : Number(body.p_days);
+        for (const grant of activeGrants(person.user_id)) {
+          grant.revoked_at = now.toISOString();
+          grant.revoke_reason = "Diganti pemberian manual baru";
+        }
+        const list = grants.get(person.user_id) ?? [];
+        list.push({
+          id: list.length + 1,
+          tier: body?.p_tier === "pro" ? "pro" : "premium",
+          source: "manual",
+          reason,
+          starts_at: now.toISOString(),
+          ends_at: days ? new Date(now.getTime() + days * 86400000).toISOString() : null,
+          revoked_at: null,
+          revoke_reason: null,
+        });
+        grants.set(person.user_id, list);
+        return route.fulfill(json({ tier: tierOf(person.user_id), ends_at: list.at(-1)!.ends_at }));
+      }
+
+      if (path === "/rest/v1/rpc/admin_revoke_membership") {
+        const active = activeGrants(person.user_id);
+        if (active.length === 0) return route.fulfill(dbError("tidak_ada_membership_manual"));
+        for (const grant of active) {
+          grant.revoked_at = new Date().toISOString();
+          grant.revoke_reason = reason;
+        }
+        return route.fulfill(json(tierOf(person.user_id)));
+      }
     }
 
     if (path === "/rest/v1/rpc/update_profile") {
@@ -280,6 +397,7 @@ export async function mockSupabase(page: Page, options: MockOptions = {}) {
       if (action === "verify") {
         if (body?.code !== MOCK_TOTP_CODE) return route.fulfill(authError(422, "mfa_verification_failed", "Invalid TOTP code entered"));
         signedIn.factors = (signedIn.factors ?? []).map((factor) => (factor.id === factorId ? { ...factor, status: "verified" } : factor));
+        aal = "aal2";
         return route.fulfill(json(sessionJson(signedIn, "aal2")));
       }
     }
