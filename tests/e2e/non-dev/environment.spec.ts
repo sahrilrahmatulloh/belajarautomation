@@ -103,7 +103,7 @@ test.describe("Halaman Admin di luar DEV", () => {
   test.use({ role: "admin" });
 
   for (const { path, title } of [
-    { path: "/admin", title: "Ringkasan" },
+    { path: "/admin", title: "Dashboard" },
     { path: "/admin/konten", title: "Semua Konten" },
     { path: "/admin/pengguna", title: "Pengguna dan Peran" },
     { path: "/admin/log", title: "Log Aktivitas Admin" },

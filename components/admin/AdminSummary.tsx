@@ -22,7 +22,7 @@ function PlaceholderCard({ label, note, icon }: { label: string; note: string; i
   return <RoleStatCard label={label} value="0" detail={note} icon={icon} iconStyle="bg-muted text-muted-foreground" />;
 }
 
-// Ringkasan Admin (PRD FR-16 A). Setiap angka membuka daftar yang sudah tersaring.
+// Dashboard Admin versi prototipe DEV (PRD FR-16 A). Setiap angka membuka daftar yang sudah tersaring.
 export default function AdminSummary() {
   const session = useSession();
   const { data } = useAdminData();

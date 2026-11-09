@@ -73,7 +73,7 @@ export const NAVIGATION: Record<UserRole, NavItem[]> = {
     { label: "Panduan Review", href: "/reviewer/panduan", icon: BookOpenCheck },
   ],
   admin: [
-    { label: "Ringkasan", href: "/admin", icon: LayoutDashboard, group: "Konten" },
+    { label: "Dashboard", href: "/admin", icon: LayoutDashboard, group: "Konten" },
     { label: "Semua Konten", href: "/admin/konten", icon: Files, group: "Konten" },
     { label: "Pengguna dan Peran", href: "/admin/pengguna", icon: Users, group: "Pengguna" },
     { label: "Moderasi", href: "/admin/moderasi", icon: ShieldAlert, group: "Pengguna" },

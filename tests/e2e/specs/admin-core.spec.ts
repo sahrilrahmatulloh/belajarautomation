@@ -31,7 +31,7 @@ test.use({ role: "admin" });
 
 const logEntries = (log: AuditLogPageObject, action: string, target: string) => log.rows.filter({ hasText: action }).filter({ hasText: target });
 
-test.describe("Ringkasan", () => {
+test.describe("Dashboard prototipe DEV", () => {
   for (const { label, value, url, rows } of ADMIN_WORKSPACE.summaryLinks) {
     test(`angka ${label} membuka daftar yang tersaring`, async ({ page }) => {
       await page.goto("/admin");
@@ -61,7 +61,7 @@ test.describe("Sidebar", () => {
     if (isMobile) await page.getByRole("button", { name: "Buka atau tutup sidebar" }).click();
     const nav = page.getByRole("navigation", { name: "Menu Admin" });
 
-    await expect(nav.getByRole("link")).toHaveText(["Ringkasan", "Semua Konten", "Pengguna dan Peran", "Moderasi", "Transaksi", "Produk Digital", "Katalog Belajar", "Pengumuman", "Mode Maintenance", "Laporan", "Log Aktivitas Admin"]);
+    await expect(nav.getByRole("link")).toHaveText(["Dashboard", "Semua Konten", "Pengguna dan Peran", "Moderasi", "Transaksi", "Produk Digital", "Katalog Belajar", "Pengumuman", "Mode Maintenance", "Laporan", "Log Aktivitas Admin"]);
     await expect(nav).toContainText("Konten");
     await expect(nav).toContainText("Pengguna");
     await expect(nav).toContainText("Laporan");

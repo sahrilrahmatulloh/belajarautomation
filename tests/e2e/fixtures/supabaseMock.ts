@@ -221,6 +221,29 @@ export async function mockSupabase(page: Page, options: MockOptions = {}) {
       const find = (userId: unknown) => people.find((person) => person.user_id === userId);
       const reason = String(body?.p_reason ?? "").trim();
 
+      if (path === "/rest/v1/rpc/admin_dashboard_stats") {
+        const thresholds = (body?.p_rank_thresholds as number[] | undefined) ?? [0];
+        const totals = people.map((person) => xpTotals.get(person.user_id) ?? 0);
+        const rankCounts = thresholds.map((min, index) => {
+          const next = thresholds[index + 1];
+          return totals.filter((xp) => xp >= min && (next === undefined || xp < next)).length;
+        });
+        const tiers = people.map((person) => tierOf(person.user_id));
+        return route.fulfill(
+          json({
+            total_users: people.length,
+            new_users_7d: people.length,
+            active_users: people.length,
+            memberships: { pro: tiers.filter((tier) => tier === "pro").length, premium: tiers.filter((tier) => tier === "premium").length },
+            total_xp: totals.reduce((sum, xp) => sum + xp, 0),
+            rank_counts: rankCounts,
+            recent_actions: [...corrections.entries()].flatMap(([userId, items]) =>
+              items.map((item) => ({ action: "xp_correction", reason: item.reason, created_at: item.created_at, target_name: find(userId)?.display_name ?? null, admin_name: me.name }))
+            ),
+          })
+        );
+      }
+
       if (path === "/rest/v1/rpc/admin_search_users") {
         const query = String(body?.p_query ?? "").toLowerCase();
         return route.fulfill(

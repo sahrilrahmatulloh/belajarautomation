@@ -1,9 +1,12 @@
 # BELAJARAUTOMATION.COM
 ## Product Requirements Document (PRD)
-**Versi:** 2.40  
+**Versi:** 2.41  
 **Status:** Draft — Acuan Pengembangan Produk  
 **Platform:** Web Application  
 **Target Pengguna:** Pemula hingga praktisi QA, Software Testing, dan Programming
+
+### Perubahan di Versi 2.41
+- Menu Admin "Ringkasan" berganti nama menjadi "Dashboard". Untuk Admin akun sungguhan, Dashboard memakai data asli (pengguna, membership, sebaran rank, aksi Admin terbaru), dan bagian yang belum punya backend memakai angka contoh berlabel "Data contoh" di DEV dan UAT (FR-16 A).
 
 ### Perubahan di Versi 2.40
 - Koreksi XP dan pemberian membership manual untuk akun sungguhan tersedia di halaman Admin Pengguna, dengan alasan wajib dan riwayat (FR-16 D dan E).
@@ -1566,7 +1569,7 @@ Backend diprioritaskan agar Creator dapat menulis langsung di aplikasi tanpa ala
 - Reviewer tidak mengedit isi konten secara langsung.
 
 **Tugas Admin**
-Ringkasan, Semua Konten (tugaskan reviewer, terbitkan, tarik), dan Kelola Peran diatur di FR-16.
+Dashboard, Semua Konten (tugaskan reviewer, terbitkan, tarik), dan Kelola Peran diatur di FR-16.
 
 **Notifikasi peran (grup Khusus role, Bagian 4.4)**
 - Creator: konten diminta revisi, disetujui, diterbitkan, atau ditarik.
@@ -1601,15 +1604,17 @@ Menyediakan alat bagi Admin untuk mengelola konten, pengguna, transaksi, katalog
 ### Navigasi
 | Kelompok | Menu |
 |---|---|
-| Konten | Ringkasan, Semua Konten |
+| Konten | Dashboard, Semua Konten |
 | Pengguna | Pengguna dan Peran, Moderasi |
 | Bisnis | Transaksi, Produk Digital |
 | Platform | Katalog Belajar, Pengumuman, Mode Maintenance |
 | Laporan | Laporan, Log Aktivitas Admin |
 
-### A. Ringkasan
+### A. Dashboard
 - Konten: jumlah per status, Menunggu Review yang belum ditugaskan, review yang menunggu lebih dari 3 hari, dan konten Disetujui yang siap diterbitkan.
-- Pengguna: pengguna baru 7 hari terakhir dan akun yang ditandai Moderasi.
+- Pengguna: total pengguna dan akun aktif, pengguna baru 7 hari terakhir, membership aktif (Pro dan Premium), total XP terkumpul, sebaran pengguna per rank, dan akun yang ditandai Moderasi.
+- Aksi Admin terbaru: lima aksi terakhir dari Log Aktivitas Admin.
+- Bagian yang belum punya data asli di backend memakai angka contoh dengan label "Data contoh" yang jelas, tidak dapat diklik, dan hanya tampil di DEV dan UAT. Di Production, label dan angka contoh tidak boleh ada.
 - Transaksi: transaksi hari ini, transaksi menunggu pembayaran, dan permintaan refund.
 - Setiap angka dapat diklik menuju daftar yang sudah terfilter.
 
