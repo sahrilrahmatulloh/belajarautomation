@@ -11,13 +11,14 @@ export const SUPABASE_TEST_URL = `http://127.0.0.1:${SUPABASE_TEST_PORT}`;
 export const SUPABASE_TEST_SERVICE_ROLE_KEY = "service-role-uji";
 export const SUPABASE_TEST_KEY = "sb_publishable_uji";
 
-// Masuk lewat halaman login dengan Supabase tiruan yang sudah dipasang.
-export async function signInWithMock(page: Page, account: MockAccount) {
+// Masuk lewat halaman login dengan Supabase tiruan yang sudah dipasang. home: halaman tujuan
+// setelah masuk, mis. "/admin" untuk akun berperan Admin.
+export async function signInWithMock(page: Page, account: MockAccount, home = "/") {
   await page.goto("/login");
   await page.getByLabel("Email").fill(account.email);
   await page.getByRole("textbox", { name: "Password" }).fill(account.password);
   await page.getByRole("button", { name: "Masuk", exact: true }).click();
-  await page.waitForURL("/");
+  await page.waitForURL(home);
 }
 
 export interface MockAccount {
@@ -34,7 +35,18 @@ export interface MockAccount {
   newEmail?: string | null;
   avatarId?: string | null;
   themeId?: string | null;
+  // Faktor MFA (authenticator) milik akun; kode yang diterima tiruan ini adalah MOCK_TOTP_CODE.
+  factors?: MockFactor[];
 }
+
+export interface MockFactor {
+  id: string;
+  status: "verified" | "unverified";
+}
+
+// Kode authenticator yang diterima Supabase tiruan.
+export const MOCK_TOTP_CODE = "123456";
+export const MOCK_TOTP_SECRET = "JBSWY3DPEHPK3PXP";
 
 export const MOCK_STUDENT: MockAccount = {
   id: "00000000-0000-4000-8000-000000000001",
@@ -71,6 +83,14 @@ function base64Url(value: object) {
 
 function userJson(account: MockAccount) {
   return {
+    factors: (account.factors ?? []).map((factor) => ({
+      id: factor.id,
+      friendly_name: "Authenticator Admin",
+      factor_type: "totp",
+      status: factor.status,
+      created_at: "2026-11-01T00:00:00Z",
+      updated_at: "2026-11-01T00:00:00Z",
+    })),
     id: account.id,
     aud: "authenticated",
     role: "authenticated",
@@ -83,11 +103,11 @@ function userJson(account: MockAccount) {
   };
 }
 
-function sessionJson(account: MockAccount) {
+function sessionJson(account: MockAccount, aal: "aal1" | "aal2" = "aal1") {
   const expiresAt = Math.floor(Date.now() / 1000) + 3600;
   const accessToken = [
     base64Url({ alg: "HS256", typ: "JWT" }),
-    base64Url({ sub: account.id, email: account.email, role: "authenticated", aal: "aal1", exp: expiresAt }),
+    base64Url({ sub: account.id, email: account.email, role: "authenticated", aal, exp: expiresAt }),
     "tanda-tangan-uji",
   ].join(".");
   return {
@@ -225,6 +245,43 @@ export async function mockSupabase(page: Page, options: MockOptions = {}) {
     if (path === "/rest/v1/rpc/check_username") {
       const candidate = String(body?.candidate ?? "");
       return route.fulfill(json(options.usernames?.[candidate] ?? "tersedia"));
+    }
+
+    // MFA (PRD 8.3): daftar authenticator, tantangan, dan verifikasi kode.
+    if (path === "/auth/v1/factors" && request.method() === "POST") {
+      if (!signedIn) return route.fulfill(authError(401, "session_not_found", "Session not found"));
+      const id = `faktor-${(signedIn.factors?.length ?? 0) + 1}`;
+      signedIn.factors = [...(signedIn.factors ?? []), { id, status: "unverified" }];
+      return route.fulfill(
+        json({
+          id,
+          type: "totp",
+          friendly_name: body?.friendly_name ?? "",
+          totp: {
+            qr_code: '<svg xmlns="http://www.w3.org/2000/svg" width="180" height="180"><rect width="180" height="180" fill="#000"/></svg>',
+            secret: MOCK_TOTP_SECRET,
+            uri: `otpauth://totp/belajarautomation.com:${signedIn.email}?secret=${MOCK_TOTP_SECRET}`,
+          },
+        })
+      );
+    }
+
+    const factorPath = path.match(/^\/auth\/v1\/factors\/([^/]+)(?:\/(challenge|verify))?$/);
+    if (factorPath) {
+      if (!signedIn) return route.fulfill(authError(401, "session_not_found", "Session not found"));
+      const [, factorId, action] = factorPath;
+      if (!action && request.method() === "DELETE") {
+        signedIn.factors = (signedIn.factors ?? []).filter((factor) => factor.id !== factorId);
+        return route.fulfill(json({ id: factorId }));
+      }
+      if (action === "challenge") {
+        return route.fulfill(json({ id: `tantangan-${factorId}`, type: "totp", expires_at: Math.floor(Date.now() / 1000) + 300 }));
+      }
+      if (action === "verify") {
+        if (body?.code !== MOCK_TOTP_CODE) return route.fulfill(authError(422, "mfa_verification_failed", "Invalid TOTP code entered"));
+        signedIn.factors = (signedIn.factors ?? []).map((factor) => (factor.id === factorId ? { ...factor, status: "verified" } : factor));
+        return route.fulfill(json(sessionJson(signedIn, "aal2")));
+      }
     }
 
     if (path === "/auth/v1/signup") {
