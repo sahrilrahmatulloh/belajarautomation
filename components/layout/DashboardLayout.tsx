@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { usePathname } from "next/navigation";
 
+import AdminAccessGate from "@/components/admin/AdminAccessGate";
 import RequireAuth from "@/components/auth/RequireAuth";
 import MaintenanceBanner from "@/components/maintenance/MaintenanceBanner";
 import MaintenancePopup from "@/components/maintenance/MaintenancePopup";
@@ -73,7 +74,14 @@ export default function DashboardLayout({
               dokumen, yang membuat seluruh layout bergeser saat lompat ke heading.
               tabIndex: halaman panjang tanpa tautan tetap bisa digulir dengan keyboard. */}
           <main tabIndex={0} className="relative min-w-0 flex-1 overflow-y-auto bg-background p-4 outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring sm:p-5 lg:p-6">
-            {isRoleMode && isLearnerPath(pathname) ? <SwitchToLearningPrompt /> : children}
+            {isRoleMode && isLearnerPath(pathname) ? (
+              <SwitchToLearningPrompt />
+            ) : pathname.startsWith("/admin") ? (
+              // Admin akun sungguhan wajib verifikasi dua langkah (PRD 8.3).
+              <AdminAccessGate>{children}</AdminAccessGate>
+            ) : (
+              children
+            )}
           </main>
         </div>
       </div>

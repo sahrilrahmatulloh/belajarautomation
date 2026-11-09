@@ -1,9 +1,12 @@
 # BELAJARAUTOMATION.COM
 ## Product Requirements Document (PRD)
-**Versi:** 2.38  
+**Versi:** 2.39  
 **Status:** Draft — Acuan Pengembangan Produk  
 **Platform:** Web Application  
 **Target Pengguna:** Pemula hingga praktisi QA, Software Testing, dan Programming
+
+### Perubahan di Versi 2.39
+- Verifikasi dua langkah Admin untuk akun sungguhan: pendaftaran aplikasi authenticator lewat kode QR, lalu kode 6 digit setiap sesi sebelum halaman Admin terbuka (Bagian 8.3).
 
 ### Perubahan di Versi 2.38
 - Lesson dan course berstatus draf tampil dan dapat diselesaikan di DEV dan UAT, dengan label "Draf", agar alur belajar dan XP dapat diuji saat UAT. Di Production tetap tersembunyi (Bagian 13.3).
@@ -2136,6 +2139,10 @@ Diukur untuk 1 juta pengguna terdaftar, dengan perkiraan beban di `docs/DATABASE
 - Operasi penting harus aman terhadap duplikasi permintaan.
 - Akses terhadap file produk berbayar harus mengikuti entitlement.
 - Akun Admin wajib memakai verifikasi dua langkah saat backend tersedia.
+  - Metode: kode 6 digit (TOTP) dari aplikasi authenticator, mis. Google Authenticator, Microsoft Authenticator, atau Authy.
+  - Pertama kali membuka halaman Admin, Admin memindai kode QR (atau memasukkan kode rahasia secara manual), lalu memasukkan kode untuk mengaktifkannya.
+  - Setiap sesi berikutnya, halaman Admin baru terbuka setelah Admin memasukkan kode 6 digit. Kode yang salah atau kedaluwarsa ditolak dengan pesan yang jelas.
+  - Aksi Admin di database hanya berlaku untuk sesi yang sudah lolos verifikasi dua langkah, jadi melewati halaman verifikasi di browser tidak memberi akses.
 - Halaman dan aksi Admin hanya dapat diakses pengguna berperan Admin, diperiksa di backend.
 - Status maintenance diperiksa di server; penolakan login dan penutupan halaman selama maintenance tidak hanya dilakukan di frontend (FR-16 K).
 
