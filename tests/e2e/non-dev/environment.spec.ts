@@ -133,10 +133,15 @@ test.describe("Halaman Admin di luar DEV", () => {
     expect(response?.status()).toBe(404);
   });
 
-  test("detail pengguna tidak tersedia", async ({ page }) => {
-    const response = await page.goto("/admin/pengguna/user-sobat");
+  // Detail pengguna dipakai Admin akun sungguhan (koreksi XP dan membership, PRD FR-16 D dan E),
+  // jadi route-nya ada di luar DEV. Akun demo hanya melihat halaman informasi tanpa data dummy.
+  test("detail pengguna untuk akun demo hanya halaman informasi", async ({ page }) => {
+    await page.goto("/admin/pengguna/user-sobat");
+    const main = page.getByRole("main");
 
-    expect(response?.status()).toBe(404);
+    await expect(main.getByRole("heading", { level: 1, name: "Detail Pengguna" })).toBeVisible();
+    await expect(main.getByRole("form")).toHaveCount(0);
+    await expect(main).not.toContainText("Koreksi XP");
   });
 });
 

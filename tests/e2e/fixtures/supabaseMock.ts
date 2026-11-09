@@ -11,13 +11,14 @@ export const SUPABASE_TEST_URL = `http://127.0.0.1:${SUPABASE_TEST_PORT}`;
 export const SUPABASE_TEST_SERVICE_ROLE_KEY = "service-role-uji";
 export const SUPABASE_TEST_KEY = "sb_publishable_uji";
 
-// Masuk lewat halaman login dengan Supabase tiruan yang sudah dipasang.
-export async function signInWithMock(page: Page, account: MockAccount) {
+// Masuk lewat halaman login dengan Supabase tiruan yang sudah dipasang. home: halaman tujuan
+// setelah masuk, mis. "/admin" untuk akun berperan Admin.
+export async function signInWithMock(page: Page, account: MockAccount, home = "/") {
   await page.goto("/login");
   await page.getByLabel("Email").fill(account.email);
   await page.getByRole("textbox", { name: "Password" }).fill(account.password);
   await page.getByRole("button", { name: "Masuk", exact: true }).click();
-  await page.waitForURL("/");
+  await page.waitForURL(home);
 }
 
 export interface MockAccount {
@@ -34,7 +35,32 @@ export interface MockAccount {
   newEmail?: string | null;
   avatarId?: string | null;
   themeId?: string | null;
+  // Faktor MFA (authenticator) milik akun; kode yang diterima tiruan ini adalah MOCK_TOTP_CODE.
+  factors?: MockFactor[];
+  // Membership yang berlaku dari database (PRD FR-16 E); bawaannya basic.
+  membership?: "basic" | "pro" | "premium";
 }
+
+// Pemberian membership yang disimpan Supabase tiruan untuk fungsi Admin.
+interface MockGrant {
+  id: number;
+  tier: "pro" | "premium";
+  source: "manual";
+  reason: string;
+  starts_at: string;
+  ends_at: string | null;
+  revoked_at: string | null;
+  revoke_reason: string | null;
+}
+
+export interface MockFactor {
+  id: string;
+  status: "verified" | "unverified";
+}
+
+// Kode authenticator yang diterima Supabase tiruan.
+export const MOCK_TOTP_CODE = "123456";
+export const MOCK_TOTP_SECRET = "JBSWY3DPEHPK3PXP";
 
 export const MOCK_STUDENT: MockAccount = {
   id: "00000000-0000-4000-8000-000000000001",
@@ -71,6 +97,14 @@ function base64Url(value: object) {
 
 function userJson(account: MockAccount) {
   return {
+    factors: (account.factors ?? []).map((factor) => ({
+      id: factor.id,
+      friendly_name: "Authenticator Admin",
+      factor_type: "totp",
+      status: factor.status,
+      created_at: "2026-11-01T00:00:00Z",
+      updated_at: "2026-11-01T00:00:00Z",
+    })),
     id: account.id,
     aud: "authenticated",
     role: "authenticated",
@@ -83,11 +117,11 @@ function userJson(account: MockAccount) {
   };
 }
 
-function sessionJson(account: MockAccount) {
+function sessionJson(account: MockAccount, aal: "aal1" | "aal2" = "aal1") {
   const expiresAt = Math.floor(Date.now() / 1000) + 3600;
   const accessToken = [
     base64Url({ alg: "HS256", typ: "JWT" }),
-    base64Url({ sub: account.id, email: account.email, role: "authenticated", aal: "aal1", exp: expiresAt }),
+    base64Url({ sub: account.id, email: account.email, role: "authenticated", aal, exp: expiresAt }),
     "tanda-tangan-uji",
   ].join(".");
   return {
@@ -114,6 +148,20 @@ export async function mockSupabase(page: Page, options: MockOptions = {}) {
   const accounts = options.accounts ?? [MOCK_STUDENT];
   const requests: Request[] = [];
   let signedIn: MockAccount | null = null;
+  // Tingkat sesi: aal2 setelah kode authenticator diverifikasi (PRD 8.3).
+  let aal: "aal1" | "aal2" = "aal1";
+  // Data fungsi Admin: total XP, riwayat koreksi, dan pemberian membership per pengguna.
+  const xpTotals = new Map<string, number>((options.others ?? []).map((user) => [user.id, user.totalXp ?? 0]));
+  const corrections = new Map<string, { amount: number; reason: string; created_at: string }[]>();
+  const grants = new Map<string, MockGrant[]>();
+  const activeGrants = (userId: string) =>
+    (grants.get(userId) ?? []).filter((grant) => !grant.revoked_at && (!grant.ends_at || new Date(grant.ends_at) > new Date()));
+  const tierOf = (userId: string, fallback: MockAccount["membership"] = "basic") => {
+    const active = activeGrants(userId);
+    if (active.some((grant) => grant.tier === "premium")) return "premium";
+    if (active.length > 0) return "pro";
+    return fallback ?? "basic";
+  };
 
   await page.route(`${SUPABASE_TEST_URL}/**`, async (route) => {
     const request = route.request();
@@ -132,6 +180,7 @@ export async function mockSupabase(page: Page, options: MockOptions = {}) {
       }
       // Salinan, agar perubahan profil di satu test tidak bocor ke test lain.
       signedIn = { ...account };
+      aal = "aal1";
       return route.fulfill(json(sessionJson(account)));
     }
 
@@ -147,8 +196,96 @@ export async function mockSupabase(page: Page, options: MockOptions = {}) {
           theme_id: signedIn.themeId ?? null,
           status: signedIn.status ?? "active",
           roles: signedIn.roles ?? ["student"],
+          membership: tierOf(signedIn.id, signedIn.membership),
         })
       );
+    }
+
+    // Fungsi Admin (PRD FR-16 C, D, E): hanya Admin dengan sesi aal2.
+    if (path.startsWith("/rest/v1/rpc/admin_")) {
+      if (!signedIn || !(signedIn.roles ?? []).includes("admin") || aal !== "aal2") {
+        return route.fulfill({ status: 400, contentType: "application/json", body: JSON.stringify({ code: "42501", message: "bukan_admin", details: null, hint: null }) });
+      }
+      const me = signedIn;
+      const people = [
+        { user_id: me.id, display_name: me.name, username: me.username, email: me.email, roles: me.roles ?? ["student"] },
+        ...(options.others ?? []).map((user) => ({ user_id: user.id, display_name: user.name, username: user.username, email: `${user.username}@contoh.id`, roles: ["student"] })),
+      ];
+      const rowOf = (person: (typeof people)[number]) => ({
+        ...person,
+        total_xp: xpTotals.get(person.user_id) ?? 0,
+        tier: tierOf(person.user_id),
+        status: "active",
+        created_at: "2026-11-01T00:00:00Z",
+      });
+      const find = (userId: unknown) => people.find((person) => person.user_id === userId);
+      const reason = String(body?.p_reason ?? "").trim();
+
+      if (path === "/rest/v1/rpc/admin_search_users") {
+        const query = String(body?.p_query ?? "").toLowerCase();
+        return route.fulfill(
+          json(people.filter((person) => [person.display_name, person.username ?? "", person.email].some((value) => value.toLowerCase().includes(query))).map(rowOf))
+        );
+      }
+
+      const person = find(body?.p_user);
+      if (!person) return route.fulfill(dbError("pengguna_tidak_ditemukan"));
+
+      if (path === "/rest/v1/rpc/admin_get_user") {
+        return route.fulfill(
+          json({
+            ...rowOf(person),
+            lessons_completed: 0,
+            challenges_completed: 0,
+            xp_corrections: [...(corrections.get(person.user_id) ?? [])].reverse(),
+            memberships: [...(grants.get(person.user_id) ?? [])].reverse(),
+          })
+        );
+      }
+
+      if (reason.length < 5) return route.fulfill(dbError("alasan_wajib"));
+
+      if (path === "/rest/v1/rpc/admin_adjust_xp") {
+        const amount = Number(body?.p_amount);
+        if (!Number.isInteger(amount) || amount === 0 || Math.abs(amount) > 100000) return route.fulfill(dbError("jumlah_tidak_valid"));
+        const total = (xpTotals.get(person.user_id) ?? 0) + amount;
+        if (total < 0) return route.fulfill(dbError("xp_negatif"));
+        xpTotals.set(person.user_id, total);
+        corrections.set(person.user_id, [...(corrections.get(person.user_id) ?? []), { amount, reason, created_at: new Date().toISOString() }]);
+        return route.fulfill(json(total));
+      }
+
+      if (path === "/rest/v1/rpc/admin_grant_membership") {
+        const now = new Date();
+        const days = body?.p_days === null || body?.p_days === undefined ? null : Number(body.p_days);
+        for (const grant of activeGrants(person.user_id)) {
+          grant.revoked_at = now.toISOString();
+          grant.revoke_reason = "Diganti pemberian manual baru";
+        }
+        const list = grants.get(person.user_id) ?? [];
+        list.push({
+          id: list.length + 1,
+          tier: body?.p_tier === "pro" ? "pro" : "premium",
+          source: "manual",
+          reason,
+          starts_at: now.toISOString(),
+          ends_at: days ? new Date(now.getTime() + days * 86400000).toISOString() : null,
+          revoked_at: null,
+          revoke_reason: null,
+        });
+        grants.set(person.user_id, list);
+        return route.fulfill(json({ tier: tierOf(person.user_id), ends_at: list.at(-1)!.ends_at }));
+      }
+
+      if (path === "/rest/v1/rpc/admin_revoke_membership") {
+        const active = activeGrants(person.user_id);
+        if (active.length === 0) return route.fulfill(dbError("tidak_ada_membership_manual"));
+        for (const grant of active) {
+          grant.revoked_at = new Date().toISOString();
+          grant.revoke_reason = reason;
+        }
+        return route.fulfill(json(tierOf(person.user_id)));
+      }
     }
 
     if (path === "/rest/v1/rpc/update_profile") {
@@ -225,6 +362,44 @@ export async function mockSupabase(page: Page, options: MockOptions = {}) {
     if (path === "/rest/v1/rpc/check_username") {
       const candidate = String(body?.candidate ?? "");
       return route.fulfill(json(options.usernames?.[candidate] ?? "tersedia"));
+    }
+
+    // MFA (PRD 8.3): daftar authenticator, tantangan, dan verifikasi kode.
+    if (path === "/auth/v1/factors" && request.method() === "POST") {
+      if (!signedIn) return route.fulfill(authError(401, "session_not_found", "Session not found"));
+      const id = `faktor-${(signedIn.factors?.length ?? 0) + 1}`;
+      signedIn.factors = [...(signedIn.factors ?? []), { id, status: "unverified" }];
+      return route.fulfill(
+        json({
+          id,
+          type: "totp",
+          friendly_name: body?.friendly_name ?? "",
+          totp: {
+            qr_code: '<svg xmlns="http://www.w3.org/2000/svg" width="180" height="180"><rect width="180" height="180" fill="#000"/></svg>',
+            secret: MOCK_TOTP_SECRET,
+            uri: `otpauth://totp/belajarautomation.com:${signedIn.email}?secret=${MOCK_TOTP_SECRET}`,
+          },
+        })
+      );
+    }
+
+    const factorPath = path.match(/^\/auth\/v1\/factors\/([^/]+)(?:\/(challenge|verify))?$/);
+    if (factorPath) {
+      if (!signedIn) return route.fulfill(authError(401, "session_not_found", "Session not found"));
+      const [, factorId, action] = factorPath;
+      if (!action && request.method() === "DELETE") {
+        signedIn.factors = (signedIn.factors ?? []).filter((factor) => factor.id !== factorId);
+        return route.fulfill(json({ id: factorId }));
+      }
+      if (action === "challenge") {
+        return route.fulfill(json({ id: `tantangan-${factorId}`, type: "totp", expires_at: Math.floor(Date.now() / 1000) + 300 }));
+      }
+      if (action === "verify") {
+        if (body?.code !== MOCK_TOTP_CODE) return route.fulfill(authError(422, "mfa_verification_failed", "Invalid TOTP code entered"));
+        signedIn.factors = (signedIn.factors ?? []).map((factor) => (factor.id === factorId ? { ...factor, status: "verified" } : factor));
+        aal = "aal2";
+        return route.fulfill(json(sessionJson(signedIn, "aal2")));
+      }
     }
 
     if (path === "/auth/v1/signup") {

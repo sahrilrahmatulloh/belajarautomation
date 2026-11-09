@@ -93,6 +93,19 @@ npm run db:push             # menerapkan migrasi ke project yang di-link
 npm run db:types            # memperbarui types/supabase.ts dari skema
 ```
 
+Menjadikan akun sebagai Admin (sekali per project, oleh pemilik akses Supabase):
+
+1. Daftar akun seperti biasa di aplikasi pada lingkungan tersebut (DEV atau UAT).
+2. Di dashboard Supabase project itu, buka **SQL Editor** lalu jalankan, dengan email akun tersebut:
+
+   ```sql
+   insert into public.user_roles (user_id, role)
+   select id, 'admin' from auth.users where email = 'email-kamu@contoh.com'
+   on conflict do nothing;
+   ```
+
+3. Keluar lalu masuk lagi. Saat membuka halaman Admin pertama kali, pindai kode QR dengan aplikasi authenticator (PRD 8.3). Pastikan **Authentication > Multi-Factor > TOTP** aktif di project (aktif secara bawaan).
+
 Aturan:
 
 - Kunci rahasia (secret key atau service_role) tidak pernah ditulis di repository, `.env.example`, atau variabel berawalan `NEXT_PUBLIC_`.

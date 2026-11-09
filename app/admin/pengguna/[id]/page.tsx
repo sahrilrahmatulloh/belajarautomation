@@ -1,18 +1,31 @@
-import { notFound } from "next/navigation";
+import { Users } from "lucide-react";
 
 import UserDetailPage from "@/components/admin/UserDetailPage";
+import AdminRealSwitch from "@/components/admin/real/AdminRealSwitch";
+import RealUserDetailPage from "@/components/admin/real/RealUserDetailPage";
 import DashboardLayout from "@/components/layout/DashboardLayout";
+import RoleGuidePage from "@/components/roles/RoleGuidePage";
 import { isDev } from "@/lib/env";
 
-// Hanya di DEV (PRD FR-16).
-// PENTING: route ini WAJIB dilindungi otorisasi role "admin" di backend sebelum rilis (PRD 8.3).
+// Akun sungguhan: detail dari database dengan koreksi XP dan membership manual (PRD FR-16 D, E),
+// dijaga peran Admin dan verifikasi dua langkah di database. Akun demo: data dummy hanya di DEV.
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {
-  if (!isDev) notFound();
   const { id } = await params;
 
   return (
     <DashboardLayout>
-      <UserDetailPage userId={id} />
+      <AdminRealSwitch real={<RealUserDetailPage userId={id} />}>
+        {isDev ? (
+          <UserDetailPage userId={id} />
+        ) : (
+          <RoleGuidePage
+            role="admin"
+            title="Detail Pengguna"
+            description="Pengelolaan pengguna tersedia untuk akun Admin dengan verifikasi dua langkah."
+            icon={Users}
+          />
+        )}
+      </AdminRealSwitch>
     </DashboardLayout>
   );
 }
