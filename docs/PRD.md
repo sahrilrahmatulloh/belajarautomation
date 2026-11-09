@@ -1569,7 +1569,7 @@ Backend diprioritaskan agar Creator dapat menulis langsung di aplikasi tanpa ala
 - Reviewer tidak mengedit isi konten secara langsung.
 
 **Tugas Admin**
-Ringkasan, Semua Konten (tugaskan reviewer, terbitkan, tarik), dan Kelola Peran diatur di FR-16.
+Dashboard, Semua Konten (tugaskan reviewer, terbitkan, tarik), dan Kelola Peran diatur di FR-16.
 
 **Notifikasi peran (grup Khusus role, Bagian 4.4)**
 - Creator: konten diminta revisi, disetujui, diterbitkan, atau ditarik.
@@ -1604,7 +1604,7 @@ Menyediakan alat bagi Admin untuk mengelola konten, pengguna, transaksi, katalog
 ### Navigasi
 | Kelompok | Menu |
 |---|---|
-| Konten | Ringkasan, Semua Konten |
+| Konten | Dashboard, Semua Konten |
 | Pengguna | Pengguna dan Peran, Moderasi |
 | Bisnis | Transaksi, Produk Digital |
 | Platform | Katalog Belajar, Pengumuman, Mode Maintenance |
