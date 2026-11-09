@@ -72,7 +72,7 @@ test.describe("Kustomisasi akun Supabase", () => {
 
   test("akun Premium dari database bisa memakai avatar berbayar dan melihat paketnya", async ({ page }) => {
     const premium = { ...MOCK_STUDENT, membership: "premium" as const };
-    await mockSupabase(page, { accounts: [premium] });
+    const supabase = await mockSupabase(page, { accounts: [premium] });
     await signInWithMock(page, premium);
     const profile = new ProfilePage(page);
     await profile.gotoTab("kustomisasi");
@@ -80,6 +80,16 @@ test.describe("Kustomisasi akun Supabase", () => {
     for (const name of PAID_AVATAR_NAMES) {
       await expect(page.getByRole("button", { name: new RegExp(`^${name}`) })).toBeEnabled();
     }
+
+    // Kostum berbayar bisa dipilih dan disimpan oleh akun Premium.
+    await page.getByRole("group", { name: "Filter Gaya avatar" }).getByRole("button", { name: "Bug Hunter" }).click();
+    await page.getByRole("button", { name: /^Kucing Oren Bug Hunter/ }).click();
+    await profile.saveAppearanceButton.click();
+    await expect(notification(page, "Pilihan avatar dan tema tersimpan.")).toBeVisible();
+    expect(supabase.find("/rest/v1/rpc/set_appearance")?.postDataJSON()).toMatchObject({ new_avatar_id: "kucing-oren-bug-hunter" });
+
+    await profile.goto();
+    await expect(profile.header.getByRole("img", { name: "Avatar Kucing Oren Bug Hunter" })).toBeVisible();
 
     await page.goto("/membership");
     const premiumCard = page.getByRole("article").filter({ has: page.getByRole("heading", { name: "Premium", exact: true }) });

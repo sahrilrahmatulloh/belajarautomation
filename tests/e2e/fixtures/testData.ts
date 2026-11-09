@@ -37,6 +37,8 @@ export const PAID_AVATAR_NAMES = [
   "Kucing Corak Tiga",
   "Kucing Siam",
 ];
+// Kostum berbayar yang gambarnya sudah ada untuk kedelapan jenis kucing (PRD FR-12, v2.42).
+export const COSTUME_STYLES = ["Bug Hunter", "Cyberpunk"];
 export const ACTIVE_THEME_NAME = "Penerbangan Fuji";
 
 export const OWN_USERNAME = "sobatqa";
