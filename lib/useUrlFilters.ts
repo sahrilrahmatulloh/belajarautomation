@@ -6,31 +6,49 @@ import { usePathname, useSearchParams } from "next/navigation";
 // Nilai filter disimpan di query URL agar bisa dibagikan dan bertahan saat
 // halaman dimuat ulang. Nilai kosong berarti "Semua" dan dihapus dari URL.
 // history.replaceState didukung App Router, jadi tidak memicu request ke server.
+//
+// useSearchParams() diperbarui App Router secara tertunda setelah replaceState
+// (Next.js 16.4+). Karena itu nilai filter disimpan juga di state lokal yang
+// langsung berubah saat dipilih, dan setiap perubahan dibangun dari URL yang
+// sedang berlaku di browser, bukan dari snapshot useSearchParams yang bisa
+// tertinggal. Tanpa ini, checkbox terkontrol kembali ke nilai lama dan
+// perubahan filter yang beruntun saling menimpa.
 export function useUrlFilters<K extends string>(keys: readonly K[]) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
+  const routerQuery = searchParams.toString();
 
-  const values = useMemo(
-    () =>
-      Object.fromEntries(
-        keys.map((key) => [key, searchParams.get(key) ?? ""])
-      ) as Record<K, string>,
-    [keys, searchParams]
-  );
+  const [query, setQuery] = useState(routerQuery);
+  const [syncedRouterQuery, setSyncedRouterQuery] = useState(routerQuery);
+
+  // Ikuti perubahan dari router (Link, navigasi, tombol kembali). Saat render
+  // ini URL browser belum tentu sudah diperbarui router, jadi pakai nilainya.
+  if (routerQuery !== syncedRouterQuery) {
+    setSyncedRouterQuery(routerQuery);
+    setQuery(routerQuery);
+  }
+
+  const values = useMemo(() => {
+    const params = new URLSearchParams(query);
+    return Object.fromEntries(
+      keys.map((key) => [key, params.get(key) ?? ""])
+    ) as Record<K, string>;
+  }, [keys, query]);
 
   const setFilters = useCallback(
     (updates: Partial<Record<K, string>>) => {
-      const params = new URLSearchParams(searchParams.toString());
+      const params = new URLSearchParams(window.location.search);
 
       for (const [key, value] of Object.entries(updates)) {
         if (value) params.set(key, value as string);
         else params.delete(key);
       }
 
-      const query = params.toString();
-      window.history.replaceState(null, "", query ? `${pathname}?${query}` : pathname);
+      const next = params.toString();
+      setQuery(next);
+      window.history.replaceState(null, "", next ? `${pathname}?${next}` : pathname);
     },
-    [pathname, searchParams]
+    [pathname]
   );
 
   const resetFilters = useCallback(() => {
