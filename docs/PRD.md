@@ -1,9 +1,12 @@
 # BELAJARAUTOMATION.COM
 ## Product Requirements Document (PRD)
-**Versi:** 2.41  
+**Versi:** 2.42  
 **Status:** Draft — Acuan Pengembangan Produk  
 **Platform:** Web Application  
 **Target Pengguna:** Pemula hingga praktisi QA, Software Testing, dan Programming
+
+### Perubahan di Versi 2.42
+- Kostum Bug Hunter dan Cyberpunk tersedia untuk kedelapan jenis kucing, sehingga koleksi avatar berisi 24 avatar. Semua kostum terbuka di Pro dan Premium (FR-12).
 
 ### Perubahan di Versi 2.41
 - Menu Admin "Ringkasan" berganti nama menjadi "Dashboard". Untuk Admin akun sungguhan, Dashboard memakai data asli (pengguna, membership, sebaran rank, aksi Admin terbaru), dan bagian yang belum punya backend memakai angka contoh berlabel "Data contoh" di DEV dan UAT (FR-16 A).
@@ -1267,7 +1270,7 @@ Setiap tema memiliki:
 - Tema yang ilustrasinya sudah memuat karakter kucing tidak menampilkan avatar pengguna di atasnya, agar tidak ada dua kucing.
 
 ### Rilis awal
-- **8 avatar** dan 2 tema banner:
+- **24 avatar** dan 2 tema banner:
 
 | Tema | Akses | Catatan |
 |---|---|---|
@@ -1275,13 +1278,17 @@ Setiap tema memiliki:
 | Neon Night | Gratis | Bergerak; kota cyberpunk malam |
 
 - Target rilis awal tetap 5 tema; tema lain menyusul.
-- Avatar, semuanya gaya Basic:
+- Avatar:
 
 | Avatar | Akses |
 |---|---|
 | Kucing Putih (bawaan) | Gratis |
 | Kucing Oren | Gratis |
 | Kucing Hitam, Kucing Tuxedo, Kucing Abu-abu, Kucing Coklat, Kucing Corak Tiga, Kucing Siam | Pro dan Premium |
+| Kostum Bug Hunter untuk kedelapan jenis kucing, mis. "Kucing Oren Bug Hunter" | Pro dan Premium |
+| Kostum Cyberpunk untuk kedelapan jenis kucing, mis. "Kucing Siam Cyberpunk" | Pro dan Premium |
+
+- Gaya kostum lain (Wizard, Driver Formula, Space Explorer, Ninja, Knight, Master Chef) tampil "Segera hadir" sampai gambarnya tersedia.
 
 - Komposisi gratis dan berbayar untuk tema ditetapkan di Bagian 12. Minimal 1 avatar dan 1 tema tersedia gratis.
 - Jumlah ini adalah rilis awal, bukan batas permanen.

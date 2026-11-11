@@ -44,9 +44,10 @@ export const AUTH_SLIDES: AuthSlide[] = [
     id: "avatar-kucing",
     eyebrow: "Koleksi avatar",
     title: `${AVATARS.length} avatar kucing untuk profilmu.`,
-    description: "Kucing Putih dan Kucing Oren gratis untuk semua. Gaya kostum seperti Bug Hunter dan Ninja segera hadir.",
+    description: "Kucing Putih dan Kucing Oren gratis untuk semua. Kostum Bug Hunter dan Cyberpunk tersedia di Pro dan Premium.",
     badge: "Baru",
-    visual: { kind: "avatars", images: AVATARS.map((avatar) => avatar.image) },
+    // Grid 4 kolom: cukup delapan jenis kucing gaya Basic.
+    visual: { kind: "avatars", images: AVATARS.filter((avatar) => avatar.style === "Basic").map((avatar) => avatar.image) },
   },
   {
     id: "ebook",

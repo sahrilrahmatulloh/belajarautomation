@@ -13,6 +13,12 @@ const avatarsSource = readFileSync("data/avatars.ts", "utf8");
 for (const [, id, paid] of avatarsSource.matchAll(/basic\(\s*"([^"]+)",\s*"[^"]+",\s*"[^"]+"(?:,\s*(true|false))?\s*\)/g)) {
   fromCode.set(id, { kind: "avatar", access: paid === "true" ? "paid" : "free" });
 }
+// Kostum: costume(id, "Gaya") untuk setiap jenis kucing Basic, selalu berbayar.
+const basicIds = [...fromCode.keys()];
+for (const [, style] of avatarsSource.matchAll(/costume\(\s*id,\s*"([^"]+)"\s*\)/g)) {
+  const slug = style.toLowerCase().replace(/\s+/g, "-");
+  for (const id of basicIds) fromCode.set(`${id}-${slug}`, { kind: "avatar", access: "paid" });
+}
 const themesSource = readFileSync("data/themes.ts", "utf8");
 for (const [, id, access] of themesSource.matchAll(/id:\s*"([^"]+)"[\s\S]*?access:\s*"(free|paid)"/g)) {
   fromCode.set(id, { kind: "theme", access });
