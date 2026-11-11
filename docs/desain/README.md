@@ -9,6 +9,16 @@ Menambah mockup: simpan PNG di folder ini dengan nama fiturnya, lalu jalankan `n
 | Nama file | Fitur | Bagian PRD terkait | Tanggal disetujui | Perbedaan yang diketahui terhadap PRD |
 |---|---|---|---|---|
 | `creator-mode.webp` | Mode Creator: Konten Saya, Buat Artikel, Catatan Revisi, Sisipkan Video YouTube, Upload Gambar | FR-15, FR-02 bagian G | perlu diisi pemilik | Lihat di bawah |
+| `profil.webp` | Profil Pengguna: banner dengan tombol aksi dan kucing 3D, tab Ringkasan | FR-13, FR-12 (Model 3D kucing) | 2026-11-12 | Lihat di bawah |
+
+## Perbedaan `profil.webp`
+
+- Header aplikasi yang sudah ada tetap dipakai, termasuk ikon pengatur tema terang/gelap yang tidak tampil di mockup.
+- Rank di banner dan kartu Progress Rank memakai emblem tameng dengan warna identitas rank (FR-05). Di mockup, ikon rank di banner berupa garis dan kedua tameng di Progress Rank berwarna biru yang sama.
+- Label kartu statistik mengikuti dashboard: "Materi Selesai", "Challenge Selesai", "Achievement", dan "Total XP" (mockup: "Total Materi", "Total Challenge", "Total Achievement").
+- Mockup hanya menampilkan mode gelap; mode terang memakai tata letak yang sama dengan warna brand (Bagian 15).
+- Mockup menampilkan profil sendiri. Profil publik memakai banner yang sama tanpa ikon pensil di avatar dan tanpa tombol aksi (FR-13).
+- Banner pada mockup adalah tema Padang Rumput; banner mengikuti tema aktif pengguna.
 
 ## Perbedaan `creator-mode.webp`
 
