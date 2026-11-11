@@ -1,7 +1,8 @@
 // Mengubah PNG di public/ menjadi WebP terkompresi, lalu menghapus PNG asli.
 // - ranks:   emblem rank, latar transparan, tepi dipangkas, lebar maks 320px, < 60 KB.
-// - avatars: avatar kucing (public/profile), latar transparan, lebar maks 512px, < 60 KB.
-//            PNG tanpa alpha dipotong mengikuti bingkai lingkarannya.
+// - avatars: avatar kucing, satu folder per gaya: public/profile/<gaya>/ (mis. basic,
+//            bug-hunter). Latar transparan, lebar maks 512px, < 60 KB. Nama WebP sama dengan
+//            nama PNG-nya. PNG tanpa alpha dipotong mengikuti bingkai lingkarannya.
 // - themes:  tema banner, satu folder per tema: public/banner/<id-tema>/. PNG di folder itu
 //            (nama bebas, mis. banner.png) menjadi banner.webp (lebar maks 2400px, < 250 KB)
 //            dan thumb.webp selebar 480px untuk koleksi tema. Video banner.mp4 ditaruh
@@ -18,7 +19,7 @@ import sharp from "sharp";
 
 const GROUPS = {
   ranks: { dir: "public/ranks", maxWidth: 320, limitKb: 60, transparent: true, trim: true },
-  avatars: { dir: "public/profile", maxWidth: 512, limitKb: 60, transparent: true },
+  avatars: { dir: "public/profile", maxWidth: 512, limitKb: 60, transparent: true, subfolders: true },
   themes: { dir: "public/banner", maxWidth: 2400, limitKb: 250, thumbnailWidth: 480, perFolder: true },
   mockups: { dir: "docs/desain", maxWidth: 2400, limitKb: 500 },
   blog: { dir: "public/covers/blog", maxWidth: 1600, limitKb: 200 },
@@ -38,11 +39,14 @@ const toKb = (bytes) => Math.round(bytes / 1024);
 async function cutCircleFrame(input) {
   const { data, info } = await sharp(input).removeAlpha().raw().toBuffer({ resolveWithObject: true });
   const { width, height } = info;
+  // Latar polos (mis. hitam) dikenali dari warna piksel sudut kiri atas.
+  const corner = [data[0], data[1], data[2]];
   const isBackground = (x, y) => {
     const index = (y * width + x) * 3;
     const min = Math.min(data[index], data[index + 1], data[index + 2]);
     const max = Math.max(data[index], data[index + 1], data[index + 2]);
-    return min >= 222 && max - min <= 8;
+    const nearCorner = [0, 1, 2].every((channel) => Math.abs(data[index + channel] - corner[channel]) <= 24);
+    return (min >= 222 && max - min <= 8) || nearCorner;
   };
 
   // Kolom/baris dianggap bagian bingkai bila memuat beberapa piksel non-latar.
@@ -64,7 +68,7 @@ async function cutCircleFrame(input) {
   const top = rows[0];
   const size = Math.min(columns.at(-1) - left, rows.at(-1) - top) + 1;
   const mask = Buffer.from(
-    `<svg width="${size}" height="${size}"><circle cx="${size / 2}" cy="${size / 2}" r="${size / 2}" /></svg>`
+    `<svg width="${size}" height="${size}"><circle cx="${size / 2}" cy="${size / 2}" r="${(size / 2) * 0.985}" /></svg>`
   );
 
   return sharp(input)
@@ -128,8 +132,17 @@ for (const name of groupNames) {
       }
     }
   } else {
-    for (const file of (await readdir(dir)).filter((item) => /\.png$/i.test(item))) {
-      sources.push({ folder: dir, file, label: "" });
+    // Kelompok dengan subfolder (avatar per gaya): PNG di folder utama dan di setiap subfolder.
+    const folders = [{ folder: dir, label: "" }];
+    if (group.subfolders) {
+      for (const entry of await readdir(dir, { withFileTypes: true })) {
+        if (entry.isDirectory()) folders.push({ folder: path.join(dir, entry.name), label: `${entry.name}/` });
+      }
+    }
+    for (const { folder, label } of folders) {
+      for (const file of (await readdir(folder)).filter((item) => /\.png$/i.test(item))) {
+        sources.push({ folder, file, label });
+      }
     }
   }
 
