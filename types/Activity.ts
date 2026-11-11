@@ -4,7 +4,9 @@ export type ActivityType =
   | "quiz"
   | "challenge"
   | "achievement"
-  | "rank_up";
+  | "rank_up"
+  // Koreksi XP oleh Admin (PRD FR-16 D); bisa bernilai negatif.
+  | "correction";
 
 export interface ActivityEntry {
   id: string;

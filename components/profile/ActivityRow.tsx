@@ -6,6 +6,7 @@ import {
   LucideIcon,
   Target,
   TrendingUp,
+  Wrench,
 } from "lucide-react";
 
 import { COURSES } from "@/data/courses";
@@ -22,6 +23,7 @@ const TYPE_STYLES: Record<ActivityType, { icon: LucideIcon; label: string; class
   challenge: { icon: Target, label: "Challenge selesai", className: "bg-rose-500/10 text-rose-600 dark:text-rose-300" },
   achievement: { icon: Award, label: "Achievement diperoleh", className: "bg-amber-500/10 text-amber-600 dark:text-amber-300" },
   rank_up: { icon: TrendingUp, label: "Naik rank", className: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-300" },
+  correction: { icon: Wrench, label: "Koreksi XP", className: "bg-slate-500/10 text-slate-600 dark:text-slate-300" },
 };
 
 // Satu baris riwayat aktivitas. `whenLabel` menggantikan jam bila barisnya tidak
@@ -42,6 +44,7 @@ export default function ActivityRow({ entry, whenLabel }: { entry: ActivityEntry
       </div>
       <div className="shrink-0 text-right">
         {entry.xp > 0 && <p className="text-sm font-semibold tabular-nums text-primary-accent">+{entry.xp} XP</p>}
+        {entry.xp < 0 && <p className="text-sm font-semibold tabular-nums text-destructive">−{Math.abs(entry.xp)} XP</p>}
         <p className="text-xs tabular-nums text-muted-foreground">{whenLabel ?? entry.time}</p>
       </div>
     </li>

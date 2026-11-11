@@ -9,6 +9,8 @@ import { getRank } from "@/data/ranks";
 import { formatNumber } from "@/lib/format";
 import { createShareCard, SHARE_CARD_HEIGHT, SHARE_CARD_WIDTH } from "@/lib/shareCard";
 
+import BannerAction from "./BannerAction";
+
 interface ShareProfileDialogProps {
   displayName: string;
   username: string;
@@ -97,12 +99,7 @@ export default function ShareProfileDialog({
 
   return (
     <Dialog.Root onOpenChange={handleOpenChange}>
-      <Dialog.Trigger
-        aria-label="Bagikan profil"
-        className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-950/40 text-white backdrop-blur-sm transition-colors hover:bg-slate-950/60"
-      >
-        <Share2 className="h-5 w-5" aria-hidden="true" />
-      </Dialog.Trigger>
+      <BannerAction label="Bagikan profil" icon={Share2} render={<Dialog.Trigger />} />
 
       <Dialog.Portal>
         <Dialog.Backdrop className="fixed inset-0 z-50 bg-black/70 transition-opacity duration-150 data-ending-style:opacity-0 data-starting-style:opacity-0" />

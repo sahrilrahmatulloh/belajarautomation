@@ -4,11 +4,12 @@ import { ArrowLeft, Eye, Lock } from "lucide-react";
 
 import { PublicProfile } from "@/data/dummy/publicProfiles";
 
-import FeaturedAchievements from "./FeaturedAchievements";
+import AchievementSummary from "./AchievementSummary";
 import ProfileAchievements from "./ProfileAchievements";
 import ProfileHeader from "./ProfileHeader";
 import ProfileStats from "./ProfileStats";
 import ProfileTabs from "./ProfileTabs";
+import RankProgressCard from "./RankProgressCard";
 
 // Profil yang dilihat pengguna lain (PRD FR-13): hanya header, Ringkasan, dan
 // Pencapaian. Tanpa aktivitas detail, Kustomisasi, email, pembelian, atau membership.
@@ -27,6 +28,7 @@ export default function PublicProfilePage({ profile }: { profile: PublicProfile 
     );
   }
 
+  // Tanpa grafik Progres XP dan Aktivitas Terbaru: riwayat aktivitas hanya untuk pemilik (PRD FR-13).
   const summary = (
     <div className="space-y-6">
       <ProfileStats
@@ -35,7 +37,10 @@ export default function PublicProfilePage({ profile }: { profile: PublicProfile 
         challenges={profile.challenges}
         achievements={profile.achievements.filter((state) => state.earned).length}
       />
-      <FeaturedAchievements featured={profile.featured} allHref={`/u/${profile.username}?tab=pencapaian`} />
+      <div className="grid gap-4 md:grid-cols-2">
+        <AchievementSummary states={profile.achievements} href={`/u/${profile.username}?tab=pencapaian`} />
+        <RankProgressCard xp={profile.xp} showLink={false} />
+      </div>
     </div>
   );
 
@@ -62,6 +67,7 @@ export default function PublicProfilePage({ profile }: { profile: PublicProfile 
         avatarName={profile.avatarName}
         themeImage={profile.themeImage}
         themeVideo={profile.themeVideo}
+        catModel={profile.catModel}
         xp={profile.xp}
         isOwner={false}
       />

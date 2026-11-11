@@ -42,7 +42,7 @@ export const MAIN_PAGES: { name: string; open: (page: Page) => Promise<BasePage>
   { name: "Pengerjaan Locator", open: (page) => open(new ChallengePage(page, "locator-form-registrasi"), (p) => p.selectorPanel) },
   { name: "Leaderboard", open: (page) => open(new LeaderboardPage(page), (p) => p.topList.first()) },
   { name: "Rank & XP", open: (page) => open(new RankPage(page), (p) => p.currentTier) },
-  { name: "Profil", open: (page) => open(new ProfilePage(page), (p) => p.featuredAchievements) },
+  { name: "Profil", open: (page) => open(new ProfilePage(page), (p) => p.rankProgress) },
   {
     name: "Profil tab Aktivitas",
     open: (page) => open(new ProfilePage(page), (p) => p.activityRows.first(), (p) => p.gotoTab("aktivitas")),

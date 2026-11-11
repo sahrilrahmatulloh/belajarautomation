@@ -1,27 +1,28 @@
 "use client";
 
 import { Suspense } from "react";
-import Link from "next/link";
-import { Eye } from "lucide-react";
 
+import { getCatModel } from "@/data/catModels";
 import { getPublicProfile } from "@/data/dummy/publicProfiles";
 import { DUMMY_PROFILE } from "@/data/dummy/profile";
+import { useAccountStats, useLessonProgress } from "@/lib/lessonProgress";
 import { useSession } from "@/lib/session";
 import { useAppearance } from "@/lib/useAppearance";
+import { useXpHistory } from "@/lib/xpHistory";
 
-import FeaturedAchievements from "./FeaturedAchievements";
-import LearningProgress from "./LearningProgress";
+import AchievementSummary from "./AchievementSummary";
 import ProfileAchievements from "./ProfileAchievements";
 import ProfileActivity from "./ProfileActivity";
 import ProfileCustomization from "./ProfileCustomization";
 import ProfileHeader from "./ProfileHeader";
 import ProfileStats from "./ProfileStats";
 import ProfileTabs from "./ProfileTabs";
+import RankProgressCard from "./RankProgressCard";
 import RecentActivity from "./RecentActivity";
-import { useAccountStats, useLessonProgress } from "@/lib/lessonProgress";
-
 import ShareProfileDialog from "./ShareProfileDialog";
+import XpProgressChart from "./XpProgressChart";
 
+// Profil sendiri (PRD FR-13, acuan docs/desain/profil.webp).
 export default function ProfilePage() {
   // Profil akun demo selalu ada; datanya sama dengan yang tampil di profil publik.
   const profile = getPublicProfile(DUMMY_PROFILE.username)!;
@@ -37,30 +38,37 @@ export default function ProfilePage() {
   const avatarName = isRealAccount ? appearance.avatar.name : profile.avatarName;
   const themeImage = isRealAccount ? appearance.theme.image : profile.themeImage;
   const themeVideo = isRealAccount ? appearance.theme.video : profile.themeVideo;
+  const catModel = isRealAccount ? getCatModel(appearance.avatar, appearance.theme) : profile.catModel;
   const { extraXp, extraLessons } = useLessonProgress();
   const stats = useAccountStats();
   // Akun Supabase memakai XP dan progres dari database; akun demo dari data dummy.
   const xp = isRealAccount ? stats.xp : profile.xp + extraXp;
   const lessons = isRealAccount ? stats.lessons : profile.lessons + extraLessons;
   const challenges = isRealAccount ? stats.challenges : profile.challenges;
+  const history = useXpHistory();
+  const historyReady = history.isLoaded && stats.isLoaded;
 
   const earnedAchievements = profile.achievements.filter((state) => state.earned).length;
 
   const summary = (
     <div className="space-y-6">
-      <ProfileStats
-        xp={xp}
-        lessons={lessons}
-        challenges={challenges}
-        achievements={earnedAchievements}
-      />
+      <ProfileStats xp={xp} lessons={lessons} challenges={challenges} achievements={earnedAchievements} />
 
-      <FeaturedAchievements featured={profile.featured} allHref="/profile?tab=pencapaian" />
-
-      <div className="grid gap-6 lg:grid-cols-2">
-        <LearningProgress />
-        <RecentActivity />
+      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)_minmax(0,1fr)]">
+        <div className="min-w-0 md:col-span-2 xl:col-span-1 [&>section]:h-full">
+          {historyReady ? (
+            <XpProgressChart totalXp={xp} gainsByDaysAgo={history.gainsByDaysAgo} />
+          ) : (
+            <section aria-label="Progres XP" className="flex h-full min-h-56 items-center justify-center rounded-2xl border border-border bg-card p-5">
+              <p role="status" className="text-sm text-muted-foreground">Memuat progres XP...</p>
+            </section>
+          )}
+        </div>
+        <AchievementSummary states={profile.achievements} href="/profile?tab=pencapaian" />
+        <RankProgressCard xp={xp} />
       </div>
+
+      <RecentActivity entries={history.recent} isLoaded={historyReady} />
     </div>
   );
 
@@ -74,6 +82,7 @@ export default function ProfilePage() {
         avatarName={avatarName}
         themeImage={themeImage}
         themeVideo={themeVideo}
+        catModel={catModel}
         xp={xp}
         isOwner
         shareAction={
@@ -91,16 +100,6 @@ export default function ProfilePage() {
         }
       />
 
-      <div className="flex justify-end">
-        <Link
-          href={`/u/${username || profile.username}`}
-          className="inline-flex min-h-10 items-center gap-2 rounded-xl border border-border bg-card px-4 text-sm font-medium transition-colors hover:bg-accent"
-        >
-          <Eye className="h-4 w-4" aria-hidden="true" />
-          Lihat sebagai publik
-        </Link>
-      </div>
-
       {/* Tab dibaca dari URL, jadi butuh Suspense saat prerender. */}
       <Suspense fallback={summary}>
         <ProfileTabs
@@ -108,8 +107,8 @@ export default function ProfilePage() {
             ringkasan: summary,
             aktivitas: <ProfileActivity />,
             pencapaian: <ProfileAchievements states={profile.achievements} />,
-            kustomisasi: <ProfileCustomization />,
           }}
+          customization={<ProfileCustomization />}
         />
       </Suspense>
     </div>

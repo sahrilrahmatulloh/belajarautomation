@@ -43,8 +43,20 @@ test.describe("Profil publik setelah login", () => {
 
     await expect(profile.main).not.toContainText(ACCOUNTS.user.email);
     await expect(profile.main).not.toContainText(/membership/i);
-    await expect(profile.settingsLink).toBeHidden();
+    await expect(profile.bannerActions).toBeHidden();
+    await expect(profile.customizeLink).toBeHidden();
     await expect(profile.shareButton).toBeHidden();
+  });
+
+  test("Ringkasan publik berisi statistik, Achievement, dan Progress Rank tanpa riwayat aktivitas", async ({ page }) => {
+    const profile = new PublicProfilePage(page, PUBLIC_USER.username);
+    await profile.goto();
+
+    await expect(profile.stats).toBeVisible();
+    await expect(profile.achievementCard).toBeVisible();
+    await expect(profile.rankProgress).toBeVisible();
+    await expect(profile.xpProgress).toHaveCount(0);
+    await expect(profile.recentActivity).toHaveCount(0);
   });
 
   test("profil privat hanya menampilkan keterangan privat", async ({ page }) => {

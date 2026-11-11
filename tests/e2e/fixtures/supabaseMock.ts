@@ -342,6 +342,7 @@ export async function mockSupabase(page: Page, options: MockOptions = {}) {
 
     // Progres dan XP dicatat server Next.js di server tiruan; browser membacanya dari sana.
     if (path === "/rest/v1/rpc/get_my_progress") return route.continue();
+    if (path === "/rest/v1/xp_transactions") return route.continue();
 
     if (path === "/rest/v1/rpc/get_leaderboard") {
       if (!signedIn) return route.fulfill(dbError("tidak_login"));

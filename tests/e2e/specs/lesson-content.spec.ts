@@ -103,7 +103,10 @@ test.describe("Lesson yang sudah punya isi", () => {
     await profile.goto();
 
     await expect(lessons).toContainText(String(before + 1));
-    await expect(page.getByRole("heading", { name: "Progres Belajar" }).locator("..")).toContainText(courseTitle);
+    // Progres per course tidak lagi di profil (PRD FR-13 v2.43); course tampil di Lanjutkan Belajar dashboard.
+    const dashboard = new DashboardPage(page);
+    await dashboard.goto();
+    await expect(dashboard.continueLearning).toContainText(courseTitle);
   });
 
   test("lesson yang belum ditulis tidak memberi XP", async ({ page }) => {
