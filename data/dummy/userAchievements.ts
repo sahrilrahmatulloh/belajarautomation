@@ -17,9 +17,6 @@ export const DUMMY_EARNED_ACHIEVEMENTS: EarnedAchievement[] = DUMMY_ACTIVITY.fla
     : []
 );
 
-// Achievement unggulan yang tampil di tab Ringkasan profil.
-export const DUMMY_FEATURED_ACHIEVEMENT_IDS = ["consistent-learner", "bug-hunter", "quiz-master"];
-
 // Progres achievement bertahap yang belum tercapai.
 export const DUMMY_ACHIEVEMENT_PROGRESS: Record<string, number> = {
   "rajin-belajar": getActivityCount("lesson"),

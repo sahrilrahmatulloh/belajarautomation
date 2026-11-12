@@ -6,6 +6,16 @@ import { BannerTheme } from "@/types/Appearance";
 // satu entri di sini, lalu tambah barisnya di private.cosmetic_items lewat migrasi baru.
 export const THEMES: BannerTheme[] = [
   {
+    // Tema bawaan pengguna baru (PRD FR-12, v2.43). Gambar diam tanpa karakter kucing,
+    // sehingga kucing 3D di banner profil dapat tampil di atasnya.
+    id: "padang-rumput",
+    name: "Padang Rumput",
+    image: "/banner/padang-rumput/banner.webp",
+    thumbnail: "/banner/padang-rumput/thumb.webp",
+    access: "free",
+    includedIn: [],
+  },
+  {
     id: "kucing-fuji",
     name: "Penerbangan Fuji",
     image: "/banner/kucing-fuji/banner.webp",
@@ -30,7 +40,9 @@ export const THEMES: BannerTheme[] = [
   },
 ];
 
-export const DEFAULT_THEME_ID = "kucing-fuji";
+// Berlaku untuk pengguna yang belum pernah menyimpan tema (theme_id kosong); pilihan
+// yang sudah disimpan tidak berubah.
+export const DEFAULT_THEME_ID = "padang-rumput";
 
 export function getTheme(id: string) {
   return THEMES.find((theme) => theme.id === id);

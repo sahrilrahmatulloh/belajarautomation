@@ -1,9 +1,16 @@
 # BELAJARAUTOMATION.COM
 ## Product Requirements Document (PRD)
-**Versi:** 2.42  
+**Versi:** 2.43  
 **Status:** Draft — Acuan Pengembangan Produk  
 **Platform:** Web Application  
 **Target Pengguna:** Pemula hingga praktisi QA, Software Testing, dan Programming
+
+### Perubahan di Versi 2.43
+- Halaman profil mengikuti mockup `docs/desain/profil.webp`: tombol aksi di banner, kucing 3D di sisi kanan banner, dan Ringkasan berisi kartu statistik, Progres XP, Achievement, Progress Rank, serta Aktivitas Terbaru (FR-13).
+- Profil memiliki 3 tab: Ringkasan, Aktivitas, dan Pencapaian. Kustomisasi tidak lagi menjadi tab dan dibuka dari ikon pensil pada avatar (FR-13).
+- Progress per kategori materi dan progress roadmap dihapus dari Ringkasan; progres tetap terlihat di halaman Belajar dan Roadmap (FR-13).
+- Model 3D maskot dan avatar kucing diperbolehkan khusus di banner profil, mengikuti jenis kucing avatar aktif (FR-12).
+- Menambahkan tema **Padang Rumput** (gratis, diam) sebagai tema bawaan pengguna baru; Penerbangan Fuji tetap tersedia sebagai pilihan (FR-12).
 
 ### Perubahan di Versi 2.42
 - Kostum Bug Hunter dan Cyberpunk tersedia untuk kedelapan jenis kucing, sehingga koleksi avatar berisi 24 avatar. Semua kostum terbuka di Pro dan Premium (FR-12).
@@ -370,7 +377,7 @@ Memberikan gambaran ringkas mengenai aktivitas belajar dan perkembangan pengguna
 - Deskripsi singkat platform.
 - Avatar kucing aktif pengguna dalam ukuran besar.
 - Latar banner sesuai tema banner aktif pengguna (FR-12).
-- Pengguna baru melihat avatar Kucing Putih Basic dan tema gratis bawaan (Penerbangan Fuji).
+- Pengguna baru melihat avatar Kucing Putih Basic dan tema gratis bawaan (Padang Rumput).
 
 Ketentuan Welcome Banner:
 - Tema banner hanya berlaku di Welcome Banner dan banner profil; bagian website lainnya mengikuti brand guideline.
@@ -1190,7 +1197,7 @@ Memberikan identitas brand yang mudah dikenali dan sarana ekspresi diri pengguna
 
 ### Maskot resmi
 - Maskot resmi BelajarAutomation adalah **kucing putih**.
-- Desain mengikuti desain asli yang sudah digunakan di Instagram pembuat. Bentuk dasar dan ciri khasnya tidak diubah, dan tidak diubah menjadi karakter 3D atau fotorealistis.
+- Desain mengikuti desain asli yang sudah digunakan di Instagram pembuat. Bentuk dasar dan ciri khasnya tidak diubah, dan tidak diubah menjadi karakter fotorealistis. Versi 3D hanya dipakai di banner profil (lihat Model 3D kucing) dan tetap mempertahankan bentuk serta ciri khas desain asli.
 - Filosofi: kucing putih melambangkan ilmu yang dimiliki, dipelajari, dan dibagikan kepada orang lain.
 - Maskot resmi dipakai sebagai identitas brand: empty state, halaman 404, hasil latihan di Playground, halaman Tentang, dan materi pemasaran.
 - Logo dan warna brand tetap menjadi identitas utama platform; maskot berperan sebagai karakter pendamping.
@@ -1269,13 +1276,29 @@ Setiap tema memiliki:
 - Ukuran video sebaiknya di bawah 1 MB, dengan resolusi yang cukup untuk banner lebar (minimal sekitar 1.600 piksel).
 - Tema yang ilustrasinya sudah memuat karakter kucing tidak menampilkan avatar pengguna di atasnya, agar tidak ada dua kucing.
 
+### Model 3D kucing
+- Banner profil (FR-13) dapat menampilkan model 3D kucing di sisi kanan, sesuai mockup `docs/desain/profil.webp`.
+- Model mengikuti **jenis kucing** avatar aktif pengguna, mis. avatar Kucing Oren memakai model 3D Kucing Oren. Gaya kostum belum memiliki model 3D sendiri, sehingga avatar "Kucing Oren Bug Hunter" memakai model Kucing Oren.
+- Jika model 3D untuk jenis kucing tersebut belum tersedia, kucing 3D tidak ditampilkan. Model jenis lain (termasuk Kucing Putih) tidak dipakai sebagai pengganti.
+- Kucing 3D tidak ditampilkan pada tema yang ilustrasinya sudah memuat kucing (mis. Penerbangan Fuji dan Neon Night), agar banner tidak berisi dua karakter kucing.
+- Model memakai bentuk dan ciri khas yang sama dengan maskot dan avatar 2D, bukan karakter baru.
+- Kucing 3D bersifat dekoratif: tidak memuat teks, tidak menutupi area teks banner, dan tidak dapat diklik.
+- Gerakan diam yang pelan dan halus (mis. bernapas atau sedikit bergoyang). Pengguna yang mengaktifkan "kurangi gerakan" melihat pose diam.
+- Model dimuat setelah isi profil tampil, sehingga tidak memperlambat halaman. Jika perangkat tidak mendukung 3D atau model gagal dimuat, banner tetap utuh tanpa kucing 3D.
+- Di layar kecil kucing 3D tidak ditampilkan agar nama, bio, dan progres rank tetap terbaca.
+- Aset disimpan di `public/models/<jenis-kucing>.glb` (format GLB), dengan ukuran sebaiknya di bawah 2 MB.
+- Rilis awal: model 3D Kucing Putih.
+
 ### Rilis awal
-- **24 avatar** dan 2 tema banner:
+- **24 avatar** dan 3 tema banner:
 
 | Tema | Akses | Catatan |
 |---|---|---|
-| Penerbangan Fuji (bawaan) | Gratis | Bergerak; kabin pesawat dengan jendela menghadap Gunung Fuji |
+| Padang Rumput (bawaan) | Gratis | Diam; padang rumput hijau di bawah langit biru, tanpa karakter kucing |
+| Penerbangan Fuji | Gratis | Bergerak; kabin pesawat dengan jendela menghadap Gunung Fuji |
 | Neon Night | Gratis | Bergerak; kota cyberpunk malam |
+
+- Pengguna yang sudah menyimpan tema lain tetap memakai tema pilihannya. Tema bawaan hanya berlaku untuk pengguna yang belum pernah memilih tema.
 
 - Target rilis awal tetap 5 tema; tema lain menyusul.
 - Avatar:
@@ -1319,36 +1342,65 @@ Setiap tema memiliki:
 ### Tujuan
 Menampilkan identitas, perkembangan belajar, dan pencapaian pengguna, serta tempat mengatur tampilan diri.
 
+Acuan visual: `docs/desain/profil.webp` (Bagian 13.2).
+
 ### Header profil
-Tampil di semua tab:
-- Banner sesuai tema aktif pengguna.
-- Avatar kucing aktif.
-- Nama tampilan dan username.
-- Bio singkat.
-- Emblem tameng dan nama rank.
-- Total XP dan progress menuju rank berikutnya (atau keterangan rank tertinggi untuk Master).
+Banner tampil di atas semua tab dan berisi:
+- Latar sesuai tema aktif pengguna (FR-12).
+- Avatar kucing aktif dalam bingkai bulat. Pada profil sendiri, avatar diberi ikon pensil kecil yang membuka Kustomisasi.
+- Nama tampilan, username (`@username`), dan bio singkat.
+- Emblem tameng dan nama rank (FR-05).
+- Total XP, bar progres, dan keterangan menuju rank berikutnya, mis. "580 XP lagi ke Practitioner (17%)". Pengguna Master melihat keterangan rank tertinggi telah tercapai.
+- Kucing 3D di sisi kanan banner sesuai ketentuan Model 3D kucing (FR-12).
+- Tombol aksi bulat yang tersusun vertikal di kanan banner, **hanya pada profil sendiri**:
+
+| Ikon | Nama aksesibel | Aksi |
+|---|---|---|
+| Pensil | Edit profil | Membuka Pengaturan bagian Informasi Profil |
+| Bagikan | Bagikan profil | Membuka dialog Bagikan profil |
+| Roda gigi | Pengaturan | Membuka halaman Pengaturan |
+| Mata | Lihat sebagai publik | Membuka profil publik `/u/username` milik sendiri; tidak tampil bila username belum ada |
 
 Ketentuan:
 - Tidak ada sistem level. Perkembangan hanya ditunjukkan oleh rank dan XP (FR-05).
 - Rank tidak memiliki sub-tingkat (mis. tidak ada "Apprentice II").
 - Tidak ada lencana verifikasi atau penanda status membership di samping nama.
+- Profil publik (`/u/username`) memakai banner yang sama tanpa ikon pensil pada avatar dan tanpa tombol aksi.
+- Teks banner tetap terbaca dengan kontras memadai di semua tema, di mode terang maupun gelap.
+- Di layar kecil, isi banner tersusun ke bawah dan tombol aksi menjadi satu baris; kucing 3D tidak ditampilkan.
+- Setiap tombol ikon memiliki nama aksesibel dan tooltip.
 
 ### Tab profil
 
 | Tab | Isi |
 |---|---|
-| **Ringkasan** | Statistik utama (total XP, materi selesai, challenge selesai, jumlah achievement), progress per kategori materi, progress roadmap yang sedang diikuti, achievement unggulan, dan aktivitas terbaru |
+| **Ringkasan** | Lihat bagian Ringkasan di bawah |
 | **Aktivitas** | Riwayat aktivitas yang dikelompokkan per tanggal beserta XP yang diperoleh; filter jenis aktivitas (materi, challenge, kuis, achievement, rank) dan periode; ringkasan periode; grafik XP harian dan heatmap konsistensi belajar |
 | **Pencapaian** | Achievement yang sudah diperoleh dan yang sedang dalam progres, dikelompokkan per kategori (FR-14) |
-| **Kustomisasi** | Koleksi avatar dan tema banner, preview profil, serta pilihan yang sedang digunakan. Hanya terlihat oleh pemilik profil |
 
 Ketentuan:
+- Profil memiliki 3 tab, ditampilkan sebagai satu baris tombol tab selebar konten dengan ikon dan label.
 - Nama tab dan seluruh label dalam Bahasa Indonesia.
-- Progress roadmap mengikuti 6 roadmap dan cabangnya (FR-03); roadmap tidak ditampilkan sebagai jalur yang mengunci materi.
 - Nilai XP pada riwayat mengikuti konfigurasi XP di FR-05.
-- Informasi yang sama tidak perlu diulang di beberapa tab.
+- Progress per kategori materi dan progress roadmap tidak ditampilkan di profil; progres tersebut ada di halaman Belajar (FR-02) dan Roadmap (FR-03).
+
+### Ringkasan
+Urutan dari atas ke bawah:
+
+1. **Kartu statistik** — empat kartu dalam satu baris (dua kolom di layar kecil): Materi Selesai, Challenge Selesai, Achievement (jumlah yang tercapai), dan Total XP. Arti setiap angka mengikuti FR-05 dan sama dengan kartu statistik di dashboard.
+2. **Tiga kartu berdampingan** (bertumpuk di layar kecil):
+   - **Progres XP** — grafik garis total XP kumulatif per hari dengan pilihan periode 7 Hari, 30 Hari (bawaan), dan 90 Hari. Titik terakhir diberi label total XP saat ini. Grafik memiliki ringkasan teks untuk pembaca layar. Jika belum ada aktivitas di periode tersebut, tampil empty state.
+   - **Achievement** — diagram cincin persentase achievement yang tercapai dari seluruh achievement, jumlah "Tercapai" dan "Belum Tercapai", serta "Achievement Terbaru": paling banyak 3 badge terbaru dan penanda sisa (mis. "+4"). Kartu dapat diklik menuju tab Pencapaian.
+   - **Progress Rank** — emblem rank saat ini (Saat ini) dan rank berikutnya (Berikutnya), bar progres, XP saat ini terhadap batas rank berikutnya (mis. "420 / 1.000 XP"), dan sisa XP. Pengguna Master melihat emblem Master dengan keterangan rank tertinggi. Kartu memiliki tautan ke halaman Rank & XP (FR-05).
+3. **Aktivitas Terbaru** — tiga aktivitas terakhir: ikon jenis aktivitas, judul, keterangan (course atau jenis challenge), XP yang diperoleh, dan waktu relatif. Tautan "Lihat semua" membuka tab Aktivitas.
+
+Ketentuan:
+- Emblem pada Progress Rank memakai emblem tameng dengan warna identitas rank masing-masing (FR-05), bukan warna seragam.
+- Pada profil publik, Ringkasan menampilkan bagian yang sama kecuali grafik Progres XP dan Aktivitas Terbaru, karena riwayat aktivitas detail hanya terlihat oleh pemilik profil.
 
 ### Kustomisasi
+- Dibuka dari ikon pensil pada avatar di banner profil sendiri. Kustomisasi bukan tab, memiliki alamat sendiri sehingga dapat dibuka langsung, dan menyediakan tombol "Kembali ke profil".
+- Hanya dapat dibuka oleh pemilik profil.
 - Dua bagian: **Avatar** dan **Tema Banner**.
 - Filter koleksi (Semua, Dimiliki, Terkunci) berupa tombol ikon filter di kanan judul koleksi, yang membuka dropdown. Tombol diberi penanda titik saat filter selain Semua aktif.
 - Avatar dikelompokkan per **gaya** (FR-12) dengan chip yang dapat digeser: Basic, Bug Hunter, Cyberpunk, Wizard, Driver Formula, Space Explorer, Ninja, Knight, dan Master Chef. Chip awal adalah gaya avatar yang sedang dipakai.
@@ -1376,7 +1428,7 @@ Ketentuan:
 | Email | Tautan konfirmasi dikirim ke email lama dan email baru. Email baru berlaku setelah keduanya dikonfirmasi; selama itu tampil keterangan "Menunggu konfirmasi" |
 
 Ketentuan:
-- Foto profil adalah avatar kucing dan diganti di tab Kustomisasi (FR-12); tidak ada unggah foto.
+- Foto profil adalah avatar kucing dan diganti di Kustomisasi (FR-12); tidak ada unggah foto.
 - Perubahan langsung tampil di header profil, menu profil, dan bagian lain yang memakai nama atau username.
 - Akun demo di DEV dapat melihat isian tetapi tidak dapat menyimpan.
 - Aturan panjang, jeda username, dan status akun ditegakkan di database.
@@ -1385,7 +1437,7 @@ Ketentuan:
 - Profil dapat dilihat oleh pengguna lain yang sudah login, di alamat `/u/username`.
 - Username yang tidak ada atau milik akun nonaktif menampilkan "Profil tidak ditemukan".
 - Yang terlihat publik: banner, avatar, nama tampilan, username, bio, rank, total XP, ringkasan statistik, dan achievement.
-- Yang tidak terlihat publik: tab Kustomisasi, email, data pembelian, dan membership.
+- Yang tidak terlihat publik: Kustomisasi, tombol aksi banner, email, data pembelian, dan membership.
 - Riwayat aktivitas detail hanya terlihat oleh pemilik profil, kecuali pengguna memilih membukanya.
 - Pengguna yang memilih tidak tampil di leaderboard tetap dapat memilih apakah profilnya dapat dilihat publik.
 - Fitur melihat profil pengguna lain dari leaderboard dan ruang chat komunitas direncanakan untuk tahap berikutnya (Phase 7).
@@ -1398,7 +1450,7 @@ Ketentuan:
 Memberikan pengakuan atas pencapaian belajar sebagai motivasi tambahan.
 
 ### Ketentuan
-- Achievement **hanya ditampilkan di halaman profil** (tab Ringkasan sebagai achievement unggulan, dan tab Pencapaian). Achievement tidak ditampilkan di dashboard.
+- Achievement **hanya ditampilkan di halaman profil** (kartu Achievement di tab Ringkasan, dan tab Pencapaian). Achievement tidak ditampilkan di dashboard.
 - Achievement **tidak memberikan XP** agar XP tetap murni berasal dari aktivitas belajar.
 - Achievement diperoleh dari aktivitas belajar yang valid dan tidak dapat dibeli.
 - Kategori awal: Belajar, Testing, Automation, Challenge, Konsistensi, dan Milestone.
@@ -2296,7 +2348,7 @@ Pengembangan harus dilakukan secara bertahap agar perubahan tidak merusak fitur 
 - Detail benefit.
 - Pembelian paket.
 - Aktivasi entitlement.
-- Katalog avatar dan tema banner, koleksi di tab Kustomisasi profil, dan pemilihan item aktif.
+- Katalog avatar dan tema banner, koleksi di Kustomisasi profil, dan pemilihan item aktif.
 - Kredit produk.
 - Alur klaim eBook.
 - Alur klaim project.
@@ -2392,8 +2444,11 @@ Pengembangan harus dilakukan secara bertahap agar perubahan tidak merusak fitur 
 - Emblem tameng rank tidak berubah karena avatar atau tema.
 - Avatar pengguna di header, profil, dan leaderboard menampilkan avatar aktif.
 - Jika avatar atau tema aktif tidak valid, tampilan kembali ke bawaan gratis.
-- Profil memiliki 4 tab: Ringkasan, Aktivitas, Pencapaian, dan Kustomisasi.
-- Tab Kustomisasi hanya terlihat oleh pemilik profil.
+- Profil memiliki 3 tab: Ringkasan, Aktivitas, dan Pencapaian.
+- Kustomisasi dibuka dari ikon pensil pada avatar dan hanya dapat dibuka oleh pemilik profil.
+- Tombol aksi banner (Edit profil, Bagikan profil, Pengaturan, Lihat sebagai publik) hanya tampil pada profil sendiri.
+- Kucing 3D di banner profil mengikuti jenis kucing avatar aktif dan tidak tampil bila modelnya belum tersedia.
+- Halaman profil tetap dapat dipakai dan terbaca bila model 3D gagal dimuat.
 - Achievement hanya muncul di profil dan tidak menambah XP.
 
 ---

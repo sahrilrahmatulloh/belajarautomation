@@ -6,10 +6,12 @@ import { BookOpen, Pause, Play } from "lucide-react";
 
 import ThemeBackdrop from "@/components/common/ThemeBackdrop";
 import { AUTH_SLIDE_INTERVAL_MS, AUTH_SLIDES, AuthSlide } from "@/data/authSlides";
-import { DEFAULT_THEME_ID, getTheme } from "@/data/themes";
+import { getTheme } from "@/data/themes";
 import { useReducedMotion } from "@/lib/useReducedMotion";
 
-const defaultTheme = getTheme(DEFAULT_THEME_ID)!;
+// Slide promosi memakai tema bergerak Penerbangan Fuji sebagai visual tetap, terlepas dari
+// tema bawaan pengguna baru (PRD 4.5, FR-12).
+const defaultTheme = getTheme("kucing-fuji")!;
 // Jarak geser minimum (px) agar dianggap menggeser slide, bukan klik.
 const SWIPE_THRESHOLD = 50;
 

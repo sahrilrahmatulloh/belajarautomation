@@ -4,6 +4,7 @@ import {
   ACTIVE_THEME_NAME,
   COSTUME_STYLES,
   FREE_AVATAR_NAMES,
+  OWN_USERNAME,
   PAID_AVATAR_NAMES,
   USER_RANK,
 } from "../fixtures/testData";
@@ -18,19 +19,50 @@ test.describe("Profil", () => {
     profile = new ProfilePage(page);
   });
 
-  test("memiliki 4 tab", async () => {
+  test("memiliki 3 tab tanpa Kustomisasi", async () => {
     await profile.goto();
 
-    await expect(profile.tabs).toHaveText(["Ringkasan", "Aktivitas", "Pencapaian", "Kustomisasi"]);
+    await expect(profile.tabs).toHaveText(["Ringkasan", "Aktivitas", "Pencapaian"]);
   });
 
-  for (const tab of ["Aktivitas", "Pencapaian", "Kustomisasi"]) {
+  for (const tab of ["Aktivitas", "Pencapaian"]) {
     test(`tab ${tab} terbuka langsung lewat URL`, async () => {
       await profile.gotoTab(tab.toLowerCase());
 
       await expect(profile.tab(tab)).toHaveAttribute("aria-selected", "true");
     });
   }
+
+  test("ikon pensil pada avatar membuka Kustomisasi, dan Kembali ke profil menutupnya", async ({ page }) => {
+    await profile.goto();
+    await profile.customizeLink.click();
+
+    await expect(page).toHaveURL("/profile?tab=kustomisasi");
+    await expect(profile.preview).toBeVisible();
+    await expect(profile.tabs).toHaveCount(0);
+
+    await profile.backToProfileLink.click();
+
+    await expect(page).toHaveURL("/profile");
+    await expect(profile.tab("Ringkasan")).toHaveAttribute("aria-selected", "true");
+  });
+
+  test("tombol aksi banner menuju Edit profil, Pengaturan, dan profil publik", async () => {
+    await profile.goto();
+
+    await expect(profile.bannerActions.getByRole("link").or(profile.shareButton)).toHaveCount(4);
+    await expect(profile.editProfileLink).toHaveAttribute("href", "/settings#informasi-profil");
+    await expect(profile.settingsLink).toHaveAttribute("href", "/settings");
+    await expect(profile.viewAsPublicLink).toHaveAttribute("href", `/u/${OWN_USERNAME}`);
+    await expect(profile.shareButton).toBeVisible();
+  });
+
+  test("tema akun demo memuat kucing sendiri, jadi kucing 3D tidak ditampilkan", async () => {
+    await profile.goto();
+    await expect(profile.rankEmblem).toBeVisible();
+
+    await expect(profile.cat3d).toHaveCount(0);
+  });
 
   test("header tanpa level, sub-tingkat rank, dan lencana verifikasi", async () => {
     await profile.goto();

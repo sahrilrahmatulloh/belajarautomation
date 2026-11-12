@@ -20,13 +20,50 @@ test.describe("Tab Ringkasan profil", () => {
     await expect(stats.filter({ hasText: "Achievement" })).toContainText("7");
   });
 
-  test("Achievement Unggulan menuju tab Pencapaian", async ({ page }) => {
-    await expect(profile.featuredAchievements.getByRole("listitem")).toHaveCount(3);
+  test("kartu Achievement menampilkan persentase dan 3 badge terbaru, lalu menuju tab Pencapaian", async ({ page }) => {
+    await expect(profile.achievementCard).toContainText("58%");
+    await expect(profile.achievementCard).toContainText("Tercapai7");
+    await expect(profile.achievementCard).toContainText("Belum Tercapai5");
+    await expect(profile.achievementCard.getByRole("listitem")).toHaveText([/./, /./, /./, /\+4/]);
 
-    await profile.featuredAchievements.getByRole("link", { name: "Lihat semua" }).click();
+    await profile.achievementCard.getByRole("link", { name: "Achievement" }).click();
 
     await expect(page).toHaveURL(/[?&]tab=pencapaian/);
     await expect(profile.tab("Pencapaian")).toHaveAttribute("aria-selected", "true");
+  });
+
+  test("Progress Rank menampilkan rank saat ini, rank berikutnya, dan sisa XP", async () => {
+    await expect(profile.rankProgress.getByRole("img", { name: /^Emblem rank / })).toHaveCount(2);
+    await expect(profile.rankProgress).toContainText("Apprentice(Saat ini)");
+    await expect(profile.rankProgress).toContainText("Practitioner(Berikutnya)");
+    await expect(profile.rankProgress).toContainText("420 / 1.000 XP");
+    await expect(profile.rankProgress).toContainText("580 XP lagi");
+    await expect(profile.rankProgress.getByRole("link", { name: "Lihat detail rank" })).toHaveAttribute("href", "/rank");
+  });
+
+  test("Progres XP berakhir di total XP, dengan periode 30 hari bawaan yang dapat diganti", async () => {
+    await expect(profile.xpPeriodSelect).toHaveValue("30");
+    await expect(profile.xpProgress).toContainText("420 XP");
+    await expect(profile.xpProgress).toContainText(/menjadi 420 dalam 30 hari terakhir/);
+
+    await profile.xpPeriodSelect.selectOption({ label: "7 Hari" });
+
+    await expect(profile.xpProgress).toContainText(/menjadi 420 dalam 7 hari terakhir/);
+  });
+
+  test("Aktivitas Terbaru menampilkan 3 aktivitas dan menuju tab Aktivitas", async ({ page }) => {
+    await expect(profile.recentActivity.getByRole("listitem")).toHaveCount(3);
+
+    await profile.recentActivity.getByRole("link", { name: "Lihat semua" }).click();
+
+    await expect(page).toHaveURL(/[?&]tab=aktivitas/);
+    await expect(profile.tab("Aktivitas")).toHaveAttribute("aria-selected", "true");
+  });
+
+  test("progres per course dan roadmap tidak lagi ditampilkan di profil", async ({ page }) => {
+    await expect(profile.rankProgress).toBeVisible();
+
+    await expect(page.getByRole("heading", { name: "Progres Belajar" })).toHaveCount(0);
   });
 });
 

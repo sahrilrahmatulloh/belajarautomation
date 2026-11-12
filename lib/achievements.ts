@@ -2,7 +2,6 @@ import { ACHIEVEMENTS } from "@/data/achievements";
 import {
   DUMMY_ACHIEVEMENT_PROGRESS,
   DUMMY_EARNED_ACHIEVEMENTS,
-  DUMMY_FEATURED_ACHIEVEMENT_IDS,
   EarnedAchievement,
 } from "@/data/dummy/userAchievements";
 import { Achievement } from "@/types/Achievement";
@@ -23,14 +22,5 @@ export function getAchievementStates(): AchievementState[] {
       earned,
       progress: !earned && achievement.target ? (DUMMY_ACHIEVEMENT_PROGRESS[achievement.id] ?? 0) : undefined,
     };
-  });
-}
-
-// Achievement unggulan untuk tab Ringkasan; yang belum diperoleh diabaikan.
-export function getFeaturedAchievements() {
-  const states = getAchievementStates();
-  return DUMMY_FEATURED_ACHIEVEMENT_IDS.flatMap((id) => {
-    const state = states.find((item) => item.achievement.id === id);
-    return state?.earned ? [state] : [];
   });
 }

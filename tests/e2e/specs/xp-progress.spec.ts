@@ -9,6 +9,7 @@ import { ChallengePage } from "../pages/ChallengePage";
 import { DashboardPage } from "../pages/DashboardPage";
 import { LessonPage } from "../pages/LessonPage";
 import { NotificationsPage } from "../pages/NotificationsPage";
+import { ProfilePage } from "../pages/ProfilePage";
 
 // Perhitungan XP, materi selesai, challenge selesai, dan rank untuk akun Supabase (PRD FR-05).
 // XP dicatat server Next.js ke Supabase tiruan (tests/e2e/mock-supabase-server.mjs); setiap test
@@ -166,6 +167,21 @@ test.describe("XP akun Supabase", () => {
     await expect(statValue(dashboard, "Total XP")).toHaveText("240");
     await expect(statValue(dashboard, "Materi Selesai")).toHaveText("16");
     await expect(statValue(dashboard, "Challenge Selesai")).toHaveText("1");
+  });
+
+  test("Ringkasan profil memakai riwayat XP dari database: Aktivitas Terbaru dan Progres XP", async ({ page }) => {
+    await signIn(page, uniqueMockAccount());
+    const lesson = await openLesson(page);
+    await completeAndNext(page, lesson);
+
+    const profile = new ProfilePage(page);
+    await profile.goto();
+
+    await expect(profile.recentActivity.getByRole("listitem")).toHaveCount(1);
+    await expect(profile.recentActivity).toContainText(LESSON_CONTENT.lessonTitle);
+    await expect(profile.recentActivity).toContainText(LESSON_CONTENT.courseTitle);
+    await expect(profile.recentActivity).toContainText("+10 XP");
+    await expect(profile.xpProgress).toContainText(/naik dari 0 menjadi 10 dalam 30 hari terakhir/);
   });
 
   test("Dasar Web & API: 8 lesson memberi 80 XP plus bonus course 50, lalu kuisnya +30", async ({ page }) => {

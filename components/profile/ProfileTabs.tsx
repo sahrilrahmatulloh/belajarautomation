@@ -1,7 +1,8 @@
 "use client";
 
 import { ReactNode } from "react";
-import { History, LayoutDashboard, Palette, Trophy } from "lucide-react";
+import Link from "next/link";
+import { ArrowLeft, History, LayoutDashboard, Trophy } from "lucide-react";
 
 import { useUrlFilters } from "@/lib/useUrlFilters";
 
@@ -10,18 +11,44 @@ export const PROFILE_TABS = [
   { value: "ringkasan", label: "Ringkasan", icon: LayoutDashboard },
   { value: "aktivitas", label: "Aktivitas", icon: History },
   { value: "pencapaian", label: "Pencapaian", icon: Trophy },
-  // Hanya terlihat oleh pemilik profil.
-  { value: "kustomisasi", label: "Kustomisasi", icon: Palette },
 ] as const;
 
 export type ProfileTab = (typeof PROFILE_TABS)[number]["value"];
 
+// Kustomisasi bukan tab: dibuka dari ikon pensil pada avatar di alamat ?tab=kustomisasi.
+export const CUSTOMIZATION_TAB = "kustomisasi";
+
 const FILTER_KEYS = ["tab"] as const;
 
-// Hanya tab yang punya isi yang ditampilkan; profil publik tidak mengirim Aktivitas
-// dan Kustomisasi, sehingga keduanya tidak bisa dibuka lewat URL.
-export default function ProfileTabs({ panels }: { panels: Partial<Record<ProfileTab, ReactNode>> }) {
+// Hanya tab yang punya isi yang ditampilkan; profil publik tidak mengirim Aktivitas dan
+// Kustomisasi, sehingga keduanya tidak bisa dibuka lewat URL.
+export default function ProfileTabs({
+  panels,
+  customization,
+  backHref = "/profile",
+}: {
+  panels: Partial<Record<ProfileTab, ReactNode>>;
+  // Tampilan Kustomisasi, hanya untuk pemilik profil.
+  customization?: ReactNode;
+  backHref?: string;
+}) {
   const { values, setFilters } = useUrlFilters(FILTER_KEYS);
+
+  if (customization && values.tab === CUSTOMIZATION_TAB) {
+    return (
+      <div className="space-y-4">
+        <Link
+          href={backHref}
+          className="inline-flex min-h-10 items-center gap-2 rounded-xl border border-border bg-card px-4 text-sm font-medium transition-colors hover:bg-accent"
+        >
+          <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+          Kembali ke profil
+        </Link>
+        {customization}
+      </div>
+    );
+  }
+
   const tabs = PROFILE_TABS.filter((item) => panels[item.value] !== undefined);
   // Nilai URL yang tidak dikenal dianggap Ringkasan.
   const tab: ProfileTab = tabs.some((item) => item.value === values.tab)
@@ -33,7 +60,7 @@ export default function ProfileTabs({ panels }: { panels: Partial<Record<Profile
       <div
         role="tablist"
         aria-label="Bagian profil"
-        className={`grid gap-1 rounded-2xl border border-border bg-card p-1.5 ${tabs.length === 2 ? "grid-cols-2" : "grid-cols-4"}`}
+        className={`grid gap-1 rounded-2xl border border-border bg-card p-1.5 ${tabs.length === 2 ? "grid-cols-2" : "grid-cols-3"}`}
       >
         {tabs.map((item) => {
           const isActive = item.value === tab;
@@ -48,15 +75,14 @@ export default function ProfileTabs({ panels }: { panels: Partial<Record<Profile
               aria-controls="profil-panel"
               // Ringkasan tidak ditulis ke URL karena merupakan tab bawaan.
               onClick={() => setFilters({ tab: item.value === "ringkasan" ? "" : item.value })}
-              // Mobile: ikon di atas label agar keempat tab muat tanpa digeser.
-              className={`flex min-h-12 min-w-0 flex-col items-center justify-center gap-1 rounded-xl px-1 text-xs font-semibold transition-colors sm:min-h-11 sm:flex-row sm:gap-2 sm:px-4 sm:text-sm ${
+              className={`flex min-h-12 min-w-0 items-center justify-center gap-2 rounded-xl px-2 text-sm font-semibold transition-colors sm:px-4 ${
                 isActive
                   ? "bg-primary text-primary-foreground shadow-sm"
                   : "text-muted-foreground hover:bg-accent hover:text-foreground"
               }`}
             >
               <Icon className="h-4 w-4 shrink-0" aria-hidden="true" />
-              <span className="max-w-full truncate">{item.label}</span>
+              <span className="truncate">{item.label}</span>
             </button>
           );
         })}

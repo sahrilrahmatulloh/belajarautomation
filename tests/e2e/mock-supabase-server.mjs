@@ -4,18 +4,21 @@
 // - POST /rest/v1/rpc/record_lesson_completion, record_challenge_attempt : logika XP seperti di
 //   supabase/migrations/20261109090000_xp_progress.sql, disimpan di memori per pengguna.
 // - POST /rest/v1/rpc/get_my_progress   : progres pengguna dari token (diteruskan dari browser).
+// - GET  /rest/v1/xp_transactions       : riwayat XP milik pengguna dari token, terbaru lebih dulu
+//   (seperti RLS di database; diteruskan dari browser untuk Ringkasan profil).
 // Jalankan: node tests/e2e/mock-supabase-server.mjs (otomatis lewat playwright.config.ts).
 import http from "node:http";
 
 const PORT = Number(process.env.MOCK_SUPABASE_PORT ?? 54399);
 const SERVICE_ROLE_KEY = process.env.MOCK_SUPABASE_SERVICE_ROLE_KEY ?? "service-role-uji";
 
-/** @type {Map<string, {lessons: Map<string, string>, attempts: {slug: string, score: number, passed: boolean, at: string}[], xp: Set<string>, totalXp: number, lessonsCompleted: number, challengesCompleted: number}>} */
+/** @type {Map<string, {lessons: Map<string, string>, attempts: {slug: string, score: number, passed: boolean, at: string}[], xp: Set<string>, transactions: {id: number, source_type: string, source_id: string, xp: number, created_at: string}[], totalXp: number, lessonsCompleted: number, challengesCompleted: number}>} */
 const users = new Map();
+let nextTransactionId = 1;
 
 function userState(id) {
   if (!users.has(id)) {
-    users.set(id, { lessons: new Map(), attempts: [], xp: new Set(), totalXp: 0, lessonsCompleted: 0, challengesCompleted: 0 });
+    users.set(id, { lessons: new Map(), attempts: [], xp: new Set(), transactions: [], totalXp: 0, lessonsCompleted: 0, challengesCompleted: 0 });
   }
   return users.get(id);
 }
@@ -39,6 +42,7 @@ function addXp(state, type, source, xp) {
   if (xp <= 0 || state.xp.has(key)) return 0;
   state.xp.add(key);
   state.totalXp += xp;
+  state.transactions.push({ id: nextTransactionId++, source_type: type, source_id: source, xp, created_at: new Date().toISOString() });
   return xp;
 }
 
@@ -114,6 +118,14 @@ const server = http.createServer(async (req, res) => {
     const payload = decodeJwt(token);
     if (!payload) return send(res, 401, { code: "42501", message: "permission denied" });
     return send(res, 200, progressOf(payload.sub));
+  }
+
+  if (url.pathname === "/rest/v1/xp_transactions" && req.method === "GET") {
+    const payload = decodeJwt(token);
+    if (!payload) return send(res, 401, { code: "42501", message: "permission denied" });
+    const limit = Number(url.searchParams.get("limit") ?? 1000);
+    const rows = [...userState(payload.sub).transactions].reverse().slice(0, limit);
+    return send(res, 200, rows);
   }
 
   if (url.pathname === "/rest/v1/rpc/record_lesson_completion") {
