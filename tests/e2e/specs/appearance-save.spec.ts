@@ -18,49 +18,14 @@ test.describe("Kustomisasi akun Supabase", () => {
     await expect(new DashboardPage(page).profileMenuButton.locator("img")).toHaveAttribute("src", /kucing-putih/);
   });
 
-  test("akun baru memakai tema bawaan Padang Rumput dengan kucing 3D Kucing Putih di banner", async ({ page, isMobile }) => {
-    const modelRequests: string[] = [];
-    page.on("request", (request) => {
-      if (request.url().endsWith(".glb")) modelRequests.push(request.url());
-    });
+  test("akun baru memakai tema bawaan Padang Rumput", async ({ page }) => {
     await mockSupabase(page);
     await signInWithMock(page, MOCK_STUDENT);
     const profile = new ProfilePage(page);
     await profile.goto();
 
     await expect(profile.header.locator('img[src*="padang-rumput%2Fbanner.webp"]')).toBeAttached();
-    if (isMobile) {
-      // Di layar kecil kucing 3D tidak ditampilkan dan modelnya tidak diunduh (PRD FR-12).
-      await expect(profile.cat3d).toBeHidden();
-      await expect(profile.rankProgress).toBeVisible();
-      expect(modelRequests).toEqual([]);
-    } else {
-      await expect(profile.cat3d).toHaveAttribute("data-cat-3d", "ready", { timeout: 15_000 });
-      await expect(profile.cat3d.locator("canvas")).toBeVisible();
-      expect(modelRequests.some((url) => url.endsWith("/models/kucing-putih.glb"))).toBe(true);
-    }
-  });
-
-  test("avatar Kucing Oren belum punya model 3D, jadi kucing 3D tidak ditampilkan", async ({ page }) => {
-    const oren = { ...MOCK_STUDENT, avatarId: "kucing-oren" };
-    await mockSupabase(page, { accounts: [oren] });
-    await signInWithMock(page, oren);
-    const profile = new ProfilePage(page);
-    await profile.goto();
-
-    await expect(profile.header.getByRole("img", { name: "Avatar Kucing Oren" })).toBeVisible();
-    await expect(profile.cat3d).toHaveCount(0);
-  });
-
-  test("tema yang sudah memuat kucing (Penerbangan Fuji) tidak menampilkan kucing 3D", async ({ page }) => {
-    const fuji = { ...MOCK_STUDENT, themeId: "kucing-fuji" };
-    await mockSupabase(page, { accounts: [fuji] });
-    await signInWithMock(page, fuji);
-    const profile = new ProfilePage(page);
-    await profile.goto();
-
-    await expect(profile.header.locator('img[src*="kucing-fuji%2Fbanner.webp"]')).toBeAttached();
-    await expect(profile.cat3d).toHaveCount(0);
+    await expect(profile.header.locator("video[data-theme-video]")).toHaveCount(0);
   });
 
   test("menyimpan avatar pilihan lalu tampil di header profil dan menu profil", async ({ page }) => {

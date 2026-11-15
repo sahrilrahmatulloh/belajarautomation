@@ -13,7 +13,6 @@ export class ProfilePage extends BasePage {
   readonly viewAsPublicLink: Locator;
   readonly customizeLink: Locator;
   readonly backToProfileLink: Locator;
-  readonly cat3d: Locator;
   readonly stats: Locator;
   readonly xpProgress: Locator;
   readonly xpPeriodSelect: Locator;
@@ -43,8 +42,6 @@ export class ProfilePage extends BasePage {
     this.viewAsPublicLink = this.bannerActions.getByRole("link", { name: "Lihat sebagai publik" });
     this.customizeLink = this.header.getByRole("link", { name: "Ubah avatar dan tema" });
     this.backToProfileLink = page.getByRole("link", { name: "Kembali ke profil" });
-    // Kucing 3D dekoratif (aria-hidden), jadi dicari lewat penanda datanya.
-    this.cat3d = this.header.locator("[data-cat-3d]");
     this.stats = page.getByRole("region", { name: "Statistik belajar" });
     this.xpProgress = page.getByRole("region", { name: "Progres XP" });
     this.xpPeriodSelect = this.xpProgress.getByRole("combobox", { name: "Periode grafik XP" });

@@ -13,7 +13,6 @@ import { getRankProgress } from "@/data/ranks";
 import { formatNumber } from "@/lib/format";
 
 import BannerAction from "./BannerAction";
-import Cat3D from "./Cat3D";
 import { CUSTOMIZATION_TAB } from "./ProfileTabs";
 
 const CUSTOMIZATION_HREF = `/profile?tab=${CUSTOMIZATION_TAB}`;
@@ -27,8 +26,6 @@ interface ProfileHeaderProps {
   themeImage: string;
   themeVideo?: string;
   xp: number;
-  // Model 3D kucing (PRD FR-12); undefined bila tidak ditampilkan.
-  catModel?: string;
   // Pemilik melihat progres rank, ikon pensil di avatar, dan tombol aksi; publik hanya rank dan total XP.
   isOwner: boolean;
   // Tombol Bagikan profil (pemicu dialog), tampil di antara Edit profil dan Pengaturan.
@@ -36,7 +33,7 @@ interface ProfileHeaderProps {
 }
 
 // Header profil (PRD FR-13, acuan docs/desain/profil.webp): banner tema aktif, avatar aktif,
-// rank, XP, kucing 3D, dan tombol aksi pemilik. Tanpa level, sub-tingkat rank, atau lencana verifikasi.
+// rank, XP, dan tombol aksi pemilik. Tanpa level, sub-tingkat rank, atau lencana verifikasi.
 export default function ProfileHeader({
   displayName,
   username,
@@ -46,7 +43,6 @@ export default function ProfileHeader({
   themeImage,
   themeVideo,
   xp,
-  catModel,
   isOwner,
   shareAction,
 }: ProfileHeaderProps) {
@@ -69,11 +65,6 @@ export default function ProfileHeader({
         aria-hidden="true"
         className="absolute inset-0 -z-10 bg-gradient-to-r from-slate-950/90 via-slate-950/75 to-slate-950/45 sm:via-slate-950/60 sm:to-transparent"
       />
-
-      {/* Kucing 3D dekoratif di sisi kanan, hanya di banner yang cukup lebar (PRD FR-12). */}
-      {catModel && (
-        <Cat3D src={catModel} className="absolute bottom-0 right-16 top-2 z-0 hidden w-[26%] max-w-64 @3xl:block" />
-      )}
 
       {/* Tanpa position agar tombol aksi (absolute) diposisikan terhadap banner, bukan kolom teks. */}
       <div className="flex flex-col gap-5 p-5 sm:p-6 @2xl:min-h-56 @2xl:justify-center @2xl:pr-20 @3xl:max-w-[70%] @3xl:pr-6">

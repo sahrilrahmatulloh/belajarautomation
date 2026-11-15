@@ -1,9 +1,12 @@
 # BELAJARAUTOMATION.COM
 ## Product Requirements Document (PRD)
-**Versi:** 2.44  
+**Versi:** 2.45  
 **Status:** Draft — Acuan Pengembangan Produk  
 **Platform:** Web Application  
 **Target Pengguna:** Pemula hingga praktisi QA, Software Testing, dan Programming
+
+### Perubahan di Versi 2.45
+- Kucing 3D di banner profil dihapus sementara konsep visualnya dirancang ulang. Banner profil cukup menampilkan avatar aktif (foto profil) pengguna (FR-12, FR-13).
 
 ### Perubahan di Versi 2.44
 - Kucing 3D di banner profil bergerak paling banyak 30 bingkai per detik, dan tampil sebagai pose diam di perangkat tanpa akselerasi grafis (FR-12).
@@ -1200,7 +1203,7 @@ Memberikan identitas brand yang mudah dikenali dan sarana ekspresi diri pengguna
 
 ### Maskot resmi
 - Maskot resmi BelajarAutomation adalah **kucing putih**.
-- Desain mengikuti desain asli yang sudah digunakan di Instagram pembuat. Bentuk dasar dan ciri khasnya tidak diubah, dan tidak diubah menjadi karakter fotorealistis. Versi 3D hanya dipakai di banner profil (lihat Model 3D kucing) dan tetap mempertahankan bentuk serta ciri khas desain asli.
+- Desain mengikuti desain asli yang sudah digunakan di Instagram pembuat. Bentuk dasar dan ciri khasnya tidak diubah, dan tidak diubah menjadi karakter fotorealistis.
 - Filosofi: kucing putih melambangkan ilmu yang dimiliki, dipelajari, dan dibagikan kepada orang lain.
 - Maskot resmi dipakai sebagai identitas brand: empty state, halaman 404, hasil latihan di Playground, halaman Tentang, dan materi pemasaran.
 - Logo dan warna brand tetap menjadi identitas utama platform; maskot berperan sebagai karakter pendamping.
@@ -1280,17 +1283,7 @@ Setiap tema memiliki:
 - Tema yang ilustrasinya sudah memuat karakter kucing tidak menampilkan avatar pengguna di atasnya, agar tidak ada dua kucing.
 
 ### Model 3D kucing
-- Banner profil (FR-13) dapat menampilkan model 3D kucing di sisi kanan, sesuai mockup `docs/desain/profil.webp`.
-- Model mengikuti **jenis kucing** avatar aktif pengguna, mis. avatar Kucing Oren memakai model 3D Kucing Oren. Gaya kostum belum memiliki model 3D sendiri, sehingga avatar "Kucing Oren Bug Hunter" memakai model Kucing Oren.
-- Jika model 3D untuk jenis kucing tersebut belum tersedia, kucing 3D tidak ditampilkan. Model jenis lain (termasuk Kucing Putih) tidak dipakai sebagai pengganti.
-- Kucing 3D tidak ditampilkan pada tema yang ilustrasinya sudah memuat kucing (mis. Penerbangan Fuji dan Neon Night), agar banner tidak berisi dua karakter kucing.
-- Model memakai bentuk dan ciri khas yang sama dengan maskot dan avatar 2D, bukan karakter baru.
-- Kucing 3D bersifat dekoratif: tidak memuat teks, tidak menutupi area teks banner, dan tidak dapat diklik.
-- Gerakan diam yang pelan dan halus (mis. bernapas atau sedikit bergoyang), paling banyak 30 bingkai per detik. Pengguna yang mengaktifkan "kurangi gerakan", dan perangkat yang menampilkan 3D tanpa akselerasi grafis (GPU), melihat pose diam agar halaman tetap ringan.
-- Model dimuat setelah isi profil tampil, sehingga tidak memperlambat halaman. Jika perangkat tidak mendukung 3D atau model gagal dimuat, banner tetap utuh tanpa kucing 3D.
-- Di layar kecil kucing 3D tidak ditampilkan agar nama, bio, dan progres rank tetap terbaca.
-- Aset disimpan di `public/models/<jenis-kucing>.glb` (format GLB), dengan ukuran sebaiknya di bawah 2 MB.
-- Rilis awal: model 3D Kucing Putih.
+- Belum dipakai. Kucing 3D di banner profil dihapus pada v2.45 dan konsep visualnya sedang dirancang ulang. Sampai konsep baru disetujui, banner profil hanya menampilkan avatar aktif pengguna, dan tidak ada model 3D yang dimuat.
 
 ### Rilis awal
 - **24 avatar** dan 3 tema banner:
@@ -1354,7 +1347,6 @@ Banner tampil di atas semua tab dan berisi:
 - Nama tampilan, username (`@username`), dan bio singkat.
 - Emblem tameng dan nama rank (FR-05).
 - Total XP, bar progres, dan keterangan menuju rank berikutnya, mis. "580 XP lagi ke Practitioner (17%)". Pengguna Master melihat keterangan rank tertinggi telah tercapai.
-- Kucing 3D di sisi kanan banner sesuai ketentuan Model 3D kucing (FR-12).
 - Tombol aksi bulat yang tersusun vertikal di kanan banner, **hanya pada profil sendiri**:
 
 | Ikon | Nama aksesibel | Aksi |
@@ -1370,7 +1362,7 @@ Ketentuan:
 - Tidak ada lencana verifikasi atau penanda status membership di samping nama.
 - Profil publik (`/u/username`) memakai banner yang sama tanpa ikon pensil pada avatar dan tanpa tombol aksi.
 - Teks banner tetap terbaca dengan kontras memadai di semua tema, di mode terang maupun gelap.
-- Di layar kecil, isi banner tersusun ke bawah dan tombol aksi menjadi satu baris; kucing 3D tidak ditampilkan.
+- Di layar kecil, isi banner tersusun ke bawah dan tombol aksi menjadi satu baris.
 - Setiap tombol ikon memiliki nama aksesibel dan tooltip.
 
 ### Tab profil
@@ -2450,8 +2442,6 @@ Pengembangan harus dilakukan secara bertahap agar perubahan tidak merusak fitur 
 - Profil memiliki 3 tab: Ringkasan, Aktivitas, dan Pencapaian.
 - Kustomisasi dibuka dari ikon pensil pada avatar dan hanya dapat dibuka oleh pemilik profil.
 - Tombol aksi banner (Edit profil, Bagikan profil, Pengaturan, Lihat sebagai publik) hanya tampil pada profil sendiri.
-- Kucing 3D di banner profil mengikuti jenis kucing avatar aktif dan tidak tampil bila modelnya belum tersedia.
-- Halaman profil tetap dapat dipakai dan terbaca bila model 3D gagal dimuat.
 - Achievement hanya muncul di profil dan tidak menambah XP.
 
 ---

@@ -57,16 +57,19 @@ test.describe("Profil", () => {
     await expect(profile.shareButton).toBeVisible();
   });
 
-  test("akun demo memakai Kucing Putih di tema Padang Rumput dengan kucing 3D seperti mockup", async ({ isMobile }) => {
+  test("akun demo memakai Kucing Putih di tema Padang Rumput, tanpa kucing 3D", async ({ page }) => {
+    const modelRequests: string[] = [];
+    page.on("request", (request) => {
+      if (request.url().endsWith(".glb")) modelRequests.push(request.url());
+    });
     await profile.goto();
 
     await expect(profile.header.getByRole("img", { name: `Avatar ${ACTIVE_AVATAR_NAME}` })).toBeVisible();
     await expect(profile.header.locator('img[src*="padang-rumput%2Fbanner.webp"]')).toBeAttached();
-    if (isMobile) {
-      await expect(profile.cat3d).toBeHidden();
-    } else {
-      await expect(profile.cat3d).toHaveAttribute("data-cat-3d", "ready", { timeout: 15_000 });
-    }
+    // Kucing 3D dihapus sementara konsepnya dirancang ulang (PRD v2.45); banner cukup memakai avatar.
+    await expect(profile.rankProgress).toBeVisible();
+    await expect(profile.header.locator("canvas")).toHaveCount(0);
+    expect(modelRequests).toEqual([]);
   });
 
   test("header tanpa level, sub-tingkat rank, dan lencana verifikasi", async () => {

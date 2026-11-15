@@ -5,7 +5,6 @@ import Link from "next/link";
 
 import { DEFAULT_AVATAR_ID, getAvatar } from "@/data/avatars";
 import { ACHIEVEMENTS } from "@/data/achievements";
-import { getCatModel } from "@/data/catModels";
 import { PublicProfile } from "@/data/dummy/publicProfiles";
 import { DEFAULT_THEME_ID, getTheme } from "@/data/themes";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
@@ -42,7 +41,6 @@ function toPublicProfile(row: PublicProfileDbRow): PublicProfile {
     avatarName: avatar.name,
     themeImage: theme.image,
     themeVideo: theme.video,
-    catModel: getCatModel(avatar, theme),
     xp: row.total_xp,
     isProfilePublic: row.profile_public,
     isCurrentUser: row.is_current_user,

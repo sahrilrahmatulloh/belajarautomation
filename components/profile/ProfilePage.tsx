@@ -2,7 +2,6 @@
 
 import { Suspense } from "react";
 
-import { getCatModel } from "@/data/catModels";
 import { getPublicProfile } from "@/data/dummy/publicProfiles";
 import { DUMMY_PROFILE } from "@/data/dummy/profile";
 import { useAccountStats, useLessonProgress } from "@/lib/lessonProgress";
@@ -38,7 +37,6 @@ export default function ProfilePage() {
   const avatarName = isRealAccount ? appearance.avatar.name : profile.avatarName;
   const themeImage = isRealAccount ? appearance.theme.image : profile.themeImage;
   const themeVideo = isRealAccount ? appearance.theme.video : profile.themeVideo;
-  const catModel = isRealAccount ? getCatModel(appearance.avatar, appearance.theme) : profile.catModel;
   const { extraXp, extraLessons } = useLessonProgress();
   const stats = useAccountStats();
   // Akun Supabase memakai XP dan progres dari database; akun demo dari data dummy.
@@ -82,7 +80,6 @@ export default function ProfilePage() {
         avatarName={avatarName}
         themeImage={themeImage}
         themeVideo={themeVideo}
-        catModel={catModel}
         xp={xp}
         isOwner
         shareAction={

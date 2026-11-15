@@ -6,8 +6,7 @@ import { BannerTheme } from "@/types/Appearance";
 // satu entri di sini, lalu tambah barisnya di private.cosmetic_items lewat migrasi baru.
 export const THEMES: BannerTheme[] = [
   {
-    // Tema bawaan pengguna baru (PRD FR-12, v2.43). Gambar diam tanpa karakter kucing,
-    // sehingga kucing 3D di banner profil dapat tampil di atasnya.
+    // Tema bawaan pengguna baru (PRD FR-12, v2.43). Gambar diam tanpa karakter kucing.
     id: "padang-rumput",
     name: "Padang Rumput",
     image: "/banner/padang-rumput/banner.webp",
