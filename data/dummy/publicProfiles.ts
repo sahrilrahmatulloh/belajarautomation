@@ -5,7 +5,6 @@
 // Sengaja tidak memuat email, pembelian, maupun membership (PRD FR-13).
 import { ACHIEVEMENTS } from "@/data/achievements";
 import { getAvatar } from "@/data/avatars";
-import { getCatModel } from "@/data/catModels";
 import { DUMMY_ACCOUNT } from "@/data/dummy/account";
 import { ACTIVE_AVATAR, ACTIVE_THEME } from "@/data/dummy/appearance";
 import { DUMMY_LEADERBOARD_USERS, LeaderboardUser } from "@/data/dummy/leaderboard";
@@ -23,8 +22,6 @@ export interface PublicProfile {
   avatarName: string;
   themeImage: string;
   themeVideo?: string;
-  // Model 3D kucing di banner (PRD FR-12); undefined bila tidak ditampilkan.
-  catModel?: string;
   xp: number;
   isProfilePublic: boolean;
   isCurrentUser: boolean;
@@ -82,7 +79,6 @@ function toPublicProfile(user: LeaderboardUser): PublicProfile {
     avatarName: avatar.name,
     themeImage: getTheme(DEFAULT_THEME_ID)!.image,
     themeVideo: getTheme(DEFAULT_THEME_ID)!.video,
-    catModel: getCatModel(avatar, getTheme(DEFAULT_THEME_ID)),
     xp,
     isProfilePublic: user.isProfilePublic,
     isCurrentUser: false,
@@ -101,7 +97,6 @@ function currentUserProfile(): PublicProfile {
     avatarName: ACTIVE_AVATAR.name,
     themeImage: ACTIVE_THEME.image,
     themeVideo: ACTIVE_THEME.video,
-    catModel: getCatModel(ACTIVE_AVATAR, ACTIVE_THEME),
     xp: DUMMY_ACCOUNT.xp,
     isProfilePublic: DUMMY_PROFILE.isProfilePublic,
     isCurrentUser: true,

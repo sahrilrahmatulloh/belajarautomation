@@ -9,7 +9,7 @@ Menambah mockup: simpan PNG di folder ini dengan nama fiturnya, lalu jalankan `n
 | Nama file | Fitur | Bagian PRD terkait | Tanggal disetujui | Perbedaan yang diketahui terhadap PRD |
 |---|---|---|---|---|
 | `creator-mode.webp` | Mode Creator: Konten Saya, Buat Artikel, Catatan Revisi, Sisipkan Video YouTube, Upload Gambar | FR-15, FR-02 bagian G | perlu diisi pemilik | Lihat di bawah |
-| `profil.webp` | Profil Pengguna: banner dengan tombol aksi dan kucing 3D, tab Ringkasan | FR-13, FR-12 (Model 3D kucing) | 2026-11-12 | Lihat di bawah |
+| `profil.webp` | Profil Pengguna: banner dengan tombol aksi, tab Ringkasan | FR-13 | 2026-11-12 | Lihat di bawah |
 
 ## Perbedaan `profil.webp`
 
@@ -19,6 +19,7 @@ Menambah mockup: simpan PNG di folder ini dengan nama fiturnya, lalu jalankan `n
 - Mockup hanya menampilkan mode gelap; mode terang memakai tata letak yang sama dengan warna brand (Bagian 15).
 - Mockup menampilkan profil sendiri. Profil publik memakai banner yang sama tanpa ikon pensil di avatar dan tanpa tombol aksi (FR-13).
 - Banner pada mockup adalah tema Padang Rumput; banner mengikuti tema aktif pengguna.
+- Kucing 3D di sisi kanan banner pada mockup tidak diterapkan. Konsepnya sedang dirancang ulang, dan banner hanya menampilkan avatar aktif (PRD v2.45, FR-12).
 
 ## Perbedaan `creator-mode.webp`
 
