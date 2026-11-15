@@ -52,6 +52,17 @@ test.describe("Kustomisasi akun Supabase", () => {
     await expect(profile.cat3d).toHaveCount(0);
   });
 
+  test("tema yang sudah memuat kucing (Penerbangan Fuji) tidak menampilkan kucing 3D", async ({ page }) => {
+    const fuji = { ...MOCK_STUDENT, themeId: "kucing-fuji" };
+    await mockSupabase(page, { accounts: [fuji] });
+    await signInWithMock(page, fuji);
+    const profile = new ProfilePage(page);
+    await profile.goto();
+
+    await expect(profile.header.locator('img[src*="kucing-fuji%2Fbanner.webp"]')).toBeAttached();
+    await expect(profile.cat3d).toHaveCount(0);
+  });
+
   test("menyimpan avatar pilihan lalu tampil di header profil dan menu profil", async ({ page }) => {
     const supabase = await mockSupabase(page);
     await signInWithMock(page, MOCK_STUDENT);
@@ -138,7 +149,7 @@ test.describe("Kustomisasi akun demo", () => {
     const profile = new ProfilePage(page);
     await profile.gotoTab("kustomisasi");
 
-    await page.getByRole("button", { name: /^Kucing Putih/ }).click();
+    await page.getByRole("button", { name: /^Kucing Oren/ }).click();
 
     await expect(profile.saveAppearanceButton).toBeDisabled();
     await expect(profile.preview.getByText("Akun demo tidak dapat menyimpan pilihan.")).toBeVisible();

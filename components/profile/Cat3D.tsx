@@ -67,6 +67,13 @@ export default function Cat3D({ src, className = "" }: { src: string; className?
         renderer.domElement.style.width = "100%";
         renderer.domElement.style.height = "100%";
 
+        // Tanpa GPU (render software seperti SwiftShader atau llvmpipe) animasi terus-menerus
+        // membebani CPU, jadi cukup satu pose diam seperti "kurangi gerakan".
+        const gl = renderer.getContext();
+        const debugInfo = gl.getExtension("WEBGL_debug_renderer_info");
+        const rendererName = debugInfo ? String(gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL)) : "";
+        const isStatic = reducedMotion || /swiftshader|llvmpipe|software/i.test(rendererName);
+
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(28, 1, 0.1, 20);
         camera.position.set(0, 0.55, 3.1);
@@ -107,27 +114,33 @@ export default function Cat3D({ src, className = "" }: { src: string; className?
 
         // Gerakan diam yang pelan: sedikit bergoyang dan bernapas. Berhenti saat banner tidak
         // terlihat atau tab disembunyikan; "kurangi gerakan" hanya merender pose diam.
+        // Gerakannya pelan, jadi dibatasi 30 fps agar beban GPU dan baterai separuh.
+        const FRAME_SECONDS = 1 / 30;
         let frame = 0;
         let visible = true;
+        let lastRender = -Infinity;
         const clock = new THREE.Clock();
         const render = () => renderer.render(scene, camera);
         const tick = () => {
           frame = 0;
           const time = clock.getElapsedTime();
-          pivot.rotation.y = Math.sin(time * 0.6) * 0.22;
-          pivot.position.y = Math.sin(time * 1.6) * 0.012;
-          pivot.scale.set(1, 1 + Math.sin(time * 1.6) * 0.008, 1);
-          render();
+          if (time - lastRender >= FRAME_SECONDS) {
+            lastRender = time;
+            pivot.rotation.y = Math.sin(time * 0.6) * 0.22;
+            pivot.position.y = Math.sin(time * 1.6) * 0.012;
+            pivot.scale.set(1, 1 + Math.sin(time * 1.6) * 0.008, 1);
+            render();
+          }
           if (visible && !document.hidden) frame = requestAnimationFrame(tick);
         };
         const start = () => {
-          if (reducedMotion) render();
+          if (isStatic) render();
           else if (!frame) frame = requestAnimationFrame(tick);
         };
 
         const resizeObserver = new ResizeObserver(() => {
           resize();
-          if (reducedMotion) render();
+          if (isStatic) render();
         });
         resizeObserver.observe(container);
         const intersectionObserver = new IntersectionObserver(([entry]) => {
@@ -142,6 +155,7 @@ export default function Cat3D({ src, className = "" }: { src: string; className?
 
         start();
         setState("ready");
+        container.dataset.motion = isStatic ? "static" : "animated";
 
         cleanupScene = () => {
           cancelAnimationFrame(frame);

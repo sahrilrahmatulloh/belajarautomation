@@ -1,9 +1,12 @@
 # BELAJARAUTOMATION.COM
 ## Product Requirements Document (PRD)
-**Versi:** 2.43  
+**Versi:** 2.44  
 **Status:** Draft — Acuan Pengembangan Produk  
 **Platform:** Web Application  
 **Target Pengguna:** Pemula hingga praktisi QA, Software Testing, dan Programming
+
+### Perubahan di Versi 2.44
+- Kucing 3D di banner profil bergerak paling banyak 30 bingkai per detik, dan tampil sebagai pose diam di perangkat tanpa akselerasi grafis (FR-12).
 
 ### Perubahan di Versi 2.43
 - Halaman profil mengikuti mockup `docs/desain/profil.webp`: tombol aksi di banner, kucing 3D di sisi kanan banner, dan Ringkasan berisi kartu statistik, Progres XP, Achievement, Progress Rank, serta Aktivitas Terbaru (FR-13).
@@ -1283,7 +1286,7 @@ Setiap tema memiliki:
 - Kucing 3D tidak ditampilkan pada tema yang ilustrasinya sudah memuat kucing (mis. Penerbangan Fuji dan Neon Night), agar banner tidak berisi dua karakter kucing.
 - Model memakai bentuk dan ciri khas yang sama dengan maskot dan avatar 2D, bukan karakter baru.
 - Kucing 3D bersifat dekoratif: tidak memuat teks, tidak menutupi area teks banner, dan tidak dapat diklik.
-- Gerakan diam yang pelan dan halus (mis. bernapas atau sedikit bergoyang). Pengguna yang mengaktifkan "kurangi gerakan" melihat pose diam.
+- Gerakan diam yang pelan dan halus (mis. bernapas atau sedikit bergoyang), paling banyak 30 bingkai per detik. Pengguna yang mengaktifkan "kurangi gerakan", dan perangkat yang menampilkan 3D tanpa akselerasi grafis (GPU), melihat pose diam agar halaman tetap ringan.
 - Model dimuat setelah isi profil tampil, sehingga tidak memperlambat halaman. Jika perangkat tidak mendukung 3D atau model gagal dimuat, banner tetap utuh tanpa kucing 3D.
 - Di layar kecil kucing 3D tidak ditampilkan agar nama, bio, dan progres rank tetap terbaca.
 - Aset disimpan di `public/models/<jenis-kucing>.glb` (format GLB), dengan ukuran sebaiknya di bawah 2 MB.

@@ -57,11 +57,16 @@ test.describe("Profil", () => {
     await expect(profile.shareButton).toBeVisible();
   });
 
-  test("tema akun demo memuat kucing sendiri, jadi kucing 3D tidak ditampilkan", async () => {
+  test("akun demo memakai Kucing Putih di tema Padang Rumput dengan kucing 3D seperti mockup", async ({ isMobile }) => {
     await profile.goto();
-    await expect(profile.rankEmblem).toBeVisible();
 
-    await expect(profile.cat3d).toHaveCount(0);
+    await expect(profile.header.getByRole("img", { name: `Avatar ${ACTIVE_AVATAR_NAME}` })).toBeVisible();
+    await expect(profile.header.locator('img[src*="padang-rumput%2Fbanner.webp"]')).toBeAttached();
+    if (isMobile) {
+      await expect(profile.cat3d).toBeHidden();
+    } else {
+      await expect(profile.cat3d).toHaveAttribute("data-cat-3d", "ready", { timeout: 15_000 });
+    }
   });
 
   test("header tanpa level, sub-tingkat rank, dan lencana verifikasi", async () => {
