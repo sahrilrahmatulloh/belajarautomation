@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 
 import AuthShell from "@/components/auth/AuthShell";
-import GoogleAuthOption from "@/components/auth/GoogleAuthOption";
 import GuestOnly from "@/components/auth/GuestOnly";
 import LoginForm from "@/components/auth/LoginForm";
 
@@ -17,7 +16,6 @@ export default function Page() {
         title="Selamat datang kembali"
         description="Masuk untuk melanjutkan belajar atau mengelola konten sesuai role kamu."
       >
-        <GoogleAuthOption mode="login" />
         <LoginForm />
       </AuthShell>
     </GuestOnly>
