@@ -110,6 +110,23 @@ test.describe("Kustomisasi akun Supabase", () => {
 test.describe("Kustomisasi akun demo", () => {
   test.use({ role: "user" });
 
+  test("pratinjau dan tombol simpan berada di atas koleksi pada mobile, di kiri pada desktop", async ({ page, isMobile }) => {
+    const profile = new ProfilePage(page);
+    await profile.gotoTab("kustomisasi");
+    const collection = page.getByRole("heading", { level: 2, name: /^Koleksi / });
+    await expect(collection).toBeVisible();
+
+    const preview = (await profile.preview.boundingBox())!;
+    const list = (await collection.boundingBox())!;
+    if (isMobile) expect(preview.y + preview.height).toBeLessThanOrEqual(list.y);
+    else expect(preview.x + preview.width).toBeLessThanOrEqual(list.x);
+
+    // Pratinjau hanya banner, avatar, dan nama, tanpa rank dan XP (PRD FR-13 v2.47).
+    await expect(profile.preview).toContainText("Sobat QA");
+    await expect(profile.preview.getByRole("img", { name: /^Emblem rank / })).toHaveCount(0);
+    await expect(profile.preview).not.toContainText("XP");
+  });
+
   test("pilihan hanya tampil di pratinjau dan tidak dapat disimpan", async ({ page }) => {
     const profile = new ProfilePage(page);
     await profile.gotoTab("kustomisasi");

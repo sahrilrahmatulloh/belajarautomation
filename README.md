@@ -93,6 +93,15 @@ npm run db:push             # menerapkan migrasi ke project yang di-link
 npm run db:types            # memperbarui types/supabase.ts dari skema
 ```
 
+Penyesuaian XP ke aturan XP per modul (PRD FR-05 v2.47), sekali per project setelah migrasi `20261115090000_xp_per_module.sql` diterapkan:
+
+```bash
+npx -y tsx --env-file=.env.local scripts/convert-xp-to-modules.ts          # pratinjau, tidak mengubah data
+npx -y tsx --env-file=.env.local scripts/convert-xp-to-modules.ts --apply  # menerapkan
+```
+
+`.env.local` harus berisi URL dan service_role project yang dituju. Skrip mencatat koreksi negatif sebesar XP lesson lama dan XP untuk modul yang sudah tuntas, tanpa mengubah riwayat. Aman dijalankan ulang.
+
 Menjadikan akun sebagai Admin (sekali per project, oleh pemilik akses Supabase):
 
 1. Daftar akun seperti biasa di aplikasi pada lingkungan tersebut (DEV atau UAT).

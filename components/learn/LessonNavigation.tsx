@@ -6,11 +6,12 @@ import { useRouter } from "next/navigation";
 import { ArrowLeft, ArrowRight, CheckCircle2, ChevronsDown, Flag } from "lucide-react";
 
 import { completeLessonAction } from "@/app/learn/actions";
-import { XP_PER_COURSE_COMPLETION, XP_PER_LESSON } from "@/data/xp";
+import { XP_PER_COURSE_COMPLETION, XP_PER_MODULE } from "@/data/xp";
 import { completeLesson, useLessonProgress } from "@/lib/lessonProgress";
 import { notify } from "@/lib/notify";
 import { refreshRealProgress, useIsRealAccount } from "@/lib/realProgress";
 import { useSession } from "@/lib/session";
+import { getLessonModule } from "@/lib/xpRules";
 
 interface LessonLink {
   slug: string;
@@ -50,6 +51,12 @@ export default function LessonNavigation({ courseSlug, courseTitle, lessonSlug, 
   // Lesson terakhir yang menuntaskan course: semua lesson lain sudah selesai.
   const others = [...completedSlugs(courseSlug)].filter((slug) => slug !== lessonSlug).length;
   const finishesCourse = others >= total - 1;
+  // XP materi diberikan per modul (PRD FR-05 v2.47): lesson ini menuntaskan modulnya bila semua
+  // lesson lain di modul yang sama sudah selesai.
+  const lessonModule = getLessonModule(courseSlug, lessonSlug);
+  const done = completedSlugs(courseSlug);
+  const finishesModule = Boolean(lessonModule?.lessonSlugs.every((slug) => slug === lessonSlug || done.has(slug)));
+  const xpOnComplete = (finishesModule ? XP_PER_MODULE : 0) + (finishesCourse ? XP_PER_COURSE_COMPLETION : 0);
 
   // Penanda akhir isi lesson.
   useEffect(() => {
@@ -69,11 +76,7 @@ export default function LessonNavigation({ courseSlug, courseTitle, lessonSlug, 
     if (!session) return;
     if (!isReal) {
       completeLesson(session.email, courseSlug, lessonSlug);
-      notify.success(
-        finishesCourse
-          ? `Course ${courseTitle} tuntas! +${XP_PER_LESSON + XP_PER_COURSE_COMPLETION} XP termasuk bonus course.`
-          : `Lesson selesai, +${XP_PER_LESSON} XP.`
-      );
+      notify.success(completionMessage(courseTitle, xpOnComplete, finishesCourse, finishesModule ? lessonModule?.title : undefined));
       return;
     }
     const result = await completeLessonAction(courseSlug, lessonSlug);
@@ -82,11 +85,7 @@ export default function LessonNavigation({ courseSlug, courseTitle, lessonSlug, 
       return;
     }
     await refreshRealProgress();
-    if (result.courseBonus) {
-      notify.success(`Course ${courseTitle} tuntas! +${result.xpAwarded} XP termasuk bonus course.`);
-    } else if (result.xpAwarded > 0) {
-      notify.success(`Lesson selesai, +${result.xpAwarded} XP.`);
-    }
+    notify.success(completionMessage(courseTitle, result.xpAwarded, result.courseBonus, result.moduleBonus ? result.moduleTitle : undefined));
   };
 
   // "Berikutnya": pindah lesson tanpa menunggu pencatatan selesai.
@@ -139,7 +138,7 @@ export default function LessonNavigation({ courseSlug, courseTitle, lessonSlug, 
           <Link href={`${courseHref}/${next.slug}`} onClick={onNext} className={`${navLinkClassName} justify-end text-right`}>
             <span className="min-w-0">
               <span className="block text-xs text-muted-foreground">
-                {canComplete && !isDone ? `Berikutnya (+${XP_PER_LESSON} XP)` : "Berikutnya"}
+                {canComplete && !isDone && xpOnComplete > 0 ? `Berikutnya (+${xpOnComplete} XP, modul selesai)` : "Berikutnya"}
               </span>
               <span className="block text-sm font-semibold">{next.title}</span>
             </span>
@@ -154,7 +153,11 @@ export default function LessonNavigation({ courseSlug, courseTitle, lessonSlug, 
           >
             <span className="min-w-0">
               <span className="block text-xs">
-                {finishesCourse ? `+${XP_PER_LESSON + XP_PER_COURSE_COMPLETION} XP termasuk bonus course` : `+${XP_PER_LESSON} XP`}
+                {finishesCourse
+                  ? `+${xpOnComplete} XP termasuk bonus course`
+                  : finishesModule
+                    ? `+${xpOnComplete} XP, modul selesai`
+                    : "Tandai lesson selesai"}
               </span>
               <span className="block text-sm font-semibold">
                 {isPending ? "Menyimpan..." : finishesCourse ? "Selesaikan course" : "Selesai, lihat semua materi"}
@@ -171,4 +174,11 @@ export default function LessonNavigation({ courseSlug, courseTitle, lessonSlug, 
       </nav>
     </div>
   );
+}
+
+// Pesan setelah lesson tercatat selesai. XP hanya disebut bila modul atau course tuntas.
+function completionMessage(courseTitle: string, xp: number, courseDone: boolean, moduleTitle?: string) {
+  if (courseDone) return `Course ${courseTitle} tuntas! +${xp} XP termasuk bonus course.`;
+  if (moduleTitle && xp > 0) return `Modul ${moduleTitle} selesai, +${xp} XP.`;
+  return "Lesson selesai.";
 }

@@ -1,9 +1,19 @@
 # BELAJARAUTOMATION.COM
 ## Product Requirements Document (PRD)
-**Versi:** 2.46  
+**Versi:** 2.47  
 **Status:** Draft — Acuan Pengembangan Produk  
 **Platform:** Web Application  
 **Target Pengguna:** Pemula hingga praktisi QA, Software Testing, dan Programming
+
+### Perubahan di Versi 2.47
+- XP materi diberikan per modul (10 XP saat seluruh lesson dalam satu modul selesai), bukan per lesson. Bonus course, kuis, dan challenge tidak berubah (FR-05).
+- Batas XP rank disesuaikan: Practitioner 900, Specialist 1.900, Expert 3.100, Master 4.400, sehingga Master tetap dapat dicapai dari konten gratis dan rank awal membutuhkan porsi konten lebih banyak (FR-05).
+- XP akun lama disesuaikan lewat transaksi koreksi tanpa mengubah riwayat (FR-05).
+- Banner Playground hanya menampilkan latar tema, tanpa avatar kucing (FR-04, FR-12).
+- Banner sampul bertema yang sama dengan Playground dipakai di halaman Belajar, Roadmap, Leaderboard, eBook, dan Project. Blog tidak memakainya karena terbuka untuk publik (FR-12).
+- Deskripsi fitur di banner sampul dibuka dari tombol ikon (i) berupa popup, termasuk keterangan yang sebelumnya tampil terpisah di halaman, mis. kotak "Tempat latihan" di Playground (FR-12).
+- Ajakan "Tidak tahu mulai dari mana?" di halaman Belajar tertutup secara bawaan dan dibuka dengan tombol panah (FR-02).
+- Pratinjau Kustomisasi tampil di atas koleksi pada layar kecil dan hanya berisi banner, avatar, dan nama, tanpa rank dan XP (FR-13).
 
 ### Perubahan di Versi 2.46
 - Welcome Banner dashboard hanya menampilkan latar tema, tanpa avatar kucing (FR-01, FR-12).
@@ -393,7 +403,7 @@ Memberikan gambaran ringkas mengenai aktivitas belajar dan perkembangan pengguna
 - Pengguna baru melihat tema gratis bawaan (Padang Rumput).
 
 Ketentuan Welcome Banner:
-- Tema banner hanya berlaku di Welcome Banner dan banner profil; bagian website lainnya mengikuti brand guideline.
+- Tema banner hanya berlaku di Welcome Banner, banner sampul halaman fitur (FR-12), dan banner profil; bagian website lainnya mengikuti brand guideline.
 - Struktur konten banner (tagline, sapaan, deskripsi) dan posisinya tetap sama di semua tema.
 - Welcome Banner tidak menampilkan kutipan motivasi.
 - Teks banner harus tetap terbaca dengan kontras memadai pada semua tema, di mode terang maupun gelap.
@@ -447,7 +457,7 @@ Menjadi pusat katalog seluruh materi pembelajaran.
 ### Fitur utama
 
 **Ajakan Roadmap**
-- Bagian atas halaman Belajar, di antara header dan filter, menampilkan ajakan "Tidak tahu mulai dari mana?" dengan tombol menuju halaman Roadmap.
+- Bagian atas halaman Belajar, di antara header dan filter, menampilkan ajakan "Tidak tahu mulai dari mana?". Ajakan tertutup secara bawaan: hanya satu baris berisi ikon, teks ajakan, dan ikon panah bawah. Menekannya membuka penjelasan singkat dan tombol "Lihat Roadmap" menuju halaman Roadmap; menekannya lagi menutup kembali.
 - Ajakan ini ringkas agar katalog course tetap terlihat tanpa banyak scroll.
 
 **A. Pencarian Materi**
@@ -769,18 +779,21 @@ Nilai XP dan batas rank dikelola melalui konfigurasi sistem. Nilai awal yang dis
 
 | Aktivitas | XP |
 |---|---|
-| Menyelesaikan satu lesson | 10 |
+| Menyelesaikan seluruh lesson dalam satu modul | 10 |
 | Bonus menyelesaikan seluruh lesson dalam satu course | 50 |
 | Lulus kuis | 30 |
 | Menyelesaikan challenge yang tervalidasi | 75 |
 
 XP hanya diberikan saat aktivitas tersebut diselesaikan pertama kali. Pengguna boleh mengulang lesson, kuis, atau challenge tanpa memperoleh XP lagi.
 
+Menyelesaikan satu lesson tidak memberi XP sendiri. XP materi diberikan per modul, agar kenaikan rank mencerminkan penguasaan satu topik utuh dan tidak terlalu cepat.
+
 ### Aturan penyelesaian aktivitas
 
 | Aktivitas | Dianggap selesai saat | XP | Catatan |
 |---|---|---|---|
-| Lesson | Pengguna mengklik "Berikutnya" ke lesson selanjutnya. Pada lesson terakhir course, pengguna menekan "Selesaikan course" | 10 | Hanya tercatat bila isi lesson sudah digulir sampai akhir; navigasi tetap bisa dipakai kapan saja, dengan keterangan bila lesson belum tercatat. Lesson yang belum punya isi tidak bisa diselesaikan. |
+| Lesson | Pengguna mengklik "Berikutnya" ke lesson selanjutnya. Pada lesson terakhir course, pengguna menekan "Selesaikan course" | 0 | Hanya tercatat bila isi lesson sudah digulir sampai akhir; navigasi tetap bisa dipakai kapan saja, dengan keterangan bila lesson belum tercatat. Lesson yang belum punya isi tidak bisa diselesaikan. Lesson selesai tetap dihitung di statistik "Materi selesai" dan tampil di riwayat aktivitas tanpa XP. |
+| Modul | Seluruh lesson dalam modul selesai, dalam urutan apa pun | 10 | Diberikan otomatis bersama lesson terakhir modul yang diselesaikan. Tombol "Berikutnya" pada lesson yang menuntaskan modul menampilkan XP yang akan diperoleh. Pengguna melihat pemberitahuan "Modul [nama] selesai, +10 XP." dan riwayat aktivitas mencatat "Modul selesai". |
 | Course | Seluruh lesson dalam course selesai | 50 (bonus) | Diberikan otomatis bersama lesson terakhir yang diselesaikan. Pengguna melihat pemberitahuan "Course [nama] tuntas!", lalu kembali ke halaman course. |
 | Kuis | Lulus dengan skor minimal 70% | 30 | Percobaan tidak dibatasi. |
 | Bug Hunt dan Locator Challenge | Lulus penilaian otomatis | 75 | Percobaan tidak dibatasi. |
@@ -805,12 +818,17 @@ Ketentuan perhitungan:
 |---|---|---|
 | Trainee | 0 | Baru mulai belajar |
 | Apprentice | 300 | Menyelesaikan roadmap Fundamental |
-| Practitioner | 1.000 | Menyelesaikan satu roadmap lengkap |
-| Specialist | 2.200 | Menyelesaikan sekitar dua roadmap |
-| Expert | 3.800 | Menyelesaikan sebagian besar jalur automation |
-| Master | 5.500 | Menyelesaikan hampir seluruh konten dan challenge |
+| Practitioner | 900 | Menyelesaikan satu roadmap lengkap |
+| Specialist | 1.900 | Menyelesaikan sekitar dua roadmap |
+| Expert | 3.100 | Menyelesaikan sebagian besar jalur automation |
+| Master | 4.400 | Menyelesaikan hampir seluruh konten dan challenge |
 
-Batas ini dihitung dari perkiraan total XP konten yang direncanakan (sekitar 6.600 XP) dan wajib ditinjau ulang setiap kali jumlah konten atau pembagian course gratis dan premium berubah, agar rank Master tetap dapat dicapai hanya dari konten gratis.
+Batas ini dihitung dari perkiraan total XP konten yang direncanakan (sekitar 5.300 XP dengan XP materi per modul: sekitar 77 modul, 25 bonus course, serta kuis dan challenge) dan wajib ditinjau ulang setiap kali jumlah konten atau pembagian course gratis dan premium berubah, agar rank Master tetap dapat dicapai hanya dari konten gratis. Master membutuhkan sekitar 84% dari total XP konten.
+
+Perubahan aturan XP untuk akun yang sudah ada:
+- Saat aturan XP berubah dari per lesson ke per modul (v2.47), XP akun lama disesuaikan lewat transaksi koreksi baru: koreksi negatif sebesar seluruh XP lesson lama, ditambah XP untuk setiap modul yang seluruh lesson-nya sudah selesai. Riwayat XP lama tidak diubah atau dihapus.
+- Penyesuaian dicatat di riwayat aktivitas sebagai "Penyesuaian aturan XP per modul" dan hanya terjadi sekali per akun.
+- Rank yang sudah dirayakan tidak dirayakan ulang. Bila total XP turun di bawah batas rank sebelumnya, rank mengikuti total XP yang baru.
 
 ### Halaman Rank & XP
 - Alamat `/rank`, dibuka dari kartu Rank & XP di dashboard dan dari tautan "Lihat tingkatan rank" di kartu posisi leaderboard.
@@ -1230,7 +1248,7 @@ Memberikan identitas brand yang mudah dikenali dan sarana ekspresi diri pengguna
 | Bentuk | Tameng berwarna identitas rank (FR-05) | Ilustrasi kucing dari beberapa jenis dan gaya | Ilustrasi latar banner |
 | Cara memperoleh | Naik rank melalui XP yang valid | Gratis atau melalui Pro/Premium | Gratis atau melalui Pro/Premium |
 | Dipilih pengguna | Tidak; mengikuti rank | Ya, satu avatar aktif | Ya, satu tema aktif |
-| Tampil di | Kartu Rank & XP, profil, leaderboard | Foto profil, header, leaderboard, profil | Welcome Banner dan banner profil |
+| Tampil di | Kartu Rank & XP, profil, leaderboard | Foto profil, header, leaderboard, profil | Welcome Banner, banner sampul halaman fitur, dan banner profil |
 | Memengaruhi XP, rank, leaderboard | Tidak | Tidak | Tidak |
 
 ### Avatar kucing
@@ -1269,7 +1287,9 @@ Setiap avatar memiliki:
 - Tingkat akses: gratis atau berbayar (Pro/Premium).
 
 ### Tema banner
-- Tema adalah ilustrasi latar untuk **Welcome Banner dashboard** dan **banner halaman profil**.
+- Tema adalah ilustrasi latar untuk **Welcome Banner dashboard**, **banner sampul halaman fitur**, dan **banner halaman profil**.
+- Banner sampul halaman fitur tampil di bagian atas halaman Belajar, Roadmap, Playground, Leaderboard, eBook, dan Project. Isinya ikon fitur, judul halaman (heading utama), dan tombol ikon (i) dengan nama aksesibel "Tentang [judul]" di samping judul, di atas latar tema aktif, tanpa avatar. Deskripsi singkat fitur tidak tampil langsung; menekan tombol (i) membuka popup berisi judul dan deskripsi tersebut, yang ditutup dengan klik di luar popup atau tombol Escape. Semua keterangan fitur di halaman tersebut (mis. aturan XP latihan di Playground, cara peringkat dihitung di Leaderboard, dan ketersediaan project) berada di popup ini; halaman tidak menampilkan kotak atau paragraf keterangan terpisah. Struktur dan posisi teksnya sama di semua tema, dan teks tetap terbaca di mode terang maupun gelap.
+- Blog tidak memakai banner sampul karena dapat dibuka publik tanpa login (FR-07); halaman Blog tetap mengikuti brand guideline.
 - Tema tidak mengubah warna website. Warna website tetap mengikuti brand guideline (Bagian 15), dengan pilihan mode terang atau gelap.
 - Setiap tema memiliki versi mode terang dan gelap, atau satu versi yang tetap terbaca di keduanya.
 - Area teks pada banner harus tetap terbaca dengan kontras memadai di setiap tema.
@@ -1287,7 +1307,7 @@ Setiap tema memiliki:
 - Gerakan pelan dan halus, tanpa kedip atau goyangan kamera, agar tidak mengganggu belajar.
 - Video tidak memuat teks dan tidak menutupi area teks banner.
 - Ukuran video sebaiknya di bawah 1 MB, dengan resolusi yang cukup untuk banner lebar (minimal sekitar 1.600 piksel).
-- Tema yang ilustrasinya sudah memuat karakter kucing tidak menampilkan avatar pengguna di atasnya, agar tidak ada dua kucing.
+- Avatar tidak ditampilkan di atas ilustrasi tema pada banner mana pun (Welcome Banner, banner sampul halaman fitur). Pada banner profil, avatar berada di bingkai bulat terpisah, sehingga tema yang ilustrasinya sudah memuat karakter kucing tetap dapat dipakai.
 
 ### Model 3D kucing
 - Belum dipakai. Kucing 3D di banner profil dihapus pada v2.45 dan konsep visualnya sedang dirancang ulang. Sampai konsep baru disetujui, banner profil hanya menampilkan avatar aktif pengguna, dan tidak ada model 3D yang dimuat.
@@ -1391,7 +1411,7 @@ Empat kartu berukuran sama: dua kolom × dua baris di layar lebar, bertumpuk sat
 
 1. **Progres XP** — grafik garis total XP kumulatif per hari dengan pilihan periode 7 Hari, 30 Hari (bawaan), dan 90 Hari. Titik terakhir diberi label total XP saat ini. Grafik memiliki ringkasan teks untuk pembaca layar. Jika belum ada aktivitas di periode tersebut, tampil empty state. Tinggi grafik tetap sama di semua ukuran layar dan lebarnya mengikuti kartu, sehingga grafik tidak membesar di desktop atau mengecil di mobile.
 2. **Achievement** — diagram cincin persentase achievement yang tercapai dari seluruh achievement, jumlah "Tercapai" dan "Belum Tercapai", serta "Achievement Terbaru": paling banyak 3 badge terbaru dan penanda sisa (mis. "+4"). Kartu dapat diklik menuju tab Pencapaian.
-3. **Progress Rank** — emblem rank saat ini (Saat ini) dan rank berikutnya (Berikutnya), bar progres, XP saat ini terhadap batas rank berikutnya (mis. "420 / 1.000 XP"), dan sisa XP. Pengguna Master melihat emblem Master dengan keterangan rank tertinggi. Kartu memiliki tautan ke halaman Rank & XP (FR-05).
+3. **Progress Rank** — emblem rank saat ini (Saat ini) dan rank berikutnya (Berikutnya), bar progres, XP saat ini terhadap batas rank berikutnya (mis. "320 / 900 XP"), dan sisa XP. Pengguna Master melihat emblem Master dengan keterangan rank tertinggi. Kartu memiliki tautan ke halaman Rank & XP (FR-05).
 4. **Aktivitas Terbaru** — tiga aktivitas terakhir: ikon jenis aktivitas, judul, keterangan (course atau jenis challenge), XP yang diperoleh, dan waktu relatif. Tautan "Lihat semua" membuka tab Aktivitas.
 
 Ketentuan:
@@ -1407,9 +1427,10 @@ Ketentuan:
 - Avatar dikelompokkan per **gaya** (FR-12) dengan chip yang dapat digeser: Basic, Bug Hunter, Cyberpunk, Wizard, Driver Formula, Space Explorer, Ninja, Knight, dan Master Chef. Chip awal adalah gaya avatar yang sedang dipakai.
 - Setiap gaya menampilkan grid jenis kucing yang gambarnya sudah tersedia. Gaya yang belum punya gambar tetap tampil dengan keterangan "Segera hadir".
 - Filter Semua, Dimiliki, dan Terkunci berlaku di dalam gaya yang dipilih.
-- Preview profil memperlihatkan hasil pilihan sebelum disimpan.
-- "Simpan Pilihan" menyimpan avatar dan tema ke akun. Setelah disimpan, avatar tampil di header profil, menu profil, Playground, dan kartu "Posisi kamu" di leaderboard, sedangkan tema tampil di Welcome Banner dan banner profil. Akun demo di DEV hanya melihat pratinjau.
+- Preview profil memperlihatkan hasil pilihan sebelum disimpan: banner tema, avatar, dan nama tampilan saja, tanpa rank dan XP.
+- "Simpan Pilihan" menyimpan avatar dan tema ke akun. Setelah disimpan, avatar tampil di header profil, menu profil, dan kartu "Posisi kamu" di leaderboard, sedangkan tema tampil di Welcome Banner, banner Playground, dan banner profil. Akun demo di DEV hanya melihat pratinjau.
 - Avatar dan tema yang sedang dipakai ditandai "Digunakan" pada kartu koleksi. Tombol "Simpan Pilihan" berada di bawah pratinjau profil.
+- Pratinjau profil beserta tombol "Simpan Pilihan" tampil di atas koleksi pada layar kecil, agar hasil pilihan langsung terlihat; di layar lebar berada di kolom kiri yang tetap terlihat saat koleksi digulir.
 - Item terkunci menampilkan cara memperolehnya (mis. "Tersedia di Pro dan Premium").
 
 ### Username
@@ -1790,7 +1811,7 @@ Menutup situs sementara untuk perbaikan tanpa membuat pengguna kehilangan pekerj
 Ketentuan profil pengguna diatur di FR-13. Informasi sensitif tidak boleh ditampilkan secara publik tanpa alasan dan persetujuan yang sesuai.
 
 ## 4.2 Preferensi Tampilan
-Warna website mengikuti brand guideline untuk semua pengguna. Tema banner hanya berlaku untuk Welcome Banner dan banner profil.
+Warna website mengikuti brand guideline untuk semua pengguna. Tema banner hanya berlaku untuk Welcome Banner, banner sampul halaman fitur, dan banner profil.
 
 Pengguna dapat mengatur:
 - Mode terang atau gelap.

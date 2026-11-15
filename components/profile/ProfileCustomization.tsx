@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { Cat, Check, Eye, ImageIcon, ListFilter, Lock, Sparkles } from "lucide-react";
 
-import RankEmblem from "@/components/common/RankEmblem";
 import FilterChips from "@/components/filters/FilterChips";
 import {
   DropdownMenu,
@@ -17,16 +16,13 @@ import {
 import FilterEmptyState from "@/components/filters/FilterEmptyState";
 import { AVATAR_STYLES, AVATARS, getAvatar } from "@/data/avatars";
 import { DUMMY_ACCOUNT } from "@/data/dummy/account";
-import { useAccountXp } from "@/lib/lessonProgress";
 import { saveAppearance } from "@/lib/auth/profileActions";
 import { notify } from "@/lib/notify";
 import { useSession } from "@/lib/session";
 import { useAppearance } from "@/lib/useAppearance";
 import { getMembershipPlan } from "@/data/membership";
-import { getRank } from "@/data/ranks";
 import { getTheme, THEMES } from "@/data/themes";
 import { canUseAvatar, canUseTheme } from "@/lib/appearance";
-import { formatNumber } from "@/lib/format";
 import { BannerTheme, CatAvatar } from "@/types/Appearance";
 
 // Tab Kustomisasi (PRD FR-13): koleksi avatar dan tema banner, pratinjau profil,
@@ -189,8 +185,6 @@ export default function ProfileCustomization() {
 
   const avatar = getAvatar(avatarId) ?? activeAvatar;
   const theme = getTheme(themeId) ?? activeTheme;
-  const xp = useAccountXp();
-  const rank = getRank(xp);
   const hasChanges = avatar.id !== activeAvatar.id || theme.id !== activeTheme.id;
 
   const handleSave = async () => {
@@ -219,30 +213,24 @@ export default function ProfileCustomization() {
 
   return (
     <div className="grid gap-6 lg:grid-cols-[18rem_minmax(0,1fr)]">
-      {/* Pratinjau dan pilihan aktif: di bawah koleksi pada mobile, dua kolom di tablet */}
-      <aside aria-label="Pratinjau profil" className="order-last lg:sticky lg:top-24 lg:order-none lg:self-start">
+      {/* Pratinjau dan tombol simpan: di atas koleksi pada mobile agar hasil pilihan langsung
+          terlihat, kolom kiri yang menempel di layar lebar (PRD FR-13 v2.47). */}
+      <aside aria-label="Pratinjau profil" className="lg:sticky lg:top-24 lg:self-start">
         <section aria-labelledby="pratinjau-profil" className="overflow-hidden rounded-2xl border border-border bg-card">
           <h2 id="pratinjau-profil" className="flex items-center gap-2 px-4 pb-3 pt-4 font-semibold">
             <Eye className="h-4 w-4 text-primary-accent" aria-hidden="true" />
             Pratinjau Profil
           </h2>
-          <div className="relative mx-4 h-24 overflow-hidden rounded-xl">
+          {/* Lebih ringkas di layar kecil agar koleksi cepat terlihat di bawahnya. */}
+          <div className="relative mx-4 h-16 overflow-hidden rounded-xl lg:h-24">
             <Image src={theme.thumbnail} alt="" fill sizes="288px" className="object-cover object-[75%_50%]" />
           </div>
-          <div className="-mt-10 flex flex-col items-center px-4 pb-4 text-center">
+          <div className="-mt-8 flex flex-col items-center px-4 pb-4 text-center lg:-mt-10">
             <div className="relative rounded-full bg-white p-1 shadow-md">
-              <Image src={avatar.image} alt="" width={72} height={72} className="h-[72px] w-[72px] rounded-full" />
+              <Image src={avatar.image} alt="" width={72} height={72} className="h-14 w-14 rounded-full lg:h-[72px] lg:w-[72px]" />
             </div>
+            {/* Pratinjau hanya kosmetik: banner, avatar, dan nama, tanpa rank dan XP (PRD FR-13 v2.47). */}
             <p className="mt-2 font-semibold">{session?.name ?? DUMMY_ACCOUNT.name}</p>
-            <div className="mt-2 flex flex-wrap justify-center gap-2 text-xs">
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-border px-2.5 py-1">
-                <RankEmblem rank={rank} variant="compact" size={18} />
-                {rank.name}
-              </span>
-              <span className="rounded-full border border-border px-2.5 py-1 tabular-nums">
-                {formatNumber(xp)} XP
-              </span>
-            </div>
           </div>
 
           {/* Pilihan aktif ditandai "Digunakan" pada kartu koleksi (PRD FR-13). */}

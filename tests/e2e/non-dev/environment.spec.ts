@@ -167,7 +167,7 @@ test.describe("eBook dan Project di luar DEV", () => {
 test.describe("Lesson draf di UAT", () => {
   test.use({ role: "user" });
 
-  test("isi draf tampil berlabel Draf dan Berikutnya memberi XP", async ({ page }) => {
+  test("isi draf tampil berlabel Draf dan Berikutnya menandai lesson selesai", async ({ page }) => {
     const lesson = new LessonPage(page, "dasar-web-api", "client-server");
     await lesson.goto();
     await expect(lesson.writingNotice).toBeHidden();
@@ -177,7 +177,8 @@ test.describe("Lesson draf di UAT", () => {
     await lesson.completeAndNext();
 
     await expect(page).toHaveURL("/learn/dasar-web-api/apa-itu-http");
-    await expect(page.getByText("Lesson selesai, +10 XP.")).toBeVisible();
+    // XP materi diberikan per modul (PRD FR-05 v2.47); lesson pertama modul belum memberi XP.
+    await expect(page.getByText("Lesson selesai.", { exact: true })).toBeVisible();
   });
 });
 

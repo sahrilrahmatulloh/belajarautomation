@@ -369,8 +369,8 @@ export const ADMIN_WORKSPACE = {
 
 // Katalog dan Moderasi (data/catalogRules.json dan data/dummy/moderation.ts).
 export const ADMIN_PLATFORM = {
-  freeXp: "3.880",
-  masterXp: "5.500",
+  freeXp: "2.560",
+  masterXp: "4.400",
   foundationCourse: "QA Fundamental",
   studiedFreeCourse: "JavaScript",
   unstudiedFreeCourse: "Cypress",
@@ -378,8 +378,8 @@ export const ADMIN_PLATFORM = {
   readyTargetCourse: "Selenium",
   flaggedUser: "Rina Kartika",
   flaggedUserId: "user-1",
-  flaggedUserXp: "6.400",
-  correctedXp: "4.400",
+  flaggedUserXp: "5.600",
+  correctedXp: "3.600",
   rankBefore: "Master",
   rankAfter: "Expert",
   otherFlaggedUser: "Dimas Permana",

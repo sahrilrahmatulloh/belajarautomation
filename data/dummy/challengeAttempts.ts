@@ -6,5 +6,6 @@ export const DUMMY_CHALLENGE_SCORES: Record<string, number> = {
   "find-checkout-bug": 100,
   "kuis-qa-fundamental": 80,
   "playwright-locator": 100,
+  "kuis-playwright": 90,
   "kuis-git-github": 50,
 };

@@ -1,24 +1,28 @@
 "use server";
 
-import { XP_PER_COURSE_COMPLETION, XP_PER_LESSON } from "@/data/xp";
+import { XP_PER_COURSE_COMPLETION, XP_PER_MODULE } from "@/data/xp";
 import { getLessonPageData } from "@/lib/courseLessons";
 import { showsDraftLearning } from "@/lib/env";
 import { getSupabaseAdminClient } from "@/lib/supabase/admin";
 import { getAuthenticatedUserId } from "@/lib/xp/record";
+import { getLessonModule } from "@/lib/xpRules";
 import { LessonCompletionResult } from "@/types/Xp";
 
 interface LessonRecordRow {
   xp_awarded: number;
+  module_bonus: boolean;
   course_bonus: boolean;
   total_xp: number;
   lessons_completed: number;
 }
 
-// Menandai lesson selesai untuk akun Supabase (PRD FR-05): +XP lesson sekali, dan bonus
-// course saat seluruh lesson course itu selesai. Lesson divalidasi dari katalog di server.
+// Menandai lesson selesai untuk akun Supabase (PRD FR-05 v2.47): +XP modul saat seluruh lesson
+// modulnya selesai, dan bonus course saat seluruh lesson course selesai. Lesson dan modul
+// divalidasi dari katalog di server.
 export async function completeLessonAction(courseSlug: string, lessonSlug: string): Promise<LessonCompletionResult> {
   const data = typeof courseSlug === "string" && typeof lessonSlug === "string" ? getLessonPageData(courseSlug, lessonSlug) : null;
-  if (!data) return { ok: false, message: "Lesson tidak ditemukan." };
+  const lessonModule = data ? getLessonModule(courseSlug, lessonSlug) : undefined;
+  if (!data || !lessonModule) return { ok: false, message: "Lesson tidak ditemukan." };
   // Course draf hanya bisa diselesaikan di DEV dan UAT (lib/env.ts).
   if (data.course.contentStatus === "draft" && !showsDraftLearning) return { ok: false, message: "Lesson ini belum terbit." };
   // Hak akses membership belum tersambung ke backend (Fase 5), jadi XP course premium belum bisa dicatat.
@@ -35,8 +39,10 @@ export async function completeLessonAction(courseSlug: string, lessonSlug: strin
     p_user: userId,
     p_course: courseSlug,
     p_lesson: lessonSlug,
+    p_module: lessonModule.key,
+    p_module_lessons: lessonModule.lessonSlugs,
     p_course_lesson_count: data.total,
-    p_lesson_xp: XP_PER_LESSON,
+    p_module_xp: XP_PER_MODULE,
     p_course_xp: XP_PER_COURSE_COMPLETION,
   });
   if (error || !row) return { ok: false, message: "Progres belum tersimpan. Coba lagi beberapa saat lagi." };
@@ -45,6 +51,8 @@ export async function completeLessonAction(courseSlug: string, lessonSlug: strin
   return {
     ok: true,
     xpAwarded: result.xp_awarded,
+    moduleBonus: result.module_bonus,
+    moduleTitle: lessonModule.title,
     courseBonus: result.course_bonus,
     totalXp: result.total_xp,
     lessonsCompleted: result.lessons_completed,

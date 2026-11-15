@@ -414,9 +414,10 @@ test.describe("Aturan Katalog Belajar", () => {
     expect(COURSES.find((course) => course.slug === "cypress")?.contentStatus).toBe("draft");
   });
 
-  test("XP gratis dihitung dari target lesson dan latihan", () => {
-    expect(freeXpTotal({})).toBe(3880);
-    expect(freeXpTotal({ cypress: { access: "premium" } })).toBe(3880 - 130);
+  test("XP gratis dihitung dari modul course dan latihan", () => {
+    expect(freeXpTotal({})).toBe(2560);
+    // Cypress: 3 modul × 10 XP + bonus course 50 (PRD FR-05 v2.47).
+    expect(freeXpTotal({ cypress: { access: "premium" } })).toBe(2560 - 80);
   });
 });
 
@@ -429,7 +430,7 @@ test.describe("Aturan Moderasi", () => {
 
     const updated = await repo.correctXp(ADMIN, "user-1", -2000, REASON, "flag-rina");
 
-    expect(updated.xp).toBe(4400);
+    expect(updated.xp).toBe(3600);
     expect(await repo.listXpTransactions()).toMatchObject([{ userId: "user-1", amount: -2000, kind: "koreksi", alasan: REASON }]);
     expect((await repo.listModerationFlags()).find((flag) => flag.id === "flag-rina")?.status).toBe("ditangani");
 
@@ -449,7 +450,7 @@ test.describe("Aturan Moderasi", () => {
     await expectRule(repo.setLeaderboardVisibility(ADMIN, "user-1", false, " ", null), /Alasan wajib/);
 
     const hidden = await repo.setLeaderboardVisibility(ADMIN, "user-1", false, REASON, null);
-    expect(hidden).toMatchObject({ hiddenFromLeaderboard: true, xp: 6400 });
+    expect(hidden).toMatchObject({ hiddenFromLeaderboard: true, xp: 5600 });
     await expectRule(repo.setLeaderboardVisibility(ADMIN, "user-1", false, REASON, null), /sudah disembunyikan/);
 
     expect((await repo.setLeaderboardVisibility(ADMIN, "user-1", true, REASON, null)).hiddenFromLeaderboard).toBe(false);

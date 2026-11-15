@@ -1,5 +1,7 @@
 export type ActivityType =
   | "lesson"
+  // Seluruh lesson dalam satu modul selesai; sumber XP materi (PRD FR-05 v2.47).
+  | "module_complete"
   | "course_complete"
   | "quiz"
   | "challenge"
