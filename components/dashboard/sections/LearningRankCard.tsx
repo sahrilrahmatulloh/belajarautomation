@@ -12,21 +12,38 @@ export default function LearningRankCard() {
   const xp = useAccountXp();
   const { rank, nextRank, xpToNext, percent } = getRankProgress(xp);
 
+  // Latar memakai warna identitas rank (PRD FR-01 bagian C, FR-05), jadi kartu ikut berubah
+  // saat naik rank. Dasarnya tetap gelap agar teks putih terbaca di semua rank.
+  const accent = rank.accentColor ?? rank.color;
+
   return (
-    <section className="relative isolate overflow-hidden rounded-xl bg-slate-950 p-4 text-white shadow-sm sm:p-5">
+    <section
+      className="relative isolate overflow-hidden rounded-xl border p-4 text-white shadow-sm sm:p-5"
+      style={{
+        borderColor: `${rank.color}66`,
+        backgroundColor: "#020617",
+        backgroundImage: `radial-gradient(circle at 10% 50%, ${rank.color}59 0%, transparent 45%), linear-gradient(120deg, #020617 35%, ${rank.color}40 100%)`,
+      }}
+    >
+      {/* Pola garis diagonal tipis dan kilau warna rank di sisi kanan */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -right-12 -top-24 h-56 w-40 rotate-45 rounded-[2rem] border border-blue-400/20 bg-blue-500/10"
+        className="pointer-events-none absolute inset-0 -z-10 opacity-[0.07] [background-image:repeating-linear-gradient(135deg,#fff_0_1px,transparent_1px_14px)]"
       />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -bottom-24 right-1/4 h-52 w-28 -rotate-45 rounded-[2rem] border border-cyan-300/15 bg-cyan-300/5"
+        className="pointer-events-none absolute -right-16 -top-20 -z-10 h-56 w-56 rounded-full blur-3xl"
+        style={{ backgroundColor: `${accent}40` }}
       />
 
       <div className="relative flex flex-col gap-5 sm:flex-row sm:items-center">
         <div
-          className="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl border p-1.5 sm:h-[4.5rem] sm:w-[4.5rem]"
-          style={{ borderColor: `${rank.color}55`, backgroundColor: `${rank.color}1a` }}
+          className="relative flex h-16 w-16 shrink-0 items-center justify-center rounded-xl border p-1.5 sm:h-[4.5rem] sm:w-[4.5rem]"
+          style={{
+            borderColor: `${rank.color}80`,
+            backgroundColor: `${rank.color}26`,
+            boxShadow: `0 0 28px ${rank.color}66`,
+          }}
         >
           <RankEmblem
             rank={rank}

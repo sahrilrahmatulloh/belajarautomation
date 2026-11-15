@@ -11,6 +11,7 @@ test.describe("Bagikan profil", () => {
   test.beforeEach(async ({ page }) => {
     const profile = new ProfilePage(page);
     await profile.goto();
+    await profile.openActions();
     await profile.shareButton.click();
 
     share = new ShareProfileDialog(page);

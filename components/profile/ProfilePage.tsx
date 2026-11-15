@@ -14,7 +14,6 @@ import ProfileAchievements from "./ProfileAchievements";
 import ProfileActivity from "./ProfileActivity";
 import ProfileCustomization from "./ProfileCustomization";
 import ProfileHeader from "./ProfileHeader";
-import ProfileStats from "./ProfileStats";
 import ProfileTabs from "./ProfileTabs";
 import RankProgressCard from "./RankProgressCard";
 import RecentActivity from "./RecentActivity";
@@ -48,25 +47,28 @@ export default function ProfilePage() {
 
   const earnedAchievements = profile.achievements.filter((state) => state.earned).length;
 
+  // Ringkasan (PRD FR-13, v2.46): empat kartu berukuran sama, 2×2 di layar lebar dan
+  // bertumpuk di mobile. Statistik angka tetap ada di dashboard.
   const summary = (
-    <div className="space-y-6">
-      <ProfileStats xp={xp} lessons={lessons} challenges={challenges} achievements={earnedAchievements} />
-
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)_minmax(0,1fr)]">
-        <div className="min-w-0 md:col-span-2 xl:col-span-1 [&>section]:h-full">
-          {historyReady ? (
-            <XpProgressChart totalXp={xp} gainsByDaysAgo={history.gainsByDaysAgo} />
-          ) : (
-            <section aria-label="Progres XP" className="flex h-full min-h-56 items-center justify-center rounded-2xl border border-border bg-card p-5">
-              <p role="status" className="text-sm text-muted-foreground">Memuat progres XP...</p>
-            </section>
-          )}
-        </div>
+    <div className="grid gap-4 md:auto-rows-fr md:grid-cols-2 [&>*]:min-w-0 [&>*>section]:h-full">
+      <div>
+        {historyReady ? (
+          <XpProgressChart totalXp={xp} gainsByDaysAgo={history.gainsByDaysAgo} />
+        ) : (
+          <section aria-label="Progres XP" className="flex h-full min-h-56 items-center justify-center rounded-2xl border border-border bg-card p-5">
+            <p role="status" className="text-sm text-muted-foreground">Memuat progres XP...</p>
+          </section>
+        )}
+      </div>
+      <div>
         <AchievementSummary states={profile.achievements} href="/profile?tab=pencapaian" />
+      </div>
+      <div>
         <RankProgressCard xp={xp} />
       </div>
-
-      <RecentActivity entries={history.recent} isLoaded={historyReady} />
+      <div>
+        <RecentActivity entries={history.recent} isLoaded={historyReady} />
+      </div>
     </div>
   );
 

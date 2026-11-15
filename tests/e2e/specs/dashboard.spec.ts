@@ -27,10 +27,22 @@ test.describe("Dashboard", () => {
     await expect(dashboard.welcomeBanner).not.toContainText(/["“”]/);
   });
 
+  test("Welcome Banner hanya memakai latar tema, tanpa avatar kucing", async () => {
+    // PRD FR-01 bagian B v2.46: avatar tetap di header, profil, dan leaderboard.
+    await expect(dashboard.welcomeBanner.locator('img[src*="padang-rumput%2Fbanner.webp"]')).toBeAttached();
+    await expect(dashboard.welcomeBanner.locator('img[src*="%2Fprofile%2F"], img[src^="/profile/"]')).toHaveCount(0);
+  });
+
   test("kartu Rank & XP menampilkan nama rank dan emblem", async () => {
     await expect(dashboard.rankCard.getByRole("heading", { name: USER_RANK })).toBeVisible();
     await expect(dashboard.rankEmblem).toBeVisible();
     await expect(dashboard.rankCard).toContainText("XP");
+  });
+
+  test("latar kartu Rank & XP memakai warna identitas rank", async () => {
+    // Akun demo di rank Apprentice: silver #9CA3AF (PRD FR-05).
+    const background = await dashboard.rankCard.evaluate((element) => getComputedStyle(element).backgroundImage);
+    expect(background).toContain("rgba(156, 163, 175");
   });
 
   test("Lanjutkan Belajar menampilkan sampul dan tombol menuju halaman course", async ({ page }) => {

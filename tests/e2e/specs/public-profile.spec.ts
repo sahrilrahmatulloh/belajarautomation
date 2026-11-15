@@ -79,6 +79,7 @@ test.describe("Profil publik setelah login", () => {
   test('"Lihat sebagai publik" membuka profil sendiri dengan keterangan pemilik', async ({ page }) => {
     const ownProfile = new ProfilePage(page);
     await ownProfile.goto();
+    await ownProfile.openActions();
     await ownProfile.viewAsPublicLink.click();
 
     await expect(page).toHaveURL(`/u/${OWN_USERNAME}`);

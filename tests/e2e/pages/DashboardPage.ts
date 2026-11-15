@@ -30,6 +30,11 @@ export class DashboardPage extends BasePage {
     this.calendarActivityLink = this.calendar.getByRole("link", { name: "Aktivitas" });
   }
 
+  // Angka statistik di bawah judulnya, mis. statValue("Materi Selesai").
+  statValue(label: string) {
+    return this.stats.getByRole("heading", { level: 3, name: label }).locator("xpath=following-sibling::p");
+  }
+
   // Nama tombol tanggal, mis. "16 November 2026" atau "16 November 2026, ada aktivitas belajar".
   calendarDay(name: string) {
     return this.calendar.getByRole("button", { name, exact: true });

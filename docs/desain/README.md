@@ -20,6 +20,8 @@ Menambah mockup: simpan PNG di folder ini dengan nama fiturnya, lalu jalankan `n
 - Mockup menampilkan profil sendiri. Profil publik memakai banner yang sama tanpa ikon pensil di avatar dan tanpa tombol aksi (FR-13).
 - Banner pada mockup adalah tema Padang Rumput; banner mengikuti tema aktif pengguna.
 - Kucing 3D di sisi kanan banner pada mockup tidak diterapkan. Konsepnya sedang dirancang ulang, dan banner hanya menampilkan avatar aktif (PRD v2.45, FR-12).
+- Ringkasan pada mockup memuat kartu statistik; sejak PRD v2.46 Ringkasan profil sendiri hanya berisi empat kartu berukuran sama (Progres XP, Achievement, Progress Rank, Aktivitas Terbaru) (FR-13).
+- Di layar kecil tombol aksi banner diringkas ke dalam tombol menu (PRD v2.46, FR-13); mockup hanya menampilkan desktop.
 
 ## Perbedaan `creator-mode.webp`
 

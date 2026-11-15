@@ -1,9 +1,16 @@
 # BELAJARAUTOMATION.COM
 ## Product Requirements Document (PRD)
-**Versi:** 2.45  
+**Versi:** 2.46  
 **Status:** Draft — Acuan Pengembangan Produk  
 **Platform:** Web Application  
 **Target Pengguna:** Pemula hingga praktisi QA, Software Testing, dan Programming
+
+### Perubahan di Versi 2.46
+- Welcome Banner dashboard hanya menampilkan latar tema, tanpa avatar kucing (FR-01, FR-12).
+- Kartu Rank & XP di dashboard memakai latar gradasi warna identitas rank (FR-01).
+- Ringkasan profil berisi empat kartu berukuran sama: Progres XP, Achievement, Progress Rank, dan Aktivitas Terbaru. Kartu statistik dihapus dari Ringkasan profil sendiri; profil publik tetap menampilkannya (FR-13).
+- Grafik Progres XP memiliki tinggi tetap di semua ukuran layar (FR-13).
+- Di layar kecil, tombol aksi banner profil diringkas ke dalam tombol menu (FR-13).
 
 ### Perubahan di Versi 2.45
 - Kucing 3D di banner profil dihapus sementara konsep visualnya dirancang ulang. Banner profil cukup menampilkan avatar aktif (foto profil) pengguna (FR-12, FR-13).
@@ -381,16 +388,15 @@ Memberikan gambaran ringkas mengenai aktivitas belajar dan perkembangan pengguna
 **B. Welcome Banner**
 - Sapaan kepada pengguna.
 - Deskripsi singkat platform.
-- Avatar kucing aktif pengguna dalam ukuran besar.
 - Latar banner sesuai tema banner aktif pengguna (FR-12).
-- Pengguna baru melihat avatar Kucing Putih Basic dan tema gratis bawaan (Padang Rumput).
+- Welcome Banner tidak menampilkan avatar; avatar aktif tetap tampil di header, profil, dan leaderboard.
+- Pengguna baru melihat tema gratis bawaan (Padang Rumput).
 
 Ketentuan Welcome Banner:
 - Tema banner hanya berlaku di Welcome Banner dan banner profil; bagian website lainnya mengikuti brand guideline.
 - Struktur konten banner (tagline, sapaan, deskripsi) dan posisinya tetap sama di semua tema.
 - Welcome Banner tidak menampilkan kutipan motivasi.
 - Teks banner harus tetap terbaca dengan kontras memadai pada semua tema, di mode terang maupun gelap.
-- Pada layar kecil, avatar menyesuaikan ukuran atau posisi agar tidak menutupi teks.
 
 **C. Rank & XP**
 - Emblem tameng rank saat ini (lihat FR-05). Emblem tidak dipengaruhi avatar atau tema.
@@ -400,6 +406,7 @@ Ketentuan Welcome Banner:
 - Persentase progress.
 - Informasi rank berikutnya.
 - Tombol "Lihat detail rank" menuju halaman Rank & XP (FR-05).
+- Latar kartu berupa gradasi warna identitas rank saat ini (FR-05) di atas dasar gelap, sehingga kartu ikut berubah saat naik rank. Teks tetap terbaca dengan kontras memadai di semua rank.
 
 **D. Kalender Belajar**
 - Tampilan kalender bulanan.
@@ -1223,7 +1230,7 @@ Memberikan identitas brand yang mudah dikenali dan sarana ekspresi diri pengguna
 | Bentuk | Tameng berwarna identitas rank (FR-05) | Ilustrasi kucing dari beberapa jenis dan gaya | Ilustrasi latar banner |
 | Cara memperoleh | Naik rank melalui XP yang valid | Gratis atau melalui Pro/Premium | Gratis atau melalui Pro/Premium |
 | Dipilih pengguna | Tidak; mengikuti rank | Ya, satu avatar aktif | Ya, satu tema aktif |
-| Tampil di | Kartu Rank & XP, profil, leaderboard | Foto profil, header, leaderboard, Welcome Banner, profil | Welcome Banner dan banner profil |
+| Tampil di | Kartu Rank & XP, profil, leaderboard | Foto profil, header, leaderboard, profil | Welcome Banner dan banner profil |
 | Memengaruhi XP, rank, leaderboard | Tidak | Tidak | Tidak |
 
 ### Avatar kucing
@@ -1232,7 +1239,7 @@ Memberikan identitas brand yang mudah dikenali dan sarana ekspresi diri pengguna
 - Avatar = satu jenis kucing dengan satu gaya, mis. "Kucing Tuxedo Ninja".
 - Kucing putih Basic menjadi avatar bawaan setiap pengguna baru.
 - Semua avatar memakai gaya ilustrasi yang sama dengan maskot resmi agar terasa satu keluarga.
-- Avatar tampil di header, halaman profil, leaderboard, dan Welcome Banner.
+- Avatar tampil di header, halaman profil, dan leaderboard. Welcome Banner tidak menampilkan avatar.
 - Avatar tidak menggantikan emblem rank.
 
 ### Gaya avatar
@@ -1258,7 +1265,7 @@ Ketentuan:
 
 Setiap avatar memiliki:
 - ID unik, nama, jenis kucing, dan gaya.
-- Aset ukuran kecil (32–48px, untuk header dan leaderboard) dan ukuran besar (untuk profil dan Welcome Banner).
+- Aset ukuran kecil (32–48px, untuk header dan leaderboard) dan ukuran besar (untuk profil).
 - Tingkat akses: gratis atau berbayar (Pro/Premium).
 
 ### Tema banner
@@ -1362,7 +1369,7 @@ Ketentuan:
 - Tidak ada lencana verifikasi atau penanda status membership di samping nama.
 - Profil publik (`/u/username`) memakai banner yang sama tanpa ikon pensil pada avatar dan tanpa tombol aksi.
 - Teks banner tetap terbaca dengan kontras memadai di semua tema, di mode terang maupun gelap.
-- Di layar kecil, isi banner tersusun ke bawah dan tombol aksi menjadi satu baris.
+- Di layar kecil, isi banner tersusun ke bawah dan keempat tombol aksi diringkas ke dalam satu tombol menu (ikon garis tiga, nama aksesibel "Aksi profil") di kanan atas banner. Menekan tombol menu menampilkan keempat tombol aksi dalam satu baris di bawah isi banner, tanpa menutupi teks; menekannya lagi, menekan Escape, atau mengklik di luar menu menutupnya.
 - Setiap tombol ikon memiliki nama aksesibel dan tooltip.
 
 ### Tab profil
@@ -1380,18 +1387,17 @@ Ketentuan:
 - Progress per kategori materi dan progress roadmap tidak ditampilkan di profil; progres tersebut ada di halaman Belajar (FR-02) dan Roadmap (FR-03).
 
 ### Ringkasan
-Urutan dari atas ke bawah:
+Empat kartu berukuran sama: dua kolom × dua baris di layar lebar, bertumpuk satu kolom di layar kecil. Urutannya:
 
-1. **Kartu statistik** — empat kartu dalam satu baris (dua kolom di layar kecil): Materi Selesai, Challenge Selesai, Achievement (jumlah yang tercapai), dan Total XP. Arti setiap angka mengikuti FR-05 dan sama dengan kartu statistik di dashboard.
-2. **Tiga kartu berdampingan** (bertumpuk di layar kecil):
-   - **Progres XP** — grafik garis total XP kumulatif per hari dengan pilihan periode 7 Hari, 30 Hari (bawaan), dan 90 Hari. Titik terakhir diberi label total XP saat ini. Grafik memiliki ringkasan teks untuk pembaca layar. Jika belum ada aktivitas di periode tersebut, tampil empty state.
-   - **Achievement** — diagram cincin persentase achievement yang tercapai dari seluruh achievement, jumlah "Tercapai" dan "Belum Tercapai", serta "Achievement Terbaru": paling banyak 3 badge terbaru dan penanda sisa (mis. "+4"). Kartu dapat diklik menuju tab Pencapaian.
-   - **Progress Rank** — emblem rank saat ini (Saat ini) dan rank berikutnya (Berikutnya), bar progres, XP saat ini terhadap batas rank berikutnya (mis. "420 / 1.000 XP"), dan sisa XP. Pengguna Master melihat emblem Master dengan keterangan rank tertinggi. Kartu memiliki tautan ke halaman Rank & XP (FR-05).
-3. **Aktivitas Terbaru** — tiga aktivitas terakhir: ikon jenis aktivitas, judul, keterangan (course atau jenis challenge), XP yang diperoleh, dan waktu relatif. Tautan "Lihat semua" membuka tab Aktivitas.
+1. **Progres XP** — grafik garis total XP kumulatif per hari dengan pilihan periode 7 Hari, 30 Hari (bawaan), dan 90 Hari. Titik terakhir diberi label total XP saat ini. Grafik memiliki ringkasan teks untuk pembaca layar. Jika belum ada aktivitas di periode tersebut, tampil empty state. Tinggi grafik tetap sama di semua ukuran layar dan lebarnya mengikuti kartu, sehingga grafik tidak membesar di desktop atau mengecil di mobile.
+2. **Achievement** — diagram cincin persentase achievement yang tercapai dari seluruh achievement, jumlah "Tercapai" dan "Belum Tercapai", serta "Achievement Terbaru": paling banyak 3 badge terbaru dan penanda sisa (mis. "+4"). Kartu dapat diklik menuju tab Pencapaian.
+3. **Progress Rank** — emblem rank saat ini (Saat ini) dan rank berikutnya (Berikutnya), bar progres, XP saat ini terhadap batas rank berikutnya (mis. "420 / 1.000 XP"), dan sisa XP. Pengguna Master melihat emblem Master dengan keterangan rank tertinggi. Kartu memiliki tautan ke halaman Rank & XP (FR-05).
+4. **Aktivitas Terbaru** — tiga aktivitas terakhir: ikon jenis aktivitas, judul, keterangan (course atau jenis challenge), XP yang diperoleh, dan waktu relatif. Tautan "Lihat semua" membuka tab Aktivitas.
 
 Ketentuan:
+- Ringkasan profil sendiri tidak memuat kartu statistik; angka Materi Selesai, Challenge Selesai, dan Total XP ada di dashboard (FR-01).
 - Emblem pada Progress Rank memakai emblem tameng dengan warna identitas rank masing-masing (FR-05), bukan warna seragam.
-- Pada profil publik, Ringkasan menampilkan bagian yang sama kecuali grafik Progres XP dan Aktivitas Terbaru, karena riwayat aktivitas detail hanya terlihat oleh pemilik profil.
+- Profil publik menampilkan kartu statistik (Materi Selesai, Challenge Selesai, Achievement, dan Total XP; arti angka mengikuti FR-05), Achievement, dan Progress Rank. Grafik Progres XP dan Aktivitas Terbaru tidak ditampilkan karena riwayat aktivitas detail hanya terlihat oleh pemilik profil.
 
 ### Kustomisasi
 - Dibuka dari ikon pensil pada avatar di banner profil sendiri. Kustomisasi bukan tab, memiliki alamat sendiri sehingga dapat dibuka langsung, dan menyediakan tombol "Kembali ke profil".
@@ -1402,7 +1408,7 @@ Ketentuan:
 - Setiap gaya menampilkan grid jenis kucing yang gambarnya sudah tersedia. Gaya yang belum punya gambar tetap tampil dengan keterangan "Segera hadir".
 - Filter Semua, Dimiliki, dan Terkunci berlaku di dalam gaya yang dipilih.
 - Preview profil memperlihatkan hasil pilihan sebelum disimpan.
-- "Simpan Pilihan" menyimpan avatar dan tema ke akun. Setelah disimpan, pilihan tampil di header profil, menu profil, Welcome Banner, Playground, dan kartu "Posisi kamu" di leaderboard. Akun demo di DEV hanya melihat pratinjau.
+- "Simpan Pilihan" menyimpan avatar dan tema ke akun. Setelah disimpan, avatar tampil di header profil, menu profil, Playground, dan kartu "Posisi kamu" di leaderboard, sedangkan tema tampil di Welcome Banner dan banner profil. Akun demo di DEV hanya melihat pratinjau.
 - Avatar dan tema yang sedang dipakai ditandai "Digunakan" pada kartu koleksi. Tombol "Simpan Pilihan" berada di bawah pratinjau profil.
 - Item terkunci menampilkan cara memperolehnya (mis. "Tersedia di Pro dan Premium").
 
@@ -2431,7 +2437,7 @@ Pengembangan harus dilakukan secara bertahap agar perubahan tidak merusak fitur 
 - Pengaturan tampilan tidak mengubah progress, XP, atau entitlement.
 
 ## Avatar, Tema, Profil, dan Achievement
-- Welcome Banner dan banner profil menampilkan avatar dan tema aktif pengguna.
+- Welcome Banner menampilkan tema aktif tanpa avatar; banner profil menampilkan avatar dan tema aktif pengguna.
 - Teks banner tetap terbaca pada semua tema, di mode terang maupun gelap.
 - Bagian website di luar banner tetap mengikuti brand guideline apa pun temanya.
 - Pengguna Basic hanya dapat memilih avatar dan tema gratis.
