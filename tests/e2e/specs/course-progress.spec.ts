@@ -2,7 +2,6 @@ import { expect, test } from "../fixtures/auth";
 import { AVAILABLE_COURSE_SLUGS } from "../fixtures/testData";
 import { CourseDetailPage } from "../pages/CourseDetailPage";
 import { DashboardPage } from "../pages/DashboardPage";
-import { ProfilePage } from "../pages/ProfilePage";
 
 test.use({ role: "user" });
 
@@ -43,7 +42,7 @@ test.describe("Progres di halaman detail course", () => {
     await expect(new CourseDetailPage(page, "qa-fundamentals").progressText).toHaveText("8 / 16 materi");
   });
 
-  test("jumlah lesson selesai di semua course sama dengan statistik profil", async ({ page }) => {
+  test("jumlah lesson selesai di semua course sama dengan statistik dashboard", async ({ page }) => {
     let total = 0;
     for (const slug of AVAILABLE_COURSE_SLUGS) {
       const course = new CourseDetailPage(page, slug);
@@ -52,10 +51,11 @@ test.describe("Progres di halaman detail course", () => {
       total += await course.completedMarks.count();
     }
 
-    const profile = new ProfilePage(page);
-    await profile.goto();
+    // Ringkasan profil tidak lagi memuat kartu statistik (PRD FR-13 v2.46).
+    const dashboard = new DashboardPage(page);
+    await dashboard.goto();
 
-    await expect(profile.stats.getByRole("article").filter({ hasText: "Materi Selesai" })).toContainText(String(total));
+    await expect(dashboard.statValue("Materi Selesai")).toContainText(String(total));
     expect(total).toBe(19);
   });
 });

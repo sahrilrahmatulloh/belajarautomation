@@ -9,7 +9,6 @@ import { LESSON_CONTENT, UNWRITTEN_LESSON } from "../fixtures/testData";
 import { CourseDetailPage } from "../pages/CourseDetailPage";
 import { DashboardPage } from "../pages/DashboardPage";
 import { LessonPage } from "../pages/LessonPage";
-import { ProfilePage } from "../pages/ProfilePage";
 
 const { courseSlug, courseTitle, lessonSlug, lessonTitle, nextLessonSlug, moduleTitle, totalLessons } = LESSON_CONTENT;
 
@@ -90,22 +89,20 @@ test.describe("Lesson yang sudah punya isi", () => {
     await expect(xp).toHaveText(expected);
   });
 
-  test("lesson selesai ikut terhitung di profil", async ({ page }) => {
-    const profile = new ProfilePage(page);
-    await profile.goto();
-    const lessons = profile.stats.getByRole("article").filter({ hasText: "Materi Selesai" });
+  test("lesson selesai ikut terhitung di statistik dashboard", async ({ page }) => {
+    // Ringkasan profil tidak lagi memuat kartu statistik (PRD FR-13 v2.46).
+    const dashboard = new DashboardPage(page);
+    await dashboard.goto();
+    const lessons = dashboard.statValue("Materi Selesai");
     await expect(lessons).toBeVisible();
     const before = Number((await lessons.innerText()).replace(/\D/g, ""));
 
     await lesson.goto();
     await lesson.completeAndNext();
     await expect(page).toHaveURL(`/learn/${courseSlug}/${nextLessonSlug}`);
-    await profile.goto();
+    await dashboard.goto();
 
     await expect(lessons).toContainText(String(before + 1));
-    // Progres per course tidak lagi di profil (PRD FR-13 v2.43); course tampil di Lanjutkan Belajar dashboard.
-    const dashboard = new DashboardPage(page);
-    await dashboard.goto();
     await expect(dashboard.continueLearning).toContainText(courseTitle);
   });
 

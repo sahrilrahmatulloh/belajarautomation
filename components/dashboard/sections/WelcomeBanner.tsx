@@ -1,16 +1,13 @@
 "use client";
 
-import Image from "next/image";
-
 import ThemeBackdrop from "@/components/common/ThemeBackdrop";
 import { useAppearance } from "@/lib/useAppearance";
 import { useSession } from "@/lib/session";
 
-// Welcome Banner (PRD FR-01 bagian B): latar mengikuti tema banner aktif dan
-// avatar aktif tampil besar di kanan bawah, kecuali bila ilustrasi tema sudah
-// memuat karakter kucing sendiri.
+// Welcome Banner (PRD FR-01 bagian B): latar mengikuti tema banner aktif, tanpa avatar
+// (v2.46); avatar tetap tampil di header, profil, dan leaderboard.
 export default function WelcomeBanner() {
-  const { avatar, theme } = useAppearance();
+  const { theme } = useAppearance();
   const session = useSession();
 
   return (
@@ -36,16 +33,6 @@ export default function WelcomeBanner() {
         aria-hidden="true"
         className="absolute inset-0 -z-10 hidden bg-gradient-to-r from-card from-20% via-card/80 via-45% to-transparent to-75% sm:block"
       />
-
-      {!theme.hasCharacter && (
-        <Image
-          src={avatar.image}
-          alt=""
-          width={192}
-          height={192}
-          className="absolute bottom-3 right-4 -z-10 hidden h-32 w-32 drop-shadow-lg sm:block lg:bottom-4 lg:right-8 lg:h-44 lg:w-44"
-        />
-      )}
 
       {/* Struktur teks sama di semua tema */}
       <div className="relative px-5 pb-5 sm:max-w-[60%] sm:p-6 lg:max-w-[52%]">

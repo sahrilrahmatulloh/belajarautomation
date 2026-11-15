@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { TrendingUp } from "lucide-react";
 
 import { dateFromDaysAgo, formatNumber } from "@/lib/format";
@@ -13,12 +13,13 @@ const PERIODS = [
 ];
 const DEFAULT_DAYS = 30;
 
-// Ukuran kanvas SVG; tampil responsif mengikuti lebar kartu.
-// Lebar mendekati lebar kartu di desktop agar teks sumbu tidak mengecil.
-const WIDTH = 400;
-const HEIGHT = 210;
+// Tinggi grafik tetap di semua layar; lebar kanvas mengikuti lebar kartu sehingga teks sumbu
+// selalu 12px dan grafik tidak membesar di desktop atau mengecil di mobile.
+const DEFAULT_WIDTH = 400;
+const HEIGHT = 180;
 const PAD = { top: 30, right: 16, bottom: 28, left: 40 };
-const X_LABELS = 7;
+// Jumlah label tanggal menyesuaikan lebar agar tidak bertumpuk di layar sempit.
+const xLabelCount = (width: number) => (width < 360 ? 4 : width < 480 ? 5 : 7);
 
 const shortDate = new Intl.DateTimeFormat("id-ID", { day: "numeric", month: "short" });
 
@@ -42,6 +43,19 @@ export default function XpProgressChart({
   // Grafik hanya dirender di browser, jadi tanggalnya mengikuti zona waktu pengguna.
   const [today] = useState(() => new Date());
   const selectId = useId();
+  const chartRef = useRef<HTMLDivElement>(null);
+  const [WIDTH, setWidth] = useState(DEFAULT_WIDTH);
+
+  useEffect(() => {
+    const element = chartRef.current;
+    if (!element) return;
+    const observer = new ResizeObserver(([entry]) => {
+      const width = Math.round(entry.contentRect.width);
+      if (width > 0) setWidth(width);
+    });
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, []);
 
   const points = cumulativeXp(totalXp, gainsByDaysAgo, days);
   const first = points[0].xp;
@@ -54,8 +68,9 @@ export default function XpProgressChart({
 
   const line = points.map((point, index) => `${index === 0 ? "M" : "L"}${x(index).toFixed(1)},${y(point.xp).toFixed(1)}`).join(" ");
   const area = `${line} L${x(points.length - 1).toFixed(1)},${y(0)} L${x(0).toFixed(1)},${y(0)} Z`;
+  const labelCount = xLabelCount(WIDTH);
   const yTicks = [0, 0.25, 0.5, 0.75, 1].map((ratio) => Math.round(maxY * ratio));
-  const xLabelIndexes = Array.from({ length: X_LABELS }, (_, index) => Math.round((index / (X_LABELS - 1)) * (points.length - 1)));
+  const xLabelIndexes = Array.from({ length: labelCount }, (_, index) => Math.round((index / (labelCount - 1)) * (points.length - 1)));
   const lastX = x(points.length - 1);
   const lastY = y(totalXp);
   const gradientId = `${selectId}-area`;
@@ -92,54 +107,56 @@ export default function XpProgressChart({
           : `Belum ada XP baru dalam ${periodLabel} terakhir. Total XP ${formatNumber(totalXp)}.`}
       </p>
 
-      {gained <= 0 && totalXp === 0 ? (
-        <p className="flex flex-1 items-center justify-center py-10 text-center text-sm text-muted-foreground">
-          Belum ada XP. Selesaikan lesson atau latihan pertamamu untuk mulai melihat progres.
-        </p>
-      ) : (
-        <svg viewBox={`0 0 ${WIDTH} ${HEIGHT}`} aria-hidden="true" className="mt-3 h-auto w-full overflow-visible">
-          <defs>
-            <linearGradient id={gradientId} x1="0" x2="0" y1="0" y2="1">
-              <stop offset="0%" stopColor="var(--color-primary)" stopOpacity="0.35" />
-              <stop offset="100%" stopColor="var(--color-primary)" stopOpacity="0" />
-            </linearGradient>
-          </defs>
-
-          {yTicks.map((tick) => (
-            <g key={tick}>
-              <line x1={PAD.left} x2={WIDTH - PAD.right} y1={y(tick)} y2={y(tick)} className="stroke-border" strokeDasharray={tick === 0 ? undefined : "3 4"} />
-              <text x={PAD.left - 8} y={y(tick)} dy="0.32em" textAnchor="end" className="fill-muted-foreground text-[12px] tabular-nums">
-                {formatNumber(tick)}
+      <div ref={chartRef} className="mt-3 flex min-w-0 flex-1 flex-col justify-end">
+        {gained <= 0 && totalXp === 0 ? (
+          <p className="flex flex-1 items-center justify-center py-10 text-center text-sm text-muted-foreground">
+            Belum ada XP. Selesaikan lesson atau latihan pertamamu untuk mulai melihat progres.
+          </p>
+        ) : (
+          <svg viewBox={`0 0 ${WIDTH} ${HEIGHT}`} width="100%" height={HEIGHT} aria-hidden="true" className="block overflow-visible">
+            <defs>
+              <linearGradient id={gradientId} x1="0" x2="0" y1="0" y2="1">
+                <stop offset="0%" stopColor="var(--color-primary)" stopOpacity="0.35" />
+                <stop offset="100%" stopColor="var(--color-primary)" stopOpacity="0" />
+              </linearGradient>
+            </defs>
+  
+            {yTicks.map((tick) => (
+              <g key={tick}>
+                <line x1={PAD.left} x2={WIDTH - PAD.right} y1={y(tick)} y2={y(tick)} className="stroke-border" strokeDasharray={tick === 0 ? undefined : "3 4"} />
+                <text x={PAD.left - 8} y={y(tick)} dy="0.32em" textAnchor="end" className="fill-muted-foreground text-[12px] tabular-nums">
+                  {formatNumber(tick)}
+                </text>
+              </g>
+            ))}
+  
+            {xLabelIndexes.map((index, position) => (
+              <text
+                key={`${index}-${position}`}
+                x={x(index)}
+                y={HEIGHT - 6}
+                // Label ujung kanan rata kanan agar tidak keluar kartu; lainnya di tengah titiknya.
+                textAnchor={position === labelCount - 1 ? "end" : "middle"}
+                className="fill-muted-foreground text-[12px]"
+              >
+                {shortDate.format(dateFromDaysAgo(today, points[index].daysAgo))}
+              </text>
+            ))}
+  
+            <path d={area} fill={`url(#${gradientId})`} />
+            <path d={line} fill="none" stroke="var(--color-primary)" strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round" />
+  
+            <circle cx={lastX} cy={lastY} r="7" fill="var(--color-primary)" fillOpacity="0.25" />
+            <circle cx={lastX} cy={lastY} r="4" fill="var(--color-primary)" className="stroke-card" strokeWidth="2" />
+            <g transform={`translate(${Math.min(lastX, WIDTH - PAD.right - 30)}, ${Math.max(lastY - 20, 12)})`}>
+              <rect x="-34" y="-12" width="68" height="22" rx="6" fill="var(--color-primary)" />
+              <text textAnchor="middle" dy="0.32em" y="-1" className="fill-primary-foreground text-[12px] font-semibold tabular-nums">
+                {formatNumber(totalXp)} XP
               </text>
             </g>
-          ))}
-
-          {xLabelIndexes.map((index, position) => (
-            <text
-              key={`${index}-${position}`}
-              x={x(index)}
-              y={HEIGHT - 6}
-              // Label ujung kanan rata kanan agar tidak keluar kartu; lainnya di tengah titiknya.
-              textAnchor={position === X_LABELS - 1 ? "end" : "middle"}
-              className="fill-muted-foreground text-[12px]"
-            >
-              {shortDate.format(dateFromDaysAgo(today, points[index].daysAgo))}
-            </text>
-          ))}
-
-          <path d={area} fill={`url(#${gradientId})`} />
-          <path d={line} fill="none" stroke="var(--color-primary)" strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round" />
-
-          <circle cx={lastX} cy={lastY} r="7" fill="var(--color-primary)" fillOpacity="0.25" />
-          <circle cx={lastX} cy={lastY} r="4" fill="var(--color-primary)" className="stroke-card" strokeWidth="2" />
-          <g transform={`translate(${Math.min(lastX, WIDTH - PAD.right - 30)}, ${Math.max(lastY - 20, 12)})`}>
-            <rect x="-34" y="-12" width="68" height="22" rx="6" fill="var(--color-primary)" />
-            <text textAnchor="middle" dy="0.32em" y="-1" className="fill-primary-foreground text-[12px] font-semibold tabular-nums">
-              {formatNumber(totalXp)} XP
-            </text>
-          </g>
-        </svg>
-      )}
+          </svg>
+        )}
+      </div>
     </section>
   );
 }

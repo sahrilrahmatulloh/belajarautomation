@@ -11,13 +11,26 @@ test.describe("Tab Ringkasan profil", () => {
     await profile.goto();
   });
 
-  test("statistik sama dengan riwayat aktivitas akun demo", async () => {
-    const stats = profile.stats.getByRole("article");
+  test("hanya berisi Progres XP, Achievement, Progress Rank, dan Aktivitas Terbaru dengan ukuran sama", async ({ isMobile }) => {
+    const cards = [profile.xpProgress, profile.achievementCard, profile.rankProgress, profile.recentActivity];
+    for (const card of cards) await expect(card).toBeVisible();
+    // Kartu statistik dihapus dari Ringkasan (PRD FR-13 v2.46); statistik ada di dashboard.
+    await expect(profile.stats).toHaveCount(0);
 
-    await expect(stats.filter({ hasText: "Total XP" })).toContainText("420");
-    await expect(stats.filter({ hasText: "Materi Selesai" })).toContainText("19");
-    await expect(stats.filter({ hasText: "Challenge Selesai" })).toContainText("2");
-    await expect(stats.filter({ hasText: "Achievement" })).toContainText("7");
+    const boxes = await Promise.all(cards.map((card) => card.boundingBox()));
+    const widths = boxes.map((box) => Math.round(box!.width));
+    expect(new Set(widths).size).toBe(1);
+    if (!isMobile) {
+      // 2×2 di layar lebar: dua kartu per baris dengan tinggi yang sama.
+      expect(Math.round(boxes[0]!.y)).toBe(Math.round(boxes[1]!.y));
+      expect(new Set(boxes.map((box) => Math.round(box!.height))).size).toBe(1);
+    }
+  });
+
+  test("grafik Progres XP memiliki tinggi tetap di layar lebar maupun sempit", async () => {
+    const chart = profile.xpProgress.locator("svg:has(linearGradient)");
+    await expect(chart).toBeVisible();
+    expect(Math.round((await chart.boundingBox())!.height)).toBe(180);
   });
 
   test("kartu Achievement menampilkan persentase dan 3 badge terbaru, lalu menuju tab Pencapaian", async ({ page }) => {

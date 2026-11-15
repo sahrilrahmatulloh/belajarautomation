@@ -49,12 +49,39 @@ test.describe("Profil", () => {
 
   test("tombol aksi banner menuju Edit profil, Pengaturan, dan profil publik", async () => {
     await profile.goto();
+    await profile.openActions();
 
     await expect(profile.bannerActions.getByRole("link").or(profile.shareButton)).toHaveCount(4);
     await expect(profile.editProfileLink).toHaveAttribute("href", "/settings#informasi-profil");
     await expect(profile.settingsLink).toHaveAttribute("href", "/settings");
     await expect(profile.viewAsPublicLink).toHaveAttribute("href", `/u/${OWN_USERNAME}`);
     await expect(profile.shareButton).toBeVisible();
+  });
+
+  test("di mobile tombol aksi tersembunyi di balik menu; di desktop selalu tampil", async ({ page, isMobile }) => {
+    await profile.goto();
+
+    if (!isMobile) {
+      await expect(profile.actionsMenuButton).toBeHidden();
+      await expect(profile.bannerActions).toBeVisible();
+      return;
+    }
+    await expect(profile.bannerActions).toBeHidden();
+    await expect(profile.actionsMenuButton).toHaveAttribute("aria-expanded", "false");
+
+    await profile.openActions();
+    await expect(profile.actionsMenuButton).toHaveAttribute("aria-expanded", "true");
+    await expect(profile.bannerActions.getByRole("link").or(profile.shareButton)).toHaveCount(4);
+    // Keempat tombol berada utuh di dalam banner, di bawah progres XP, tanpa menutupi teks.
+    const header = (await profile.header.boundingBox())!;
+    const actions = (await profile.bannerActions.boundingBox())!;
+    const progress = (await profile.header.getByRole("progressbar").boundingBox())!;
+    expect(actions.y + actions.height).toBeLessThanOrEqual(header.y + header.height);
+    expect(actions.y).toBeGreaterThan(progress.y + progress.height);
+
+    await page.keyboard.press("Escape");
+    await expect(profile.bannerActions).toBeHidden();
+    await expect(profile.actionsMenuButton).toBeFocused();
   });
 
   test("akun demo memakai Kucing Putih di tema Padang Rumput, tanpa kucing 3D", async ({ page }) => {

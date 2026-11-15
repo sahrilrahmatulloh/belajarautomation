@@ -1,9 +1,9 @@
 "use client";
 
-import { ReactNode } from "react";
+import { ReactNode, useEffect, useId, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Eye, Pencil, Settings } from "lucide-react";
+import { Eye, Menu, Pencil, Settings, X } from "lucide-react";
 
 import ThemeBackdrop from "@/components/common/ThemeBackdrop";
 import LinkifiedText from "@/components/common/LinkifiedText";
@@ -12,7 +12,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { getRankProgress } from "@/data/ranks";
 import { formatNumber } from "@/lib/format";
 
-import BannerAction from "./BannerAction";
+import BannerAction, { BANNER_ACTION_CLASS } from "./BannerAction";
 import { CUSTOMIZATION_TAB } from "./ProfileTabs";
 
 const CUSTOMIZATION_HREF = `/profile?tab=${CUSTOMIZATION_TAB}`;
@@ -47,6 +47,7 @@ export default function ProfileHeader({
   shareAction,
 }: ProfileHeaderProps) {
   const { rank, nextRank, xpToNext, percent } = getRankProgress(xp);
+  const { open: actionsOpen, toggle: toggleActions, menuId, buttonRef, menuRef } = useBannerActionsMenu();
 
   return (
     <section
@@ -96,7 +97,8 @@ export default function ProfileHeader({
             )}
           </div>
 
-          <div className="min-w-0 @2xl:self-end">
+          {/* Ruang kanan untuk tombol menu aksi di banner sempit, agar nama tidak tertutup. */}
+          <div className={`min-w-0 @2xl:self-end ${isOwner ? "pr-10 @2xl:pr-0" : ""}`}>
             <h1 className="line-clamp-2 break-words text-2xl font-bold tracking-tight sm:text-3xl">{displayName}</h1>
             {username && <p className="truncate text-sm text-white/80">@{username}</p>}
             {bio && (
@@ -112,15 +114,32 @@ export default function ProfileHeader({
         </div>
 
         {isOwner && (
-          <nav
-            aria-label="Aksi profil"
-            className="flex flex-wrap gap-2 @2xl:absolute @2xl:right-4 @2xl:top-1/2 @2xl:-translate-y-1/2 @2xl:flex-col"
-          >
-            <BannerAction label="Edit profil" icon={Pencil} href="/settings#informasi-profil" />
-            {shareAction}
-            <BannerAction label="Pengaturan" icon={Settings} href="/settings" />
-            {username && <BannerAction label="Lihat sebagai publik" icon={Eye} href={`/u/${username}`} />}
-          </nav>
+          <>
+            {/* Banner sempit: tombol aksi diringkas ke menu agar banner tetap minimalis (PRD FR-13). */}
+            <button
+              ref={buttonRef}
+              type="button"
+              aria-label="Aksi profil"
+              aria-expanded={actionsOpen}
+              aria-controls={menuId}
+              onClick={toggleActions}
+              className={`${BANNER_ACTION_CLASS} absolute right-4 top-4 z-10 @2xl:hidden`}
+            >
+              {actionsOpen ? <X className="h-5 w-5" aria-hidden="true" /> : <Menu className="h-5 w-5" aria-hidden="true" />}
+            </button>
+            <nav
+              ref={menuRef}
+              id={menuId}
+              aria-label="Aksi profil"
+              // Banner sempit: satu baris di bawah isi banner saat menu dibuka, agar tidak menutupi teks.
+              className={`${actionsOpen ? "flex" : "hidden"} flex-wrap gap-2 @2xl:absolute @2xl:right-4 @2xl:top-1/2 @2xl:z-10 @2xl:flex @2xl:-translate-y-1/2 @2xl:flex-col`}
+            >
+              <BannerAction label="Edit profil" icon={Pencil} href="/settings#informasi-profil" />
+              {shareAction}
+              <BannerAction label="Pengaturan" icon={Settings} href="/settings" />
+              {username && <BannerAction label="Lihat sebagai publik" icon={Eye} href={`/u/${username}`} />}
+            </nav>
+          </>
         )}
       </div>
     </section>
@@ -168,4 +187,38 @@ function RankAndXp({
       </div>
     </>
   );
+}
+
+// Menu tombol aksi di banner sempit: dibuka dengan tombol menu, ditutup lagi dengan tombol yang
+// sama, tombol Escape, atau klik di luar menu. Di banner lebar tombol aksi selalu tampil.
+function useBannerActionsMenu() {
+  const [open, setOpen] = useState(false);
+  const menuId = useId();
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const menuRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      // Escape di dalam dialog Bagikan profil hanya menutup dialognya.
+      if (event.key !== "Escape" || document.querySelector("[role=dialog]")) return;
+      setOpen(false);
+      buttonRef.current?.focus();
+    };
+    const onPointerDown = (event: PointerEvent) => {
+      const target = event.target as Node;
+      if (buttonRef.current?.contains(target) || menuRef.current?.contains(target)) return;
+      // Klik di dalam dialog atau tooltip (dirender di luar menu) tidak menutup menu.
+      if (target instanceof Element && target.closest("[role=dialog], [data-slot=tooltip-content]")) return;
+      setOpen(false);
+    };
+    document.addEventListener("keydown", onKeyDown);
+    document.addEventListener("pointerdown", onPointerDown);
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      document.removeEventListener("pointerdown", onPointerDown);
+    };
+  }, [open]);
+
+  return { open, toggle: () => setOpen((value) => !value), menuId, buttonRef, menuRef };
 }

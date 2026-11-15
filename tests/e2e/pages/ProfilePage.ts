@@ -1,4 +1,4 @@
-import { Locator, Page } from "@playwright/test";
+import { expect, Locator, Page } from "@playwright/test";
 
 import { BasePage } from "./BasePage";
 
@@ -8,6 +8,7 @@ export class ProfilePage extends BasePage {
   readonly rankEmblem: Locator;
   readonly shareButton: Locator;
   readonly bannerActions: Locator;
+  readonly actionsMenuButton: Locator;
   readonly editProfileLink: Locator;
   readonly settingsLink: Locator;
   readonly viewAsPublicLink: Locator;
@@ -37,6 +38,8 @@ export class ProfilePage extends BasePage {
     this.rankEmblem = this.header.getByRole("img", { name: /^Emblem rank / });
     this.shareButton = page.getByRole("button", { name: "Bagikan profil" });
     this.bannerActions = page.getByRole("navigation", { name: "Aksi profil" });
+    // Tombol menu yang membuka tombol aksi di banner sempit (mobile).
+    this.actionsMenuButton = this.header.getByRole("button", { name: "Aksi profil" });
     this.editProfileLink = this.bannerActions.getByRole("link", { name: "Edit profil" });
     this.settingsLink = this.bannerActions.getByRole("link", { name: "Pengaturan", exact: true });
     this.viewAsPublicLink = this.bannerActions.getByRole("link", { name: "Lihat sebagai publik" });
@@ -55,6 +58,19 @@ export class ProfilePage extends BasePage {
     this.xpChart = page.getByRole("region", { name: "XP 7 Hari Terakhir" });
     this.heatmap = page.getByRole("region", { name: "Konsistensi 30 Hari" });
     this.achievementTotal = page.getByRole("region", { name: "Progres total achievement" });
+  }
+
+  // Di banner sempit tombol aksi tersembunyi di balik menu; di banner lebar selalu tampil.
+  async openActions() {
+    await this.header.getByRole("heading", { level: 1 }).waitFor();
+    if (await this.actionsMenuButton.isVisible()) {
+      // Diulang bila klik terjadi sebelum halaman selesai hydrate.
+      await expect(async () => {
+        if ((await this.actionsMenuButton.getAttribute("aria-expanded")) !== "true") await this.actionsMenuButton.click();
+        await expect(this.bannerActions).toBeVisible({ timeout: 1_000 });
+      }).toPass();
+    }
+    await expect(this.bannerActions).toBeVisible();
   }
 
   tab(name: string) {
