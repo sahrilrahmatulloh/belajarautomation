@@ -31,7 +31,7 @@ const TYPE_OPTIONS = [
 
 // Bonus selesai course termasuk Materi karena berasal dari menyelesaikan lesson.
 const TYPES_BY_FILTER: Record<string, ActivityType[]> = {
-  materi: ["lesson", "course_complete"],
+  materi: ["lesson", "module_complete", "course_complete"],
   kuis: ["quiz"],
   challenge: ["challenge"],
   achievement: ["achievement"],

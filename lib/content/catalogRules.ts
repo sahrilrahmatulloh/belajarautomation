@@ -2,7 +2,8 @@ import CATALOG_RULES from "@/data/catalogRules.json";
 import { CHALLENGES } from "@/data/challenges";
 import { COURSES } from "@/data/courses";
 import { getRank, RANKS } from "@/data/ranks";
-import { XP_PER_CHALLENGE, XP_PER_COURSE_COMPLETION, XP_PER_LESSON, XP_PER_QUIZ } from "@/data/xp";
+import { COURSE_DETAILS } from "@/data/courseDetails";
+import { XP_PER_CHALLENGE, XP_PER_COURSE_COMPLETION, XP_PER_MODULE, XP_PER_QUIZ } from "@/data/xp";
 import { CatalogOverride, CourseCatalogState } from "@/types/AdminPlatform";
 
 // Aturan katalog (PRD FR-02, FR-05, dan FR-16 G). Daftar course fondasi dan target lesson ada di
@@ -22,11 +23,19 @@ export function courseCatalogState(courseSlug: string, overrides: Record<string,
   return { availability: course.availability, contentStatus: course.contentStatus, access: course.access, ...overrides[courseSlug] };
 }
 
-function courseXp(courseSlug: string) {
-  return (LESSON_TARGETS[courseSlug] ?? 0) * XP_PER_LESSON + XP_PER_COURSE_COMPLETION;
+// XP materi diberikan per modul (PRD FR-05 v2.47). Course yang sudah punya daftar modul memakai
+// jumlah modulnya; course lain diperkirakan 3 lesson per modul dari target lesson kurikulum.
+const LESSONS_PER_MODULE = 3;
+function moduleCount(courseSlug: string) {
+  const detail = COURSE_DETAILS.find((item) => item.courseSlug === courseSlug);
+  return detail ? detail.modules.length : Math.ceil((LESSON_TARGETS[courseSlug] ?? 0) / LESSONS_PER_MODULE);
 }
 
-// Total XP dari course dan latihan gratis, memakai target lesson kurikulum dan latihan yang ada di data.
+function courseXp(courseSlug: string) {
+  return moduleCount(courseSlug) * XP_PER_MODULE + XP_PER_COURSE_COMPLETION;
+}
+
+// Total XP dari course dan latihan gratis, memakai modul course dan latihan yang ada di data.
 export function freeXpTotal(overrides: Record<string, CatalogOverride>) {
   const isFree = (courseSlug: string) => courseCatalogState(courseSlug, overrides)?.access === "free";
   const fromCourses = COURSES.filter((course) => isFree(course.slug)).reduce((total, course) => total + courseXp(course.slug), 0);

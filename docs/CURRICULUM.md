@@ -1,7 +1,7 @@
 # Kurikulum BelajarAutomation
 
-**Versi:** 2.3
-**Acuan:** `docs/PRD.md` v2.13 — FR-02 (Learning Center), FR-03 (Roadmap), FR-05 (XP dan Rank), FR-07 (Blog), FR-10 (Membership)
+**Versi:** 2.4
+**Acuan:** `docs/PRD.md` v2.47 — FR-02 (Learning Center), FR-03 (Roadmap), FR-05 (XP dan Rank), FR-07 (Blog), FR-10 (Membership)
 
 Dokumen ini adalah sumber acuan konten Learning Center dan Roadmap. Data di `data/` wajib mengikuti dokumen ini. Jika kurikulum berubah, perbarui dokumen ini lebih dulu, lalu sesuaikan data. Jika dokumen ini bertentangan dengan PRD, PRD yang berlaku.
 
@@ -35,7 +35,7 @@ Aturan:
 
 Aturan pembagian:
 - Course fondasi wajib `free`, minimal: qa-fundamentals, dasar-web-api, test-design, bug-reporting, git-github, dan setidaknya satu bahasa pemrograman beserta satu tool automation.
-- Total XP dari course dan latihan `free` wajib cukup untuk mencapai rank Master (saat ini 5.500 XP, PRD FR-05). Jika pembagian membuat XP gratis kurang dari itu, batas rank wajib diturunkan.
+- Total XP dari course dan latihan `free` wajib cukup untuk mencapai rank Master (saat ini 4.400 XP, PRD FR-05). Jika pembagian membuat XP gratis kurang dari itu, batas rank wajib diturunkan.
 - Course yang sudah `free` tidak boleh diubah menjadi `premium` setelah ada pengguna yang mempelajarinya.
 
 > **Status saat ini:** pembagian course gratis dan premium belum ditetapkan. Sampai diputuskan, seluruh course diperlakukan sebagai `free`.
@@ -55,7 +55,7 @@ Beginner, Intermediate, atau Advanced, sesuai kesiapan yang dibutuhkan untuk mem
 
 ### Target lesson
 - Kolom "Target lesson" adalah rencana jumlah lesson. Jumlah lesson aktual di data boleh berbeda selama pengembangan.
-- Total target sekitar 206 lesson. Angka ini menjadi dasar perhitungan batas XP rank di PRD FR-05 (10 XP per lesson, 50 XP bonus course tuntas, ditambah XP kuis dan challenge).
+- Total target sekitar 206 lesson. Angka ini menjadi dasar perhitungan batas XP rank di PRD FR-05 (10 XP per modul selesai, 50 XP bonus course tuntas, ditambah XP kuis dan challenge).
 - Jika total lesson aktual berubah signifikan, batas XP rank wajib ditinjau ulang agar rank Master tetap dapat dicapai.
 
 ### Format lesson

@@ -10,7 +10,7 @@ import { ACTIVE_AVATAR, ACTIVE_THEME } from "@/data/dummy/appearance";
 import { DUMMY_LEADERBOARD_USERS, LeaderboardUser } from "@/data/dummy/leaderboard";
 import { DUMMY_PROFILE } from "@/data/dummy/profile";
 import { DEFAULT_THEME_ID, getTheme } from "@/data/themes";
-import { XP_PER_CHALLENGE, XP_PER_LESSON } from "@/data/xp";
+import { XP_PER_CHALLENGE, XP_PER_COURSE_COMPLETION, XP_PER_MODULE } from "@/data/xp";
 import { AchievementState, getAchievementStates } from "@/lib/achievements";
 import { getCompletedLessonCount } from "@/lib/learningProgress";
 
@@ -39,21 +39,25 @@ function isEarned(id: string, xp: number, lessons: number, challenges: number) {
     case "rajin-belajar": return lessons >= 50;
     case "quiz-master": return xp >= 600;
     case "bug-hunter": return challenges >= 2;
-    case "test-designer": return xp >= 1000;
+    case "test-designer": return xp >= 900;
     case "automation-starter": return xp >= 400;
     case "challenge-starter": return challenges >= 1;
     case "challenge-runner": return challenges >= 5;
     case "consistent-learner": return xp >= 800;
-    case "roadmap-finisher": return xp >= 2200;
-    case "grand-learner": return xp >= 5500;
+    case "roadmap-finisher": return xp >= 1900;
+    case "grand-learner": return xp >= 4400;
     default: return false;
   }
 }
 
+// Perkiraan XP per lesson dari XP modul (rata-rata 3 lesson per modul) dan bonus course
+// (rata-rata 8 lesson per course), PRD FR-05 v2.47.
+const XP_PER_LESSON_ESTIMATE = XP_PER_MODULE / 3 + XP_PER_COURSE_COMPLETION / 8;
+
 function toPublicProfile(user: LeaderboardUser): PublicProfile {
   const xp = user.totalXp;
   const challenges = Math.min(Math.floor((xp * 0.35) / XP_PER_CHALLENGE), TOTAL_CHALLENGES);
-  const lessons = Math.floor((xp - challenges * XP_PER_CHALLENGE) / XP_PER_LESSON);
+  const lessons = Math.floor((xp - challenges * XP_PER_CHALLENGE) / XP_PER_LESSON_ESTIMATE);
   const avatar = getAvatar(user.avatarId) ?? ACTIVE_AVATAR;
 
   const progressOf: Record<string, number> = {

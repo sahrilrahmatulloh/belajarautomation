@@ -13,13 +13,24 @@ test.describe("Halaman Belajar", () => {
     await expect(learn.courseTitles.first()).toBeVisible();
   });
 
-  test('ajakan "Tidak tahu mulai dari mana?" ada di atas daftar dan menuju /roadmap', async ({ page }) => {
-    await expect(learn.roadmapCta).toContainText("Tidak tahu mulai dari mana?");
+  test('ajakan "Tidak tahu mulai dari mana?" tertutup di atas daftar, dibuka dengan tombol panah, lalu menuju /roadmap', async ({ page }) => {
+    await expect(learn.roadmapCtaToggle).toHaveAttribute("aria-expanded", "false");
+    await expect(learn.roadmapCtaLink).toBeHidden();
 
     const cta = await learn.roadmapCta.boundingBox();
     const list = await learn.list.boundingBox();
     expect(cta!.y + cta!.height).toBeLessThanOrEqual(list!.y);
 
+    // Diulang bila klik terjadi sebelum halaman selesai hydrate.
+    await expect(async () => {
+      if ((await learn.roadmapCtaToggle.getAttribute("aria-expanded")) !== "true") await learn.roadmapCtaToggle.click();
+      await expect(learn.roadmapCtaLink).toBeVisible({ timeout: 1_000 });
+    }).toPass();
+    await expect(learn.roadmapCtaToggle).toHaveAttribute("aria-expanded", "true");
+
+    await learn.roadmapCtaToggle.click();
+    await expect(learn.roadmapCtaLink).toBeHidden();
+    await learn.roadmapCtaToggle.click();
     await learn.roadmapCtaLink.click();
 
     await expect(page).toHaveURL("/roadmap");

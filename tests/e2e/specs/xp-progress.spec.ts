@@ -39,6 +39,19 @@ async function completeAndNext(page: Page, lesson: LessonPage) {
   await saved;
 }
 
+// Menyelesaikan sisa lesson modul pertama Dasar Web & API setelah lesson pertamanya; lesson
+// terakhir modul menampilkan XP modul di tombol Berikutnya.
+async function completeModuleOne(page: Page) {
+  for (const slug of [LESSON_CONTENT.nextLessonSlug, "http-method"]) {
+    const lesson = await openLesson(page, courseSlug, slug);
+    await completeAndNext(page, lesson);
+  }
+  const last = await openLesson(page, courseSlug, "status-code");
+  await expect(last.nextLink).toContainText("Berikutnya (+10 XP, modul selesai)");
+  await completeAndNext(page, last);
+  return last;
+}
+
 async function signIn(page: Page, account: MockAccount) {
   await mockSupabase(page, { accounts: [account] });
   await signInWithMock(page, account);
@@ -54,7 +67,7 @@ async function passQuiz(page: Page, slug: string = quiz.slug, answers: readonly 
 }
 
 test.describe("XP akun Supabase", () => {
-  test("lesson selesai memberi +10 XP sekali dan menambah materi selesai di dashboard", async ({ page }) => {
+  test("lesson selesai menambah materi selesai tanpa XP; modul selesai memberi +10 XP sekali", async ({ page }) => {
     await signIn(page, uniqueMockAccount());
     const dashboard = new DashboardPage(page);
     await expect(statValue(dashboard, "Total XP")).toHaveText("0");
@@ -62,18 +75,27 @@ test.describe("XP akun Supabase", () => {
 
     const lesson = await openLesson(page);
     await expect(lesson.completeHint).toBeVisible();
+    await expect(lesson.nextLink).not.toContainText("XP");
     await completeAndNext(page, lesson);
     await expect(page).toHaveURL(`/learn/${courseSlug}/${LESSON_CONTENT.nextLessonSlug}`);
-    await expect(page.getByText("Lesson selesai, +10 XP.")).toBeVisible();
+    await expect(page.getByText("Lesson selesai.", { exact: true }).first()).toBeVisible();
+
+    await dashboard.goto();
+    await expect(statValue(dashboard, "Total XP")).toHaveText("0");
+    await expect(statValue(dashboard, "Materi Selesai")).toHaveText("1");
+
+    // Lesson terakhir modul "Cara Kerja Web" memberi XP modul (PRD FR-05 v2.47).
+    const lastInModule = await completeModuleOne(page);
+    await expect(page.getByText(`Modul ${LESSON_CONTENT.moduleTitle} selesai, +10 XP.`)).toBeVisible();
 
     await dashboard.goto();
     await expect(statValue(dashboard, "Total XP")).toHaveText("10");
-    await expect(statValue(dashboard, "Materi Selesai")).toHaveText("1");
+    await expect(statValue(dashboard, "Materi Selesai")).toHaveText("4");
 
     // Lesson yang sudah selesai tidak memberi XP lagi.
-    await lesson.goto();
-    await expect(lesson.completedStatus).toBeVisible();
-    await expect(lesson.nextLink).not.toContainText("+10 XP");
+    await lastInModule.goto();
+    await expect(lastInModule.completedStatus).toBeVisible();
+    await expect(lastInModule.nextLink).not.toContainText("XP");
   });
 
   test("kuis lulus memberi +30 XP sekali; mengulang boleh tanpa XP tambahan", async ({ page }) => {
@@ -113,12 +135,15 @@ test.describe("XP akun Supabase", () => {
 
   test("naik rank menampilkan perayaan dan menambah notifikasi", async ({ page, request }) => {
     const account = uniqueMockAccount();
-    // 290 XP: satu lesson lagi (+10) mencapai Apprentice (300 XP).
+    // 290 XP: lulus kuis (+30) mencapai Apprentice (300 XP).
     await request.post(`${SUPABASE_TEST_URL}/__test/seed`, { data: { user: account.id, totalXp: 290 } });
     await signIn(page, account);
 
-    const lesson = await openLesson(page);
-    await completeAndNext(page, lesson);
+    // Popup perayaan langsung menutupi hasil kuis, jadi yang ditunggu adalah popup-nya.
+    const challenge = new ChallengePage(page, quiz.slug);
+    await challenge.goto();
+    await challenge.answerQuiz(quiz.answers);
+    await challenge.submitAnswerButton.click();
 
     const celebration = page.getByRole("dialog", { name: /^Selamat!/ });
     await expect(celebration).toBeVisible();
@@ -136,7 +161,7 @@ test.describe("XP akun Supabase", () => {
     await expect(notifications.item("Naik rank ke Apprentice")).toBeVisible();
   });
 
-  test("QA Fundamental: 16 lesson memberi 160 XP plus bonus course 50, lalu kuisnya +30", async ({ page }) => {
+  test("QA Fundamental: 5 modul memberi 50 XP plus bonus course 50, lalu kuisnya +30", async ({ page }) => {
     test.slow();
     await signIn(page, uniqueMockAccount());
 
@@ -164,7 +189,7 @@ test.describe("XP akun Supabase", () => {
 
     const dashboard = new DashboardPage(page);
     await dashboard.goto();
-    await expect(statValue(dashboard, "Total XP")).toHaveText("240");
+    await expect(statValue(dashboard, "Total XP")).toHaveText("130");
     await expect(statValue(dashboard, "Materi Selesai")).toHaveText("16");
     await expect(statValue(dashboard, "Challenge Selesai")).toHaveText("1");
   });
@@ -177,14 +202,23 @@ test.describe("XP akun Supabase", () => {
     const profile = new ProfilePage(page);
     await profile.goto();
 
+    // Lesson selesai tampil di riwayat tanpa XP (PRD FR-05 v2.47).
     await expect(profile.recentActivity.getByRole("listitem")).toHaveCount(1);
     await expect(profile.recentActivity).toContainText(LESSON_CONTENT.lessonTitle);
     await expect(profile.recentActivity).toContainText(LESSON_CONTENT.courseTitle);
-    await expect(profile.recentActivity).toContainText("+10 XP");
+    await expect(profile.recentActivity).not.toContainText("XP");
+
+    await completeModuleOne(page);
+    await profile.goto();
+
+    // Modul selesai tampil paling atas dengan XP-nya.
+    await expect(profile.recentActivity.getByRole("listitem")).toHaveCount(3);
+    await expect(profile.recentActivity.getByRole("listitem").first()).toContainText(LESSON_CONTENT.moduleTitle);
+    await expect(profile.recentActivity.getByRole("listitem").first()).toContainText("+10 XP");
     await expect(profile.xpProgress).toContainText(/naik dari 0 menjadi 10 dalam 30 hari terakhir/);
   });
 
-  test("Dasar Web & API: 8 lesson memberi 80 XP plus bonus course 50, lalu kuisnya +30", async ({ page }) => {
+  test("Dasar Web & API: 3 modul memberi 30 XP plus bonus course 50, lalu kuisnya +30", async ({ page }) => {
     test.slow();
     await signIn(page, uniqueMockAccount());
 
@@ -204,7 +238,7 @@ test.describe("XP akun Supabase", () => {
 
     const dashboard = new DashboardPage(page);
     await dashboard.goto();
-    await expect(statValue(dashboard, "Total XP")).toHaveText("160");
+    await expect(statValue(dashboard, "Total XP")).toHaveText("110");
     await expect(statValue(dashboard, "Materi Selesai")).toHaveText("8");
   });
 });

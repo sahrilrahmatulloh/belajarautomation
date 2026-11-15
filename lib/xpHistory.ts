@@ -30,7 +30,7 @@ export interface XpHistory {
 
 interface XpTransactionRow {
   id: number;
-  source_type: "lesson" | "course" | "quiz" | "challenge" | "correction";
+  source_type: "lesson" | "module" | "course" | "quiz" | "challenge" | "correction";
   source_id: string;
   xp: number;
   created_at: string;
@@ -48,6 +48,11 @@ function lessonTitle(courseSlug: string, lessonSlug: string) {
   return detail?.modules.flatMap((module) => module.lessons).find((lesson) => lesson.slug === lessonSlug)?.title ?? lessonSlug;
 }
 
+function moduleTitle(courseSlug: string, moduleKey: string) {
+  const detail = COURSE_DETAILS.find((item) => item.courseSlug === courseSlug);
+  return detail?.modules.find((module) => `modul-${module.id}` === moduleKey)?.title ?? moduleKey;
+}
+
 function toEntry(row: XpTransactionRow, today: Date): ActivityEntry {
   const date = new Date(row.created_at);
   const base = { id: `xp-${row.id}`, xp: row.xp, daysAgo: daysAgoOf(date, today), time: timeFormatter.format(date) };
@@ -55,6 +60,11 @@ function toEntry(row: XpTransactionRow, today: Date): ActivityEntry {
     case "lesson": {
       const [courseSlug, lessonSlug] = row.source_id.split("/");
       return { ...base, type: "lesson", title: lessonTitle(courseSlug, lessonSlug), courseSlug, lessonSlug };
+    }
+    case "module": {
+      // source_id: course/modul-<id> (PRD FR-05 v2.47).
+      const [courseSlug, moduleKey] = row.source_id.split("/");
+      return { ...base, type: "module_complete", title: moduleTitle(courseSlug, moduleKey), courseSlug };
     }
     case "course": {
       const title = COURSES.find((course) => course.slug === row.source_id)?.title ?? row.source_id;
@@ -67,6 +77,8 @@ function toEntry(row: XpTransactionRow, today: Date): ActivityEntry {
       return { ...base, type, title, challengeSlug: row.source_id };
     }
     case "correction":
+      // Penyesuaian otomatis saat aturan XP berubah ke per modul (migrasi 20261115090000).
+      if (row.source_id === "aturan-xp-per-modul") return { ...base, type: "correction", title: "Penyesuaian aturan XP per modul" };
       return { ...base, type: "correction", title: "Koreksi XP oleh Admin" };
   }
 }
@@ -108,7 +120,22 @@ export function useXpHistory(): XpHistory {
   if (userId) {
     const rows = state && state.key === key ? state.rows : null;
     const today = new Date();
-    const recent = (rows ?? []).map((row) => toEntry(row, today));
+    // Sejak XP materi per modul, lesson selesai tidak lagi punya transaksi XP; lesson diambil dari
+    // progres lesson (0 XP) agar tetap tampil di riwayat. Lesson lama yang sudah punya transaksi
+    // XP lesson tidak ditambahkan dua kali.
+    const withXp = new Set((rows ?? []).filter((row) => row.source_type === "lesson").map((row) => row.source_id));
+    const lessonRows = (real?.lessons ?? [])
+      .filter((item) => !withXp.has(`${item.courseSlug}/${item.lessonSlug}`))
+      .map((item) => ({
+        at: item.completedAt,
+        entry: {
+          ...toEntry({ id: 0, source_type: "lesson", source_id: `${item.courseSlug}/${item.lessonSlug}`, xp: 0, created_at: item.completedAt }, today),
+          id: `lesson-${item.courseSlug}-${item.lessonSlug}`,
+        },
+      }));
+    const recent = [...(rows ?? []).map((row) => ({ at: row.created_at, entry: toEntry(row, today) })), ...lessonRows]
+      .sort((a, b) => (a.at < b.at ? 1 : a.at > b.at ? -1 : 0))
+      .map((item) => item.entry);
     return { gainsByDaysAgo: summarize(recent), recent, isLoaded: rows !== null };
   }
 

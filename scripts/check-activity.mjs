@@ -37,6 +37,20 @@ for (const block of read("data/courseDetails.ts").split(/courseSlug:\s*"/).slice
   lessonsByCourse.set(block.slice(0, block.indexOf('"')), lessons);
 }
 
+// Modul per course beserta lesson-nya, untuk XP materi per modul (PRD FR-05 v2.47).
+// Kunci modul-<id> sama dengan lib/xpRules.ts; createModules memberi id berurutan dari 1.
+const modulesByCourse = new Map();
+for (const block of read("data/courseDetails.ts").split(/courseSlug:\s*"/).slice(1)) {
+  const matches = [...block.matchAll(/(?:id:\s*(\d+),\s*)?title:\s*"([^"]+)",\s*lessons:\s*\[/g)];
+  const modules = matches.map((match, index) => {
+    const body = block.slice(match.index + match[0].length, matches[index + 1]?.index ?? block.length);
+    const pattern = /slug:\s*"([^"]+)",\s*title:\s*"([^"]+)"|\[\s*"([^"]+)",\s*\d+\s*\]/g;
+    const slugs = [...body.matchAll(pattern)].map(([, slug, , tupleTitle]) => slug ?? slugify(tupleTitle));
+    return { key: `modul-${match[1] ?? index + 1}`, title: match[2], slugs };
+  });
+  modulesByCourse.set(block.slice(0, block.indexOf('"')), modules);
+}
+
 const challenges = new Map(
   read("data/challenges.ts")
     .split(/\r?\n  \{/)
@@ -57,7 +71,7 @@ const ranks = [...read("data/ranks.ts").matchAll(/name:\s*"([^"]+)",\s*minXp:\s*
 const source = read("data/dummy/activity.ts");
 const list = source.slice(source.indexOf("export const DUMMY_ACTIVITY"));
 const entries = [
-  ...list.matchAll(/^\s*(lesson|courseComplete|quiz|challenge|achievement|rankUp)\((.+),\s*(\d+),\s*"([^"]*)"\),?\s*$/gm),
+  ...list.matchAll(/^\s*(lesson|moduleComplete|courseComplete|quiz|challenge|achievement|rankUp)\((.+),\s*(\d+),\s*"([^"]*)"\),?\s*$/gm),
 ].map(([, kind, args, daysAgo, time]) => ({
   kind,
   strings: [...args.matchAll(/"([^"]*)"/g)].map(([, value]) => value),
@@ -104,7 +118,25 @@ entries.forEach((entry, index) => {
       problems.push(`${label(entry)}: seharusnya lesson ke-${done.length + 1} "${expected?.title}"`);
     }
     lessonsDone.set(courseSlug, [...done, entry]);
-    xp += XP.XP_PER_LESSON;
+    // Lesson yang menuntaskan modul harus langsung diikuti moduleComplete modul tersebut.
+    const doneSlugs = new Set([...done, entry].map((item) => item.strings[1]));
+    const finished = (modulesByCourse.get(courseSlug) ?? []).find(
+      (module) => module.slugs.includes(lessonSlug) && module.slugs.every((slug) => doneSlugs.has(slug))
+    );
+    const next = entries[index + 1];
+    if (finished && !(next?.kind === "moduleComplete" && next.strings[0] === courseSlug && next.strings[1] === finished.key)) {
+      problems.push(`${label(entry)}: menuntaskan ${finished.key}, harus diikuti moduleComplete("${courseSlug}", "${finished.key}", ...)`);
+    }
+  } else if (entry.kind === "moduleComplete") {
+    const [courseSlug, moduleKey, title] = entry.strings;
+    const found = (modulesByCourse.get(courseSlug) ?? []).find((item) => item.key === moduleKey);
+    const doneSlugs = new Set((lessonsDone.get(courseSlug) ?? []).map((item) => item.strings[1]));
+    if (!found) problems.push(`${label(entry)}: modul tidak ada`);
+    else {
+      if (found.title !== title) problems.push(`${label(entry)}: judul seharusnya "${found.title}"`);
+      if (!found.slugs.every((slug) => doneSlugs.has(slug))) problems.push(`${label(entry)}: belum semua lesson modul selesai`);
+    }
+    xp += XP.XP_PER_MODULE;
   } else if (entry.kind === "courseComplete") {
     const [courseSlug, title] = entry.strings;
     const course = courses.get(courseSlug);

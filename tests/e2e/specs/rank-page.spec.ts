@@ -29,7 +29,7 @@ test.describe("Halaman Rank & XP", () => {
     await expect(rank.currentTier).toContainText(USER_RANK);
     await expect(rank.currentTier).toHaveAttribute("aria-current", "step");
     await expect(rank.xpRewards.getByRole("listitem")).toHaveCount(4);
-    await expect(rank.xpRewards).toContainText("Menyelesaikan satu lesson");
+    await expect(rank.xpRewards).toContainText("Menyelesaikan seluruh lesson dalam satu modul");
   });
 
   test("tombol Lihat leaderboard membuka halaman leaderboard", async ({ page }) => {

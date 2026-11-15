@@ -5,6 +5,7 @@ import { CatalogPage } from "./CatalogPage";
 export class LearnPage extends CatalogPage {
   readonly roadmapCta: Locator;
   readonly roadmapCtaLink: Locator;
+  readonly roadmapCtaToggle: Locator;
   readonly courseTitles: Locator;
   readonly availableOnlySwitch: Locator;
   readonly comingSoonBadges: Locator;
@@ -13,6 +14,7 @@ export class LearnPage extends CatalogPage {
     super(page, "/learn", "Daftar course", "Cari course");
     this.roadmapCta = page.getByRole("region", { name: "Ajakan roadmap" });
     this.roadmapCtaLink = this.roadmapCta.getByRole("link", { name: "Lihat Roadmap" });
+    this.roadmapCtaToggle = this.roadmapCta.getByRole("button", { name: "Tidak tahu mulai dari mana?" });
     this.courseTitles = this.list.getByRole("heading", { level: 2 });
     this.availableOnlySwitch = page.getByRole("switch", { name: "Hanya yang tersedia" });
     this.comingSoonBadges = this.list.getByText("Segera hadir", { exact: true });

@@ -5,7 +5,7 @@
 //
 // Komposisi (tampil): Master 2, Expert 3, Specialist 4, Practitioner 6,
 // Apprentice 50, Trainee 12, ditambah 3 pengguna yang memilih tidak tampil.
-// Dengan akun dummy (Apprentice, 420 XP), pengguna berada di luar 50 besar
+// Dengan akun dummy (Apprentice, 320 XP), pengguna berada di luar 50 besar
 // Global (#51) tetapi di dalam 50 besar tab Apprentice (#36), dan tab
 // Apprentice berisi lebih dari 50 orang.
 
@@ -41,17 +41,17 @@ const BIOS = [
   "Fresh graduate yang menyiapkan karier sebagai QA Engineer.",
 ];
 
-// Daftar XP per kelompok, dari tertinggi.
+// Daftar XP per kelompok, dari tertinggi, mengikuti batas rank PRD FR-05 v2.47.
 const range = (count: number, start: number, step: number) =>
   Array.from({ length: count }, (_, index) => start - index * step);
 
 const VISIBLE_XP = [
-  ...[6400, 5820], // Master
-  ...[5300, 4600, 3950], // Expert
-  ...[3650, 3100, 2700, 2300], // Specialist
-  ...[2100, 1820, 1560, 1340, 1180, 1050], // Practitioner
-  ...range(35, 995, 16), // Apprentice di atas akun dummy: 995–451
-  ...range(15, 415, 8), // Apprentice di bawah akun dummy: 415–303
+  ...[5600, 4900], // Master
+  ...[4200, 3700, 3250], // Expert
+  ...[3000, 2600, 2300, 2000], // Specialist
+  ...[1800, 1550, 1320, 1150, 1000, 920], // Practitioner
+  ...range(35, 880, 14), // Apprentice di atas akun dummy: 880–404
+  ...range(15, 318, 1), // Apprentice di bawah akun dummy: 318–304
   ...range(12, 290, 22), // Trainee: 290–48
 ];
 

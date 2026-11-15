@@ -1,6 +1,7 @@
 import {
   Award,
   BookOpen,
+  BookCheck,
   ClipboardCheck,
   GraduationCap,
   LucideIcon,
@@ -14,6 +15,7 @@ import { ActivityEntry, ActivityType } from "@/types/Activity";
 
 const TYPE_STYLES: Record<ActivityType, { icon: LucideIcon; label: string; className: string }> = {
   lesson: { icon: BookOpen, label: "Materi selesai", className: "bg-brand-blue/10 text-brand-blue" },
+  module_complete: { icon: BookCheck, label: "Modul selesai", className: "bg-sky-500/10 text-sky-700 dark:text-sky-300" },
   course_complete: {
     icon: GraduationCap,
     label: "Course selesai",
@@ -31,7 +33,9 @@ const TYPE_STYLES: Record<ActivityType, { icon: LucideIcon; label: string; class
 export default function ActivityRow({ entry, whenLabel }: { entry: ActivityEntry; whenLabel?: string }) {
   const { icon: Icon, label, className } = TYPE_STYLES[entry.type];
   const courseTitle =
-    entry.type === "lesson" ? COURSES.find((course) => course.slug === entry.courseSlug)?.title : undefined;
+    entry.type === "lesson" || entry.type === "module_complete"
+      ? COURSES.find((course) => course.slug === entry.courseSlug)?.title
+      : undefined;
 
   return (
     <li className="flex items-center gap-3 py-3">

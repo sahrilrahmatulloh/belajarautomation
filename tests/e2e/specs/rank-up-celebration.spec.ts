@@ -40,7 +40,7 @@ test.describe("Popup naik rank", () => {
     await expect(celebration).toContainText("Rank Up!");
     await expect(celebration).toContainText("Kamu telah naik ke rank");
     await expect(celebration).toContainText("Practitioner");
-    await expect(celebration).toContainText("raih rank Specialist di 2.200 XP");
+    await expect(celebration).toContainText("raih rank Specialist di 1.900 XP");
 
     await celebration.getByRole("button", { name: "Lanjut Belajar" }).click();
     await expect(celebration).toBeHidden();

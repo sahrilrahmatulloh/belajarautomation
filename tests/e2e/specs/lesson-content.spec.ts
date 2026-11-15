@@ -39,10 +39,12 @@ test.describe("Lesson yang sudah punya isi", () => {
     await expect(main.getByText("Draf", { exact: true })).toBeVisible();
   });
 
-  test("Berikutnya memberi XP setelah materi digulir sampai akhir", async ({ page }) => {
+  test("lesson yang belum menuntaskan modul tidak menjanjikan XP, dan tercatat setelah digulir sampai akhir", async ({ page }) => {
     await expect(page.getByRole("button", { name: /^Tandai selesai/ })).toHaveCount(0);
     await expect(lesson.completeHint).toBeVisible();
-    await expect(lesson.nextLink).toContainText("Berikutnya (+10 XP)");
+    // XP materi diberikan per modul (PRD FR-05 v2.47).
+    await expect(lesson.nextLink).toContainText("Berikutnya");
+    await expect(lesson.nextLink).not.toContainText("XP");
 
     await lesson.scrollToEnd();
 
@@ -52,11 +54,11 @@ test.describe("Lesson yang sudah punya isi", () => {
   test("klik Berikutnya menandai selesai dan bertahan setelah dimuat ulang", async ({ page }) => {
     await lesson.completeAndNext();
     await expect(page).toHaveURL(`/learn/${courseSlug}/${nextLessonSlug}`);
-    await expect(page.getByText("Lesson selesai, +10 XP.")).toBeVisible();
+    await expect(page.getByText("Lesson selesai.", { exact: true }).first()).toBeVisible();
 
     await lesson.goto();
     await expect(lesson.completedStatus).toContainText("Lesson selesai.");
-    await expect(lesson.nextLink).not.toContainText("+10 XP");
+    await expect(lesson.nextLink).not.toContainText("XP");
     await expect(lesson.completeHint).toBeHidden();
 
     const course = new CourseDetailPage(page, courseSlug);
@@ -65,26 +67,41 @@ test.describe("Lesson yang sudah punya isi", () => {
     await expect(course.completedMark(lessonTitle)).toBeAttached();
   });
 
-  test("XP hanya bertambah sekali dan tampil di dashboard", async ({ page }) => {
+  test("XP +10 baru diberikan saat seluruh lesson modul selesai, hanya sekali, dan tampil di dashboard", async ({ page }) => {
     const dashboard = new DashboardPage(page);
     await dashboard.goto();
-    const xp = page.getByRole("region", { name: "Statistik belajar" }).getByRole("heading", { level: 3, name: "Total XP" }).locator("xpath=following-sibling::p");
+    const xp = dashboard.statValue("Total XP");
     await expect(xp).not.toBeEmpty();
-    const expected = (Number((await xp.innerText()).replace(/\D/g, "")) + 10).toLocaleString("id-ID");
+    const before = (await xp.innerText()).trim();
+    const expected = (Number(before.replace(/\D/g, "")) + 10).toLocaleString("id-ID");
 
+    // Modul "Cara Kerja Web": client-server, apa-itu-http, http-method, status-code.
     await lesson.goto();
     await lesson.completeAndNext();
     await expect(page).toHaveURL(`/learn/${courseSlug}/${nextLessonSlug}`);
+    await dashboard.goto();
+    await expect(xp).toHaveText(before);
+
+    for (const slug of [nextLessonSlug, "http-method"]) {
+      const current = new LessonPage(page, courseSlug, slug);
+      await current.goto();
+      await current.completeAndNext();
+    }
+    const lastInModule = new LessonPage(page, courseSlug, "status-code");
+    await lastInModule.goto();
+    await expect(lastInModule.nextLink).toContainText("Berikutnya (+10 XP, modul selesai)");
+    await lastInModule.completeAndNext();
+    await expect(page.getByText(`Modul ${moduleTitle} selesai, +10 XP.`)).toBeVisible();
 
     await dashboard.goto();
     await expect(xp).toHaveText(expected);
     await expect(dashboard.continueLearning).toContainText(courseTitle);
 
     // Klik Berikutnya lagi pada lesson yang sudah selesai tidak menambah XP.
-    await lesson.goto();
-    await expect(lesson.completedStatus).toBeVisible();
-    await lesson.nextLink.click();
-    await expect(page).toHaveURL(`/learn/${courseSlug}/${nextLessonSlug}`);
+    await lastInModule.goto();
+    await expect(lastInModule.completedStatus).toBeVisible();
+    await expect(lastInModule.nextLink).not.toContainText("XP");
+    await lastInModule.nextLink.click();
     await dashboard.goto();
     await expect(xp).toHaveText(expected);
   });
@@ -111,7 +128,7 @@ test.describe("Lesson yang sudah punya isi", () => {
 
     await expect(lesson.writingNotice).toBeVisible();
     await expect(lesson.completeHint).toBeHidden();
-    await expect(lesson.nextLink).not.toContainText("+10 XP");
+    await expect(lesson.nextLink).not.toContainText("XP");
   });
 
   test("lesson terbuka dari daftar modul", async ({ page }) => {

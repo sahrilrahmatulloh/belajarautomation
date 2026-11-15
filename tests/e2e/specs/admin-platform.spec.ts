@@ -141,7 +141,7 @@ test.describe("Moderasi", () => {
     await expect(page).toHaveURL(ACCOUNTS.user.home);
     const leaderboard = new LeaderboardPage(page);
     await page.goto("/leaderboard?tab=global");
-    await expect(leaderboard.topList.filter({ hasText: flaggedUser })).toContainText("4.500 XP");
+    await expect(leaderboard.topList.filter({ hasText: flaggedUser })).toContainText("3.700 XP");
   });
 
   test("sembunyikan dari leaderboard bekerja, dan bisa ditampilkan kembali", async ({ page }) => {

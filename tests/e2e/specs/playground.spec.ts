@@ -12,6 +12,13 @@ test.describe("Daftar latihan", () => {
     await expect(playground.cards.first()).toBeVisible();
   });
 
+  test("banner hanya memakai latar tema, tanpa avatar kucing", async ({ page }) => {
+    // PRD FR-12 v2.47: avatar tetap di header, profil, dan leaderboard.
+    const banner = page.locator("section").filter({ has: page.getByRole("heading", { level: 1, name: "QA Automation Playground" }) });
+    await expect(banner.locator('img[src*="padang-rumput%2Fbanner.webp"]')).toBeAttached();
+    await expect(banner.locator('img[src*="%2Fprofile%2F"], img[src^="/profile/"]')).toHaveCount(0);
+  });
+
   test("menampilkan 10 latihan tanpa filter", async () => {
     await expect(playground.cards).toHaveCount(10);
     await expect(playground.list.getByText("10 latihan tersedia")).toBeVisible();

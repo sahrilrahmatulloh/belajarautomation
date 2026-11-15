@@ -4,12 +4,12 @@ import { useSyncExternalStore } from "react";
 
 import { COURSE_DETAILS } from "@/data/courseDetails";
 import { DUMMY_ACCOUNT } from "@/data/dummy/account";
-import { XP_PER_COURSE_COMPLETION, XP_PER_LESSON } from "@/data/xp";
 import { getCompletedLessonSlugs } from "@/lib/activity";
 import { useXpCorrection } from "@/lib/content";
 import { CourseInProgress, getCompletedLessonCount, getStudiedCourses } from "@/lib/learningProgress";
 import { useIsRealAccount, useRealProgress } from "@/lib/realProgress";
 import { useSession } from "@/lib/session";
+import { courseLessonXp } from "@/lib/xpRules";
 import { COURSES } from "@/data/courses";
 
 // Progres lesson dan XP (PRD FR-05).
@@ -91,12 +91,13 @@ function summarize(keys: string[]) {
   const finishedCourses: string[] = [];
   for (const [courseSlug, lessons] of newByCourse) {
     extraLessons += lessons.length;
-    extraXp += lessons.length * XP_PER_LESSON;
+    // XP materi per modul dan bonus course (PRD FR-05 v2.47): selisih XP sebelum dan sesudah
+    // lesson baru, sehingga modul yang sudah tuntas di riwayat tidak dihitung dua kali.
+    const before = getCompletedLessonSlugs(courseSlug);
+    const after = new Set([...before, ...lessons]);
+    extraXp += courseLessonXp(courseSlug, after) - courseLessonXp(courseSlug, before);
     const total = totalLessons(courseSlug);
-    if (total > 0 && getCompletedLessonSlugs(courseSlug).size + lessons.length >= total) {
-      extraXp += XP_PER_COURSE_COMPLETION;
-      finishedCourses.push(courseSlug);
-    }
+    if (total > 0 && after.size >= total) finishedCourses.push(courseSlug);
   }
   return { newByCourse, extraXp, extraLessons, finishedCourses };
 }

@@ -39,7 +39,8 @@ test.describe("Kalender Belajar", () => {
   });
 
   test("memilih tanggal menampilkan ringkasan aktivitasnya", async () => {
-    await expect(dashboard.calendar).toContainText(/Senin, 16 November: \d+ aktivitas, \+\d+ XP\./);
+    // Hari ini hanya lesson; XP materi diberikan per modul, jadi tanpa XP (PRD FR-05 v2.47).
+    await expect(dashboard.calendar).toContainText("Senin, 16 November: 1 aktivitas.");
 
     await dashboard.calendarDay("11 November 2026").click();
 
@@ -47,7 +48,8 @@ test.describe("Kalender Belajar", () => {
 
     await dashboard.calendarDay(`15 November 2026${ACTIVE}`).click();
 
-    await expect(dashboard.calendar).toContainText("Minggu, 15 November: 1 aktivitas, +75 XP.");
+    // Challenge Playwright Locator (+75 XP) lalu naik rank ke Apprentice (0 XP).
+    await expect(dashboard.calendar).toContainText("Minggu, 15 November: 2 aktivitas, +75 XP.");
   });
 
   test("tautan Aktivitas membuka tab Aktivitas di profil", async ({ page }) => {

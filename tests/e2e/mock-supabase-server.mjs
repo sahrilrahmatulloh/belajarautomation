@@ -134,12 +134,16 @@ const server = http.createServer(async (req, res) => {
     const state = userState(body.p_user);
     const key = `${body.p_course}/${body.p_lesson}`;
     const isNew = !state.lessons.has(key);
-    let lessonXp = 0;
+    let moduleXp = 0;
     let courseXp = 0;
     if (isNew) {
       state.lessons.set(key, new Date().toISOString());
       state.lessonsCompleted += 1;
-      lessonXp = addXp(state, "lesson", key, body.p_lesson_xp);
+    }
+    // XP materi per modul (migrasi 20261115090000_xp_per_module.sql).
+    const moduleLessons = Array.isArray(body.p_module_lessons) ? body.p_module_lessons : [];
+    if (moduleLessons.length > 0 && moduleLessons.every((slug) => state.lessons.has(`${body.p_course}/${slug}`))) {
+      moduleXp = addXp(state, "module", `${body.p_course}/${body.p_module}`, body.p_module_xp);
     }
     const doneInCourse = [...state.lessons.keys()].filter((item) => item.startsWith(`${body.p_course}/`)).length;
     if (body.p_course_lesson_count > 0 && doneInCourse >= body.p_course_lesson_count) {
@@ -147,7 +151,8 @@ const server = http.createServer(async (req, res) => {
     }
     return send(res, 200, {
       is_new: isNew,
-      xp_awarded: lessonXp + courseXp,
+      xp_awarded: moduleXp + courseXp,
+      module_bonus: moduleXp > 0,
       course_bonus: courseXp > 0,
       total_xp: state.totalXp,
       lessons_completed: state.lessonsCompleted,

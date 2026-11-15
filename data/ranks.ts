@@ -33,7 +33,7 @@ export const RANKS: Rank[] = [
   },
   {
     name: "Practitioner",
-    minXp: 1000,
+    minXp: 900,
     color: "#EAB308",
     stars: 3,
     emblem: "/ranks/practitioner.webp",
@@ -41,7 +41,7 @@ export const RANKS: Rank[] = [
   },
   {
     name: "Specialist",
-    minXp: 2200,
+    minXp: 1900,
     color: "#10B981",
     stars: 4,
     emblem: "/ranks/specialist.webp",
@@ -49,7 +49,7 @@ export const RANKS: Rank[] = [
   },
   {
     name: "Expert",
-    minXp: 3800,
+    minXp: 3100,
     color: "#9333EA",
     stars: 5,
     emblem: "/ranks/expert.webp",
@@ -57,7 +57,7 @@ export const RANKS: Rank[] = [
   },
   {
     name: "Master",
-    minXp: 5500,
+    minXp: 4400,
     color: "#B91C1C",
     accentColor: "#F59E0B",
     stars: 6,

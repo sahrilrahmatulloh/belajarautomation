@@ -6,5 +6,14 @@ export interface XpOutcome {
 }
 
 export type LessonCompletionResult =
-  | { ok: true; xpAwarded: number; courseBonus: boolean; totalXp: number; lessonsCompleted: number }
+  | {
+      ok: true;
+      xpAwarded: number;
+      // Lesson ini menuntaskan modulnya (XP modul, PRD FR-05 v2.47).
+      moduleBonus: boolean;
+      moduleTitle: string;
+      courseBonus: boolean;
+      totalXp: number;
+      lessonsCompleted: number;
+    }
   | { ok: false; message: string };

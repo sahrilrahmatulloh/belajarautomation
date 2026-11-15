@@ -49,19 +49,19 @@ test.describe("Tab Ringkasan profil", () => {
     await expect(profile.rankProgress.getByRole("img", { name: /^Emblem rank / })).toHaveCount(2);
     await expect(profile.rankProgress).toContainText("Apprentice(Saat ini)");
     await expect(profile.rankProgress).toContainText("Practitioner(Berikutnya)");
-    await expect(profile.rankProgress).toContainText("420 / 1.000 XP");
+    await expect(profile.rankProgress).toContainText("320 / 900 XP");
     await expect(profile.rankProgress).toContainText("580 XP lagi");
     await expect(profile.rankProgress.getByRole("link", { name: "Lihat detail rank" })).toHaveAttribute("href", "/rank");
   });
 
   test("Progres XP berakhir di total XP, dengan periode 30 hari bawaan yang dapat diganti", async () => {
     await expect(profile.xpPeriodSelect).toHaveValue("30");
-    await expect(profile.xpProgress).toContainText("420 XP");
-    await expect(profile.xpProgress).toContainText(/menjadi 420 dalam 30 hari terakhir/);
+    await expect(profile.xpProgress).toContainText("320 XP");
+    await expect(profile.xpProgress).toContainText(/menjadi 320 dalam 30 hari terakhir/);
 
     await profile.xpPeriodSelect.selectOption({ label: "7 Hari" });
 
-    await expect(profile.xpProgress).toContainText(/menjadi 420 dalam 7 hari terakhir/);
+    await expect(profile.xpProgress).toContainText(/menjadi 320 dalam 7 hari terakhir/);
   });
 
   test("Aktivitas Terbaru menampilkan 3 aktivitas dan menuju tab Aktivitas", async ({ page }) => {
