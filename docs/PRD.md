@@ -1,9 +1,12 @@
 # BELAJARAUTOMATION.COM
 ## Product Requirements Document (PRD)
-**Versi:** 2.47  
+**Versi:** 2.48  
 **Status:** Draft — Acuan Pengembangan Produk  
 **Platform:** Web Application  
 **Target Pengguna:** Pemula hingga praktisi QA, Software Testing, dan Programming
+
+### Perubahan di Versi 2.48
+- Tombol "Masuk dengan Google" dan "Daftar dengan Google" dipindah ke bawah tombol utama form email, dipisah garis "atau" (4.5).
 
 ### Perubahan di Versi 2.47
 - XP materi diberikan per modul (10 XP saat seluruh lesson dalam satu modul selesai), bukan per lesson. Bonus course, kuis, dan challenge tidak berubah (FR-05).
@@ -1905,7 +1908,7 @@ Klik notifikasi menandainya sebagai dibaca dan langsung membuka halaman terkait:
 
 ### Metode
 - Email dan password.
-- Akun Google: tombol "Masuk dengan Google" di halaman masuk dan "Daftar dengan Google" di halaman daftar, di atas form email.
+- Akun Google: tombol "Masuk dengan Google" di halaman masuk dan "Daftar dengan Google" di halaman daftar, di bawah tombol utama form email (Masuk atau Buat Akun), dipisah garis "atau".
 
 ### Daftar dengan email
 - Isian: nama lengkap, username (FR-13), email, password (minimal 8 karakter), konfirmasi password, dan persetujuan syarat dan ketentuan.

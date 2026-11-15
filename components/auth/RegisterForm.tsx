@@ -21,6 +21,7 @@ import { useHydrated } from "@/lib/useHydrated";
 import { isValidEmail } from "@/lib/validation";
 
 import AuthField from "./AuthField";
+import GoogleAuthOption from "./GoogleAuthOption";
 
 const MIN_PASSWORD_LENGTH = 8;
 
@@ -276,6 +277,8 @@ export default function RegisterForm() {
         <UserPlus className="h-4 w-4" aria-hidden="true" />
         {isSubmitting ? "Memproses..." : "Buat Akun"}
       </button>
+
+      <GoogleAuthOption mode="register" />
 
       <p className="text-center text-sm text-muted-foreground">
         Sudah punya akun?{" "}

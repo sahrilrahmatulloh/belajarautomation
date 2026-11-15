@@ -13,20 +13,21 @@ function GoogleIcon() {
 }
 
 // Masuk atau daftar dengan Google (PRD 4.5). Aktif setelah backend Supabase Auth tersedia.
+// Ditempatkan di bawah tombol utama form email, dipisah garis "atau".
 export default function GoogleAuthOption({ mode }: { mode: "login" | "register" }) {
   return (
-    <div className="mb-6 space-y-6">
+    <div className="space-y-5">
+      <div className="flex items-center gap-3 text-xs text-muted-foreground">
+        <span className="h-px flex-1 bg-border" aria-hidden="true" />
+        atau
+        <span className="h-px flex-1 bg-border" aria-hidden="true" />
+      </div>
       <ComingSoonButton
         label={mode === "login" ? "Masuk dengan Google" : "Daftar dengan Google"}
         icon={<GoogleIcon />}
         variant="outline"
         fullWidth
       />
-      <div className="flex items-center gap-3 text-xs text-muted-foreground">
-        <span className="h-px flex-1 bg-border" aria-hidden="true" />
-        atau dengan email
-        <span className="h-px flex-1 bg-border" aria-hidden="true" />
-      </div>
     </div>
   );
 }

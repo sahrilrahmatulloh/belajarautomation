@@ -20,6 +20,7 @@ import { isValidEmail } from "@/lib/validation";
 import { Session } from "@/types/Auth";
 
 import AuthField from "./AuthField";
+import GoogleAuthOption from "./GoogleAuthOption";
 
 interface LoginErrors {
   email?: string;
@@ -243,6 +244,8 @@ export default function LoginForm() {
           <LogIn className="h-4 w-4" aria-hidden="true" />
           {isSubmitting ? "Memproses..." : "Masuk"}
         </button>
+
+        <GoogleAuthOption mode="login" />
 
         <p className="text-center text-sm text-muted-foreground">
           Belum punya akun?{" "}
