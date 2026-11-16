@@ -207,7 +207,9 @@ export const BLOG = {
 
 // Konten dummy akun Creator (data/dummy/contents.ts).
 export const CREATOR_DASHBOARD = {
-  statLabels: ["Draf", "Menunggu Review", "Perlu Revisi", "Disetujui", "Terbit"],
+  statLabels: ["Total Konten", "Perlu Revisi", "Menunggu Review", "Terbit"],
+  stageLabels: ["Draf", "Menunggu Review", "Perlu Revisi", "Disetujui", "Terbit"],
+  total: 7,
   needsRevisionTitle: "Cara Menulis Bug Report",
   draftTitle: "Apa Itu Quality Assurance?",
   openRevisionCount: 2,
@@ -229,7 +231,6 @@ export const ROLE_MODE = {
     { label: "Disetujui", value: "2" },
     { label: "Diminta Revisi", value: "2" },
   ],
-  adminTasks: ["Menerbitkan konten yang sudah disetujui", "Mengelola peran pengguna"],
   publicUsername: "sobatqa",
   notifications: {
     revision: { title: "Konten perlu revisi", href: "/creator/revisi/konten-bug-report", contentTitle: "Cara Menulis Bug Report" },
@@ -364,7 +365,7 @@ export const ADMIN_WORKSPACE = {
   // Peserta leaderboard pertama (data/dummy/leaderboard.ts).
   leaderboardUserId: "user-1",
   leaderboardUserName: "Rina Kartika",
-  axePaths: ["/admin", "/admin/konten", "/admin/pengguna", "/admin/pengguna/user-rahma", "/admin/log", "/admin/transaksi", "/admin/transaksi/trx-sobat-ebook", "/admin/transaksi/trx-sobat-pro", "/admin/produk", "/admin/katalog", "/admin/moderasi", "/admin/pengumuman", "/admin/laporan"],
+  axePaths: ["/admin", "/admin/profil", "/admin/pengaturan", "/admin/konten", "/admin/pengguna", "/admin/pengguna/user-rahma", "/admin/log", "/admin/transaksi", "/admin/transaksi/trx-sobat-ebook", "/admin/transaksi/trx-sobat-pro", "/admin/produk", "/admin/katalog", "/admin/moderasi", "/admin/pengumuman", "/admin/laporan"],
 } as const;
 
 // Katalog dan Moderasi (data/catalogRules.json dan data/dummy/moderation.ts).
@@ -414,7 +415,7 @@ export const REVIEWER_WORKSPACE = {
   approvedId: "konten-login",
   approvedTitle: "Contoh Test Case Login yang Lengkap",
   draftId: "konten-qa",
-  axePaths: ["/reviewer", "/reviewer/antrean", "/reviewer/riwayat", "/reviewer/review/konten-pemula", "/reviewer/review/konten-login"],
+  axePaths: ["/reviewer", "/reviewer/profil", "/reviewer/pengaturan", "/reviewer/antrean", "/reviewer/riwayat", "/reviewer/review/konten-pemula", "/reviewer/review/konten-login"],
 } as const;
 
 // Ruang kerja Creator (data/dummy/contents.ts, akun creator@).
@@ -442,5 +443,5 @@ export const CREATOR_STUDIO = {
   // Gambar PNG 1x1 yang valid.
   pngBase64: "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==",
   videoIds: ["abcdefghij1", "abcdefghij2", "abcdefghij3"],
-  axePaths: ["/creator/konten", "/creator/buat", "/creator/buat/artikel", "/creator/buat/artikel?konten=konten-qa", "/creator/revisi", "/creator/revisi/konten-bug-report", "/creator/konten/konten-pemula"],
+  axePaths: ["/creator/profil", "/creator/pengaturan", "/creator/konten", "/creator/buat", "/creator/buat/artikel", "/creator/buat/artikel?konten=konten-qa", "/creator/revisi", "/creator/revisi/konten-bug-report", "/creator/konten/konten-pemula"],
 } as const;

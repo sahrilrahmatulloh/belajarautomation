@@ -47,6 +47,21 @@ test.describe("Konten Saya", () => {
     await expect(contents.entries).toHaveCount(CREATOR_STUDIO.pageSize);
   });
 
+  test("kartu di layar kecil menampilkan aksi bertulisan, dan jenis konten tampil di daftar", async ({ page, isMobile }) => {
+    test.skip(!isMobile, "Khusus layar kecil.");
+    const card = page.getByRole("list", { name: "Daftar konten saya" }).getByRole("listitem").filter({ hasText: "Perlu Revisi" }).first();
+    await expect(card).toContainText("Artikel");
+    await expect(card.getByRole("link", { name: "Lihat catatan" })).toHaveText("Lihat catatan");
+    await expect(card.getByRole("link", { name: "Edit" })).toHaveText("Edit");
+  });
+
+  test("filter status tersimpan di alamat halaman", async ({ page }) => {
+    await page.goto("/creator/konten?status=draf");
+    await expect(page.getByRole("button", { name: /^Draf \(\d+\)/ })).toHaveAttribute("aria-pressed", "true");
+    await page.getByRole("button", { name: /^Terbit \(\d+\)/ }).click();
+    await expect(page).toHaveURL(/status=terbit/);
+  });
+
   test("tab status menampilkan jumlah dan menyaring daftar", async () => {
     await expect(contents.statusTab(/^Semua/)).toHaveText(`Semua (${CREATOR_STUDIO.contentCount})`);
 
@@ -151,6 +166,22 @@ test.describe("Buat Konten", () => {
 
     await main.getByRole("link", { name: /^Artikel/ }).click();
     await expect(page).toHaveURL("/creator/buat/artikel");
+  });
+
+  test("tombol sampul berbahasa Indonesia, dan gambar yang dipilih tampil sebagai pratinjau", async ({ page, isMobile }) => {
+    await page.goto("/creator/buat/artikel");
+    if (isMobile) await page.getByRole("button", { name: "Informasi" }).click().catch(() => {});
+    const main = page.getByRole("main");
+    await expect(main.getByText("Pilih gambar", { exact: true })).toBeVisible();
+    await expect(main.getByText("Choose File")).toHaveCount(0);
+
+    await page.getByLabel("Sampul", { exact: true }).setInputFiles({
+      name: "sampul.png",
+      mimeType: "image/png",
+      buffer: Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==", "base64"),
+    });
+    await expect(main.getByRole("img", { name: "Pratinjau sampul" })).toBeVisible();
+    await expect(main.getByText("Ganti gambar", { exact: true })).toBeVisible();
   });
 });
 

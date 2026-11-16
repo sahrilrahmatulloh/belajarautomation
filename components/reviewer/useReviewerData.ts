@@ -8,7 +8,7 @@ const DAY_MS = 86_400_000;
 
 export interface ReviewerData {
   contents: ContentItem[];
-  users: { id: string; name: string }[];
+  users: { id: string; name: string; joinedAt?: string }[];
   events: StatusEvent[];
   loadedAt: number;
 }

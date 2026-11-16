@@ -8,7 +8,7 @@ import ListPagination, { pageSlice } from "@/components/common/ListPagination";
 import PrototypeNotice from "@/components/creator/studio/PrototypeNotice";
 import { userName } from "@/components/creator/studio/useCreatorData";
 import SearchField from "@/components/filters/SearchField";
-import { formatContentDate } from "@/lib/content/document";
+import { formatContentDate, wibDate } from "@/lib/content/document";
 import { matchesKeyword } from "@/lib/filters";
 import { formatRupiah } from "@/lib/format";
 import { useCatalogFilters } from "@/lib/useUrlFilters";
@@ -34,8 +34,8 @@ export default function TransactionsPage() {
   const filtered = transactions.filter(
     (item) =>
       (!values.status || item.status === values.status) &&
-      (!values.dari || item.createdAt.slice(0, 10) >= values.dari) &&
-      (!values.sampai || item.createdAt.slice(0, 10) <= values.sampai) &&
+      (!values.dari || wibDate(item.createdAt) >= values.dari) &&
+      (!values.sampai || wibDate(item.createdAt) <= values.sampai) &&
       (values.hari !== "ini" || isToday(item.createdAt, loadedAt)) &&
       matchesKeyword(values.q, item.id, item.itemTitle, userName(users, item.userId))
   );

@@ -1,6 +1,7 @@
 import Link from "next/link";
-import { ClipboardList, GraduationCap, Lock, Newspaper } from "lucide-react";
+import { ClipboardList, FilePlus2, GraduationCap, Lock, Newspaper } from "lucide-react";
 
+import RolePageHeader from "@/components/roles/RolePageHeader";
 import PrototypeNotice from "./PrototypeNotice";
 
 const LOCKED_TYPES = [
@@ -14,10 +15,7 @@ export default function ContentTypePage() {
     <div className="mx-auto w-full max-w-4xl space-y-5">
       <PrototypeNotice />
 
-      <header>
-        <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">Buat Konten</h1>
-        <p className="mt-1 text-muted-foreground">Pilih jenis konten yang ingin kamu tulis.</p>
-      </header>
+      <RolePageHeader icon={FilePlus2} title="Buat Konten" description="Pilih jenis konten yang ingin kamu tulis." />
 
       <div className="grid gap-4 sm:grid-cols-3">
         <Link href="/creator/buat/artikel" className="rounded-2xl border border-primary/40 bg-card p-5 transition-shadow hover:shadow-md">

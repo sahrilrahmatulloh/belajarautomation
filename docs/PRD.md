@@ -1,9 +1,17 @@
 # BELAJARAUTOMATION.COM
 ## Product Requirements Document (PRD)
-**Versi:** 2.48  
+**Versi:** 2.49  
 **Status:** Draft — Acuan Pengembangan Produk  
 **Platform:** Web Application  
 **Target Pengguna:** Pemula hingga praktisi QA, Software Testing, dan Programming
+
+### Perubahan di Versi 2.49
+- Seluruh tanggal di Panel Admin memakai WIB, termasuk filter tanggal dan "hari ini" (FR-16).
+- Sidebar Panel Admin: kelompok menu berupa dropdown, dan di layar lebar sidebar selalu tampil tanpa tombol sembunyikan (FR-16).
+- Dashboard Admin dirapikan: empat angka utama, grafik Pertumbuhan Pengguna dan Pendapatan per Minggu, Konten per Status, Perlu Perhatian, Sebaran Rank, dan Aksi Admin Terbaru (FR-16 A).
+- Profil Admin dan Pengaturan Admin terpisah dari profil pelajar, tanpa foto profil: inisial nama, status verifikasi dua langkah, ringkasan kerja, keamanan akun, dan notifikasi Admin (FR-16 L).
+- Dashboard Creator diperbarui: empat angka utama, grafik Alur Konten dan Konten Dibuat per Minggu, Perlu Dikerjakan, dan Konten Terbaru; ikon jenis konten dan judul halaman berikon; tampilan mobile Konten Saya dengan aksi bertulisan (FR-15).
+- Dashboard Reviewer lebih interaktif: antrean yang dapat disaring dan diambil langsung, Hasil Review, Keputusan per Minggu, dan checklist panduan yang dapat dibuka-tutup; Profil dan Pengaturan Creator dan Reviewer tanpa foto (FR-15).
 
 ### Perubahan di Versi 2.48
 - Tombol "Masuk dengan Google" dan "Daftar dengan Google" dipindah ke bawah tombol utama form email, dipisah garis "atau" (4.5).
@@ -1544,11 +1552,36 @@ Perilaku mode peran:
 
 | Peran | Isi profil |
 |---|---|
-| Creator | Jumlah konten per status dan daftar konten yang sudah terbit |
-| Reviewer | Jumlah konten yang direview, disetujui, dan diminta revisi |
-| Admin | Peran dan tugas, tanpa statistik |
+| Creator | Profil Creator di `/creator/profil` tanpa foto: info akun, jumlah konten per status, dan daftar konten yang sudah terbit |
+| Reviewer | Profil Reviewer di `/reviewer/profil` tanpa foto: info akun, jumlah konten yang direview, disetujui, diminta revisi, dan sedang ditugaskan, serta keputusan terakhir (lihat Profil dan Pengaturan Reviewer) |
+| Admin | Profil Admin di `/admin/profil`: info akun, status verifikasi dua langkah, dan ringkasan kerja, tanpa foto (FR-16 L) |
 
 - Profil publik (FR-13) tetap menampilkan profil pelajar.
+
+### Dashboard Creator
+- Header berisi sapaan dan tombol "Buat Konten Baru" (selebar layar di layar kecil).
+- Empat angka utama yang membuka Konten Saya dengan filter status: Total Konten, Perlu Revisi, Menunggu Review, dan Terbit.
+- **Alur Konten:** batang tersegmen yang menunjukkan porsi konten di setiap tahap (Draf, Menunggu Review, Perlu Revisi, Disetujui, Terbit), dengan legenda berikon dan berangka; setiap tahap membuka Konten Saya dengan filter tahap tersebut. Warna setiap tahap divalidasi agar dapat dibedakan pengguna buta warna, dengan tingkat warna sendiri untuk mode gelap.
+- **Konten Dibuat per Minggu:** grafik batang 8 minggu terakhir, dengan tooltip dan tabel data untuk pembaca layar.
+- **Perlu Dikerjakan:** konten Perlu Revisi beserta jumlah catatan yang sudah ditandai, lalu draf yang belum dikirim; setiap baris membuka Catatan Revisi atau editor.
+- **Konten Terbaru:** lima konten yang terakhir diperbarui, dengan ikon jenis konten, status, dan tanggal; setiap baris membuka detail konten.
+- Ikon jenis konten dipakai konsisten di Dashboard, Konten Saya, dan Buat Konten: Artikel (koran), Lesson (topi wisuda), dan Soal (papan klip). Halaman Konten Saya, Buat Konten, dan Catatan Revisi memakai judul berikon yang sama dengan menu sidebar.
+- Filter status Konten Saya tersimpan di alamat halaman (`?status=`).
+- Di layar kecil, aksi pada kartu Konten Saya ditampilkan dengan ikon dan teks; di layar lebar berupa ikon dengan tooltip.
+
+### Dashboard Reviewer
+- Header berisi sapaan dan tombol "Buka Antrean".
+- Empat angka utama yang dapat diklik: Ditugaskan ke Saya, Belum Ditugaskan (membuka Antrean Review tab Belum ditugaskan, `?tab=belum`), Disetujui, dan Diminta Revisi (membuka Riwayat Review).
+- **Antrean Review** dengan saringan Semua, Ditugaskan ke saya, dan Belum ditugaskan. Setiap baris memuat ikon jenis konten, judul, Creator, dan lama menunggu; konten yang menunggu lebih dari 3 hari ditandai. Konten yang ditugaskan dibuka dengan tombol "Review"; konten yang belum ditugaskan dapat langsung diambil dengan tombol "Ambil", kecuali konten tulisannya sendiri.
+- **Hasil Review:** batang perbandingan Disetujui dan Diminta Revisi beserta jumlah dan persentasenya. Warnanya sama dengan tahap Disetujui dan Perlu Revisi di Dashboard Creator dan dapat dibedakan pengguna buta warna.
+- **Keputusan per Minggu:** grafik batang 8 minggu terakhir, dengan rincian disetujui dan diminta revisi di tooltip serta tabel data untuk pembaca layar.
+- **Aktivitas Review Terakhir** dan **Checklist Panduan Review** yang dapat dibuka-tutup, dengan tautan ke Riwayat Review dan Panduan Review.
+
+### Profil dan Pengaturan Creator dan Reviewer
+- Di semua mode peran (Creator, Reviewer, Admin), header dan menu profil menampilkan inisial nama, bukan avatar kucing (FR-16 L). Avatar kucing hanya dipakai di Mode Belajar.
+- Menu profil membuka Profil dan Pengaturan perannya: `/creator/profil` dan `/creator/pengaturan`, `/reviewer/profil` dan `/reviewer/pengaturan`. Membuka `/profile` di mode peran juga menampilkan profil perannya. Halaman `/settings` tetap ada untuk pengaturan grup notifikasi dan data dummy DEV.
+- Pengaturan Reviewer memuat Informasi Akun (nama dapat diubah, email hanya dibaca), Keamanan (ganti password dan keluar dari semua perangkat; tanpa verifikasi dua langkah wajib), Notifikasi Reviewer (konten baru ditugaskan, kiriman ulang dari Creator, dan antrean belum ditugaskan), serta Tampilan. Bagian khusus pelajar tidak ditampilkan.
+- Pengaturan Creator memuat Informasi Akun, Keamanan, Notifikasi Creator (konten diminta revisi, disetujui, diterbitkan, dan ditarik), serta Tampilan.
 
 ### Jenis konten yang dapat dibuat Creator (bertahap)
 1. **Artikel blog** — tahap pertama.
@@ -1683,6 +1716,7 @@ Menyediakan alat bagi Admin untuk mengelola konten, pengguna, transaksi, katalog
 - Aturan ditegakkan di backend, bukan hanya dengan menyembunyikan tombol.
 - Admin tidak pernah melihat kata sandi pengguna dan tidak dapat mengubah status pembayaran yang berasal dari payment gateway.
 - Data historis (transaksi, XP, riwayat status) tidak dihapus; perubahan dilakukan dengan catatan koreksi.
+- Seluruh tanggal dan jam di Panel Admin, termasuk filter rentang tanggal, "hari ini", dan pengelompokan di Laporan, memakai zona waktu WIB (Asia/Jakarta).
 - Seluruh Panel Admin dibangun sekarang dengan data dummy dan hanya tampil di DEV (FR-15 "Tahap antarmuka dengan data dummy"). Aksi yang membutuhkan backend atau payment gateway diberi keterangan "Simulasi".
 
 ### Navigasi
@@ -1693,6 +1727,9 @@ Menyediakan alat bagi Admin untuk mengelola konten, pengguna, transaksi, katalog
 | Bisnis | Transaksi, Produk Digital |
 | Platform | Katalog Belajar, Pengumuman, Mode Maintenance |
 | Laporan | Laporan, Log Aktivitas Admin |
+
+- Di sidebar, setiap kelompok menu (Konten, Pengguna, Bisnis, Platform, Laporan) berupa tombol dropdown yang membuka dan menutup daftar menunya. Kelompok yang memuat halaman yang sedang dibuka selalu terbuka, dan pilihan buka atau tutup diingat per browser.
+- Di layar lebar, sidebar Panel Admin selalu tampil penuh tanpa tombol sembunyikan sidebar. Di layar kecil, sidebar tetap dibuka dari tombol menu di header.
 
 ### A. Dashboard
 - Konten: jumlah per status, Menunggu Review yang belum ditugaskan, review yang menunggu lebih dari 3 hari, dan konten Disetujui yang siap diterbitkan.
@@ -1805,6 +1842,31 @@ Menutup situs sementara untuk perbaikan tanpa membuat pengguna kehilangan pekerj
 - Dibangun sekarang sebagai simulasi DEV seperti bagian Panel Admin lainnya: status maintenance tersimpan per browser, sehingga Admin dan pengguna dicoba di browser yang sama.
 - Perlindungan kuis diterapkan saat format kuis dibangun; sebelum itu berlaku untuk latihan Playground dan draf Creator.
 - Pemeriksaan status di server, kode 503, dan antrean kiriman ke server menunggu backend.
+
+### L. Profil dan Pengaturan Admin
+Di mode Admin, akun bekerja sebagai petugas, bukan pelajar, sehingga profil dan pengaturannya dipisah dari profil pelajar (FR-13). Profil pelajar, avatar, XP, dan rank tetap ada di Mode Belajar.
+
+**Identitas**
+- Di mode Admin, header dan menu profil menampilkan inisial nama dalam lingkaran, bukan avatar kucing. Avatar kucing kembali saat beralih ke Mode Belajar.
+- Menu profil di mode Admin membuka Profil Admin (`/admin/profil`) dan Pengaturan Admin (`/admin/pengaturan`).
+
+**Profil Admin**
+- Nama, email, tanggal bergabung, dan seluruh peran yang dimiliki.
+- Status verifikasi dua langkah (aktif atau belum, beserta tanggal aktif bila tersedia).
+- Ringkasan kerja: jumlah aksi Admin 30 hari terakhir dan tautan ke Log Aktivitas Admin yang tersaring ke Admin tersebut.
+- Tanpa XP, rank, banner, kustomisasi, maupun profil publik.
+
+**Pengaturan Admin**
+
+| Bagian | Isi |
+|---|---|
+| Informasi Akun | Nama tampilan dapat diubah; email hanya dibaca |
+| Keamanan | Ganti password (minimal 8 karakter, dengan konfirmasi); status verifikasi dua langkah dan tombol atur ulang authenticator (dengan konfirmasi; Admin langsung keluar dan wajib memindai kode QR baru saat masuk lagi ke halaman Admin); keluar dari semua perangkat |
+| Notifikasi Admin | Akun ditandai Moderasi, review menunggu lebih dari 3 hari, dan transaksi menunggu pembayaran |
+| Tampilan | Mode terang, gelap, atau mengikuti sistem |
+
+- Pengaturan khusus pelajar tidak ditampilkan: privasi profil publik, preferensi belajar, kustomisasi avatar, dan hapus akun. Akun Admin tidak dapat menghapus dirinya sendiri.
+- Akun demo DEV melihat seluruh bagian, tetapi aksi yang membutuhkan backend (nama, password, verifikasi dua langkah, keluar dari semua perangkat) tidak dapat dijalankan dan diberi keterangan. Pilihan notifikasi tersimpan per browser sampai backend tersedia.
 
 ---
 

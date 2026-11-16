@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { FileText } from "lucide-react";
 
 import CreatorGuidePage from "@/components/creator/CreatorGuidePage";
@@ -10,7 +11,10 @@ export default function Page() {
   return (
     <DashboardLayout>
       {isDev ? (
-        <ContentsPage />
+        // Filter status dibaca dari alamat (useSearchParams), jadi butuh Suspense saat prerender.
+        <Suspense fallback={<p className="text-sm text-muted-foreground">Memuat konten...</p>}>
+          <ContentsPage />
+        </Suspense>
       ) : (
         <CreatorGuidePage
           title="Konten Saya"

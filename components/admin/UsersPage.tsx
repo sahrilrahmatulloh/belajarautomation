@@ -15,7 +15,7 @@ import { UserRole } from "@/types/Role";
 
 import AccountStatusBadge from "./AccountStatusBadge";
 import AdminList, { AdminColumn } from "./AdminList";
-import { MEMBERSHIP_LABELS, NEW_USER_DAYS, isNewUser, useAdminData } from "./useAdminData";
+import { MEMBERSHIP_LABELS, NEW_USER_DAYS, PAID_MEMBERSHIP, isNewUser, useAdminData } from "./useAdminData";
 
 const PAGE_SIZE = 10;
 const FILTER_KEYS = ["q", "peran", "membership", "status", "kesepakatan", "baru"] as const;
@@ -36,7 +36,7 @@ export default function UsersPage() {
   const filtered = users.filter(
     (user) =>
       (!values.peran || user.roles.includes(values.peran as UserRole)) &&
-      (!values.membership || user.membership === values.membership) &&
+      (!values.membership || (values.membership === PAID_MEMBERSHIP ? user.membership !== "basic" : user.membership === values.membership)) &&
       (!values.status || user.status === values.status) &&
       (!values.kesepakatan || (user.roles.includes("creator") && !hasAgreement(user))) &&
       (!values.baru || isNewUser(user, loadedAt)) &&
@@ -101,6 +101,7 @@ export default function UsersPage() {
         <select aria-label="Filter membership" value={values.membership} onChange={(event) => updateFilter("membership", event.target.value)} className={selectClass}>
           <option value="">Semua membership</option>
           {Object.entries(MEMBERSHIP_LABELS).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
+          <option value={PAID_MEMBERSHIP}>Pro dan Premium</option>
         </select>
         <select aria-label="Filter status akun" value={values.status} onChange={(event) => updateFilter("status", event.target.value)} className={selectClass}>
           <option value="">Semua status</option>

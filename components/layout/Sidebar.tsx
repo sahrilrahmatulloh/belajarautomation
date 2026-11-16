@@ -6,8 +6,11 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import AuthLink from "@/components/auth/AuthLink";
+import { NavItem } from "@/types/Navigation";
 import { useSession } from "@/lib/session";
 import { useViewMode } from "@/lib/viewMode";
+
+import AdminSidebarNav from "./AdminSidebarNav";
 
 import {
   getRoleFromPath,
@@ -32,6 +35,10 @@ export default function Sidebar({
   const role = pathRole === "user" ? activeRole : pathRole;
   const home = ROLE_HOME[role];
   const menuItems = NAVIGATION[role];
+  const isItemActive = (item: NavItem) =>
+    Boolean(item.href) && (item.href === home ? pathname === home : pathname.startsWith(item.href!));
+  // Panel Admin: sidebar selalu lebar dengan kelompok menu berupa dropdown (PRD FR-16 Navigasi).
+  if (role === "admin") collapsed = false;
 
   return (
     <aside
@@ -77,7 +84,7 @@ export default function Sidebar({
         aria-label={`Menu ${ROLE_LABELS[role]}`}
         className={`flex-1 space-y-2 overflow-y-auto ${collapsed ? "px-3" : "px-4"}`}
       >
-        {menuItems.map((item, index) => {
+        {role === "admin" ? <AdminSidebarNav items={menuItems} isActive={isItemActive} /> : menuItems.map((item, index) => {
           const Icon = item.icon;
           const groupTitle = !collapsed && item.group && item.group !== menuItems[index - 1]?.group ? (
             <p className="px-3 pt-3 text-xs font-semibold text-muted-foreground first:pt-0">{item.group}</p>

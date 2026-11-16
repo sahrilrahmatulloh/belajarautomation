@@ -6,11 +6,13 @@ import RoleGuidePage from "@/components/roles/RoleGuidePage";
 import { isDev } from "@/lib/env";
 
 // Antarmuka dengan data dummy hanya di DEV. Di luar DEV tetap halaman informasi (PRD FR-15).
-export default function Page() {
+// ?tab=belum membuka tab Belum ditugaskan, mis. dari angka di Dashboard Reviewer.
+export default async function Page({ searchParams }: { searchParams: Promise<{ tab?: string }> }) {
+  const { tab } = await searchParams;
   return (
     <DashboardLayout>
       {isDev ? (
-        <ReviewQueuePage />
+        <ReviewQueuePage key={tab ?? ""} initialTab={tab === "belum" ? "belum" : "ditugaskan"} />
       ) : (
         <RoleGuidePage
           role="reviewer"

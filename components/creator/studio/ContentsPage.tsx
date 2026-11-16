@@ -14,25 +14,33 @@ import ContentStatusBadge from "@/components/roles/ContentStatusBadge";
 import { runContentAction } from "@/lib/content";
 import { formatContentDate, KIND_LABELS, STATUS_LABELS } from "@/lib/content/document";
 import { matchesKeyword } from "@/lib/filters";
+import { useCatalogFilters } from "@/lib/useUrlFilters";
 import { ContentItem, ContentKind, ContentStatusId } from "@/types/ContentWorkflow";
 
+import { KIND_ICONS } from "@/components/creator/contentMeta";
+
+import RolePageHeader from "@/components/roles/RolePageHeader";
 import PrototypeNotice from "./PrototypeNotice";
 import { useCreatorData, userName } from "./useCreatorData";
 
 const PAGE_SIZE = 5;
 const STATUSES = Object.keys(STATUS_LABELS) as ContentStatusId[];
 const KINDS = Object.keys(KIND_LABELS) as ContentKind[];
+const FILTER_KEYS = ["status"] as const;
 
 function RowActions({
   content,
   userId,
   onDelete,
   onError,
+  labeled = false,
 }: {
   content: ContentItem;
   userId: string;
   onDelete: (content: ContentItem) => void;
   onError: (message: string) => void;
+  // Kartu di layar kecil: semua aksi bertulisan agar mudah dikenali Creator.
+  labeled?: boolean;
 }) {
   const router = useRouter();
   const detailHref = `/creator/konten/${content.id}`;
@@ -54,30 +62,41 @@ function RowActions({
       {content.status === "draf" && (
         <>
           <IconAction label="Kirim untuk Review" icon={Send} href={editHref} showLabel />
-          <IconAction label="Edit" icon={Pencil} href={editHref} />
-          <IconAction label="Hapus" icon={Trash2} tone="destructive" onClick={() => onDelete(content)} />
+          <IconAction label="Edit" icon={Pencil} href={editHref} showLabel={labeled} />
+          <IconAction label="Hapus" icon={Trash2} tone="destructive" onClick={() => onDelete(content)} showLabel={labeled} />
         </>
       )}
       {content.status === "menunggu-review" && (
         <>
-          <IconAction label="Lihat" icon={Eye} href={detailHref} />
-          <IconAction label="Tarik kembali" icon={Undo2} onClick={() => void withdraw()} />
+          <IconAction label="Lihat" icon={Eye} href={detailHref} showLabel={labeled} />
+          <IconAction label="Tarik kembali" icon={Undo2} onClick={() => void withdraw()} showLabel={labeled} />
         </>
       )}
       {content.status === "perlu-revisi" && (
         <>
-          <IconAction label="Lihat catatan" icon={MessageSquareText} href={`/creator/revisi/${content.id}`} />
-          <IconAction label="Edit" icon={Pencil} href={editHref} />
+          <IconAction label="Lihat catatan" icon={MessageSquareText} href={`/creator/revisi/${content.id}`} showLabel={labeled} />
+          <IconAction label="Edit" icon={Pencil} href={editHref} showLabel={labeled} />
         </>
       )}
-      {content.status === "disetujui" && <IconAction label="Lihat" icon={Eye} href={detailHref} />}
+      {content.status === "disetujui" && <IconAction label="Lihat" icon={Eye} href={detailHref} showLabel={labeled} />}
       {content.status === "terbit" && (
         <>
           <IconAction label="Buat revisi" icon={FilePen} onClick={() => void createRevision()} showLabel />
-          {content.publicPath && <IconAction label="Lihat di website" icon={ExternalLink} href={content.publicPath} />}
+          {content.publicPath && <IconAction label="Lihat di website" icon={ExternalLink} href={content.publicPath} showLabel={labeled} />}
         </>
       )}
     </div>
+  );
+}
+
+// Jenis konten dengan ikonnya, agar mudah dikenali (PRD FR-15).
+function KindLabel({ kind }: { kind: ContentKind }) {
+  const Icon = KIND_ICONS[kind];
+  return (
+    <span className="inline-flex items-center gap-1.5">
+      <Icon className="h-4 w-4 shrink-0 text-primary-accent" aria-hidden="true" />
+      {KIND_LABELS[kind]}
+    </span>
   );
 }
 
@@ -89,7 +108,9 @@ function RevisionLabel({ content }: { content: ContentItem }) {
 // Konten Saya (PRD FR-15).
 export default function ContentsPage() {
   const { userId, data } = useCreatorData();
-  const [status, setStatus] = useState<"" | ContentStatusId>("");
+  // Status tersimpan di alamat, agar angka di Dashboard Creator membuka daftar yang tersaring.
+  const { values, setFilters } = useCatalogFilters(FILTER_KEYS);
+  const status = (STATUSES as string[]).includes(values.status) ? (values.status as ContentStatusId) : "";
   const [kind, setKind] = useState("");
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
@@ -122,16 +143,17 @@ export default function ContentsPage() {
     <div className="mx-auto w-full max-w-6xl space-y-5">
       <PrototypeNotice />
 
-      <header className="flex flex-wrap items-start justify-between gap-4">
-        <div className="min-w-0">
-          <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">Konten Saya</h1>
-          <p className="mt-1 text-muted-foreground">Kelola konten dan pantau statusnya dari draf hingga terbit.</p>
-        </div>
-        <Link href="/creator/buat" className="inline-flex min-h-10 items-center gap-2 rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary-hover">
-          <Plus className="h-4 w-4" aria-hidden="true" />
-          Buat Konten
-        </Link>
-      </header>
+      <RolePageHeader
+        icon={FileText}
+        title="Konten Saya"
+        description="Kelola konten dan pantau statusnya dari draf hingga terbit."
+        action={
+          <Link href="/creator/buat" className="inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary-hover sm:w-auto">
+            <Plus className="h-4 w-4" aria-hidden="true" />
+            Buat Konten
+          </Link>
+        }
+      />
 
       {error && <p role="alert" className="rounded-lg border border-destructive/40 bg-destructive/10 p-3 text-sm text-destructive">{error}</p>}
 
@@ -178,7 +200,7 @@ export default function ContentsPage() {
             options={tabs}
             active={status}
             onChange={(value) => {
-              setStatus(value as "" | ContentStatusId);
+              setFilters({ status: value });
               setPage(1);
             }}
           />
@@ -198,7 +220,7 @@ export default function ContentsPage() {
                     {visible.map((content) => (
                       <tr key={content.id}>
                         <th scope="row" className="px-4 py-3 font-medium">{titleOf(content)}<RevisionLabel content={content} /></th>
-                        <td className="px-4 py-3 text-muted-foreground">{KIND_LABELS[content.type]}</td>
+                        <td className="px-4 py-3 text-muted-foreground"><KindLabel kind={content.type} /></td>
                         <td className="px-4 py-3 text-muted-foreground">{content.kategori || "-"}</td>
                         <td className="px-4 py-3"><ContentStatusBadge status={content.status} /></td>
                         <td className="whitespace-nowrap px-4 py-3 text-muted-foreground">{formatContentDate(content.updatedAt)}</td>
@@ -218,11 +240,11 @@ export default function ContentsPage() {
                       <ContentStatusBadge status={content.status} />
                     </div>
                     <p className="mt-1 text-sm text-muted-foreground">
-                      {KIND_LABELS[content.type]} · {content.kategori || "-"} · {formatContentDate(content.updatedAt)}
+                      <KindLabel kind={content.type} /> · {content.kategori || "-"} · {formatContentDate(content.updatedAt)}
                     </p>
                     <p className="text-sm text-muted-foreground">Reviewer: {userName(users, content.reviewerId)}</p>
                     <div className="mt-2 border-t border-border pt-2">
-                      <RowActions content={content} userId={userId} onDelete={setDeleting} onError={setError} />
+                      <RowActions content={content} userId={userId} onDelete={setDeleting} onError={setError} labeled />
                     </div>
                   </li>
                 ))}

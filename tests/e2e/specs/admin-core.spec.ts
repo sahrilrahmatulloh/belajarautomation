@@ -51,7 +51,7 @@ test.describe("Dashboard prototipe DEV", () => {
       await expect(page.getByRole("heading", { level: 3, name: label })).toBeVisible();
       await expect(page.getByRole("link", { name: new RegExp(label) })).toHaveCount(0);
     }
-    await expect(page.getByRole("main")).toContainText("Alur belum ditentukan");
+    await expect(page.getByRole("main")).toContainText("Menunggu kebijakan refund");
   });
 });
 
@@ -60,11 +60,51 @@ test.describe("Sidebar", () => {
     await page.goto("/admin");
     if (isMobile) await page.getByRole("button", { name: "Buka atau tutup sidebar" }).click();
     const nav = page.getByRole("navigation", { name: "Menu Admin" });
+    // Kelompok menu berupa dropdown; tunggu siap, lalu buka semua yang masih tertutup.
+    await expect(nav.getByRole("button", { name: "Konten", exact: true })).toHaveAttribute("aria-expanded", "true");
+    for (const name of ["Pengguna", "Bisnis", "Platform", "Laporan"]) await nav.getByRole("button", { name, exact: true }).click();
 
     await expect(nav.getByRole("link")).toHaveText(["Dashboard", "Semua Konten", "Pengguna dan Peran", "Moderasi", "Transaksi", "Produk Digital", "Katalog Belajar", "Pengumuman", "Mode Maintenance", "Laporan", "Log Aktivitas Admin"]);
     await expect(nav).toContainText("Konten");
     await expect(nav).toContainText("Pengguna");
     await expect(nav).toContainText("Laporan");
+  });
+
+  test("kelompok menu berupa dropdown; kelompok halaman aktif terbuka dan pilihan diingat", async ({ page, isMobile }) => {
+    const openSidebar = async () => {
+      if (isMobile) await page.getByRole("button", { name: "Buka atau tutup sidebar" }).click();
+    };
+    await page.goto("/admin/moderasi");
+    await openSidebar();
+    const nav = page.getByRole("navigation", { name: "Menu Admin" });
+    const group = (name: string) => nav.getByRole("button", { name, exact: true });
+
+    await expect(nav.getByRole("button")).toHaveText(["Konten", "Pengguna", "Bisnis", "Platform", "Laporan"]);
+    await expect(group("Pengguna")).toHaveAttribute("aria-expanded", "true");
+    await expect(nav.getByRole("link", { name: "Moderasi" })).toHaveAttribute("aria-current", "page");
+    await expect(group("Bisnis")).toHaveAttribute("aria-expanded", "false");
+    await expect(nav.getByRole("link", { name: "Transaksi" })).toBeHidden();
+
+    await group("Bisnis").click();
+    await expect(nav.getByRole("link", { name: "Transaksi" })).toBeVisible();
+
+    // Pilihan dibuka tetap diingat di halaman lain.
+    await nav.getByRole("link", { name: "Transaksi" }).click();
+    await expect(page).toHaveURL("/admin/transaksi");
+    await openSidebar();
+    await expect(group("Bisnis")).toHaveAttribute("aria-expanded", "true");
+    await expect(group("Pengguna")).toHaveAttribute("aria-expanded", "true");
+  });
+
+  test("di layar lebar sidebar selalu tampil tanpa tombol sembunyikan", async ({ page, isMobile }) => {
+    await page.goto("/admin");
+    const toggle = page.getByRole("button", { name: "Buka atau tutup sidebar" });
+    if (isMobile) {
+      await expect(toggle).toBeVisible();
+      return;
+    }
+    await expect(toggle).toBeHidden();
+    await expect(page.getByRole("navigation", { name: "Menu Admin" })).toBeVisible();
   });
 });
 

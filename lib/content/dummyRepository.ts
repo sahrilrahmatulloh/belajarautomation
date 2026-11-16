@@ -10,6 +10,7 @@ import {
   StatusAction,
 } from "@/types/ContentWorkflow";
 import { DUMMY_LEARNING_PROGRESS } from "@/data/dummy/learningProgress";
+import { MANUAL_MEMBERSHIP_DAYS } from "@/data/membership";
 import { isAvailableHref } from "@/lib/notificationTarget";
 import { ModerationActionKind } from "@/types/AdminPlatform";
 import { Announcement } from "@/types/Announcement";
@@ -141,8 +142,11 @@ export function createDummyRepository(storage: KeyValueStorage | null = browserS
   const hasAgreement = (userId: string) => state().agreements.some((item) => item.userId === userId);
 
   // Membership mengikuti hak akses aktif tertinggi, jadi refund dan pencabutan langsung berdampak.
+  // Hak akses berlaku: belum dicabut dan, untuk membership manual, belum lewat masa berlakunya.
+  const isLive = (entry: Entitlement) => entry.active && (!entry.endsAt || Date.parse(entry.endsAt) > Date.now());
+
   const syncMembership = (userId: string) => {
-    const tiers = state().entitlements.filter((item) => item.userId === userId && item.kind === "membership" && item.active).map((item) => item.itemId);
+    const tiers = state().entitlements.filter((item) => item.userId === userId && item.kind === "membership" && isLive(item)).map((item) => item.itemId);
     user(userId).membership = tiers.includes("premium") ? "premium" : tiers.includes("pro") ? "pro" : "basic";
   };
 
@@ -230,6 +234,11 @@ export function createDummyRepository(storage: KeyValueStorage | null = browserS
     },
 
     async listUsers() {
+      // Membership manual yang sudah lewat masa berlakunya kembali ke paket di bawahnya.
+      const withMembership = new Set(state().entitlements.filter((item) => item.kind === "membership").map((item) => item.userId));
+      withMembership.forEach((userId) => {
+        if (state().users.some((item) => item.id === userId)) syncMembership(userId);
+      });
       return structuredClone(state().users);
     },
     async listContents() {
@@ -695,12 +704,33 @@ export function createDummyRepository(storage: KeyValueStorage | null = browserS
       return structuredClone(item);
     },
 
-    async grantEntitlement(actorId, userId, { kind, itemId }, alasan) {
+    async grantEntitlement(actorId, userId, { kind, itemId, durationDays = null }, alasan) {
       requireRole(actorId, "admin", "Admin");
       const reason = requireReason(alasan);
       const target = user(userId);
       const title = itemTitle(kind, itemId);
-      if (state().entitlements.some((entry) => entry.userId === userId && entry.itemId === itemId && entry.active)) throw new ContentRuleError(`${target.name} sudah memiliki ${title}.`);
+      const at = now();
+      let endsAt: string | null = null;
+      if (kind === "membership") {
+        // Membership manual (PRD FR-16 E): alasan minimal 5 karakter, durasi tertentu, dan
+        // menggantikan pemberian manual yang masih berlaku.
+        if (reason.length < 5) throw new ContentRuleError("Alasan minimal 5 karakter.");
+        if (durationDays !== null && !MANUAL_MEMBERSHIP_DAYS.includes(durationDays)) throw new ContentRuleError("Durasi membership tidak valid.");
+        if (state().entitlements.some((entry) => entry.userId === userId && entry.itemId === itemId && entry.source === "pembelian" && isLive(entry))) {
+          throw new ContentRuleError(`${target.name} sudah memiliki ${title} dari pembelian.`);
+        }
+        endsAt = durationDays === null ? null : new Date(Date.parse(at) + durationDays * 86_400_000).toISOString();
+        state().entitlements.forEach((entry) => {
+          if (entry.userId === userId && entry.kind === "membership" && entry.source === "pemberian-manual" && isLive(entry)) {
+            entry.active = false;
+            entry.revokedAt = at;
+            entry.revokedBy = actorId;
+            entry.revokeReason = "Digantikan pemberian manual baru.";
+          }
+        });
+      } else if (state().entitlements.some((entry) => entry.userId === userId && entry.itemId === itemId && isLive(entry))) {
+        throw new ContentRuleError(`${target.name} sudah memiliki ${title}.`);
+      }
       const entry: Entitlement = {
         id: newId("akses"),
         userId,
@@ -710,15 +740,17 @@ export function createDummyRepository(storage: KeyValueStorage | null = browserS
         source: "pemberian-manual",
         transactionId: null,
         active: true,
-        grantedAt: now(),
+        grantedAt: at,
         grantedBy: actorId,
         alasan: reason,
         revokedAt: null,
         revokedBy: null,
         revokeReason: null,
+        endsAt,
       };
       state().entitlements.push(entry);
-      audit({ adminId: actorId, action: "berikan-akses", targetType: "pengguna", targetId: userId, targetLabel: target.name, alasan: reason, before: null, after: { hakAkses: title, sumber: "Pemberian manual" } });
+      const durasi = kind === "membership" ? { durasi: durationDays === null ? "Tanpa batas" : `${durationDays} hari` } : {};
+      audit({ adminId: actorId, action: "berikan-akses", targetType: "pengguna", targetId: userId, targetLabel: target.name, alasan: reason, before: null, after: { hakAkses: title, sumber: "Pemberian manual", ...durasi } });
       syncMembership(userId);
       commit();
       return structuredClone(entry);

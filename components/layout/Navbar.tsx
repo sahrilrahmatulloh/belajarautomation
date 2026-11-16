@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Menu, SunMoon } from "lucide-react";
 import { useTheme } from "next-themes";
 
@@ -9,6 +10,7 @@ import NotificationBell from "@/components/notifications/NotificationBell";
 import ProfileDropdown from "@/components/profile/ProfileDropdown";
 import { useSession } from "@/lib/session";
 import { useHydrated } from "@/lib/useHydrated";
+import { getRoleFromPath } from "@/data/navigation";
 import { useViewMode } from "@/lib/viewMode";
 
 interface NavbarProps {
@@ -22,6 +24,8 @@ export default function Navbar({
   const session = useSession();
   const isHydrated = useHydrated();
   const { isRoleMode } = useViewMode();
+  // Panel Admin: sidebar desktop selalu tampil, jadi tombol ini hanya untuk layar kecil.
+  const isAdmin = getRoleFromPath(usePathname()) === "admin";
 
   const toggleTheme = () => {
     setTheme(
@@ -37,7 +41,7 @@ export default function Navbar({
         <button
           type="button"
           onClick={onToggleSidebar}
-          className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-lg transition-colors duration-150 hover:bg-accent active:scale-95"
+          className={`inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-lg transition-colors duration-150 hover:bg-accent active:scale-95 ${isAdmin ? "lg:hidden" : ""}`}
           aria-label="Buka atau tutup sidebar"
         >
           <Menu size={20} />

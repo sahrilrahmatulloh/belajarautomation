@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ClipboardCheck, Eye, FileSearch } from "lucide-react";
+import { ClipboardCheck, Eye, FileSearch, Inbox } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import IconAction from "@/components/common/IconAction";
@@ -10,7 +10,9 @@ import { userName } from "@/components/creator/studio/useCreatorData";
 import PrototypeNotice from "@/components/creator/studio/PrototypeNotice";
 import FilterChips from "@/components/filters/FilterChips";
 import SearchField from "@/components/filters/SearchField";
+import { KIND_ICONS } from "@/components/creator/contentMeta";
 import ContentStatusBadge from "@/components/roles/ContentStatusBadge";
+import RolePageHeader from "@/components/roles/RolePageHeader";
 import { runContentAction } from "@/lib/content";
 import { formatContentDate, KIND_LABELS } from "@/lib/content/document";
 import { matchesKeyword } from "@/lib/filters";
@@ -22,6 +24,17 @@ const PAGE_SIZE = 10;
 const KINDS = Object.keys(KIND_LABELS) as ContentKind[];
 
 type TabId = "ditugaskan" | "belum" | "riwayat";
+
+// Jenis konten dengan ikonnya, sama seperti di halaman Creator (PRD FR-15).
+function KindLabel({ kind }: { kind: ContentKind }) {
+  const Icon = KIND_ICONS[kind];
+  return (
+    <span className="inline-flex items-center gap-1.5">
+      <Icon className="h-4 w-4 shrink-0 text-primary-accent" aria-hidden="true" />
+      {KIND_LABELS[kind]}
+    </span>
+  );
+}
 
 // Antrian Review (PRD FR-15). Riwayat Review memakai halaman yang sama dengan tab terbuka.
 export default function ReviewQueuePage({ initialTab = "ditugaskan" }: { initialTab?: TabId }) {
@@ -51,10 +64,7 @@ export default function ReviewQueuePage({ initialTab = "ditugaskan" }: { initial
     <div className="mx-auto w-full max-w-6xl space-y-5">
       <PrototypeNotice />
 
-      <header>
-        <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">Antrean Review</h1>
-        <p className="mt-1 text-muted-foreground">Periksa konten dari Creator sebelum diterbitkan.</p>
-      </header>
+      <RolePageHeader icon={Inbox} title="Antrean Review" description="Periksa konten dari Creator sebelum diterbitkan." />
 
       {error && <p role="alert" className="rounded-lg border border-destructive/40 bg-destructive/10 p-3 text-sm text-destructive">{error}</p>}
 
@@ -112,7 +122,7 @@ export default function ReviewQueuePage({ initialTab = "ditugaskan" }: { initial
                 {pageSlice(filtered, currentPage, PAGE_SIZE).map((content) => (
                   <tr key={content.id}>
                     <th scope="row" className="px-4 py-3 font-medium">{content.judul}</th>
-                    <td className="px-4 py-3 text-muted-foreground">{KIND_LABELS[content.type]}</td>
+                    <td className="px-4 py-3 text-muted-foreground"><KindLabel kind={content.type} /></td>
                     <td className="px-4 py-3">{userName(data.users, content.authorId)}</td>
                     <td className="whitespace-nowrap px-4 py-3 text-muted-foreground">{content.submittedAt ? formatContentDate(content.submittedAt) : "-"}</td>
                     <td className="whitespace-nowrap px-4 py-3 text-muted-foreground">{submissionLabel(content.submissionCount)}</td>

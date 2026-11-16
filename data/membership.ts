@@ -71,3 +71,12 @@ export const MEMBERSHIP_COMPARISON: {
   { feature: "Beli eBook dan project terpisah", values: { basic: true, pro: true, premium: true } },
   { feature: "Bonus XP atau rank karena pembayaran", values: { basic: false, pro: false, premium: false } },
 ];
+
+// Durasi membership manual dari Panel Admin (PRD FR-16 E). null berarti tanpa batas.
+export const MANUAL_MEMBERSHIP_DURATIONS: { days: number | null; label: string }[] = [
+  { days: 30, label: "30 hari" },
+  { days: 90, label: "90 hari" },
+  { days: 365, label: "1 tahun" },
+  { days: null, label: "Tanpa batas" },
+];
+export const MANUAL_MEMBERSHIP_DAYS = MANUAL_MEMBERSHIP_DURATIONS.flatMap((item) => (item.days === null ? [] : [item.days]));

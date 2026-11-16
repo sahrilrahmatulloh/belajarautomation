@@ -87,7 +87,8 @@ export interface ContentRepository {
   // Transaksi dan hak akses. Tidak ada operasi Admin untuk mengubah status pembayaran: refund
   // adalah satu-satunya aksi Admin, dan hanya dari status Berhasil (PRD FR-16 E).
   refundTransaction(actorId: string, transactionId: string, alasan: string): Promise<Transaction>;
-  grantEntitlement(actorId: string, userId: string, item: { kind: EntitlementKind; itemId: string }, alasan: string): Promise<Entitlement>;
+  // durationDays hanya untuk membership: 30, 90, 365, atau null (tanpa batas).
+  grantEntitlement(actorId: string, userId: string, item: { kind: EntitlementKind; itemId: string; durationDays?: number | null }, alasan: string): Promise<Entitlement>;
   revokeEntitlement(actorId: string, entitlementId: string, alasan: string): Promise<Entitlement>;
   saveProduct(actorId: string, productId: string | null, input: ProductInput, alasan: string): Promise<Product>;
   // Meniru kabar dari payment gateway. Hanya untuk tahap dummy; bukan aksi Admin.

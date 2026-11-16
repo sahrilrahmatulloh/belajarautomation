@@ -50,6 +50,9 @@ export interface Entitlement {
   revokedAt: string | null;
   revokedBy: string | null;
   revokeReason: string | null;
+  // Akhir masa berlaku membership manual (PRD FR-16 E: 30 hari, 90 hari, 1 tahun, atau tanpa
+  // batas). Kosong berarti tanpa batas; hak akses lain tidak punya masa berlaku.
+  endsAt?: string | null;
 }
 
 export interface CreditClaim {

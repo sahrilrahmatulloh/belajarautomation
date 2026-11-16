@@ -162,7 +162,7 @@ export default function CatalogPage() {
           <div className="h-full rounded-full bg-primary" style={{ width: `${Math.min(100, (freeXp / MASTER_XP) * 100)}%` }} />
         </div>
         <p className="mt-2 text-sm text-muted-foreground">
-          {isEnough ? "Rank Master bisa dicapai dari materi gratis." : "Masih di bawah batas rank Master, jadi course gratis tidak bisa dijadikan premium."} Dihitung dari target lesson kurikulum dan latihan yang sudah ada.
+          {isEnough ? "Rank Master bisa dicapai dari materi gratis." : "Masih di bawah batas rank Master, jadi course gratis tidak bisa dijadikan premium."} Dihitung dari modul course (XP per modul dan bonus course, PRD FR-05) dan latihan yang sudah ada.
         </p>
       </section>
 
