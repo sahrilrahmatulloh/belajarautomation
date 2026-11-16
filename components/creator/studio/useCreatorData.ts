@@ -12,7 +12,7 @@ export function useCreatorData() {
     const [contents, notes, users] = await Promise.all([repository.listContents(), repository.listAllNotes(), repository.listUsers()]);
     const own = contents.filter((content) => content.authorId === userId);
     const ownIds = new Set(own.map((content) => content.id));
-    return { contents: own, notes: notes.filter((note) => ownIds.has(note.contentId) && note.released), users };
+    return { contents: own, notes: notes.filter((note) => ownIds.has(note.contentId) && note.released), users, loadedAt: Date.now() };
   });
 
   return { userId, data };

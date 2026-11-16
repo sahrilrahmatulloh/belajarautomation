@@ -1,5 +1,6 @@
 import { COURSES } from "@/data/courses";
 import { DUMMY_LEARNING_PROGRESS } from "@/data/dummy/learningProgress";
+import { wibDate } from "@/lib/content/document";
 import { Transaction } from "@/types/Commerce";
 import { ContentItem, ContentUser, StatusEvent } from "@/types/ContentWorkflow";
 
@@ -19,7 +20,7 @@ export interface ReportInput {
 // Laporan dihitung dari data, tidak ada angka yang ditulis tangan (PRD FR-16 I).
 export function buildReport({ users, transactions, contents, events, now, from, to }: ReportInput) {
   const inRange = (iso: string) => {
-    const date = iso.slice(0, 10);
+    const date = wibDate(iso);
     return (!from || date >= from) && (!to || date <= to);
   };
   const activeWithin = (days: number) => users.filter((user) => now - Date.parse(user.lastActiveAt) < days * DAY_MS).length;

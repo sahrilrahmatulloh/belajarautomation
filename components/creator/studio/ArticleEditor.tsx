@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Dialog } from "@base-ui/react/dialog";
-import { Eye, Plus, Trash2, X } from "lucide-react";
+import { Eye, ImagePlus, Plus, Trash2, X } from "lucide-react";
 
 import ContentArticleView from "@/components/content/ContentArticleView";
 import { useMaintenance } from "@/components/maintenance/useMaintenance";
@@ -47,6 +47,7 @@ function SavedStatus({ savedAt, error }: { savedAt: number | null; error: string
 
 function CoverField({ value, onChange }: { value: string; onChange: (value: string) => void }) {
   const [error, setError] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const pickFile = async (file: File | undefined) => {
     if (!file) return;
@@ -73,13 +74,27 @@ function CoverField({ value, onChange }: { value: string; onChange: (value: stri
           </button>
         </div>
       )}
-      <input
-        id="article-cover"
-        type="file"
-        accept="image/jpeg,image/png,image/webp"
-        onChange={(event) => void pickFile(event.target.files?.[0])}
-        className="mt-1.5 block w-full text-sm file:mr-3 file:min-h-9 file:rounded-lg file:border file:border-border file:bg-transparent file:px-3 file:font-medium"
-      />
+      {/* Tombol bawaan browser berbahasa Inggris ("Choose File"), jadi input disembunyikan secara
+          visual dan diganti tombol berbahasa Indonesia; input tetap bisa difokus dengan keyboard. */}
+      <div className="mt-1.5 flex flex-wrap items-center gap-3">
+        <input
+          ref={inputRef}
+          id="article-cover"
+          type="file"
+          accept="image/jpeg,image/png,image/webp"
+          onChange={(event) => void pickFile(event.target.files?.[0])}
+          className="peer sr-only"
+        />
+        <span
+          aria-hidden="true"
+          onClick={() => inputRef.current?.click()}
+          className="inline-flex min-h-10 cursor-pointer items-center gap-2 rounded-lg border border-border px-3 text-sm font-medium transition-colors hover:bg-accent peer-focus-visible:ring-2 peer-focus-visible:ring-ring"
+        >
+          <ImagePlus className="h-4 w-4" aria-hidden="true" />
+          {value ? "Ganti gambar" : "Pilih gambar"}
+        </span>
+        <span aria-hidden="true" className="text-sm text-muted-foreground">{value ? "Gambar dipilih" : "Belum ada gambar"}</span>
+      </div>
       <p className="mt-1 text-xs text-muted-foreground">Simulasi. JPG, PNG, WebP, maksimal 2 MB.</p>
       {error && <p role="alert" className="mt-1 text-xs font-medium text-destructive">{error}</p>}
     </div>

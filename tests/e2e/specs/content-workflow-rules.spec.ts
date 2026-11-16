@@ -343,7 +343,7 @@ test.describe("Aturan transaksi dan hak akses", () => {
     expect((await repo.listEntitlements()).some((item) => item.transactionId === "trx-galih-project")).toBe(false);
   });
 
-  test("pemberian manual: wajib alasan, tanpa transaksi, tidak dobel, dan bisa dicabut", async () => {
+  test("pemberian manual: wajib alasan, tanpa transaksi, membership menggantikan yang lama, dan bisa dicabut", async () => {
     const before = (await repo.listTransactions()).length;
     await expectRule(repo.grantEntitlement(RAHMA, SOBAT, { kind: "membership", itemId: "premium" }, REASON), /Admin/);
     await expectRule(repo.grantEntitlement(ADMIN, SOBAT, { kind: "membership", itemId: "premium" }, " "), /Alasan wajib/);
@@ -355,13 +355,31 @@ test.describe("Aturan transaksi dan hak akses", () => {
     expect(entry).toMatchObject({ source: "pemberian-manual", transactionId: null, grantedBy: ADMIN, alasan: REASON });
     expect((await repo.listTransactions()).length).toBe(before);
     expect(await membershipOf(SOBAT)).toBe("premium");
-    await expectRule(repo.grantEntitlement(ADMIN, SOBAT, { kind: "membership", itemId: "premium" }, REASON), /sudah memiliki/);
+    // Tanpa durasi berarti tanpa batas.
+    expect(entry.endsAt).toBeNull();
 
-    await expectRule(repo.revokeEntitlement(ADMIN, entry.id, " "), /Alasan wajib/);
-    await repo.revokeEntitlement(ADMIN, entry.id, REASON);
-    expect(await membershipOf(SOBAT)).toBe("basic");
+    // Membership manual baru menggantikan pemberian manual yang masih berlaku (PRD FR-16 E), alasan
+    // minimal 5 karakter, dan durasi hanya 30, 90, 365 hari, atau tanpa batas.
+    await expectRule(repo.grantEntitlement(ADMIN, SOBAT, { kind: "membership", itemId: "pro" }, "Ok"), /minimal 5 karakter/);
+    await expectRule(repo.grantEntitlement(ADMIN, SOBAT, { kind: "membership", itemId: "pro", durationDays: 7 }, REASON), /Durasi membership tidak valid/);
+    const replacement = await repo.grantEntitlement(ADMIN, SOBAT, { kind: "membership", itemId: "pro", durationDays: 30 }, REASON);
+    expect(replacement.endsAt).not.toBeNull();
+    const replaced = (await repo.listEntitlements()).find((item) => item.id === entry.id);
+    expect(replaced).toMatchObject({ active: false, revokeReason: "Digantikan pemberian manual baru." });
+    expect(await membershipOf(SOBAT)).toBe("pro");
     await expectRule(repo.revokeEntitlement(ADMIN, entry.id, REASON), /sudah dicabut/);
-    expect((await repo.listAuditLog()).map((item) => item.action)).toEqual(["berikan-akses", "cabut-akses"]);
+
+    await expectRule(repo.revokeEntitlement(ADMIN, replacement.id, " "), /Alasan wajib/);
+    await repo.revokeEntitlement(ADMIN, replacement.id, REASON);
+    expect(await membershipOf(SOBAT)).toBe("basic");
+    expect((await repo.listAuditLog()).map((item) => item.action)).toEqual(["berikan-akses", "berikan-akses", "cabut-akses"]);
+  });
+
+  test("pemberian manual eBook tidak boleh dobel", async () => {
+    const ebook = (await repo.listProducts()).find((item) => item.kind === "ebook" && item.status === "terbit");
+    if (!ebook) throw new Error("eBook tidak ditemukan");
+    await repo.grantEntitlement(ADMIN, "user-budi", { kind: "ebook", itemId: ebook.id }, REASON);
+    await expectRule(repo.grantEntitlement(ADMIN, "user-budi", { kind: "ebook", itemId: ebook.id }, REASON), /sudah memiliki/);
   });
 
   test("hak akses dari pembelian tidak bisa dicabut lewat aksi manual", async () => {

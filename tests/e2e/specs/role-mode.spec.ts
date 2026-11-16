@@ -256,13 +256,14 @@ test.describe("Profil per mode", () => {
   test.describe("Admin", () => {
     test.use({ role: "admin" });
 
-    test("menampilkan peran dan tugas tanpa statistik", async ({ page }) => {
+    test("menampilkan Profil Admin tanpa XP dan rank (PRD FR-16 L)", async ({ page }) => {
       await page.goto("/profile");
 
       await expect(page.getByRole("heading", { level: 1, name: ACCOUNTS.admin.name })).toBeVisible();
-      const tasks = page.getByRole("region", { name: "Peran dan Tugas" });
-      await expect(tasks.getByRole("listitem")).toHaveText([...ROLE_MODE.adminTasks]);
-      await expect(page.getByRole("main").getByRole("heading", { level: 3 })).toHaveCount(0);
+      await expect(page.getByText("Profil Admin", { exact: true })).toBeVisible();
+      await expect(page.getByRole("region", { name: "Info Akun" })).toContainText(ACCOUNTS.admin.email);
+      await expect(page.getByRole("region", { name: "Ringkasan Kerja" })).toBeVisible();
+      await expect(page.getByRole("main")).not.toContainText(/\bXP\b|Rank/);
     });
   });
 

@@ -64,7 +64,16 @@ export function noteLabel(note: ReviewNote, content: Pick<ContentItem, "body" | 
   return `Video: ${content.videos.find((video) => video.id === note.anchor)?.judul ?? note.anchor}`;
 }
 
-// Tanggal di data konten berupa ISO lengkap.
+// Tanggal kalender WIB (YYYY-MM-DD) dari ISO lengkap. Semua tanggal di Panel Admin dan alur konten
+// memakai WIB, agar aktivitas pukul 00.00–07.00 WIB tidak tampil sebagai tanggal kemarin (UTC).
+// Zona waktu tetap, jadi hasil server dan browser sama. Tanggal tanpa jam dikembalikan apa adanya.
+const WIB_DATE = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Jakarta", year: "numeric", month: "2-digit", day: "2-digit" });
+
+export function wibDate(isoDateTime: string) {
+  return isoDateTime.length <= 10 ? isoDateTime : WIB_DATE.format(new Date(isoDateTime));
+}
+
+// Tanggal di data konten berupa ISO lengkap; ditampilkan sebagai tanggal WIB.
 export function formatContentDate(isoDateTime: string) {
-  return formatDate(isoDateTime.slice(0, 10));
+  return formatDate(wibDate(isoDateTime));
 }

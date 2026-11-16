@@ -107,7 +107,8 @@ export default function RevisionDetailPage({ contentId }: { contentId: string })
           <h1 className="text-2xl font-bold tracking-tight">Catatan Revisi: {content.judul}</h1>
           <p className="mt-1 text-sm text-muted-foreground">{userName(data.users, notes[0].reviewerId)} · {formatContentDate(notes[0].createdAt)}</p>
         </div>
-        <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-emerald-500/40 bg-emerald-500/10 px-3 py-1 text-sm font-semibold text-emerald-700 dark:text-emerald-300">
+        {/* Hijau hanya bila semua catatan sudah ditandai; selain itu netral agar tidak terbaca selesai. */}
+        <span className={`inline-flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-1 text-sm font-semibold ${fixedCount === notes.length ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300" : "border-amber-500/40 bg-amber-500/10 text-amber-800 dark:text-amber-200"}`}>
           <CircleCheck className="h-4 w-4" aria-hidden="true" />
           {fixedCount} dari {notes.length} selesai
         </span>

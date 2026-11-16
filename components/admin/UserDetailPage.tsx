@@ -18,6 +18,7 @@ import { UserRole } from "@/types/Role";
 import AccountStatusBadge from "./AccountStatusBadge";
 import ReasonDialog from "./ReasonDialog";
 import UserAccessSections from "./UserAccessSections";
+import XpCorrectionDialog from "./XpCorrectionDialog";
 import { formatDateTime, useAdminData } from "./useAdminData";
 
 const MANAGED_ROLES: UserRole[] = ["creator", "reviewer", "admin"];
@@ -45,6 +46,7 @@ type Pending = { kind: "peran"; role: UserRole; action: RoleChangeAction } | { k
 export default function UserDetailPage({ userId }: { userId: string }) {
   const { userId: adminId, data } = useAdminData();
   const [pending, setPending] = useState<Pending>(null);
+  const [isCorrecting, setIsCorrecting] = useState(false);
   const [dialogError, setDialogError] = useState("");
   const [tanggal, setTanggal] = useState("");
   const [dokumen, setDokumen] = useState("");
@@ -126,6 +128,14 @@ export default function UserDetailPage({ userId }: { userId: string }) {
             <Field label="Rank">{rank.name}</Field>
             <Field label="Course dipelajari">{user.coursesStudied}</Field>
           </dl>
+          {/* Koreksi XP juga tersedia di sini, bukan hanya di Moderasi (PRD FR-16 D). */}
+          <button
+            type="button"
+            onClick={() => setIsCorrecting(true)}
+            className="mt-4 rounded-lg border border-border px-3 py-1.5 text-sm font-medium transition-colors hover:bg-accent"
+          >
+            Koreksi XP
+          </button>
         </section>
 
         <section aria-labelledby="peran-pengguna" className={panelClass}>
@@ -271,6 +281,9 @@ export default function UserDetailPage({ userId }: { userId: string }) {
           onConfirm={(alasan) => void confirm(alasan)}
           onClose={() => setPending(null)}
         />
+      )}
+      {isCorrecting && (
+        <XpCorrectionDialog userId={user.id} name={user.name} xp={user.xp} adminId={adminId} onClose={() => setIsCorrecting(false)} />
       )}
     </div>
   );

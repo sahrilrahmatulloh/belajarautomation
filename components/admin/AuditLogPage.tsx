@@ -9,6 +9,7 @@ import { EditorDialog } from "@/components/creator/studio/EditorDialogs";
 import PrototypeNotice from "@/components/creator/studio/PrototypeNotice";
 import { userName } from "@/components/creator/studio/useCreatorData";
 import SearchField from "@/components/filters/SearchField";
+import { wibDate } from "@/lib/content/document";
 import { matchesKeyword } from "@/lib/filters";
 import { useCatalogFilters } from "@/lib/useUrlFilters";
 import { AdminAction, AdminAuditLog } from "@/types/ContentWorkflow";
@@ -20,7 +21,7 @@ const PAGE_SIZE = 20;
 const FILTER_KEYS = ["q", "admin", "aksi", "dari", "sampai"] as const;
 const selectClass = "h-11 w-full rounded-lg border border-input bg-background px-3 text-sm font-medium dark:bg-card";
 
-const ACTION_LABELS: Record<AdminAction, string> = {
+export const ACTION_LABELS: Record<AdminAction, string> = {
   "tugaskan-reviewer": "Tugaskan Reviewer",
   terbitkan: "Terbitkan",
   "tarik-website": "Tarik dari website",
@@ -75,8 +76,8 @@ export default function AuditLogPage() {
       (entry) =>
         (!values.admin || entry.adminId === values.admin) &&
         (!values.aksi || entry.action === values.aksi) &&
-        (!values.dari || entry.at.slice(0, 10) >= values.dari) &&
-        (!values.sampai || entry.at.slice(0, 10) <= values.sampai) &&
+        (!values.dari || wibDate(entry.at) >= values.dari) &&
+        (!values.sampai || wibDate(entry.at) <= values.sampai) &&
         matchesKeyword(values.q, entry.targetLabel, entry.alasan ?? "", ACTION_LABELS[entry.action], userName(users, entry.adminId))
     );
   const currentPage = Math.min(page, Math.max(1, Math.ceil(filtered.length / PAGE_SIZE)));

@@ -1,6 +1,7 @@
 "use client";
 
 import { useContentData } from "@/lib/content";
+import { wibDate } from "@/lib/content/document";
 import { useSession } from "@/lib/session";
 import { ContentItem, ContentUser } from "@/types/ContentWorkflow";
 import { MembershipTier } from "@/types/Membership";
@@ -12,11 +13,14 @@ export const LONG_WAIT_DAYS = 3;
 export const NEW_USER_DAYS = 7;
 
 export const MEMBERSHIP_LABELS: Record<MembershipTier, string> = { basic: "Basic", pro: "Pro", premium: "Premium" };
+// Filter Pro dan Premium sekaligus, tujuan kartu Membership Aktif di Dashboard (PRD FR-16 A).
+export const PAID_MEMBERSHIP = "berbayar";
 
 const DAY_MS = 86_400_000;
 
 export function isToday(iso: string, now: number) {
-  return new Date(iso).toDateString() === new Date(now).toDateString();
+  // Hari ini menurut WIB, sama dengan tanggal yang tampil di daftar.
+  return wibDate(iso) === wibDate(new Date(now).toISOString());
 }
 
 export function isNewUser(user: ContentUser, now: number) {

@@ -152,6 +152,8 @@ export async function mockSupabase(page: Page, options: MockOptions = {}) {
   let aal: "aal1" | "aal2" = "aal1";
   // Data fungsi Admin: total XP, riwayat koreksi, dan pemberian membership per pengguna.
   const xpTotals = new Map<string, number>((options.others ?? []).map((user) => [user.id, user.totalXp ?? 0]));
+  // Authenticator per akun selama satu mock (PRD 8.3).
+  const factorsById = new Map<string, MockFactor[] | undefined>();
   const corrections = new Map<string, { amount: number; reason: string; created_at: string }[]>();
   const grants = new Map<string, MockGrant[]>();
   const activeGrants = (userId: string) =>
@@ -179,7 +181,8 @@ export async function mockSupabase(page: Page, options: MockOptions = {}) {
         return route.fulfill(authError(400, "email_not_confirmed", "Email not confirmed"));
       }
       // Salinan, agar perubahan profil di satu test tidak bocor ke test lain.
-      signedIn = { ...account };
+      // Authenticator yang didaftarkan atau dihapus tetap berlaku saat login ulang dalam test yang sama.
+      signedIn = { ...account, factors: factorsById.get(account.id) ?? account.factors };
       aal = "aal1";
       return route.fulfill(json(sessionJson(account)));
     }
@@ -392,6 +395,7 @@ export async function mockSupabase(page: Page, options: MockOptions = {}) {
     if (path === "/auth/v1/factors" && request.method() === "POST") {
       if (!signedIn) return route.fulfill(authError(401, "session_not_found", "Session not found"));
       const id = `faktor-${(signedIn.factors?.length ?? 0) + 1}`;
+      factorsById.set(signedIn.id, signedIn.factors);
       signedIn.factors = [...(signedIn.factors ?? []), { id, status: "unverified" }];
       return route.fulfill(
         json({
@@ -413,6 +417,7 @@ export async function mockSupabase(page: Page, options: MockOptions = {}) {
       const [, factorId, action] = factorPath;
       if (!action && request.method() === "DELETE") {
         signedIn.factors = (signedIn.factors ?? []).filter((factor) => factor.id !== factorId);
+        factorsById.set(signedIn.id, signedIn.factors);
         return route.fulfill(json({ id: factorId }));
       }
       if (action === "challenge") {
@@ -421,6 +426,7 @@ export async function mockSupabase(page: Page, options: MockOptions = {}) {
       if (action === "verify") {
         if (body?.code !== MOCK_TOTP_CODE) return route.fulfill(authError(422, "mfa_verification_failed", "Invalid TOTP code entered"));
         signedIn.factors = (signedIn.factors ?? []).map((factor) => (factor.id === factorId ? { ...factor, status: "verified" } : factor));
+        factorsById.set(signedIn.id, signedIn.factors);
         aal = "aal2";
         return route.fulfill(json(sessionJson(signedIn, "aal2")));
       }

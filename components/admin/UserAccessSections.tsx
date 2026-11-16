@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 
-import { getMembershipPlan, MEMBERSHIP_PLANS } from "@/data/membership";
+import { getMembershipPlan, MANUAL_MEMBERSHIP_DURATIONS, MEMBERSHIP_PLANS } from "@/data/membership";
 import { runContentAction } from "@/lib/content";
 import { formatContentDate } from "@/lib/content/document";
 import { formatRupiah } from "@/lib/format";
@@ -23,6 +23,13 @@ const SOURCE_LABELS: Record<EntitlementSource, string> = {
   "klaim-kredit": "Klaim kredit",
 };
 
+// Status hak akses, termasuk masa berlaku membership manual.
+function accessStatus(item: Entitlement) {
+  if (!item.active) return item.revokeReason === "Digantikan pemberian manual baru." ? "Digantikan" : "Dicabut";
+  if (!item.endsAt) return item.kind === "membership" && item.source === "pemberian-manual" ? "Aktif tanpa batas" : "Aktif";
+  return Date.parse(item.endsAt) > Date.now() ? `Aktif sampai ${formatContentDate(item.endsAt)}` : `Kedaluwarsa ${formatContentDate(item.endsAt)}`;
+}
+
 function GrantDialog({ userId, adminId, products, onClose }: { userId: string; adminId: string; products: Product[]; onClose: () => void }) {
   const [kind, setKind] = useState<EntitlementKind>("membership");
   const options =
@@ -30,11 +37,14 @@ function GrantDialog({ userId, adminId, products, onClose }: { userId: string; a
       ? MEMBERSHIP_PLANS.filter((plan) => plan.tier !== "basic").map((plan) => ({ id: plan.tier as string, label: `Membership ${plan.name}` }))
       : products.filter((product) => product.kind === kind).map((product) => ({ id: product.id, label: product.title }));
   const [itemId, setItemId] = useState("pro");
+  // Durasi hanya untuk membership manual (PRD FR-16 E); "" berarti tanpa batas.
+  const [duration, setDuration] = useState("30");
   const [error, setError] = useState("");
   const selected = options.some((option) => option.id === itemId) ? itemId : (options[0]?.id ?? "");
 
   const grant = async (alasan: string) => {
-    const result = await runContentAction((repository) => repository.grantEntitlement(adminId, userId, { kind, itemId: selected }, alasan));
+    const durationDays = kind === "membership" && duration ? Number(duration) : null;
+    const result = await runContentAction((repository) => repository.grantEntitlement(adminId, userId, { kind, itemId: selected, durationDays }, alasan));
     if (result.ok) onClose();
     else setError(result.message);
   };
@@ -62,6 +72,21 @@ function GrantDialog({ userId, adminId, products, onClose }: { userId: string; a
           {options.map((option) => <option key={option.id} value={option.id}>{option.label}</option>)}
         </select>
       </label>
+      {kind === "membership" && (
+        <>
+          <label className="mt-3 block text-sm font-medium">
+            Durasi
+            <select value={duration} onChange={(event) => setDuration(event.target.value)} className={fieldClass}>
+              {MANUAL_MEMBERSHIP_DURATIONS.map((option) => (
+                <option key={option.label} value={option.days ?? ""}>{option.label}</option>
+              ))}
+            </select>
+          </label>
+          <p className="mt-2 text-xs text-muted-foreground">
+            Menggantikan membership pemberian manual yang masih berlaku. Alasan minimal 5 karakter.
+          </p>
+        </>
+      )}
     </ReasonDialog>
   );
 }
@@ -117,7 +142,7 @@ export default function UserAccessSections({
                 <span className="min-w-0">
                   <span className="block font-medium">{item.itemTitle}</span>
                   <span className="block text-muted-foreground">
-                    {SOURCE_LABELS[item.source]} · {formatContentDate(item.grantedAt)} · {item.active ? "Aktif" : "Dicabut"}
+                    {SOURCE_LABELS[item.source]} · {formatContentDate(item.grantedAt)} · {accessStatus(item)}
                   </span>
                   {item.alasan && <span className="block text-muted-foreground">Alasan: {item.alasan}</span>}
                   {item.revokeReason && <span className="block text-muted-foreground">Alasan dicabut: {item.revokeReason}</span>}

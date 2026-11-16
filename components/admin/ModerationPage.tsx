@@ -1,14 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { CircleSlash, Eye, EyeOff, SlidersHorizontal } from "lucide-react";
+import { CircleSlash, Eye, EyeOff, LucideIcon, SlidersHorizontal } from "lucide-react";
 import Link from "next/link";
 
 import ConfirmDialog from "@/components/common/ConfirmDialog";
-import IconAction from "@/components/common/IconAction";
 import PrototypeNotice from "@/components/creator/studio/PrototypeNotice";
 import { userName } from "@/components/creator/studio/useCreatorData";
-import { getRank } from "@/data/ranks";
 import { MODERATION_THRESHOLDS } from "@/data/dummy/moderation";
 import { runContentAction } from "@/lib/content";
 import { formatContentDate } from "@/lib/content/document";
@@ -18,48 +16,45 @@ import { ModerationFlag, ModerationFlagStatus, ModerationReason } from "@/types/
 
 import AdminList, { AdminColumn } from "./AdminList";
 import ReasonDialog from "./ReasonDialog";
+import XpCorrectionDialog from "./XpCorrectionDialog";
 import { useAdminData } from "./useAdminData";
 
 const FILTER_KEYS = ["status", "alasan"] as const;
 const selectClass = "h-11 w-full rounded-lg border border-input bg-background px-3 text-sm font-medium dark:bg-card";
-const fieldClass = "mt-1.5 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm font-normal dark:bg-card";
 
 const REASON_LABELS: Record<ModerationReason, string> = { "lonjakan-xp": "Lonjakan XP harian", "lesson-terlalu-cepat": "Lesson terlalu cepat" };
 const STATUS_LABELS: Record<ModerationFlagStatus, string> = { terbuka: "Perlu ditinjau", diabaikan: "Diabaikan", ditangani: "Ditangani" };
 
-type Pending = { kind: "abaikan" | "koreksi" | "sembunyikan" | "tampilkan"; flag: ModerationFlag } | null;
-
-function CorrectionDialog({ flag, name, xp, adminId, onClose }: { flag: ModerationFlag; name: string; xp: number; adminId: string; onClose: () => void }) {
-  const [amount, setAmount] = useState("");
-  const [error, setError] = useState("");
-  const parsed = Number(amount);
-  const next = xp + (Number.isFinite(parsed) ? parsed : 0);
-
-  const save = async (alasan: string) => {
-    const result = await runContentAction((repository) => repository.correctXp(adminId, flag.userId, parsed, alasan, flag.id));
-    if (result.ok) onClose();
-    else setError(result.message);
-  };
-
+// Tombol aksi Moderasi: ikon dan teks, dengan nama aksesibel yang menyebut akun.
+function ModerationButton({
+  label,
+  icon: Icon,
+  isDestructive = false,
+  onClick,
+  children,
+}: {
+  label: string;
+  icon: LucideIcon;
+  isDestructive?: boolean;
+  onClick: () => void;
+  children: React.ReactNode;
+}) {
   return (
-    <ReasonDialog
-      title={`Koreksi XP ${name}`}
-      description="Dicatat sebagai transaksi XP koreksi, dan riwayat lama tidak diubah. Rank dihitung ulang."
-      confirmLabel="Simpan koreksi"
-      error={error}
-      onConfirm={(alasan) => void save(alasan)}
-      onClose={onClose}
+    <button
+      type="button"
+      aria-label={label}
+      onClick={onClick}
+      className={`inline-flex min-h-9 items-center gap-1.5 whitespace-nowrap rounded-lg border px-2.5 text-xs font-semibold transition-colors ${
+        isDestructive ? "border-destructive/40 text-destructive hover:bg-destructive/10" : "border-border hover:bg-accent"
+      }`}
     >
-      <label className="mt-3 block text-sm font-medium">
-        Jumlah koreksi (negatif untuk mengurangi)
-        <input type="number" value={amount} onChange={(event) => setAmount(event.target.value)} className={fieldClass} />
-      </label>
-      <p className="mt-2 text-sm text-muted-foreground">
-        {formatNumber(xp)} XP menjadi {formatNumber(Math.max(0, next))} XP ({getRank(Math.max(0, next)).name})
-      </p>
-    </ReasonDialog>
+      <Icon className="h-3.5 w-3.5" aria-hidden="true" />
+      {children}
+    </button>
   );
 }
+
+type Pending = { kind: "abaikan" | "koreksi" | "sembunyikan" | "tampilkan"; flag: ModerationFlag } | null;
 
 // Moderasi (PRD FR-16 D).
 export default function ModerationPage() {
@@ -110,13 +105,25 @@ export default function ModerationPage() {
         const isHidden = userOf(flag)?.hiddenFromLeaderboard;
         const name = userName(users, flag.userId);
         return (
-          <span className="flex flex-wrap items-center gap-1">
-            {flag.status === "terbuka" && <IconAction label={`Abaikan ${name}`} tooltip="Abaikan" icon={CircleSlash} onClick={() => open("abaikan", flag)} />}
-            <IconAction label={`Koreksi XP ${name}`} tooltip="Koreksi XP" icon={SlidersHorizontal} onClick={() => open("koreksi", flag)} />
+          // Tombol berteks agar aksi sensitif tidak salah klik (hasil audit Admin); nama aksesibel
+          // tetap menyebut akunnya.
+          <span className="flex flex-wrap items-center gap-1.5">
+            {flag.status === "terbuka" && (
+              <ModerationButton label={`Abaikan ${name}`} icon={CircleSlash} onClick={() => open("abaikan", flag)}>
+                Abaikan
+              </ModerationButton>
+            )}
+            <ModerationButton label={`Koreksi XP ${name}`} icon={SlidersHorizontal} onClick={() => open("koreksi", flag)}>
+              Koreksi XP
+            </ModerationButton>
             {isHidden ? (
-              <IconAction label={`Tampilkan kembali ${name}`} tooltip="Tampilkan kembali di leaderboard" icon={Eye} onClick={() => open("tampilkan", flag)} />
+              <ModerationButton label={`Tampilkan kembali ${name}`} icon={Eye} onClick={() => open("tampilkan", flag)}>
+                Tampilkan kembali
+              </ModerationButton>
             ) : (
-              <IconAction label={`Sembunyikan dari leaderboard: ${name}`} tooltip="Sembunyikan dari leaderboard" icon={EyeOff} onClick={() => open("sembunyikan", flag)} />
+              <ModerationButton label={`Sembunyikan dari leaderboard: ${name}`} icon={EyeOff} isDestructive onClick={() => open("sembunyikan", flag)}>
+                Sembunyikan
+              </ModerationButton>
             )}
           </span>
         );
@@ -167,7 +174,7 @@ export default function ModerationPage() {
         />
       )}
       {pending?.kind === "koreksi" && pendingUser && (
-        <CorrectionDialog flag={pending.flag} name={pendingUser.name} xp={pendingUser.xp} adminId={userId} onClose={() => setPending(null)} />
+        <XpCorrectionDialog userId={pending.flag.userId} flagId={pending.flag.id} name={pendingUser.name} xp={pendingUser.xp} adminId={userId} onClose={() => setPending(null)} />
       )}
       {(pending?.kind === "sembunyikan" || pending?.kind === "tampilkan") && (
         <ReasonDialog

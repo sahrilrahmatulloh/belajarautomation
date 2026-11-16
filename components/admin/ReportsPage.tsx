@@ -34,6 +34,14 @@ export default function ReportsPage() {
 
   if (!data) return <p className="py-10 text-center text-sm text-muted-foreground">Memuat laporan...</p>;
 
+  const hasRange = Boolean(values.dari || values.sampai);
+  const periodLabel = !hasRange
+    ? "sepanjang waktu"
+    : values.dari && values.sampai
+      ? `${formatContentDate(values.dari)} – ${formatContentDate(values.sampai)}`
+      : values.dari
+        ? `sejak ${formatContentDate(values.dari)}`
+        : `sampai ${formatContentDate(values.sampai)}`;
   const report = buildReport({ users: data.users, transactions: data.transactions, contents: data.contents, events: data.events, now: data.loadedAt, from: values.dari, to: values.sampai });
 
   const exportCsv = () => {
@@ -72,10 +80,16 @@ export default function ReportsPage() {
         </label>
       </div>
 
+      {/* Tanpa rentang tanggal, angka dihitung sepanjang waktu; ditulis jelas agar tidak disangka
+          angka minggu ini. */}
+      <p role="status" className="text-sm font-medium">
+        Periode: {periodLabel}
+      </p>
+
       <section aria-labelledby="laporan-pengguna" className="space-y-3">
         <h2 id="laporan-pengguna" className="text-lg font-bold">Pengguna</h2>
         <div className="grid gap-3 sm:grid-cols-3">
-          <Stat label="Pengguna baru" value={report.newUsers} />
+          <Stat label={hasRange ? "Pengguna baru" : "Pengguna baru (sepanjang waktu)"} value={report.newUsers} />
           <Stat label="Aktif 7 hari" value={report.active7} />
           <Stat label="Aktif 30 hari" value={report.active30} />
         </div>

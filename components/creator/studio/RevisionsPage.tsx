@@ -2,13 +2,14 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, MessageSquareText } from "lucide-react";
 
 import FilterChips from "@/components/filters/FilterChips";
 import ContentStatusBadge from "@/components/roles/ContentStatusBadge";
 import { formatContentDate } from "@/lib/content/document";
 import { latestRoundNotes, needsCreatorAction } from "@/lib/content/rules";
 
+import RolePageHeader from "@/components/roles/RolePageHeader";
 import PrototypeNotice from "./PrototypeNotice";
 import { useCreatorData, userName } from "./useCreatorData";
 
@@ -34,10 +35,7 @@ export default function RevisionsPage() {
     <div className="mx-auto w-full max-w-4xl space-y-5">
       <PrototypeNotice />
 
-      <header>
-        <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">Catatan Revisi</h1>
-        <p className="mt-1 text-muted-foreground">Daftar catatan revisi dari Reviewer untuk setiap kontenmu.</p>
-      </header>
+      <RolePageHeader icon={MessageSquareText} title="Catatan Revisi" description="Daftar catatan revisi dari Reviewer untuk setiap kontenmu." />
 
       <div className="flex flex-wrap items-center justify-between gap-3">
         <FilterChips

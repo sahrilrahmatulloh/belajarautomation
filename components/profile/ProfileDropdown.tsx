@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 import {
   Crown,
@@ -24,7 +24,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { ROLE_HOME, ROLE_LABELS } from "@/data/navigation";
+import { initialsOf } from "@/components/admin/useMfaStatus";
+import { getRoleFromPath, ROLE_HOME, ROLE_LABELS } from "@/data/navigation";
 import { useAppearance } from "@/lib/useAppearance";
 import { sessionActions, useSession } from "@/lib/session";
 import { UserRole } from "@/types/Role";
@@ -39,6 +40,15 @@ export default function ProfileDropdown() {
 
   const displayName = session?.name ?? "Tamu";
   const { activeRole, extraRoles, hasRole, isRoleMode } = useViewMode();
+  const pathname = usePathname();
+  // Mode peran (Creator, Reviewer, Admin): identitas tanpa foto (inisial) serta profil dan
+  // pengaturan perannya (PRD FR-16 L, FR-15). Hanya Mode Belajar yang memakai avatar kucing.
+  const pathRole = getRoleFromPath(pathname);
+  const currentRole = pathRole !== "user" ? pathRole : isRoleMode ? activeRole : "user";
+  const staffRole = session && currentRole !== "user" ? currentRole : null;
+  const isStaffMode = staffRole !== null;
+  const profileHref = staffRole ? `/${staffRole}/profil` : "/profile";
+  const settingsHref = staffRole ? `/${staffRole}/pengaturan` : "/settings";
   const displayStatus = !session
     ? "Belum masuk"
     : hasRole && !isRoleMode
@@ -70,12 +80,22 @@ export default function ProfileDropdown() {
         {/* Nama tombol memuat teks yang terlihat, agar pengguna perintah suara bisa menyebutnya. */}
         <span className="sr-only">Buka menu profil</span>
 
-        <Avatar aria-hidden="true" className="h-8 w-8 sm:h-10 sm:w-10">
-          <AvatarImage src={avatar.image} alt="" />
-          <AvatarFallback>
-            BA
-          </AvatarFallback>
-        </Avatar>
+        {isStaffMode ? (
+          <span
+            aria-hidden="true"
+            data-admin-initials=""
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground sm:h-10 sm:w-10 sm:text-sm"
+          >
+            {initialsOf(session?.name)}
+          </span>
+        ) : (
+          <Avatar aria-hidden="true" className="h-8 w-8 sm:h-10 sm:w-10">
+            <AvatarImage src={avatar.image} alt="" />
+            <AvatarFallback>
+              BA
+            </AvatarFallback>
+          </Avatar>
+        )}
 
         <div className="hidden text-left lg:block">
           <p className="max-w-40 truncate text-sm font-semibold text-foreground">
@@ -156,7 +176,7 @@ export default function ProfileDropdown() {
         {/* Profile */}
         <DropdownMenuItem className="p-0">
           <Link
-            href="/profile"
+            href={profileHref}
             className="flex w-full items-center gap-2 px-2 py-1.5"
           >
             <User className="h-4 w-4" />
@@ -167,7 +187,7 @@ export default function ProfileDropdown() {
         {/* Settings */}
         <DropdownMenuItem className="p-0">
           <Link
-            href="/settings"
+            href={settingsHref}
             className="flex w-full items-center gap-2 px-2 py-1.5"
           >
             <Settings className="h-4 w-4" />
