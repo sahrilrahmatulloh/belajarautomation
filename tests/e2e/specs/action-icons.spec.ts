@@ -18,7 +18,8 @@ test.describe("Aksi ikon Creator", () => {
     await expect(contents.heading).toBeVisible();
   });
 
-  test("aksi umum berupa ikon dengan tooltip, langkah utama tetap bertuliskan teks", async ({ page }) => {
+  test("aksi umum berupa ikon dengan tooltip, langkah utama tetap bertuliskan teks", async ({ page, isMobile }) => {
+    test.skip(isMobile, "Di layar kecil aksi kartu bertuliskan teks.");
     const entry = await contents.find(draft.title);
     const edit = entry.getByRole("link", { name: "Edit" });
 
@@ -29,12 +30,22 @@ test.describe("Aksi ikon Creator", () => {
     await expect(page.getByRole("tooltip")).toHaveText("Edit");
   });
 
-  test("tooltip juga muncul saat ikon difokus dengan keyboard", async ({ page }) => {
+  test("tooltip juga muncul saat ikon difokus dengan keyboard", async ({ page, isMobile }) => {
+    test.skip(isMobile, "Di layar kecil aksi kartu bertuliskan teks.");
     const entry = await contents.find(published.title);
 
     await entry.getByRole("link", { name: "Lihat di website" }).focus();
 
     await expect(page.getByRole("tooltip")).toHaveText("Lihat di website");
+  });
+
+  test("di layar kecil aksi kartu bertuliskan teks agar mudah dikenali", async ({ isMobile }) => {
+    test.skip(!isMobile, "Khusus layar kecil.");
+    const entry = await contents.find(draft.title);
+
+    await expect(entry.getByRole("link", { name: "Edit" })).toHaveText("Edit");
+    await expect(entry.getByRole("button", { name: "Hapus" })).toHaveText("Hapus");
+    await expect(entry.getByRole("link", { name: "Kirim untuk Review" })).toHaveText("Kirim untuk Review");
   });
 
   test("ikon Hapus tetap membuka konfirmasi", async ({ page }) => {
