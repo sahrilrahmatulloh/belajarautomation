@@ -26,20 +26,20 @@ export const ACTIVE_PROMO_TITLE = "Tema bergerak Neon Night";
 export const USER_RANK = "Apprentice";
 
 // Avatar dan tema akun demo (data/dummy/appearance.ts), sama dengan mockup profil.
-export const ACTIVE_AVATAR_NAME = "Kucing Putih";
+export const ACTIVE_AVATAR_NAME = "Mochi";
 
 // Koleksi avatar rilis awal (PRD FR-12).
-export const FREE_AVATAR_NAMES = ["Kucing Putih", "Kucing Oren"];
+export const FREE_AVATAR_NAMES = ["Mochi", "Oyen"];
 export const PAID_AVATAR_NAMES = [
-  "Kucing Hitam",
-  "Kucing Tuxedo",
-  "Kucing Abu-abu",
-  "Kucing Coklat",
-  "Kucing Corak Tiga",
-  "Kucing Siam",
+  "Kopi",
+  "Domino",
+  "Mendung",
+  "Karamel",
+  "Belang",
+  "Latte",
 ];
-// Kostum berbayar yang gambarnya sudah ada untuk kedelapan jenis kucing (PRD FR-12, v2.42).
-export const COSTUME_STYLES = ["Bug Hunter", "Cyberpunk"];
+// Kostum berbayar yang gambarnya sudah ada untuk kedelapan jenis kucing (PRD FR-12, v2.42 dan v2.50).
+export const COSTUME_STYLES = ["Bug Hunter", "Cyberpunk", "Wizard"];
 export const ACTIVE_THEME_NAME = "Padang Rumput";
 
 export const OWN_USERNAME = "sobatqa";

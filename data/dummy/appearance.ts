@@ -5,7 +5,7 @@ import { DUMMY_ACCOUNT } from "@/data/dummy/account";
 import { resolveAvatar, resolveTheme } from "@/lib/appearance";
 
 export const DUMMY_APPEARANCE = {
-  avatarId: "kucing-putih",
+  avatarId: "mochi",
   themeId: "padang-rumput",
 };
 

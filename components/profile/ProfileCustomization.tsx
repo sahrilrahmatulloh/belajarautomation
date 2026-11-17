@@ -320,7 +320,7 @@ export default function ProfileCustomization() {
                 <CollectionCard
                   key={item.id}
                   name={item.name}
-                  detail={item.style}
+                  detail={item.breed}
                   image={item.image}
                   imageClassName="mx-auto aspect-square h-auto w-3/4 p-3"
                   isOwned={canUseAvatar(item.id, tier)}

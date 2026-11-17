@@ -14,8 +14,8 @@ test.describe("Kustomisasi akun Supabase", () => {
     const profile = new ProfilePage(page);
     await profile.goto();
 
-    await expect(profile.header.getByRole("img", { name: "Avatar Kucing Putih" })).toBeVisible();
-    await expect(new DashboardPage(page).profileMenuButton.locator("img")).toHaveAttribute("src", /kucing-putih/);
+    await expect(profile.header.getByRole("img", { name: "Avatar Mochi" })).toBeVisible();
+    await expect(new DashboardPage(page).profileMenuButton.locator("img")).toHaveAttribute("src", /mochi/);
   });
 
   test("akun baru memakai tema bawaan Padang Rumput", async ({ page }) => {
@@ -35,21 +35,21 @@ test.describe("Kustomisasi akun Supabase", () => {
     await profile.gotoTab("kustomisasi");
     await expect(profile.saveAppearanceButton).toBeDisabled();
 
-    await page.getByRole("button", { name: /^Kucing Oren/ }).click();
+    await page.getByRole("button", { name: /^Oyen/ }).click();
     await expect(profile.saveAppearanceButton).toBeEnabled();
     await profile.saveAppearanceButton.click();
 
     await expect(notification(page, "Pilihan avatar dan tema tersimpan.")).toBeVisible();
     expect(supabase.find("/rest/v1/rpc/set_appearance")?.postDataJSON()).toEqual({
-      new_avatar_id: "kucing-oren",
+      new_avatar_id: "oyen",
       new_theme_id: "padang-rumput",
     });
-    await expect(page.getByRole("button", { name: /^Kucing Oren/ })).toContainText("Digunakan");
+    await expect(page.getByRole("button", { name: /^Oyen/ })).toContainText("Digunakan");
     await expect(profile.saveAppearanceButton).toBeDisabled();
 
     await profile.goto();
-    await expect(profile.header.getByRole("img", { name: "Avatar Kucing Oren" })).toBeVisible();
-    await expect(profile.profileMenuButton.locator("img")).toHaveAttribute("src", /kucing-oren/);
+    await expect(profile.header.getByRole("img", { name: "Avatar Oyen" })).toBeVisible();
+    await expect(profile.profileMenuButton.locator("img")).toHaveAttribute("src", /oyen/);
   });
 
   test("menyimpan tema Neon Night lalu dipakai di header profil", async ({ page }) => {
@@ -93,13 +93,13 @@ test.describe("Kustomisasi akun Supabase", () => {
 
     // Kostum berbayar bisa dipilih dan disimpan oleh akun Premium.
     await page.getByRole("group", { name: "Filter Gaya avatar" }).getByRole("button", { name: "Bug Hunter" }).click();
-    await page.getByRole("button", { name: /^Kucing Oren Bug Hunter/ }).click();
+    await page.getByRole("button", { name: /^Oyen Bug Hunter/ }).click();
     await profile.saveAppearanceButton.click();
     await expect(notification(page, "Pilihan avatar dan tema tersimpan.")).toBeVisible();
-    expect(supabase.find("/rest/v1/rpc/set_appearance")?.postDataJSON()).toMatchObject({ new_avatar_id: "kucing-oren-bug-hunter" });
+    expect(supabase.find("/rest/v1/rpc/set_appearance")?.postDataJSON()).toMatchObject({ new_avatar_id: "oyen-bug-hunter" });
 
     await profile.goto();
-    await expect(profile.header.getByRole("img", { name: "Avatar Kucing Oren Bug Hunter" })).toBeVisible();
+    await expect(profile.header.getByRole("img", { name: "Avatar Oyen Bug Hunter" })).toBeVisible();
 
     await page.goto("/membership");
     const premiumCard = page.getByRole("article").filter({ has: page.getByRole("heading", { name: "Premium", exact: true }) });
@@ -131,7 +131,7 @@ test.describe("Kustomisasi akun demo", () => {
     const profile = new ProfilePage(page);
     await profile.gotoTab("kustomisasi");
 
-    await page.getByRole("button", { name: /^Kucing Oren/ }).click();
+    await page.getByRole("button", { name: /^Oyen/ }).click();
 
     await expect(profile.saveAppearanceButton).toBeDisabled();
     await expect(profile.preview.getByText("Akun demo tidak dapat menyimpan pilihan.")).toBeVisible();

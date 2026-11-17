@@ -13,6 +13,9 @@ interface AppearanceItem {
 }
 
 export interface CatAvatar extends AppearanceItem {
+  // Nama jenis kucing untuk keterangan di koleksi, mis. "Kucing Oren". Nama avatar memakai
+  // nama panggilan kucingnya, mis. "Oyen Wizard" (PRD FR-12).
+  breed: string;
   // Jenis kucing, mis. "putih", "oren", "hitam-putih", "abu-abu".
   catType: string;
   // Gaya avatar, mis. "Basic", "Developer", "Scholar".

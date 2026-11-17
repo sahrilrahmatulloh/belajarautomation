@@ -7,10 +7,11 @@ import path from "node:path";
 
 const MIGRATIONS_DIR = "supabase/migrations";
 
-// Dari kode: basic("id", "nama", "jenis", true) untuk avatar, dan blok id/access untuk tema.
+// Dari kode: basic("id", "nama panggilan", "Kucing ...", "jenis", true) untuk avatar, dan blok
+// id/access untuk tema.
 const fromCode = new Map();
 const avatarsSource = readFileSync("data/avatars.ts", "utf8");
-for (const [, id, paid] of avatarsSource.matchAll(/basic\(\s*"([^"]+)",\s*"[^"]+",\s*"[^"]+"(?:,\s*(true|false))?\s*\)/g)) {
+for (const [, id, paid] of avatarsSource.matchAll(/basic\(\s*"([^"]+)",\s*"[^"]+",\s*"[^"]+",\s*"[^"]+"(?:,\s*(true|false))?\s*\)/g)) {
   fromCode.set(id, { kind: "avatar", access: paid === "true" ? "paid" : "free" });
 }
 // Kostum: costume(id, "Gaya") untuk setiap jenis kucing Basic, selalu berbayar.

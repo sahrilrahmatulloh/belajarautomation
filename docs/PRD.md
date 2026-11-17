@@ -1,9 +1,15 @@
 # BELAJARAUTOMATION.COM
 ## Product Requirements Document (PRD)
-**Versi:** 2.49  
+**Versi:** 2.50  
 **Status:** Draft — Acuan Pengembangan Produk  
 **Platform:** Web Application  
 **Target Pengguna:** Pemula hingga praktisi QA, Software Testing, dan Programming
+
+### Perubahan di Versi 2.50
+- Setiap jenis kucing punya nama panggilan: Mochi (Kucing Putih), Oyen (Kucing Oren), Kopi (Kucing Hitam), Domino (Kucing Tuxedo), Mendung (Kucing Abu-abu), Karamel (Kucing Coklat), Belang (Kucing Corak Tiga), dan Latte (Kucing Siam). Nama avatar memakai nama panggilan, mis. "Oyen Wizard", dengan jenis kucing sebagai keterangan di koleksi. Nama maskot resmi ditetapkan terpisah (FR-12).
+- Kostum Wizard tersedia untuk kedelapan jenis kucing, sehingga koleksi avatar berisi 32 avatar. Terbuka di Pro dan Premium (FR-12).
+- Gaya avatar menjadi 7: Driver Formula berganti nama menjadi Driver Racing, Space Explorer menjadi Astronot, serta Ninja dan Knight dihapus. Master Chef tetap (FR-12, FR-13).
+- Id dan nama file avatar memakai nama panggilan, mis. `mochi` dan `oyen-wizard`. Avatar pilihan pengguna yang tersimpan dengan id lama dipindahkan otomatis ke id baru (FR-12).
 
 ### Perubahan di Versi 2.49
 - Seluruh tanggal di Panel Admin memakai WIB, termasuk filter tanggal dan "hari ini" (FR-16).
@@ -1265,14 +1271,16 @@ Memberikan identitas brand yang mudah dikenali dan sarana ekspresi diri pengguna
 ### Avatar kucing
 - Avatar adalah foto profil pengguna berupa ilustrasi kucing.
 - Tersedia beberapa **jenis kucing** agar pilihan tidak monoton (daftarnya di Rilis awal). Setiap jenis dapat memiliki beberapa **gaya**.
-- Avatar = satu jenis kucing dengan satu gaya, mis. "Kucing Tuxedo Ninja".
+- Avatar = satu jenis kucing dengan satu gaya, mis. "Domino Astronot".
+- Setiap jenis kucing punya **nama panggilan**. Nama avatar adalah nama panggilan untuk gaya Basic (mis. "Oyen") dan nama panggilan diikuti gaya untuk kostum (mis. "Oyen Wizard"). Di koleksi, jenis kucingnya (mis. "Kucing Oren") tampil sebagai keterangan di bawah nama.
+- Nama panggilan hanya untuk avatar. Nama maskot resmi ditetapkan terpisah.
 - Kucing putih Basic menjadi avatar bawaan setiap pengguna baru.
 - Semua avatar memakai gaya ilustrasi yang sama dengan maskot resmi agar terasa satu keluarga.
 - Avatar tampil di header, halaman profil, dan leaderboard. Welcome Banner tidak menampilkan avatar.
 - Avatar tidak menggantikan emblem rank.
 
 ### Gaya avatar
-Sembilan gaya berikut berlaku untuk semua jenis kucing:
+Tujuh gaya berikut berlaku untuk semua jenis kucing:
 
 | Gaya | Ciri kostum | Akses |
 |---|---|---|
@@ -1280,10 +1288,8 @@ Sembilan gaya berikut berlaku untuk semua jenis kucing:
 | Bug Hunter | Topi detektif, kaca pembesar, dan jaring serangga | Pro dan Premium |
 | Cyberpunk | Visor dan hoodie bercahaya neon | Pro dan Premium |
 | Wizard | Topi dan jubah penyihir berbintang | Pro dan Premium |
-| Driver Formula | Helm balap | Pro dan Premium |
-| Space Explorer | Helm dan baju astronot | Pro dan Premium |
-| Ninja | Ikat kepala, pakaian ninja, dan katana | Pro dan Premium |
-| Knight | Helm dan zirah ksatria | Pro dan Premium |
+| Driver Racing | Helm dan baju balap | Pro dan Premium |
+| Astronot | Helm dan baju astronot | Pro dan Premium |
 | Master Chef | Topi dan seragam koki | Pro dan Premium |
 
 Ketentuan:
@@ -1324,7 +1330,7 @@ Setiap tema memiliki:
 - Belum dipakai. Kucing 3D di banner profil dihapus pada v2.45 dan konsep visualnya sedang dirancang ulang. Sampai konsep baru disetujui, banner profil hanya menampilkan avatar aktif pengguna, dan tidak ada model 3D yang dimuat.
 
 ### Rilis awal
-- **24 avatar** dan 3 tema banner:
+- **32 avatar** dan 3 tema banner:
 
 | Tema | Akses | Catatan |
 |---|---|---|
@@ -1337,15 +1343,24 @@ Setiap tema memiliki:
 - Target rilis awal tetap 5 tema; tema lain menyusul.
 - Avatar:
 
-| Avatar | Akses |
-|---|---|
-| Kucing Putih (bawaan) | Gratis |
-| Kucing Oren | Gratis |
-| Kucing Hitam, Kucing Tuxedo, Kucing Abu-abu, Kucing Coklat, Kucing Corak Tiga, Kucing Siam | Pro dan Premium |
-| Kostum Bug Hunter untuk kedelapan jenis kucing, mis. "Kucing Oren Bug Hunter" | Pro dan Premium |
-| Kostum Cyberpunk untuk kedelapan jenis kucing, mis. "Kucing Siam Cyberpunk" | Pro dan Premium |
+| Jenis kucing | Nama panggilan | Akses gaya Basic |
+|---|---|---|
+| Kucing Putih (bawaan) | Mochi | Gratis |
+| Kucing Oren | Oyen | Gratis |
+| Kucing Hitam | Kopi | Pro dan Premium |
+| Kucing Tuxedo | Domino | Pro dan Premium |
+| Kucing Abu-abu | Mendung | Pro dan Premium |
+| Kucing Coklat | Karamel | Pro dan Premium |
+| Kucing Corak Tiga | Belang | Pro dan Premium |
+| Kucing Siam | Latte | Pro dan Premium |
 
-- Gaya kostum lain (Wizard, Driver Formula, Space Explorer, Ninja, Knight, Master Chef) tampil "Segera hadir" sampai gambarnya tersedia.
+| Kostum | Akses |
+|---|---|
+| Bug Hunter untuk kedelapan jenis kucing, mis. "Oyen Bug Hunter" | Pro dan Premium |
+| Cyberpunk untuk kedelapan jenis kucing, mis. "Latte Cyberpunk" | Pro dan Premium |
+| Wizard untuk kedelapan jenis kucing, mis. "Kopi Wizard" | Pro dan Premium |
+
+- Gaya kostum lain (Driver Racing, Astronot, dan Master Chef) tampil "Segera hadir" sampai gambarnya tersedia.
 
 - Komposisi gratis dan berbayar untuk tema ditetapkan di Bagian 12. Minimal 1 avatar dan 1 tema tersedia gratis.
 - Jumlah ini adalah rilis awal, bukan batas permanen.
@@ -1435,7 +1450,7 @@ Ketentuan:
 - Hanya dapat dibuka oleh pemilik profil.
 - Dua bagian: **Avatar** dan **Tema Banner**.
 - Filter koleksi (Semua, Dimiliki, Terkunci) berupa tombol ikon filter di kanan judul koleksi, yang membuka dropdown. Tombol diberi penanda titik saat filter selain Semua aktif.
-- Avatar dikelompokkan per **gaya** (FR-12) dengan chip yang dapat digeser: Basic, Bug Hunter, Cyberpunk, Wizard, Driver Formula, Space Explorer, Ninja, Knight, dan Master Chef. Chip awal adalah gaya avatar yang sedang dipakai.
+- Avatar dikelompokkan per **gaya** (FR-12) dengan chip yang dapat digeser: Basic, Bug Hunter, Cyberpunk, Wizard, Driver Racing, Astronot, dan Master Chef. Chip awal adalah gaya avatar yang sedang dipakai.
 - Setiap gaya menampilkan grid jenis kucing yang gambarnya sudah tersedia. Gaya yang belum punya gambar tetap tampil dengan keterangan "Segera hadir".
 - Filter Semua, Dimiliki, dan Terkunci berlaku di dalam gaya yang dipilih.
 - Preview profil memperlihatkan hasil pilihan sebelum disimpan: banner tema, avatar, dan nama tampilan saja, tanpa rank dan XP.
