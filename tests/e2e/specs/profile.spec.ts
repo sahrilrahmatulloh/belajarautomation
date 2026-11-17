@@ -121,7 +121,7 @@ test.describe("Profil", () => {
     await expect(page.getByRole("button", { name: new RegExp(`^${ACTIVE_THEME_NAME}`) })).toContainText("Digunakan");
   });
 
-  test("chip gaya menampilkan 9 gaya; gaya tanpa gambar berisi keterangan segera hadir", async ({ page }) => {
+  test("chip gaya menampilkan 7 gaya; gaya tanpa gambar berisi keterangan segera hadir", async ({ page }) => {
     await profile.gotoTab("kustomisasi");
     const styles = page.getByRole("group", { name: "Filter Gaya avatar" }).getByRole("button");
 
@@ -130,22 +130,20 @@ test.describe("Profil", () => {
       /^Bug Hunter/,
       /^Cyberpunk/,
       /^Wizard/,
-      /^Driver Formula/,
-      /^Space Explorer/,
-      /^Ninja/,
-      /^Knight/,
+      /^Driver Racing/,
+      /^Astronot/,
       /^Master Chef/,
     ]);
-    await expect(styles.filter({ hasText: "Segera hadir" })).toHaveCount(9 - 1 - COSTUME_STYLES.length);
+    await expect(styles.filter({ hasText: "Segera hadir" })).toHaveCount(7 - 1 - COSTUME_STYLES.length);
     for (const style of COSTUME_STYLES) await expect(styles.filter({ hasText: style })).not.toContainText("Segera hadir");
     await expect(styles.filter({ hasText: "Basic" })).toHaveAttribute("aria-pressed", "true");
 
-    await styles.filter({ hasText: "Ninja" }).click();
-    await expect(page.getByRole("heading", { name: "Gaya Ninja segera hadir" })).toBeVisible();
-    await expect(page.getByRole("button", { name: /^Kucing Putih/ })).toHaveCount(0);
+    await styles.filter({ hasText: "Astronot" }).click();
+    await expect(page.getByRole("heading", { name: "Gaya Astronot segera hadir" })).toBeVisible();
+    await expect(page.getByRole("button", { name: /^Mochi/ })).toHaveCount(0);
 
     await styles.filter({ hasText: "Basic" }).click();
-    await expect(page.getByRole("button", { name: /^Kucing Putih/ })).toBeVisible();
+    await expect(page.getByRole("button", { name: /^Mochi/ })).toBeVisible();
   });
 
   for (const style of COSTUME_STYLES) {
@@ -177,7 +175,7 @@ test.describe("Profil", () => {
     await expect.poll(() => isRound(profile.header.getByRole("img", { name: /^Avatar / }).locator(".."))).toBe(true);
 
     await profile.gotoTab("kustomisasi");
-    await expect.poll(() => isRound(profile.preview.locator("img[src*=\"profile%2Fbasic%2Fkucing\"]").locator(".."))).toBe(true);
+    await expect.poll(() => isRound(profile.preview.locator("img[src*=\"profile%2Fbasic%2Fmochi\"]").locator(".."))).toBe(true);
   });
 
   test("filter kepemilikan berupa tombol ikon dengan dropdown", async ({ page }) => {
@@ -188,8 +186,8 @@ test.describe("Profil", () => {
     await filter("Semua").click();
     await page.getByRole("menuitemradio", { name: "Terkunci" }).click();
     await expect(filter("Terkunci")).toBeVisible();
-    await expect(card("Kucing Hitam")).toBeVisible();
-    await expect(card("Kucing Putih")).toHaveCount(0);
+    await expect(card("Kopi")).toBeVisible();
+    await expect(card("Mochi")).toHaveCount(0);
     await expect(page.getByText("Jenis kucing lain segera hadir")).toHaveCount(0);
 
     await filter("Terkunci").click();
@@ -217,7 +215,11 @@ test.describe("Profil", () => {
     }
     await expect(page.getByText("Jenis kucing lain segera hadir")).toHaveCount(1);
 
-    await card("Kucing Putih").click();
-    await expect(card("Kucing Putih")).toHaveAttribute("aria-pressed", "true");
+    // Nama avatar memakai nama panggilan, jenis kucingnya tampil sebagai keterangan (PRD FR-12).
+    await expect(card("Oyen")).toContainText("Kucing Oren");
+    await expect(card("Belang")).toContainText("Kucing Corak Tiga");
+
+    await card("Mochi").click();
+    await expect(card("Mochi")).toHaveAttribute("aria-pressed", "true");
   });
 });

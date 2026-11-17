@@ -6,8 +6,8 @@ import { PublicProfilePage } from "../pages/PublicProfilePage";
 // Leaderboard akun sungguhan dan profil publik yang bisa dibuka dari barisnya (PRD FR-06, FR-13).
 
 const OTHERS: MockPublicUser[] = [
-  { id: "00000000-0000-4000-8000-0000000000a1", username: "sari_qa", name: "Sari Wulandari", bio: "Belajar Playwright tiap pagi.", avatarId: "kucing-oren" },
-  { id: "00000000-0000-4000-8000-0000000000a2", username: "budi_test", name: "Budi Santoso", avatarId: "kucing-putih" },
+  { id: "00000000-0000-4000-8000-0000000000a1", username: "sari_qa", name: "Sari Wulandari", bio: "Belajar Playwright tiap pagi.", avatarId: "oyen" },
+  { id: "00000000-0000-4000-8000-0000000000a2", username: "budi_test", name: "Budi Santoso", avatarId: "mochi" },
 ];
 
 test.describe("Leaderboard akun Supabase", () => {
@@ -39,7 +39,7 @@ test.describe("Leaderboard akun Supabase", () => {
     await expect(profile.name).toHaveText("Sari Wulandari");
     await expect(profile.main).toContainText("@sari_qa");
     await expect(profile.main).toContainText("Belajar Playwright tiap pagi.");
-    await expect(profile.main.getByRole("img", { name: "Avatar Kucing Oren" })).toBeVisible();
+    await expect(profile.main.getByRole("img", { name: "Avatar Oyen" })).toBeVisible();
   });
 
   test("profil akun yang tidak ada menampilkan Profil tidak ditemukan", async ({ page }) => {

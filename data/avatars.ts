@@ -1,17 +1,22 @@
 import { CatAvatar } from "@/types/Appearance";
 
 // Avatar kucing (PRD FR-12). Gambar disimpan satu folder per gaya: public/profile/basic/<id>.webp
-// dan public/profile/<gaya>/<id-jenis>-<gaya>.webp (mis. bug-hunter/kucing-oren-bug-hunter.webp).
+// dan public/profile/<gaya>/<id-jenis>-<gaya>.webp (mis. bug-hunter/oyen-bug-hunter.webp). Id jenis
+// kucing adalah nama panggilannya (PRD FR-12, v2.50).
 // Menambah avatar: taruh PNG di folder gayanya, jalankan npm run optimize:images -- avatars,
 // samakan nama file dengan pola di atas, tambah entri di sini, lalu tambah barisnya di
 // private.cosmetic_items lewat migrasi baru (dicek npm run check:cosmetics).
 // Rilis awal: 8 avatar gaya Basic. Putih dan Oren gratis; enam lainnya terbuka di Pro dan
 // Premium (keputusan pemilik, PRD v2.23). Kostum Bug Hunter dan Cyberpunk tersedia untuk
-// kedelapan jenis kucing (PRD v2.42).
+// kedelapan jenis kucing (PRD v2.42), lalu Wizard (PRD v2.50).
 // Kucing Putih Basic adalah avatar bawaan pengguna baru.
-const basic = (id: string, name: string, catType: string, paid = false): CatAvatar => ({
+// Setiap jenis kucing punya nama panggilan (PRD FR-12, v2.50). Nama avatar = nama panggilan untuk
+// gaya Basic, atau nama panggilan + gaya untuk kostum (mis. "Oyen Wizard"); jenis kucingnya
+// tampil sebagai keterangan.
+const basic = (id: string, name: string, breed: string, catType: string, paid = false): CatAvatar => ({
   id,
   name,
+  breed,
   catType,
   style: "Basic",
   image: `/profile/basic/${id}.webp`,
@@ -26,10 +31,8 @@ export const AVATAR_STYLES = [
   "Bug Hunter",
   "Cyberpunk",
   "Wizard",
-  "Driver Formula",
-  "Space Explorer",
-  "Ninja",
-  "Knight",
+  "Driver Racing",
+  "Astronot",
   "Master Chef",
 ] as const;
 
@@ -40,21 +43,20 @@ const STYLE_SLUG: Record<AvatarStyle, string> = {
   "Bug Hunter": "bug-hunter",
   Cyberpunk: "cyberpunk",
   Wizard: "wizard",
-  "Driver Formula": "driver-formula",
-  "Space Explorer": "space-explorer",
-  Ninja: "ninja",
-  Knight: "knight",
+  "Driver Racing": "driver-racing",
+  Astronot: "astronot",
   "Master Chef": "master-chef",
 };
 
 // Kostum selalu berbayar (Pro dan Premium), termasuk untuk Putih dan Oren (PRD FR-12).
-// Nama mengikuti pola PRD, mis. "Kucing Tuxedo Ninja".
+// Nama mengikuti pola PRD: nama panggilan + gaya, mis. "Domino Astronot".
 const costume = (baseId: string, style: Exclude<AvatarStyle, "Basic">): CatAvatar => {
   const base = BASIC_AVATARS.find((item) => item.id === baseId)!;
   const slug = STYLE_SLUG[style];
   return {
     id: `${baseId}-${slug}`,
     name: `${base.name} ${style}`,
+    breed: base.breed,
     catType: base.catType,
     style,
     image: `/profile/${slug}/${baseId}-${slug}.webp`,
@@ -64,14 +66,14 @@ const costume = (baseId: string, style: Exclude<AvatarStyle, "Basic">): CatAvata
 };
 
 const BASIC_AVATARS: CatAvatar[] = [
-  basic("kucing-putih", "Kucing Putih", "putih"),
-  basic("kucing-oren", "Kucing Oren", "oren"),
-  basic("kucing-hitam", "Kucing Hitam", "hitam", true),
-  basic("kucing-tuxedo", "Kucing Tuxedo", "tuxedo", true),
-  basic("kucing-abu", "Kucing Abu-abu", "abu-abu", true),
-  basic("kucing-coklat", "Kucing Coklat", "coklat", true),
-  basic("kucing-corak-tiga", "Kucing Corak Tiga", "corak tiga", true),
-  basic("kucing-siam", "Kucing Siam", "siam", true),
+  basic("mochi", "Mochi", "Kucing Putih", "putih"),
+  basic("oyen", "Oyen", "Kucing Oren", "oren"),
+  basic("kopi", "Kopi", "Kucing Hitam", "hitam", true),
+  basic("domino", "Domino", "Kucing Tuxedo", "tuxedo", true),
+  basic("mendung", "Mendung", "Kucing Abu-abu", "abu-abu", true),
+  basic("karamel", "Karamel", "Kucing Coklat", "coklat", true),
+  basic("belang", "Belang", "Kucing Corak Tiga", "corak tiga", true),
+  basic("latte", "Latte", "Kucing Siam", "siam", true),
 ];
 
 const CAT_IDS = BASIC_AVATARS.map((avatar) => avatar.id);
@@ -81,9 +83,10 @@ export const AVATARS: CatAvatar[] = [
   ...BASIC_AVATARS,
   ...CAT_IDS.map((id) => costume(id, "Bug Hunter")),
   ...CAT_IDS.map((id) => costume(id, "Cyberpunk")),
+  ...CAT_IDS.map((id) => costume(id, "Wizard")),
 ];
 
-export const DEFAULT_AVATAR_ID = "kucing-putih";
+export const DEFAULT_AVATAR_ID = "mochi";
 
 export function getAvatar(id: string) {
   return AVATARS.find((avatar) => avatar.id === id);
