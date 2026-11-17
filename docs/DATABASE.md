@@ -2,6 +2,7 @@
 
 **Status:** Keputusan arsitektur disetujui pemilik (audit backend, PRD v2.21). Belum ada yang dibangun.
 **Acuan:** PRD Bagian 4.4, 6, 7, 8, 10, FR-10, FR-15, dan FR-16.
+**Panduan langkah:** deploy DEV dan database alur konten ada di [`PANDUAN_BACKEND_KONTEN.md`](PANDUAN_BACKEND_KONTEN.md).
 
 Dokumen ini menjelaskan cara data belajarautomation.com disimpan setelah backend tersedia, dan cara menjaga situs tetap cepat saat dipakai banyak orang. Aturan produk tetap mengikuti PRD. Jika dokumen ini bertentangan dengan PRD, PRD yang berlaku.
 
