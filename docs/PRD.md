@@ -6,7 +6,7 @@
 **Target Pengguna:** Pemula hingga praktisi QA, Software Testing, dan Programming
 
 ### Perubahan di Versi 2.50
-- Setiap jenis kucing punya nama panggilan: Mochi (Kucing Putih), Oyen (Kucing Oren), Kopi (Kucing Hitam), Domino (Kucing Tuxedo), Mendung (Kucing Abu-abu), Karamel (Kucing Coklat), Belang (Kucing Corak Tiga), dan Latte (Kucing Siam). Nama avatar memakai nama panggilan, mis. "Oyen Wizard", dengan jenis kucing sebagai keterangan di koleksi. Nama maskot resmi ditetapkan terpisah (FR-12).
+- Setiap jenis kucing punya nama panggilan: Mochi (Kucing Putih), Oyen (Kucing Oren), Kopi (Kucing Hitam), Domino (Kucing Tuxedo), Mendung (Kucing Abu-abu), Karamel (Kucing Coklat), Belang (Kucing Corak Tiga), dan Latte (Kucing Siam). Nama avatar memakai nama panggilan, mis. "Oyen Wizard", dengan jenis kucing sebagai keterangan di koleksi. Maskot resmi bernama **Kimi Cat** (FR-12).
 - Kostum Wizard tersedia untuk kedelapan jenis kucing, sehingga koleksi avatar berisi 32 avatar. Terbuka di Pro dan Premium (FR-12).
 - Gaya avatar menjadi 7: Driver Formula berganti nama menjadi Driver Racing, Space Explorer menjadi Astronot, serta Ninja dan Knight dihapus. Master Chef tetap (FR-12, FR-13).
 - Id dan nama file avatar memakai nama panggilan, mis. `mochi` dan `oyen-wizard`. Avatar pilihan pengguna yang tersimpan dengan id lama dipindahkan otomatis ke id baru (FR-12).
@@ -1244,7 +1244,8 @@ Fitur ini tidak menjadi prioritas implementasi awal sebelum fondasi pembelajaran
 Memberikan identitas brand yang mudah dikenali dan sarana ekspresi diri pengguna tanpa memengaruhi keadilan sistem belajar.
 
 ### Maskot resmi
-- Maskot resmi BelajarAutomation adalah **kucing putih**.
+- Maskot resmi BelajarAutomation adalah **kucing putih** bernama **Kimi Cat**.
+- Nama Kimi Cat khusus untuk maskot. Avatar Kucing Putih yang dipilih pengguna tetap bernama Mochi, karena avatar adalah identitas pengguna, bukan maskot.
 - Desain mengikuti desain asli yang sudah digunakan di Instagram pembuat. Bentuk dasar dan ciri khasnya tidak diubah, dan tidak diubah menjadi karakter fotorealistis.
 - Filosofi: kucing putih melambangkan ilmu yang dimiliki, dipelajari, dan dibagikan kepada orang lain.
 - Maskot resmi dipakai sebagai identitas brand: empty state, halaman 404, hasil latihan di Playground, halaman Tentang, dan materi pemasaran.
@@ -1273,7 +1274,7 @@ Memberikan identitas brand yang mudah dikenali dan sarana ekspresi diri pengguna
 - Tersedia beberapa **jenis kucing** agar pilihan tidak monoton (daftarnya di Rilis awal). Setiap jenis dapat memiliki beberapa **gaya**.
 - Avatar = satu jenis kucing dengan satu gaya, mis. "Domino Astronot".
 - Setiap jenis kucing punya **nama panggilan**. Nama avatar adalah nama panggilan untuk gaya Basic (mis. "Oyen") dan nama panggilan diikuti gaya untuk kostum (mis. "Oyen Wizard"). Di koleksi, jenis kucingnya (mis. "Kucing Oren") tampil sebagai keterangan di bawah nama.
-- Nama panggilan hanya untuk avatar. Nama maskot resmi ditetapkan terpisah.
+- Nama panggilan hanya untuk avatar. Maskot resmi bernama Kimi Cat (lihat Maskot resmi).
 - Kucing putih Basic menjadi avatar bawaan setiap pengguna baru.
 - Semua avatar memakai gaya ilustrasi yang sama dengan maskot resmi agar terasa satu keluarga.
 - Avatar tampil di header, halaman profil, dan leaderboard. Welcome Banner tidak menampilkan avatar.

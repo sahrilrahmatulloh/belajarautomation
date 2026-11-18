@@ -38,7 +38,7 @@ export default function LearningRankCard() {
 
       <div className="relative flex flex-col gap-5 sm:flex-row sm:items-center">
         <div
-          className="relative flex h-16 w-16 shrink-0 items-center justify-center rounded-xl border p-1.5 sm:h-[4.5rem] sm:w-[4.5rem]"
+          className="relative flex h-16 w-16 shrink-0 items-center justify-center self-center rounded-xl border p-1.5 sm:h-[4.5rem] sm:w-[4.5rem] sm:self-auto"
           style={{
             borderColor: `${rank.color}80`,
             backgroundColor: `${rank.color}26`,
@@ -54,7 +54,8 @@ export default function LearningRankCard() {
           />
         </div>
 
-        <div className="min-w-0 flex-1">
+        {/* Mobile: emblem, nama rank, dan progres rata tengah; layar lebar rata kiri di samping emblem. */}
+        <div className="min-w-0 flex-1 text-center sm:text-left">
           <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-blue-200">
             Rank kamu
           </p>
@@ -63,7 +64,7 @@ export default function LearningRankCard() {
             {rank.name}
           </h2>
 
-          <div className="mt-2 max-w-md">
+          <div className="mx-auto mt-2 max-w-md sm:mx-0">
             {nextRank ? (
               <>
                 <div className="flex flex-wrap items-center justify-between gap-x-3 text-xs text-slate-300">
@@ -87,7 +88,7 @@ export default function LearningRankCard() {
                 </div>
               </>
             ) : (
-              <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-300">
+              <p className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-xs text-slate-300 sm:justify-start">
                 <span className="font-semibold text-white">{formatNumber(xp)} XP</span>
                 <span className="inline-flex items-center gap-1.5 font-medium" style={{ color: rank.accentColor }}>
                   <Crown className="h-3.5 w-3.5" aria-hidden="true" />

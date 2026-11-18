@@ -19,6 +19,22 @@ test.describe("Halaman Rank & XP", () => {
     await expect(new RankPage(page).heading).toBeVisible();
   });
 
+  test("emblem kartu Rank kamu di tengah pada mobile dan di kiri pada layar lebar", async ({ page, isMobile }) => {
+    const dashboard = new DashboardPage(page);
+    await dashboard.goto();
+    const card = (await dashboard.rankCard.boundingBox())!;
+    const emblem = (await dashboard.rankCard.getByRole("img", { name: /^Emblem rank / }).boundingBox())!;
+    const cardCenter = card.x + card.width / 2;
+    const emblemCenter = emblem.x + emblem.width / 2;
+
+    if (isMobile) {
+      expect(Math.abs(emblemCenter - cardCenter)).toBeLessThanOrEqual(2);
+      await expect(dashboard.rankCard.getByRole("heading", { name: USER_RANK })).toHaveCSS("text-align", "center");
+    } else {
+      expect(emblem.x + emblem.width).toBeLessThan(card.x + card.width / 4);
+    }
+  });
+
   test("berisi 6 tingkatan rank, rank pengguna, dan cara mendapatkan XP", async ({ page }) => {
     const rank = new RankPage(page);
     await rank.goto();
