@@ -44,7 +44,7 @@ export const AUTH_SLIDES: AuthSlide[] = [
     id: "avatar-kucing",
     eyebrow: "Koleksi avatar",
     title: `${AVATARS.length} avatar kucing untuk profilmu.`,
-    description: "Mochi si kucing putih dan Oyen si kucing oren gratis untuk semua. Kostum Bug Hunter, Cyberpunk, dan Wizard tersedia di Pro dan Premium.",
+    description: "Mochi si kucing putih dan Oyen si kucing oren gratis untuk semua. Kostum Bug Hunter, Cyberpunk, Wizard, dan Driver Racing tersedia di Pro dan Premium.",
     badge: "Baru",
     // Grid 4 kolom: cukup delapan jenis kucing gaya Basic.
     visual: { kind: "avatars", images: AVATARS.filter((avatar) => avatar.style === "Basic").map((avatar) => avatar.image) },

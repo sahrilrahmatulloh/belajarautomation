@@ -39,7 +39,7 @@ export const PAID_AVATAR_NAMES = [
   "Latte",
 ];
 // Kostum berbayar yang gambarnya sudah ada untuk kedelapan jenis kucing (PRD FR-12, v2.42 dan v2.50).
-export const COSTUME_STYLES = ["Bug Hunter", "Cyberpunk", "Wizard"];
+export const COSTUME_STYLES = ["Bug Hunter", "Cyberpunk", "Wizard", "Driver Racing"];
 export const ACTIVE_THEME_NAME = "Padang Rumput";
 
 export const OWN_USERNAME = "sobatqa";
