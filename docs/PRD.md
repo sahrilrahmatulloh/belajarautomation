@@ -1,9 +1,12 @@
 # BELAJARAUTOMATION.COM
 ## Product Requirements Document (PRD)
-**Versi:** 2.50  
+**Versi:** 2.51  
 **Status:** Draft — Acuan Pengembangan Produk  
 **Platform:** Web Application  
 **Target Pengguna:** Pemula hingga praktisi QA, Software Testing, dan Programming
+
+### Perubahan di Versi 2.51
+- Kostum Driver Racing tersedia untuk kedelapan jenis kucing, sehingga koleksi avatar berisi 40 avatar. Terbuka di Pro dan Premium (FR-12).
 
 ### Perubahan di Versi 2.50
 - Setiap jenis kucing punya nama panggilan: Mochi (Kucing Putih), Oyen (Kucing Oren), Kopi (Kucing Hitam), Domino (Kucing Tuxedo), Mendung (Kucing Abu-abu), Karamel (Kucing Coklat), Belang (Kucing Corak Tiga), dan Latte (Kucing Siam). Nama avatar memakai nama panggilan, mis. "Oyen Wizard", dengan jenis kucing sebagai keterangan di koleksi. Maskot resmi bernama **Kimi Cat** (FR-12).
@@ -1331,7 +1334,7 @@ Setiap tema memiliki:
 - Belum dipakai. Kucing 3D di banner profil dihapus pada v2.45 dan konsep visualnya sedang dirancang ulang. Sampai konsep baru disetujui, banner profil hanya menampilkan avatar aktif pengguna, dan tidak ada model 3D yang dimuat.
 
 ### Rilis awal
-- **32 avatar** dan 3 tema banner:
+- **40 avatar** dan 3 tema banner:
 
 | Tema | Akses | Catatan |
 |---|---|---|
@@ -1360,8 +1363,9 @@ Setiap tema memiliki:
 | Bug Hunter untuk kedelapan jenis kucing, mis. "Oyen Bug Hunter" | Pro dan Premium |
 | Cyberpunk untuk kedelapan jenis kucing, mis. "Latte Cyberpunk" | Pro dan Premium |
 | Wizard untuk kedelapan jenis kucing, mis. "Kopi Wizard" | Pro dan Premium |
+| Driver Racing untuk kedelapan jenis kucing, mis. "Domino Driver Racing" | Pro dan Premium |
 
-- Gaya kostum lain (Driver Racing, Astronot, dan Master Chef) tampil "Segera hadir" sampai gambarnya tersedia.
+- Gaya kostum lain (Astronot dan Master Chef) tampil "Segera hadir" sampai gambarnya tersedia.
 
 - Komposisi gratis dan berbayar untuk tema ditetapkan di Bagian 12. Minimal 1 avatar dan 1 tema tersedia gratis.
 - Jumlah ini adalah rilis awal, bukan batas permanen.

@@ -8,7 +8,7 @@ import { CatAvatar } from "@/types/Appearance";
 // private.cosmetic_items lewat migrasi baru (dicek npm run check:cosmetics).
 // Rilis awal: 8 avatar gaya Basic. Putih dan Oren gratis; enam lainnya terbuka di Pro dan
 // Premium (keputusan pemilik, PRD v2.23). Kostum Bug Hunter dan Cyberpunk tersedia untuk
-// kedelapan jenis kucing (PRD v2.42), lalu Wizard (PRD v2.50).
+// kedelapan jenis kucing (PRD v2.42), lalu Wizard (PRD v2.50) dan Driver Racing (PRD v2.51).
 // Kucing Putih Basic adalah avatar bawaan pengguna baru.
 // Setiap jenis kucing punya nama panggilan (PRD FR-12, v2.50). Nama avatar = nama panggilan untuk
 // gaya Basic, atau nama panggilan + gaya untuk kostum (mis. "Oyen Wizard"); jenis kucingnya
@@ -84,6 +84,7 @@ export const AVATARS: CatAvatar[] = [
   ...CAT_IDS.map((id) => costume(id, "Bug Hunter")),
   ...CAT_IDS.map((id) => costume(id, "Cyberpunk")),
   ...CAT_IDS.map((id) => costume(id, "Wizard")),
+  ...CAT_IDS.map((id) => costume(id, "Driver Racing")),
 ];
 
 export const DEFAULT_AVATAR_ID = "mochi";
